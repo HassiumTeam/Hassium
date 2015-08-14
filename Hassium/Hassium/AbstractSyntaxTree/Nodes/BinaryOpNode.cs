@@ -4,6 +4,7 @@ namespace Hassium
 {
     public enum BinaryOperation
     {
+        Assignment,
         Addition,
         Subtraction,
         Division,

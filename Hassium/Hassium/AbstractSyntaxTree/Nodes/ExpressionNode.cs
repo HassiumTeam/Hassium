@@ -6,7 +6,23 @@ namespace Hassium
     {
         public static AstNode Parse(Parser parser)
         {
-            return ParseAdditive (parser);
+            return ParseAssignment(parser);
+        }
+
+
+        private static AstNode ParseAssignment (Parser parser)
+        {
+            AstNode left = ParseAdditive(parser);
+
+            if (parser.AcceptToken(TokenType.Store))
+            {
+                AstNode right = ParseAssignment(parser);
+                return new BinOpNode(BinaryOperation.Assignment, left, right);
+            }
+            else
+            {
+                return left;
+            }
         }
 
         private static AstNode ParseAdditive (Parser parser)
@@ -31,7 +47,7 @@ namespace Hassium
 
         private static AstNode ParseMultiplicative (Parser parser)
         {
-            AstNode left = ParseTerm(parser);
+            AstNode left = ParseFunctionCall(parser);
             
             if (parser.AcceptToken(TokenType.Operation, "*"))
             {
@@ -42,6 +58,22 @@ namespace Hassium
             {
                 AstNode right = ParseMultiplicative(parser);
                 return new BinOpNode(BinaryOperation.Division, left, right);
+            }
+            else
+            {
+                return left;
+            }
+        }
+
+        private static AstNode ParseFunctionCall (Parser parser)
+        {
+            return ParseFunctionCall(parser, ParseTerm(parser));
+        }
+        private static AstNode ParseFunctionCall(Parser parser, AstNode left)
+        {
+            if (parser.MatchToken(TokenType.Parentheses, "("))
+            {
+                return ParseFunctionCall(parser, new FunctionCallNode(left, ArgListNode.Parse(parser)));
             }
             else
             {

@@ -1,2 +1,1 @@
-print := thisVar
-print = thisVar
+6 - 7 + 1 / 4

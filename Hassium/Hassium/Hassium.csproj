@@ -43,10 +43,12 @@
     <Compile Include="AbstractSyntaxTree\Nodes\NumberNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\BinaryOpNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\StringNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\FunctionNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\ExpressionNode.cs" />
     <Compile Include="AbstractSyntaxTree\Parser.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\ExceptionNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\ArgListNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\FunctionCallNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\CodeBlock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
