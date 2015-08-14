@@ -4,9 +4,9 @@ namespace Hassium
 {
     public class NumberNode: AstNode
     {
-        public int Value { private set; get; }
+        public double Value { private set; get; }
 
-        public NumberNode (int value)
+        public NumberNode (double value)
         {
             this.Value = value;
         }

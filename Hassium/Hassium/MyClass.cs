@@ -13,10 +13,9 @@ namespace Hassium
         public string Execute(string code)
         {
             List<Token> tokens = new Lexer(code).Tokenize();
-            AST.Parse(tokens);
-            //new HassiumExecutioner(new AST(tokens)).Execute();
+            Debug.PrintTokens(tokens);
 
-            //Debug.PrintTokens(tokens);
+            //new HassiumExecutioner(new AST(tokens)).Execute();
 
             return "";
         }

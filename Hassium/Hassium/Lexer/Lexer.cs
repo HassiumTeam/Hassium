@@ -33,6 +33,10 @@ namespace Hassium
                 {
                     scanComment();
                 }
+                else if ((char)(peekChar()) == '(' || (char)(peekChar()) == ')')
+                {
+                    result.Add(new Token("PARENTHESES", ((char)readChar()).ToString()));
+                }
                 else if ((char)(peekChar()) == ',')
                 {
                     result.Add(new Token("COMMA", ((char)readChar()).ToString()));
