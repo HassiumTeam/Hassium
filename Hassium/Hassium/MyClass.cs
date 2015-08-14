@@ -12,10 +12,11 @@ namespace Hassium
 
         public string Execute(string code)
         {
-            List<Token> tokens = new Lexer(code).Tokenize();
-            new HassiumExecutioner(new AST(tokens)).Execute();
+            AST myAst = new AST(new List<Token>());
+            //List<Token> tokens = new Lexer(code).Tokenize();
+            //new HassiumExecutioner(new AST(tokens)).Execute();
 
-            Debug.PrintTokens(tokens);
+            //Debug.PrintTokens(tokens);
 
             return "";
         }

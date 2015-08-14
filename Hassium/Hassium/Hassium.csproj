@@ -41,6 +41,9 @@
     <Compile Include="Lexer\StaticLexerData.cs" />
     <Compile Include="Functions\PrintFunction.cs" />
     <Compile Include="AbstractSyntaxTree\AST.cs" />
+    <Compile Include="AbstractSyntaxTree\AstNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\NumberNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\BinaryOpNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -48,5 +51,6 @@
     <Folder Include="Debug\" />
     <Folder Include="Functions\" />
     <Folder Include="AbstractSyntaxTree\" />
+    <Folder Include="AbstractSyntaxTree\Nodes\" />
   </ItemGroup>
 </Project>
