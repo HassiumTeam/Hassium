@@ -13,12 +13,12 @@ namespace Hassium
         {
             AstNode left = ParseMultiplicative(parser);
 
-            if (parser.AcceptToken("OPERATION", "+"))
+            if (parser.AcceptToken(TokenType.Operation, "+"))
             {
                 AstNode right = ParseAdditive(parser);
                 return new BinOpNode(BinaryOperation.Addition, left, right);
             }
-            else if (parser.AcceptToken("OPERATION", "-"))
+            else if (parser.AcceptToken(TokenType.Operation, "-"))
             {
                 AstNode right = ParseAdditive(parser);
                 return new BinOpNode(BinaryOperation.Subtraction, left, right);
@@ -33,12 +33,12 @@ namespace Hassium
         {
             AstNode left = ParseTerm(parser);
             
-            if (parser.AcceptToken("OPERATION", "*"))
+            if (parser.AcceptToken(TokenType.Operation, "*"))
             {
                 AstNode right = ParseMultiplicative(parser);
                 return new BinOpNode(BinaryOperation.Multiplication, left, right);
             }
-            else if (parser.AcceptToken("OPERATION", "/"))
+            else if (parser.AcceptToken(TokenType.Operation, "/"))
             {
                 AstNode right = ParseMultiplicative(parser);
                 return new BinOpNode(BinaryOperation.Division, left, right);
@@ -51,9 +51,15 @@ namespace Hassium
 
         private static AstNode ParseTerm (Parser parser)
         {
-            if (parser.MatchToken("NUMBER"))
+            if (parser.MatchToken(TokenType.Number))
             {
-                return new NumberNode(Convert.ToDouble(parser.ExpectToken("NUMBER").Value));
+                return new NumberNode(Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value));
+            }
+            else if (parser.AcceptToken(TokenType.Parentheses, "("))
+            {
+                AstNode statement = ExpressionNode.Parse(parser);
+                parser.ExpectToken(TokenType.Parentheses, ")");
+                return statement;
             }
             else
             {

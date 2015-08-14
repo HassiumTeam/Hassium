@@ -14,7 +14,8 @@ namespace Hassium
         {
             List<Token> tokens = new Lexer(code).Tokenize();
             Debug.PrintTokens(tokens);
-
+            Parser hassiumParser = new Parser(tokens);
+            Console.Write(hassiumParser.EvaluateNode(hassiumParser.Parse()).ToString());
             //new HassiumExecutioner(new AST(tokens)).Execute();
 
             return "";

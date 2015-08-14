@@ -9,7 +9,7 @@ namespace Hassium
         {
             foreach (Token token in tokens)
             {
-                Console.WriteLine("Type: " + token.Operator + "\tValue: " + token.Value);
+                Console.WriteLine("Type: " + token.TokenClass.ToString() + "\tValue: " + token.Value);
             }
         }
     }

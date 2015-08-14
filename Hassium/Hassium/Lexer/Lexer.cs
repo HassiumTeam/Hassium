@@ -35,27 +35,28 @@ namespace Hassium
                 }
                 else if ((char)(peekChar()) == '(' || (char)(peekChar()) == ')')
                 {
-                    result.Add(new Token("PARENTHESES", ((char)readChar()).ToString()));
+                    result.Add(new Token(TokenType.Parentheses, ((char)readChar()).ToString()));
                 }
                 else if ((char)(peekChar()) == ',')
                 {
-                    result.Add(new Token("COMMA", ((char)readChar()).ToString()));
+                    result.Add(new Token(TokenType.Comma, ((char)readChar()).ToString()));
                 }
                 else if ("+-/*".Contains((((char)peekChar()).ToString())))
                 {
-                    result.Add(new Token("OPERATION", ((char)readChar()).ToString()));
+                    result.Add(new Token(TokenType.Operation, ((char)readChar()).ToString()));
                 }
-                else if ("<>!=".Contains((((char)peekChar()).ToString())))
+                else if ("=<>!".Contains((((char)peekChar()).ToString())))
                 {
-                    result.Add(new Token("COMPARISON", ((char)readChar()).ToString()));
+                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString()));
                 }
-                else if ((char)peekChar() == '#')
+                else if ((char)(peekChar()) == ':' && (char)(peekChar(1)) == '=') 
                 {
-                    result.Add(new Token("STORE", ((char)readChar()).ToString()));
+                    result.Add(new Token(TokenType.Store, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
+
                 }
                 else
                 {
-                    result.Add(new Token("EXCEPTION", "Unexpected " + ((char)peekChar()).ToString() + " encountered"));
+                    result.Add(new Token(TokenType.Exception, "Unexpected " + ((char)peekChar()).ToString() + " encountered"));
                     readChar();
                 }
 
@@ -85,7 +86,7 @@ namespace Hassium
 
             readChar();
 
-            return new Token("STRING", result);
+            return new Token(TokenType.String, result);
         }
 
         private Token scanData()
@@ -94,17 +95,10 @@ namespace Hassium
             while (char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1)
                 result += ((char)readChar()).ToString();
             if (StaticData.Functions.ContainsKey(result))
-                return new Token("FUNCTION", result);
+                return new Token(TokenType.Function, result);
             if (Regex.IsMatch(result, @"^\d+$"))
-                return new Token("NUMBER", result);
-            if (StaticLexerData.Vars.Contains(result))
-                return new Token("VARIABLE", result);
-            if (this.result[this.result.Count - 1].Operator == "STORE")
-            {
-                StaticLexerData.Vars.Add(result);
-                return new Token("VARIABLE", result);
-            }
-            return new Token("EXCEPTION", "Unrecognized type " + result);
+                return new Token(TokenType.Number, result);
+            return new Token(TokenType.Variable, result);
         }
 
         private void whiteSpaceMonster()
@@ -116,6 +110,13 @@ namespace Hassium
         {
             if (position < code.Length)
                 return code[position];
+            else
+                return -1;
+        }
+        private int peekChar(int n)
+        {
+            if (position + n < code.Length)
+                return code[position + n];
             else
                 return -1;
         }

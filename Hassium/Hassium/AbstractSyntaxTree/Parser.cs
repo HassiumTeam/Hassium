@@ -13,22 +13,22 @@ namespace Hassium
             this.tokens = tokens;
         }
 
-        public void Parse()
+        public AstNode Parse()
         {
-
+            return ExpressionNode.Parse(this);
         }
 
-        public bool MatchToken(string clazz)
+        public bool MatchToken(TokenType clazz)
         {
-            return tokens[position].Operator == clazz;
+            return position < tokens.Count && tokens [position].TokenClass == clazz;
         }
 
-        public bool MatchToken(string clazz, string value)
+        public bool MatchToken(TokenType clazz, string value)
         {
-            return tokens[position].Operator == clazz && tokens[position].Value == value;
+            return position < tokens.Count && tokens[position].TokenClass == clazz && tokens[position].Value == value;
         }
 
-        public bool AcceptToken(string clazz)
+        public bool AcceptToken(TokenType clazz)
         {
             if (MatchToken(clazz))
             {
@@ -39,7 +39,7 @@ namespace Hassium
             return false;
         }
 
-        public bool AcceptToken(string clazz, string value)
+        public bool AcceptToken(TokenType clazz, string value)
         {
             if (MatchToken(clazz, value))
             {
@@ -50,27 +50,27 @@ namespace Hassium
             return false;
         }
 
-        public Token ExpectToken(string clazz)
+        public Token ExpectToken(TokenType clazz)
         {
             if (!MatchToken(clazz))
             {
-                return new Token("EXCEPTION", "Tokens did not match");
+                return new Token(TokenType.Exception, "Tokens did not match");
             }
 
             return tokens[position++];
         }
 
-        public Token ExpectToken(string clazz, string value)
+        public Token ExpectToken(TokenType clazz, string value)
         {
             if (!MatchToken(clazz, value))
             {
-                return new Token("EXCEPTION", "Tokens did not match");
+                return new Token(TokenType.Exception, "Tokens did not match");
             }
 
             return tokens[position++];
         }
 
-        private object EvaluateNode (AstNode node)
+        public object EvaluateNode (AstNode node)
         {
             if (node is NumberNode)
             {
@@ -84,18 +84,18 @@ namespace Hassium
             return 0;
         }
 
-        public int InterpretBinaryOp (BinOpNode node)
+        public double InterpretBinaryOp (BinOpNode node)
         {
             switch (node.BinOp) 
             {
                 case BinaryOperation.Addition:
-                    return (int)(EvaluateNode (node.Left)) + (int)(EvaluateNode (node.Right));
+                    return (double)(EvaluateNode (node.Left)) + (double)(EvaluateNode (node.Right));
                     case BinaryOperation.Subtraction:
-                    return (int)(EvaluateNode (node.Left)) - (int)(EvaluateNode (node.Right));
+                    return (double)(EvaluateNode (node.Left)) - (double)(EvaluateNode (node.Right));
                     case BinaryOperation.Division:
-                    return (int)(EvaluateNode (node.Left)) / (int)(EvaluateNode (node.Right));
+                    return (double)(EvaluateNode (node.Left)) / (double)(EvaluateNode (node.Right));
                     case BinaryOperation.Multiplication:
-                    return (int)(EvaluateNode (node.Left)) * (int)(EvaluateNode (node.Right));
+                    return (double)(EvaluateNode (node.Left)) * (double)(EvaluateNode (node.Right));
             }   
             // Raise error
             return -1;

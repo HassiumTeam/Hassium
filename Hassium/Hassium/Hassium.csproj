@@ -38,7 +38,6 @@
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Lexer.cs" />
     <Compile Include="Debug\Debug.cs" />
-    <Compile Include="Lexer\StaticLexerData.cs" />
     <Compile Include="Functions\PrintFunction.cs" />
     <Compile Include="AbstractSyntaxTree\AstNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\NumberNode.cs" />

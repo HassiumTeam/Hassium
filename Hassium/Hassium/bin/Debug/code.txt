@@ -1,1 +1,2 @@
-"45 Hi" + (4 * 6) - 2
+print := thisVar
+print = thisVar

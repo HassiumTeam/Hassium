@@ -2,14 +2,28 @@ using System;
 
 namespace Hassium
 {
+    public enum TokenType
+    {
+        String,
+        Number,
+        Variable,
+        Parentheses,
+        Comma,
+        Operation,
+        Comparison,
+        Store,
+        Exception,
+        Function,
+
+    }
     public class Token
     {
-        public string Operator { get; private set; }
+        public TokenType TokenClass { get; private set; }
         public string Value { get; private set; }
 
-        public Token(string operate, string value)
+        public Token(TokenType type, string value)
         {
-            this.Operator = operate;
+            this.TokenClass = type;
             this.Value = value;
         }
     }
