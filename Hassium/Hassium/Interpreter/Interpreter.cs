@@ -21,6 +21,12 @@ namespace Hassium
             variables.Add("free", new InternalFunction(BuiltInFunctions.Free));
             variables.Add("exit", new InternalFunction(BuiltInFunctions.Exit));
             variables.Add("system", new InternalFunction(BuiltInFunctions.System));
+            variables.Add("mdir", new InternalFunction(BuiltInFunctions.Mdir));
+            variables.Add("ddir", new InternalFunction(BuiltInFunctions.DDir));
+            variables.Add("dfile", new InternalFunction(BuiltInFunctions.Dfile));
+            variables.Add("sstr", new InternalFunction(BuiltInFunctions.Sstr));
+            variables.Add("begins", new InternalFunction(BuiltInFunctions.Begins));
+            variables.Add("type", new InternalFunction(BuiltInFunctions.Type));
         }
 
         public void Execute()

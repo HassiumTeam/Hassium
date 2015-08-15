@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Hassium
 {
-    public static class BuiltInFunctions
+    public partial class BuiltInFunctions
     {
         public static object Print(object[] args)
         {
@@ -67,16 +67,71 @@ namespace Hassium
 
         public static object System(object[] args)
         {
-            Process.Start(args[0].ToString(), concatArray(args, 1).ToString());
+            Process.Start(args[0].ToString(), arrayToString(args, 1));
             return null;
         }
 
-        private static object[] concatArray(object[] args, int startIndex)
+        public static object Mdir(object[] args)
+        {
+            if (Directory.Exists(args[0].ToString()))
+                throw new Exception("Directory already exists!");
+            else
+                Directory.CreateDirectory(args[0].ToString());
+
+            return null;
+        }
+
+        public static object DDir(object[] args)
+        {
+            if (!Directory.Exists(args[0].ToString()))
+                throw new Exception("Directory does not exist!");
+            else
+                Directory.Delete(args[0].ToString());
+
+            return null;
+        }
+
+        public static object Dfile(object[] args)
+        {
+            if (!File.Exists(args[0].ToString()))
+                throw new Exception("File does not exist!");
+            else
+                File.Delete(args[0].ToString());
+
+            return null;
+        }
+
+        public static object Sstr(object[] args)
+        {
+            return args[0].ToString().Substring(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
+        }
+
+        public static object Begins(object[] args)
+        {
+            return args[0].ToString().StartsWith(arrayToString(args, 1));
+        }
+
+        public static object Type(object[] args)
+        {
+            return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".") + 1);
+        }
+
+        private static object[] narrowArray(object[] args, int startIndex)
         {
             object[] result = new object[args.Length];
 
             for (int x = startIndex; x < args.Length; x++)
                 result[x] = args[x];
+
+            return result;
+        }
+
+        private static string arrayToString(object[] args, int startIndex = 0)
+        {
+            string result = "";
+
+            for (int x = startIndex; x < args.Length; x++)
+                result += args[x].ToString();
 
             return result;
         }

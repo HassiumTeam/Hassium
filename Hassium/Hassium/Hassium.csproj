@@ -53,6 +53,7 @@
     <Compile Include="AbstractSyntaxTree\Nodes\IdentifierNode.cs" />
     <Compile Include="Functions\InternalFunction.cs" />
     <Compile Include="Functions\BuiltInFunctions.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\IfNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

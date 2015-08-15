@@ -6,12 +6,11 @@ namespace Hassium
     {
         public static AstNode Parse(Parser parser)
         {
-            /*if (parser.MatchToken(TokenType.Identifier, "if"))
+            if (parser.MatchToken(TokenType.Identifier, "if"))
             {
-                //TODO: the thing
+                return IfNode.Parse(parser);
             }
-            else */
-            if (parser.MatchToken(TokenType.Bracket, "{"))
+            else if (parser.MatchToken(TokenType.Bracket, "{"))
             {
                 return CodeBlock.Parse(parser);
             }

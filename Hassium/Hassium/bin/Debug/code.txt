@@ -1,6 +1,1 @@
-print("Enter the path of the executable: ");
-path := input();
-print("Enter the arguments: ");
-args := input();
-system(path, args);
-input();
+print(begins("abc", "a"), " is type ", type(begins("abc", "a")), "\n");
