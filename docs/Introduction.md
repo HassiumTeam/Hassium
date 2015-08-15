@@ -1,5 +1,7 @@
 # Introduction to Hassium
 
+## Part 1: Setting up Hassium
+
 Hassium is a simple programming language written in C# with a syntax similar to C and Python. It is easy
 to get Hassium set up on your computer and running your first program.
 
@@ -15,6 +17,8 @@ mono ~/Hassium/src/Hassium/bin/Debug/Hassium.exe $1
 ```
 Change the path accordingly to where your Hassium.exe is located. On windows you will just move the
 Hassium.exe to your Desktop folder where you will then create your scripts.
+
+## Part 2: Running Your First Program
 
 Now it's time to create our first program. In the folder where Hassium is located open up your favorite
 text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.hs:
@@ -38,6 +42,8 @@ Hello, World! to the screen. Also note the double-quotes around Hello, World!, t
 message we are writing is a string, or series of characters. Strings are surrounded by double quotes in
 Hassium, NOT single ' ' quotes. Now after the function call there is a semicolon ;. Semicolons indicate
 the end of the line/statement that we are running, and should not be forgotten.
+
+## Part 3: Variables
 
 If you've ever programmed before or if you have taken 8th grade algebra you should know about
 variables. Variables are data represented by an identifier that you specify. Take the following
@@ -85,3 +91,91 @@ Hopefully by now you have a pretty good grasp of how variables are assigned and 
 are made. If not please go back to the start and try and read over it again. I also reccomend that throughout
 all of this that you are trying the examples and making your own similar programs, as that is truely
 the only effective way to learn to program.
+
+## Part 4: Reading User Input and the Rest Of the Console Functions
+
+From this point on we will be focusing less on the program design and more on the functions that are
+builtin to Hassium. One of the most important is the input() function call. Input reads user input
+from the keyboard and returns it in the form of a string. Take InputPrgm.hs:
+```
+$SUMMARY: Reads user input and returns it back$
+
+print("Enter some text: ");
+in := input();
+print("The text you entered was: ", in, "\n");
+```
+
+This first call to print() writes some text to the console that asks the user to enter in a string.
+Then we have the variable in, which gets assigned the result of a call to the input() function, effectively
+storing the user's input inside the variable in. The last line prints out a string, the contents of
+the variable in, then a newline character.
+
+The functions print() and input() are all part of the console family of functions. In this documentation
+there should be a folder called Console that contains descriptions and examples of these functions. The
+source code for them can also be found in the folder src/Hassium/Functions/ConsoleFunctions.cs. These
+functions deal primarily with management of the console. We've covered the first two functions and now we'll
+deal with the last one, the cls() function.
+
+Cls is a function call that clears the console of all text. Let's look at it in action in ClearPrgm.cs:
+```
+$SUMMARY: Demonstrates clearing of console$
+
+print("When you press a key next the console will clear");
+pause();
+print("You should not see me");
+cls();
+print("The console has been cleared\n");
+```
+
+In this program we prompt the user to press enter, and we call pause() to simply hang the program until
+a key is pressed. From there there is a print call that is meant to show that cls will erase the text
+outputed by that in a few miliseconds when the very next line, cls, is called. The last print call
+comes after the cls() and can be seen by the user.
+
+## Part 5: Math in Hassium
+
+Hassium is capable of parsing most mathematical expressions. Take the program SampleMathPrgm.hs:
+```
+$SUMMARY: Demonstrates math capabilities$
+
+print("Enter the first number: ");
+x := input();
+
+print("Enter the second number: ");
+y := input();
+
+print(x, "+", y, "=", (x + y), "\n");
+print(x, "-", y, "=", (x - y), "\n");
+print(x, "*", y, "=", (x * y), "\n");
+print(x, "/", y, "=", (x / y), "\n");
+```
+
+This program gets two numbers from the user then prints out four different ways the numbers can be
+operated upon, being addition, subtraction, multiplication, and division. These can be combined in
+many differant ways, for example this line is perfectly valid: ''' print(((3 * 5) / 2) + 1); ```
+Hassium uses PEMDAS to evaluate mathematical expressions such as that.
+
+Hassium also includes a math family of functions. As this documentation is being written there
+isn't that many at the moment but I will demonstrate the ones that are there in the file MathPrgm.hs:
+```
+$SUMMARY: Shows math family$
+
+print("Enter a number to square root: ");
+x := input();
+
+print("Square root is: ", sqrt(x), "\n");
+
+print("Enter a base number: ");
+x := input();
+print("Enter a power: ");
+y := input();
+
+print("Number raised to power is: ", pow(x, y), "\n");
+```
+
+The two differant math functions being called here are sqrt() and pow(). Sqrt is a function that
+takes the square root of the argument given and returns it. Pow is a function that takes in two
+arguments and raises the first argument to the power of the second.
+
+More math functions will continue to roll in by the time you read this, so check in the file
+src/Hassium/Functions/MathFunctions.cs or in the documentation for all of the current functions.
