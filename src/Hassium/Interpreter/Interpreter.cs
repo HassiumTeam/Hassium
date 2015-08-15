@@ -60,6 +60,8 @@ namespace Hassium
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
                     object right = evaluateNode(node.Right);
+                    if (variables.ContainsKey(node.Left.ToString()))
+                        variables.Remove(node.Left.ToString());
                     variables.Add(node.Left.ToString(), right);
                     return right.ToString();
             }

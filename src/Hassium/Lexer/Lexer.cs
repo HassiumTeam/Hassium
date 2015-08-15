@@ -100,9 +100,10 @@ namespace Hassium
         private Token scanData()
         {
             string result = "";
-            while (char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1)
+            double temp = 0;;
+            while ((char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1) || ((char)(peekChar()) == '.'))
                 result += ((char)readChar()).ToString();
-            if (Regex.IsMatch(result, @"^\d+$"))
+            if (double.TryParse(result, out temp))
                 return new Token(TokenType.Number, result);
             return new Token(TokenType.Identifier, result);
         }
