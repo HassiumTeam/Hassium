@@ -6,7 +6,7 @@
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4D071F79-A66C-4C18-A702-FD50E6C4BC3B}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Hassium</RootNamespace>
     <AssemblyName>Hassium</AssemblyName>
   </PropertyGroup>
@@ -38,7 +38,6 @@
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Lexer.cs" />
     <Compile Include="Debug\Debug.cs" />
-    <Compile Include="Functions\PrintFunction.cs" />
     <Compile Include="AbstractSyntaxTree\AstNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\NumberNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\BinaryOpNode.cs" />
@@ -49,6 +48,11 @@
     <Compile Include="AbstractSyntaxTree\Nodes\ArgListNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\FunctionCallNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\CodeBlock.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\StatementNode.cs" />
+    <Compile Include="Interpreter\Interpreter.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\IdentifierNode.cs" />
+    <Compile Include="Functions\InternalFunction.cs" />
+    <Compile Include="Functions\BuiltInFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -57,5 +61,6 @@
     <Folder Include="Functions\" />
     <Folder Include="AbstractSyntaxTree\" />
     <Folder Include="AbstractSyntaxTree\Nodes\" />
+    <Folder Include="Interpreter\" />
   </ItemGroup>
 </Project>

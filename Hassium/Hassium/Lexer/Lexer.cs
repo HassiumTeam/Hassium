@@ -41,6 +41,10 @@ namespace Hassium
                 {
                     result.Add(new Token(TokenType.Parentheses, ((char)readChar()).ToString()));
                 }
+                else if ((char)(peekChar()) == '{' || (char)(peekChar()) == '}')
+                {
+                    result.Add(new Token(TokenType.Bracket, ((char)readChar()).ToString()));
+                }
                 else if ((char)(peekChar()) == ',')
                 {
                     result.Add(new Token(TokenType.Comma, ((char)readChar()).ToString()));
@@ -98,11 +102,9 @@ namespace Hassium
             string result = "";
             while (char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1)
                 result += ((char)readChar()).ToString();
-            if (StaticData.Functions.ContainsKey(result))
-                return new Token(TokenType.Function, result);
             if (Regex.IsMatch(result, @"^\d+$"))
                 return new Token(TokenType.Number, result);
-            return new Token(TokenType.Variable, result);
+            return new Token(TokenType.Identifier, result);
         }
 
         private void whiteSpaceMonster()

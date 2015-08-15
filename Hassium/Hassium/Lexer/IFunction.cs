@@ -5,7 +5,7 @@ namespace Hassium
 {
     public interface IFunction
     {
-        string Main(List<Token> line);
+        object Invoke(object[] args);
     }
 }
 

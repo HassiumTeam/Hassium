@@ -4,16 +4,16 @@ namespace Hassium
 {
     public enum TokenType
     {
+        Identifier,
+        Bracket,
         String,
         Number,
-        Variable,
         Parentheses,
         Comma,
         Operation,
         Comparison,
         Store,
         Exception,
-        Function,
         EndOfLine
 
     }

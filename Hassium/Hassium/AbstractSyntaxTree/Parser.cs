@@ -3,10 +3,18 @@ using System.Collections.Generic;
 
 namespace Hassium
 {
-    public class Parser
+    public class Parser: AstNode
     {
         private List<Token> tokens = new List<Token>();
         private int position = 0;
+
+        public bool EndOfStream
+        {
+            get
+            {
+                return this.tokens.Count <= position;
+            }
+        }
 
         public Parser(List<Token> tokens)
         {
@@ -15,7 +23,12 @@ namespace Hassium
 
         public AstNode Parse()
         {
-            return ExpressionNode.Parse(this);
+            CodeBlock block = new CodeBlock();
+            while (!EndOfStream)
+            {
+                block.Children.Add(StatementNode.Parse(this));
+            }
+            return block;
         }
 
         public bool MatchToken(TokenType clazz)
@@ -70,36 +83,7 @@ namespace Hassium
             return tokens[position++];
         }
 
-        public object EvaluateNode (AstNode node)
-        {
-            if (node is NumberNode)
-            {
-                return ((NumberNode)node).Value;
-            }
-            else if (node is BinOpNode)
-            {
-                return InterpretBinaryOp((BinOpNode)node);
-            }
 
-            return 0;
-        }
-
-        public double InterpretBinaryOp (BinOpNode node)
-        {
-            switch (node.BinOp) 
-            {
-                case BinaryOperation.Addition:
-                    return (double)(EvaluateNode (node.Left)) + (double)(EvaluateNode (node.Right));
-                    case BinaryOperation.Subtraction:
-                    return (double)(EvaluateNode (node.Left)) - (double)(EvaluateNode (node.Right));
-                    case BinaryOperation.Division:
-                    return (double)(EvaluateNode (node.Left)) / (double)(EvaluateNode (node.Right));
-                    case BinaryOperation.Multiplication:
-                    return (double)(EvaluateNode (node.Left)) * (double)(EvaluateNode (node.Right));
-            }   
-            // Raise error
-            return -1;
-        }
 
     }
 }

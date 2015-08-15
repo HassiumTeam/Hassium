@@ -1,1 +1,6 @@
-6 - 7 + 1 / 4
+print("Enter the path of the executable: ");
+path := input();
+print("Enter the arguments: ");
+args := input();
+system(path, args);
+input();

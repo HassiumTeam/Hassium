@@ -1,10 +1,29 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/AbstractSyntaxTree/AST.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/Interpreter/Interpreter.cs">
     <Files>
-      <File FileName="Hassium/AbstractSyntaxTree/AST.cs" Line="14" Column="63" />
-      <File FileName="Hassium/MyClass.cs" Line="18" Column="13" />
+      <File FileName="Hassium/MyClass.cs" Line="18" Column="18" />
+      <File FileName="Hassium/AbstractSyntaxTree/Parser.cs" Line="6" Column="33" />
+      <File FileName="Hassium/AbstractSyntaxTree/Nodes/CodeBlock.cs" Line="18" Column="26" />
+      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="21" Column="14" />
+      <File FileName="Hassium/Functions/InternalFunction.cs" Line="18" Column="38" />
+      <File FileName="Hassium/Functions/BuiltInFunctions.cs" Line="10" Column="25" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Hassium" expanded="True" selected="True">
+            <Node name="AbstractSyntaxTree" expanded="True">
+              <Node name="Nodes" expanded="True" />
+            </Node>
+            <Node name="Debug" expanded="True" />
+            <Node name="Functions" expanded="True" />
+            <Node name="Interpreter" expanded="True" />
+            <Node name="Lexer" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

@@ -1,31 +1,19 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace Hassium
 {
-    public class HassiumInterpreter
+    public static class HassiumInterpreter
     {
-        public HassiumInterpreter()
+        public static void Main(string[] args)
         {
-            StaticData.Functions.Add("print", new PrintFunction());
-        }
-
-        public string Execute(string code)
-        {
-            List<Token> tokens = new Lexer(code).Tokenize();
+            List<Token> tokens = new Lexer(File.ReadAllText("code.txt")).Tokenize();
             Debug.PrintTokens(tokens);
             Parser hassiumParser = new Parser(tokens);
-            Console.Write(hassiumParser.EvaluateNode(hassiumParser.Parse()).ToString());
-            //new HassiumExecutioner(new AST(tokens)).Execute();
-
-            return "";
+            AstNode ast = hassiumParser.Parse();
+            new Interpreter(ast).Execute();
         }
-    }
-
-    public class StaticData
-    {
-        public static Dictionary<string, IFunction> Functions = new Dictionary<string, IFunction>();
-        public static Dictionary<string, string> Vars = new Dictionary<string, string>();
     }
 }
 

@@ -71,7 +71,7 @@ namespace Hassium
         }
         private static AstNode ParseFunctionCall(Parser parser, AstNode left)
         {
-            if (parser.MatchToken(TokenType.Parentheses, "("))
+            if (parser.AcceptToken(TokenType.Parentheses, "("))
             {
                 return ParseFunctionCall(parser, new FunctionCallNode(left, ArgListNode.Parse(parser)));
             }
@@ -93,9 +93,17 @@ namespace Hassium
                 parser.ExpectToken(TokenType.Parentheses, ")");
                 return statement;
             }
+            else if (parser.MatchToken(TokenType.String))
+            {
+                return new StringNode(parser.ExpectToken(TokenType.String).Value);
+            }
+            else if (parser.MatchToken(TokenType.Identifier))
+            {
+                return new IdentifierNode(parser.ExpectToken(TokenType.Identifier).Value);
+            }
             else
             {
-                return new ExceptionNode("Unknown thing encountered in parser");
+                throw new Exception("Unexpected in Parser");
             }
 
         }
