@@ -4,8 +4,8 @@ The syntax is a lot like C mixed with Python and it is very easy to
 learn to program in it.
 
 Hassium Hello World:
-'''
+```
 print("Hello, World!");
-'''
+```
 
 More documentation coming soon.
