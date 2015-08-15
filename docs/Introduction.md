@@ -1,3 +1,5 @@
+# Introduction to Hassium
+
 Hassium is a simple programming language written in C# with a syntax similar to C and Python. It is easy
 to get Hassium set up on your computer and running your first program.
 
@@ -6,19 +8,21 @@ Your first step although probably optional but recommended is to compile Hassium
 prefer to use the command line on Linux you can invoke xbuild Hassium.sln to compile it. The resulting
 EXE should be in the bin/Debug folder. If you would like to add Hassium to your PATH on linux simply
 create the following shell script in /usr/bin/Hassium:
+```
 #!/bin/bash
 
 mono ~/Hassium/src/Hassium/bin/Debug/Hassium.exe $1
-
+```
 Change the path accordingly to where your Hassium.exe is located. On windows you will just move the
 Hassium.exe to your Desktop folder where you will then create your scripts.
 
 Now it's time to create our first program. In the folder where Hassium is located open up your favorite
 text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.hs:
-
+```
 $SUMMARY: Shows a greeting to the user$
 
 print("Hello, World!");
+```
 
 Save this file then execute it with either Hassium.exe HelloWorldPrgm.hs (on Windows) or 
 mono Hassium.exe HelloWorldPrgm.hs (on *nix). You should see the text Hello, World! on your console
@@ -38,11 +42,12 @@ the end of the line/statement that we are running, and should not be forgotten.
 If you've ever programmed before or if you have taken 8th grade algebra you should know about
 variables. Variables are data represented by an identifier that you specify. Take the following
 program VariablesPrgm.hs:
-
+```
 $SUMMARY: Uses variables$
 
 myVar := "Hassium is free as in free beer and in freedom!";
 print(myVar, "\n");
+```
 
 Now again let's look at the different parts of this program. We have the comment at the beginning that
 tells us what our program is going to do. Then the next line we have something new. We have the identifier
@@ -58,13 +63,14 @@ when encountered will create a newline on the console.
 
 Let's take a look at another program that uses another function call and demonstrates variable 
 reassignment. We'll call this Variables2Prgm.hs:
-
+```
 $SUMMARY: Uses variable reassignment and concatanation";
 
 myVar := "Hassium is free as in free beer and in freedom!";
 print(myVar);
 myVar := strcat(myVar, " The github is https://github.com/JacobMisirian/Hassium");
 print("\n", myVar);
+```
 
 The first part of this should look the same to you, myVar gets assigned to a string and is then printed
 out to the console. But then on the third line of code things are a little differant. myVar is assigned
