@@ -1,1 +1,0 @@
-print(begins("abc", "a"), " is type ", type(begins("abc", "a")), "\n");
