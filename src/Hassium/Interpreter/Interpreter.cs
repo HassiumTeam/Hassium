@@ -10,6 +10,7 @@ namespace Hassium
 
         public Interpreter(AstNode code)
         {
+            variables = new Dictionary<string, object>();
             this.code = code;
             variables.Add("print", new InternalFunction(BuiltInFunctions.Print));
             variables.Add("strcat", new InternalFunction(BuiltInFunctions.Strcat));
@@ -27,6 +28,12 @@ namespace Hassium
             variables.Add("sstr", new InternalFunction(BuiltInFunctions.Sstr));
             variables.Add("begins", new InternalFunction(BuiltInFunctions.Begins));
             variables.Add("type", new InternalFunction(BuiltInFunctions.Type));
+            variables.Add("pow", new InternalFunction(BuiltInFunctions.Pow));
+            variables.Add("sqrt", new InternalFunction(BuiltInFunctions.Sqrt));
+            variables.Add("dowstr", new InternalFunction(BuiltInFunctions.DowStr));
+            variables.Add("dowfile", new InternalFunction(BuiltInFunctions.DowFile));
+            variables.Add("upfile", new InternalFunction(BuiltInFunctions.UpFile));
+            variables.Add("throw", new InternalFunction(BuiltInFunctions.Throw));
         }
 
         public void Execute()

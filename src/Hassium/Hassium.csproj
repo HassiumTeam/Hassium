@@ -52,8 +52,13 @@
     <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\IdentifierNode.cs" />
     <Compile Include="Functions\InternalFunction.cs" />
-    <Compile Include="Functions\BuiltInFunctions.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\IfNode.cs" />
+    <Compile Include="Functions\ConsoleFunctions.cs" />
+    <Compile Include="Functions\StringFunctions.cs" />
+    <Compile Include="Functions\FileSystemFunctions.cs" />
+    <Compile Include="Functions\MathFunctions.cs" />
+    <Compile Include="Functions\MiscFunctions.cs" />
+    <Compile Include="Functions\NetworkingFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
