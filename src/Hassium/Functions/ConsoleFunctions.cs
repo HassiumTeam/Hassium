@@ -24,6 +24,12 @@ namespace Hassium
             return null;
         }
 
+        public static object Pause(object[] args)
+        {
+            Console.ReadKey(true);
+            return null;
+        }
+
         private static object[] narrowArray(object[] args, int startIndex)
         {
             object[] result = new object[args.Length];

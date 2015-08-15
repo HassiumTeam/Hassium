@@ -152,8 +152,12 @@ print(x, "/", y, "=", (x / y), "\n");
 
 This program gets two numbers from the user then prints out four different ways the numbers can be
 operated upon, being addition, subtraction, multiplication, and division. These can be combined in
-many differant ways, for example this line is perfectly valid: ''' print(((3 * 5) / 2) + 1); ```
-Hassium uses PEMDAS to evaluate mathematical expressions such as that.
+many differant ways, for example this line is perfectly valid: 
+``` 
+print(((3 * 5) / 2) + 1); 
+```
+
+Hassium uses PEMDAS to evaluate mathematical expressions such as that above.
 
 Hassium also includes a math family of functions. As this documentation is being written there
 isn't that many at the moment but I will demonstrate the ones that are there in the file MathPrgm.hs:
@@ -179,3 +183,55 @@ arguments and raises the first argument to the power of the second.
 
 More math functions will continue to roll in by the time you read this, so check in the file
 src/Hassium/Functions/MathFunctions.cs or in the documentation for all of the current functions.
+
+## Part 6: File System access in Hassium
+
+Hassium comes with many differant filesystem operations (see src/Hassium/Functions/FileSystemFunctions.cs)
+that can preform such operations as creating/deleting files and directories or setting/getting the
+current directory or determining if a file/directory exists. Take a gander at FileCreatePrgm.hs:
+```
+$SUMMARY: Creates file with specified text$
+
+print("Enter a filename: ");
+path := input();
+print("File already exists: ", fexists(path));
+
+print("\nEnter text to put in file: ");
+contents := input();
+
+puts(path, contents);
+```
+
+This starts with getting a file path from the user and checking if it exists or not using the
+function fexists() to return a boolean true or false depending on if the file already exists.
+Then the program prompts the user for some contents to put in the file and uses the puts
+function to put the variable contents into the file at variable path. Now look at DeletePrgm.cs:
+```
+$SUMMARY: Deletes a file we specify$
+
+print("Enter a file path: ");
+path := input();
+
+print("File exists: ", fexists(path), "\n");
+
+dfile(path);
+```
+
+Another useful function in the filesystem family is the system() function. System can execute
+another process on your computer with command line arguments. The syntax is system(path, arguments).
+It is important to note that even if the process you are starting requires no arguments that
+you need to still provide an empty string "" were the argument for arguments should be.
+Here's SystemPrgm.hs:
+```
+$SUMMARY: Runs an exe with arguments$
+
+print("Enter the path to an exe: ");
+path := input();
+print("Enter the arguments (optional): ");
+args := input();
+
+system(path, args);
+```
+
+The program prompts and gets the path and arguments from the user, then uses them as the
+arguments for the system function to execute the process.

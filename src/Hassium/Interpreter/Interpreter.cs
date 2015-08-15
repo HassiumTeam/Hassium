@@ -13,6 +13,7 @@ namespace Hassium
             variables = new Dictionary<string, object>();
             this.code = code;
             variables.Add("print", new InternalFunction(BuiltInFunctions.Print));
+            variables.Add("pause", new InternalFunction(BuiltInFunctions.Pause));
             variables.Add("strcat", new InternalFunction(BuiltInFunctions.Strcat));
             variables.Add("input", new InternalFunction(BuiltInFunctions.Input));
             variables.Add("strlen", new InternalFunction(BuiltInFunctions.Strlen));
@@ -34,6 +35,9 @@ namespace Hassium
             variables.Add("dowfile", new InternalFunction(BuiltInFunctions.DowFile));
             variables.Add("upfile", new InternalFunction(BuiltInFunctions.UpFile));
             variables.Add("throw", new InternalFunction(BuiltInFunctions.Throw));
+            variables.Add("fexists", new InternalFunction(BuiltInFunctions.Fexists));
+            variables.Add("getdir", new InternalFunction(BuiltInFunctions.Getdir));
+            variables.Add("setdir", new InternalFunction(BuiltInFunctions.Setdir));
         }
 
         public void Execute()
@@ -49,13 +53,13 @@ namespace Hassium
             switch (node.BinOp)
             {
                 case BinaryOperation.Addition:
-                    return (double)(evaluateNode(node.Left)) + (double)(evaluateNode(node.Right));
+                    return Convert.ToDouble((evaluateNode(node.Left))) + Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Subtraction:
-                    return (double)(evaluateNode(node.Left)) - (double)(evaluateNode(node.Right));
+                    return Convert.ToDouble((evaluateNode(node.Left))) - Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Division:
-                    return (double)(evaluateNode(node.Left)) / (double)(evaluateNode(node.Right));
+                    return Convert.ToDouble((evaluateNode(node.Left))) / Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Multiplication:
-                    return (double)(evaluateNode(node.Left)) * (double)(evaluateNode(node.Right));
+                    return Convert.ToDouble((evaluateNode(node.Left))) * Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Assignment:
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");

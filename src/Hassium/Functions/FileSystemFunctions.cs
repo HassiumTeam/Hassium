@@ -41,6 +41,25 @@ namespace Hassium
 
             return null;
         }
+
+        public static object Getdir(object[] args)
+        {
+            return Directory.GetCurrentDirectory();
+        }
+
+        public static object Setdir(object[] args)
+        {
+            Directory.SetCurrentDirectory(arrayToString(args));
+            return null;
+        }
+
+        public static object Fexists(object[] args)
+        {
+            if (File.Exists(arrayToString(args)))
+                return true;
+            else
+                return false;
+        }
         
         public static object System(object[] args)
         {
