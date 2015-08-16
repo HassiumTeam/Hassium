@@ -287,7 +287,7 @@ if (<condition>) {
 
 Lastly there is also something called else if, which isn't it's own statement so much as
 as combination of the if and else statements, this checks a second condition and, if true,
-executes it's own code block. An if-if else-else structure looks like:
+executes it's own code block. An if-else if-else structure looks like:
 ```
 if (<condition>) {
 	<statements>
@@ -300,9 +300,9 @@ if (<condition>) {
 }
 ```
 
-There can be as many if else statements as you need, so long as they are part of an if
+There can be as many else if statements as you need, so long as they are part of an if
 chain, likewise the else statement is not nessecarily needed either, and you can have a
-lone if statement or an if-if else with out an else. Let's revisit the DeletePrgm.hs
+lone if statement or an if-else with out an else. Let's revisit the DeletePrgm.hs
 which used the function fexists to determine if a file existed, but the program wouldn't
 do anything if the file didn't exist! To see what I mean run the program again and provide
 an invalid path, you should see an exception raised about filenotfound. To prevent this
