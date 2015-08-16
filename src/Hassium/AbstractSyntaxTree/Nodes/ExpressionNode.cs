@@ -48,6 +48,16 @@ namespace Hassium
                 AstNode right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.GreaterThan, left, right);
             }
+            else if (parser.AcceptToken(TokenType.Comparison, "<="))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.LesserOrEqual, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Comparison, ">="))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.GreaterOrEqual, left, right);
+            }
             else if (parser.AcceptToken(TokenType.Comparison, "&&"))
             {
                 AstNode right = ParseEquality(parser);
@@ -112,6 +122,11 @@ namespace Hassium
             {
                 AstNode right = ParseMultiplicative(parser);
                 return new BinOpNode(BinaryOperation.Division, left, right);
+            }
+            else  if (parser.AcceptToken(TokenType.Modulus, "%"))
+            {
+                AstNode right = ParseMultiplicative(parser);
+                return new BinOpNode(BinaryOperation.Modulus, left, right);
             }
             else
             {

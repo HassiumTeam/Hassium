@@ -17,7 +17,8 @@ namespace Hassium
         EndOfLine,
         Not,
         Xor,
-        Bitshift
+        Bitshift,
+        Modulus
 
     }
     public class Token

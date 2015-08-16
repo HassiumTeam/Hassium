@@ -42,6 +42,12 @@ namespace Hassium
             variables.Add("tostr", new InternalFunction(BuiltInFunctions.ToStr));
             variables.Add("tonum", new InternalFunction(BuiltInFunctions.ToNum));
             variables.Add("tobyte", new InternalFunction(BuiltInFunctions.ToByte));
+            variables.Add("setfcol", new InternalFunction(BuiltInFunctions.Setfcol));
+            variables.Add("setbcol", new InternalFunction(BuiltInFunctions.Setbcol));
+            variables.Add("getfcol", new InternalFunction(BuiltInFunctions.Getfcol));
+            variables.Add("getbcol", new InternalFunction(BuiltInFunctions.Getbcol));
+            variables.Add("toupper", new InternalFunction(BuiltInFunctions.ToUpper));
+            variables.Add("tolower", new InternalFunction(BuiltInFunctions.ToLower));
         }
 
         public void Execute()
@@ -84,12 +90,18 @@ namespace Hassium
                     return Convert.ToDouble(evaluateNode(node.Left)) < Convert.ToDouble(evaluateNode(node.Right));
                 case BinaryOperation.GreaterThan:
                     return Convert.ToDouble(evaluateNode(node.Left)) > Convert.ToDouble(evaluateNode(node.Right));
+                case BinaryOperation.GreaterOrEqual:
+                    return Convert.ToDouble(evaluateNode(node.Left)) >= Convert.ToDouble(evaluateNode(node.Right));
+                case BinaryOperation.LesserOrEqual:
+                    return Convert.ToDouble(evaluateNode(node.Left)) <= Convert.ToDouble(evaluateNode(node.Right));
                 case BinaryOperation.Xor:
                     return (bool)(evaluateNode(node.Left)) ^ (bool)(evaluateNode(node.Right));
                 case BinaryOperation.BitshiftLeft:
                     return (byte)(evaluateNode(node.Left)) << (byte)(evaluateNode(node.Right));
                 case BinaryOperation.BitshiftRight:
                     return (byte)(evaluateNode(node.Left)) >> (byte)(evaluateNode(node.Right));
+                case BinaryOperation.Modulus:
+                    return (double)(evaluateNode(node.Left)) % (double)(evaluateNode(node.Right));
             }
             // Raise error
             return -1;

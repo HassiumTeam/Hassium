@@ -27,6 +27,8 @@ namespace Hassium
                     result.Add(scanString());
                 else if ((char)(peekChar()) == '$')
                     scanComment();
+                else if (((char)(peekChar()) == '>' || (char)(peekChar()) == '<') && (char)(peekChar(1)) == '=')
+                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
                 else if (((char)(peekChar()) == '<' && (char)(peekChar(1)) == '<') || ((char)(peekChar()) == '>' && (char)(peekChar(1)) == '>'))
                     result.Add(new Token(TokenType.Bitshift, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
                 else if ((char)(peekChar()) == ';')
@@ -43,6 +45,8 @@ namespace Hassium
                     result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString()));
                 else if ((char)(peekChar()) == '!' && (char)(peekChar(1)) == '=')
                     result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
+                else if((char)(peekChar()) == '%')
+                    result.Add(new Token(TokenType.Modulus, ((char)readChar()).ToString()));
                 else if ((char)(peekChar()) == ':' && (char)(peekChar(1)) == '=')
                     result.Add(new Token(TokenType.Store, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
                 else if ((char)(peekChar()) == '!' && !((char)(peekChar(1)) == '='))

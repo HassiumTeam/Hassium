@@ -28,6 +28,16 @@ namespace Hassium
         {
             return args[0].ToString().StartsWith(arrayToString(args, 1));
         }
+
+        public static object ToUpper(object[] args)
+        {
+            return String.Join("", args).ToUpper();
+        }
+
+        public static object ToLower(object[] args)
+        {
+            return String.Join("", args).ToLower();
+        }
     }
 }
 

@@ -30,6 +30,28 @@ namespace Hassium
             return null;
         }
 
+        public static object Setfcol(object[] args)
+        {
+            Console.ForegroundColor = parseColor(args[0].ToString());
+            return null;
+        }
+
+        public static object Setbcol(object[] args)
+        {
+            Console.BackgroundColor = parseColor(args[0].ToString());
+            return null;
+        }
+
+        public static object Getfcol(object[] args)
+        {
+            return Console.ForegroundColor.ToString();
+        }
+
+        public static object Getbcol(object[] args)
+        {
+            return Console.BackgroundColor.ToString();
+        }
+ 
         private static object[] narrowArray(object[] args, int startIndex)
         {
             object[] result = new object[args.Length];
@@ -48,6 +70,27 @@ namespace Hassium
                 result += args[x].ToString();
 
             return result;
+        }
+
+        private static ConsoleColor parseColor(string color)
+        {
+            switch(color)
+            {
+                case "red":
+                    return ConsoleColor.Red;
+                case "yellow":
+                    return ConsoleColor.Yellow;
+                case "green":
+                    return ConsoleColor.Green;
+                case "blue":
+                    return ConsoleColor.Blue;
+                case "white":
+                    return ConsoleColor.White;
+                case "black":
+                    return ConsoleColor.Black;
+                default:
+                    throw new Exception("Color is not valid!");
+            }
         }
     }
 }
