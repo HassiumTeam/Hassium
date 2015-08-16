@@ -14,7 +14,7 @@ namespace Hassium
             this.code = code;
             variables.Add("print", new InternalFunction(BuiltInFunctions.Print));
             variables.Add("pause", new InternalFunction(BuiltInFunctions.Pause));
-            variables.Add("strcat", new InternalFunction(BuiltInFunctions.Strcat));
+            variables.Add("s\ttrcat", new InternalFunction(BuiltInFunctions.Strcat));
             variables.Add("input", new InternalFunction(BuiltInFunctions.Input));
             variables.Add("strlen", new InternalFunction(BuiltInFunctions.Strlen));
             variables.Add("cls", new InternalFunction(BuiltInFunctions.Cls));
@@ -36,6 +36,7 @@ namespace Hassium
             variables.Add("upfile", new InternalFunction(BuiltInFunctions.UpFile));
             variables.Add("throw", new InternalFunction(BuiltInFunctions.Throw));
             variables.Add("fexists", new InternalFunction(BuiltInFunctions.Fexists));
+            variables.Add("dexists", new InternalFunction(BuiltInFunctions.Dexists));
             variables.Add("getdir", new InternalFunction(BuiltInFunctions.Getdir));
             variables.Add("setdir", new InternalFunction(BuiltInFunctions.Setdir));
         }
@@ -44,7 +45,7 @@ namespace Hassium
         {
             foreach (AstNode node in this.code.Children)
             {
-                evaluateNode(node);
+                executeStatement(node);
             }
         }
 
@@ -68,9 +69,34 @@ namespace Hassium
                         variables.Remove(node.Left.ToString());
                     variables.Add(node.Left.ToString(), right);
                     return right.ToString();
+                case BinaryOperation.Equals:
+                    return evaluateNode(node.Left).GetHashCode() == evaluateNode(node.Right).GetHashCode();
             }
             // Raise error
             return -1;
+        }
+
+        private void executeStatement(AstNode node)
+        {
+            if (node is CodeBlock)
+                foreach (AstNode anode in node.Children)
+                    executeStatement(anode);
+            else if (node is IfNode)
+            {
+                IfNode ifStmt = (IfNode)(node);
+                if ((bool)(evaluateNode(ifStmt.Predicate)))
+                {
+                    executeStatement(ifStmt.Body);
+                }
+                else
+                {
+                    executeStatement(ifStmt.ElseBody);
+                }
+            }
+            else
+            {
+                evaluateNode(node);
+            }
         }
 
         private object evaluateNode(AstNode node)
@@ -104,6 +130,10 @@ namespace Hassium
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = evaluateNode(call.Arguments.Children[x]);
                 return target.Invoke(arguments);
+            }
+            else
+            {
+                //Raise error
             }
 
             return 0;

@@ -8,7 +8,7 @@ namespace Hassium
     {
         public static void Main(string[] args)
         {
-            List<Token> tokens = new Lexer(File.ReadAllText("code.txt")).Tokenize();
+            List<Token> tokens = new Lexer(File.ReadAllText(args[0])).Tokenize();
             Debug.PrintTokens(tokens);
             Parser hassiumParser = new Parser(tokens);
             AstNode ast = hassiumParser.Parse();

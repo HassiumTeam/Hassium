@@ -1,13 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/Interpreter/Interpreter.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/MyClass.cs">
     <Files>
-      <File FileName="Hassium/MyClass.cs" Line="18" Column="18" />
-      <File FileName="Hassium/AbstractSyntaxTree/Parser.cs" Line="6" Column="33" />
-      <File FileName="Hassium/AbstractSyntaxTree/Nodes/CodeBlock.cs" Line="18" Column="26" />
-      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="21" Column="14" />
-      <File FileName="Hassium/Functions/InternalFunction.cs" Line="18" Column="38" />
-      <File FileName="Hassium/Functions/BuiltInFunctions.cs" Line="10" Column="25" />
+      <File FileName="Hassium/AbstractSyntaxTree/Parser.cs" Line="37" Column="10" />
+      <File FileName="Hassium/AbstractSyntaxTree/Nodes/IfNode.cs" Line="31" Column="10" />
+      <File FileName="Hassium/AbstractSyntaxTree/Nodes/ExpressionNode.cs" Line="31" Column="42" />
+      <File FileName="Hassium/AbstractSyntaxTree/Nodes/StatementNode.cs" Line="16" Column="14" />
+      <File FileName="Hassium/MyClass.cs" Line="11" Column="1" />
+      <File FileName="Hassium/Functions/MiscFunctions.cs" Line="9" Column="60" />
+      <File FileName="Hassium/AbstractSyntaxTree/Nodes/CodeBlock.cs" Line="12" Column="85" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

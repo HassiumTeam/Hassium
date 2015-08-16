@@ -26,6 +26,8 @@ text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.hs:
 $SUMMARY: Shows a greeting to the user$
 
 print("Hello, World!");
+
+exit(0);
 ```
 
 Save this file then execute it with either Hassium.exe HelloWorldPrgm.hs (on Windows) or 
@@ -41,7 +43,10 @@ job to write to the screen, the argument "Hello, world!" will cause it to specif
 Hello, World! to the screen. Also note the double-quotes around Hello, World!, this is because the
 message we are writing is a string, or series of characters. Strings are surrounded by double quotes in
 Hassium, NOT single ' ' quotes. Now after the function call there is a semicolon ;. Semicolons indicate
-the end of the line/statement that we are running, and should not be forgotten.
+the end of the line/statement that we are running, and should not be forgotten. Also you may notice the
+line exit(0) at the end. Exit is the function call that ends the program. Although without the line
+the program should terminate peacefully it is still a good idea to call it to make sure that the
+exit code is 0 (EXIT_SUCCESS).
 
 ## Part 3: Variables
 
@@ -53,6 +58,8 @@ $SUMMARY: Uses variables$
 
 myVar := "Hassium is free as in free beer and in freedom!";
 print(myVar, "\n");
+
+exit(0);
 ```
 
 Now again let's look at the different parts of this program. We have the comment at the beginning that
@@ -76,6 +83,8 @@ myVar := "Hassium is free as in free beer and in freedom!";
 print(myVar);
 myVar := strcat(myVar, " The github is https://github.com/JacobMisirian/Hassium");
 print("\n", myVar);
+
+exit(0);
 ```
 
 The first part of this should look the same to you, myVar gets assigned to a string and is then printed
@@ -103,6 +112,8 @@ $SUMMARY: Reads user input and returns it back$
 print("Enter some text: ");
 in := input();
 print("The text you entered was: ", in, "\n");
+
+exit(0);
 ```
 
 This first call to print() writes some text to the console that asks the user to enter in a string.
@@ -125,6 +136,8 @@ pause();
 print("You should not see me");
 cls();
 print("The console has been cleared\n");
+
+exit(0);
 ```
 
 In this program we prompt the user to press enter, and we call pause() to simply hang the program until
@@ -148,6 +161,8 @@ print(x, "+", y, "=", (x + y), "\n");
 print(x, "-", y, "=", (x - y), "\n");
 print(x, "*", y, "=", (x * y), "\n");
 print(x, "/", y, "=", (x / y), "\n");
+
+exit(0);
 ```
 
 This program gets two numbers from the user then prints out four different ways the numbers can be
@@ -175,6 +190,8 @@ print("Enter a power: ");
 y := input();
 
 print("Number raised to power is: ", pow(x, y), "\n");
+
+exit(0);
 ```
 
 The two differant math functions being called here are sqrt() and pow(). Sqrt is a function that
@@ -200,6 +217,8 @@ print("\nEnter text to put in file: ");
 contents := input();
 
 puts(path, contents);
+
+exit(0);
 ```
 
 This starts with getting a file path from the user and checking if it exists or not using the
@@ -213,14 +232,15 @@ print("Enter a file path: ");
 path := input();
 
 print("File exists: ", fexists(path), "\n");
-
 dfile(path);
+
+exit(0);
 ```
 
 Another useful function in the filesystem family is the system() function. System can execute
 another process on your computer with command line arguments. The syntax is system(path, arguments).
 It is important to note that even if the process you are starting requires no arguments that
-you need to still provide an empty string "" were the argument for arguments should be.
+you need to still provide an empty string "" where the argument for arguments should be.
 Here's SystemPrgm.hs:
 ```
 $SUMMARY: Runs an exe with arguments$
@@ -231,6 +251,8 @@ print("Enter the arguments (optional): ");
 args := input();
 
 system(path, args);
+
+exit(0);
 ```
 
 The program prompts and gets the path and arguments from the user, then uses them as the

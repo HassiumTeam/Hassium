@@ -60,6 +60,14 @@ namespace Hassium
             else
                 return false;
         }
+
+        public static object Dexists(object[] args)
+        {
+            if (Directory.Exists(arrayToString(args)))
+                return true;
+            else 
+                return false;
+        }
         
         public static object System(object[] args)
         {

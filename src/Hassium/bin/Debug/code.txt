@@ -1,7 +1,5 @@
-print("Enter a file path: ");
-path := input();
-
-print("File exists: ", fexists(path));
-
-dfile(path);
-
+if (type("ha") = "String") {
+	print("you got it right!");
+} else {
+	print("wut");
+}

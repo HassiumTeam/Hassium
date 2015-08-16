@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Hassium
 {
-    public class Parser: AstNode
+    public class Parser
     {
         private List<Token> tokens = new List<Token>();
         private int position = 0;
@@ -31,9 +31,14 @@ namespace Hassium
             return block;
         }
 
+        public Token CurrentToken()
+        {
+            return tokens[position];
+        }
+
         public bool MatchToken(TokenType clazz)
         {
-            return position < tokens.Count && tokens [position].TokenClass == clazz;
+            return position < tokens.Count && tokens[position].TokenClass == clazz;
         }
 
         public bool MatchToken(TokenType clazz, string value)

@@ -8,7 +8,8 @@ namespace Hassium
         Addition,
         Subtraction,
         Division,
-        Multiplication
+        Multiplication,
+        Equals
     }
 
     public class BinOpNode : AstNode

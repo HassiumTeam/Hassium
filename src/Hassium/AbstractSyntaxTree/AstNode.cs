@@ -5,14 +5,15 @@ namespace Hassium
 {
     public abstract class AstNode
     {
-        public List<AstNode> Children {
-            private set;
+        public List<AstNode> Children
+        {
             get;
+            private set;
         }
 
         public AstNode ()
         {
-            this.Children = new List <AstNode> ();
+            this.Children = new List<AstNode>();
         }
     }
 }

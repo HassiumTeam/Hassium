@@ -12,12 +12,26 @@ namespace Hassium
 
         private static AstNode ParseAssignment (Parser parser)
         {
-            AstNode left = ParseAdditive(parser);
+            AstNode left = ParseEquality(parser);
 
             if (parser.AcceptToken(TokenType.Store))
             {
                 AstNode right = ParseAssignment(parser);
                 return new BinOpNode(BinaryOperation.Assignment, left, right);
+            }
+            else
+            {
+                return left;
+            }
+        }
+
+        private static AstNode ParseEquality (Parser parser)
+        {
+            AstNode left = ParseAdditive(parser);
+            if (parser.AcceptToken(TokenType.Comparison, "="))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.Equals, left, right);
             }
             else
             {
@@ -103,7 +117,7 @@ namespace Hassium
             }
             else
             {
-                throw new Exception("Unexpected in Parser");
+                throw new Exception("Unexpected in Parser: " + parser.CurrentToken().Value);
             }
 
         }

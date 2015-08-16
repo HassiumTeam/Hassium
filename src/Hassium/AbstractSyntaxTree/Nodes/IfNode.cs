@@ -28,16 +28,17 @@ namespace Hassium
 
         public IfNode(AstNode predicate, AstNode body)
         {
+         
             this.Children.Add(predicate);
             this.Children.Add(body);
             this.Children.Add(new CodeBlock());
         }
 
-        public IfNode(AstNode predicate, AstNode body, AstNode ElseBody)
+        public IfNode(AstNode predicate, AstNode body, AstNode elseBody)
         {
-            this.Children.Add(Predicate);
+            this.Children.Add(predicate);
             this.Children.Add(body);
-            this.Children.Add(ElseBody);
+            this.Children.Add(elseBody);
         }
 
         public static AstNode Parse(Parser parser)
