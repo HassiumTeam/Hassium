@@ -428,6 +428,7 @@ while(x < 11) {
 print("All done.\n");
 
 exit(0);
+```
 
 This code starts by initializing the variable x with the value 1, then a while loop is encountered which
 first evaluates if x is less than 11, which it is. It then executes the print statement and the variable 
