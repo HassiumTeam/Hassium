@@ -9,12 +9,15 @@ namespace Hassium
         Subtraction,
         Division,
         Multiplication,
-        Equals
+        Equals,
+        LessThan,
+        GreaterThan,
+        NotEqualTo
     }
 
     public class BinOpNode : AstNode
     {
-        public BinaryOperation BinOp { set; get; }
+        public BinaryOperation BinOp { get; set; }
         public AstNode Left
         {
             get 

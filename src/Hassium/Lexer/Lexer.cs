@@ -53,14 +53,22 @@ namespace Hassium
                 {
                     result.Add(new Token(TokenType.Operation, ((char)readChar()).ToString()));
                 }
-                else if ("=<>!".Contains((((char)peekChar()).ToString())))
+                else if ("=<>".Contains((((char)peekChar()).ToString())))
                 {
                     result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString()));
                 }
-                else if ((char)(peekChar()) == ':' && (char)(peekChar(1)) == '=') 
+                else if ((char)(peekChar()) == '!' && (char)(peekChar(1)) == '=')
+                {
+                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
+                }
+                else if ((char)(peekChar()) == ':' && (char)(peekChar(1)) == '=')
                 {
                     result.Add(new Token(TokenType.Store, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
 
+                }
+                else if ((char)(peekChar()) == '!' && !((char)(peekChar(1)) == '='))
+                {
+                    result.Add(new Token(TokenType.Not, ((char)readChar()).ToString()));
                 }
                 else
                 {

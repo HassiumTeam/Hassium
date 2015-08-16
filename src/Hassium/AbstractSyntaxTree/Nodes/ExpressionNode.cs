@@ -33,6 +33,21 @@ namespace Hassium
                 AstNode right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.Equals, left, right);
             }
+            else if (parser.AcceptToken(TokenType.Comparison, "!="))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.NotEqualTo, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Comparison, "<"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.LessThan, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Comparison, ">"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.GreaterThan, left, right);
+            }
             else
             {
                 return left;
@@ -61,7 +76,7 @@ namespace Hassium
 
         private static AstNode ParseMultiplicative (Parser parser)
         {
-            AstNode left = ParseFunctionCall(parser);
+            AstNode left = ParseUnary(parser);
             
             if (parser.AcceptToken(TokenType.Operation, "*"))
             {
@@ -79,7 +94,19 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseFunctionCall (Parser parser)
+        private static AstNode ParseUnary(Parser parser)
+        {
+            if (parser.AcceptToken(TokenType.Not, "!"))
+            {
+                return new UnaryOpNode(UnaryOperation.Not, ParseUnary(parser));
+            }
+            else
+            {
+                return ParseFunctionCall(parser);
+            }
+        }
+
+        private static AstNode ParseFunctionCall(Parser parser)
         {
             return ParseFunctionCall(parser, ParseTerm(parser));
         }

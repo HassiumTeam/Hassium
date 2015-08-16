@@ -60,6 +60,8 @@
     <Compile Include="Functions\MathFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Functions\NetworkingFunctions.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\WhileNode.cs" />
+    <Compile Include="AbstractSyntaxTree\Nodes\UnaryOpNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

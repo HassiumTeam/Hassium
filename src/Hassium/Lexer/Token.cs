@@ -14,7 +14,8 @@ namespace Hassium
         Comparison,
         Store,
         Exception,
-        EndOfLine
+        EndOfLine,
+        Not
 
     }
     public class Token

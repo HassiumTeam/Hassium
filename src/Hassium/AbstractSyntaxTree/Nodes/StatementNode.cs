@@ -10,6 +10,10 @@ namespace Hassium
             {
                 return IfNode.Parse(parser);
             }
+            else if (parser.MatchToken(TokenType.Identifier, "while"))
+            {
+                return WhileNode.Parse(parser);
+            }
             else if (parser.MatchToken(TokenType.Bracket, "{"))
             {
                 return CodeBlock.Parse(parser);

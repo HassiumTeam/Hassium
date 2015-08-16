@@ -71,8 +71,25 @@ namespace Hassium
                     return right.ToString();
                 case BinaryOperation.Equals:
                     return evaluateNode(node.Left).GetHashCode() == evaluateNode(node.Right).GetHashCode();
+                case BinaryOperation.NotEqualTo:
+                    return evaluateNode(node.Left).GetHashCode() != evaluateNode(node.Right).GetHashCode();
+                case BinaryOperation.LessThan:
+                    return Convert.ToDouble(evaluateNode(node.Left)) < Convert.ToDouble(evaluateNode(node.Right));
+                case BinaryOperation.GreaterThan:
+                    return Convert.ToDouble(evaluateNode(node.Left)) > Convert.ToDouble(evaluateNode(node.Right));
             }
             // Raise error
+            return -1;
+        }
+
+        private object interpretUnaryOp(UnaryOpNode node)
+        {
+            switch (node.UnOp)
+            {
+                case UnaryOperation.Not:
+                    return !(bool)((evaluateNode(node.Value)));
+            }
+            //Raise error
             return -1;
         }
 
@@ -85,13 +102,20 @@ namespace Hassium
             {
                 IfNode ifStmt = (IfNode)(node);
                 if ((bool)(evaluateNode(ifStmt.Predicate)))
-                {
                     executeStatement(ifStmt.Body);
-                }
                 else
-                {
                     executeStatement(ifStmt.ElseBody);
-                }
+            }
+            else if (node is WhileNode)
+            {
+                WhileNode whileStmt = (WhileNode)(node);
+                if ((bool)(evaluateNode(whileStmt.Predicate)))
+                    while ((bool)(evaluateNode(whileStmt.Predicate)))
+                    {
+                        executeStatement(whileStmt.Body);
+                    }
+                else
+                    executeStatement(whileStmt.ElseBody);
             }
             else
             {
@@ -112,6 +136,10 @@ namespace Hassium
             else if (node is BinOpNode)
             {
                 return interpretBinaryOp((BinOpNode)node);
+            }
+            else if (node is UnaryOpNode)
+            {
+                return interpretUnaryOp((UnaryOpNode)node);
             }
             else if (node is IdentifierNode)
             {
