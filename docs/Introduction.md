@@ -2,10 +2,10 @@
 
 ## Part 1: Setting up Hassium
 
-	Hassium is a simple programming language written in C# with a syntax similar to C and Python. It is easy
+Hassium is a simple programming language written in C# with a syntax similar to C and Python. It is easy
 to get Hassium set up on your computer and running your first program.
 
-	Your first step although probably optional but recommended is to compile Hassium. If you are on Windows
+Your first step although probably optional but recommended is to compile Hassium. If you are on Windows
 (and on *nix systems) you can open the .sln file in Visual Studio/Monodevelop and compile it. If you
 prefer to use the command line on Linux you can invoke xbuild Hassium.sln to compile it. The resulting
 EXE should be in the bin/Debug folder. If you would like to add Hassium to your PATH on linux simply
@@ -15,12 +15,12 @@ create the following shell script in /usr/bin/Hassium:
 
 mono ~/Hassium/src/Hassium/bin/Debug/Hassium.exe $1
 ```
-	Change the path accordingly to where your Hassium.exe is located. On windows you will just move the
+Change the path accordingly to where your Hassium.exe is located. On windows you will just move the
 Hassium.exe to your Desktop folder where you will then create your scripts.
 
 ## Part 2: Running Your First Program
 
-	Now it's time to create our first program. In the folder where Hassium is located open up your favorite
+Now it's time to create our first program. In the folder where Hassium is located open up your favorite
 text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.hs:
 ```
 $SUMMARY: Shows a greeting to the user$
@@ -30,11 +30,11 @@ print("Hello, World!");
 exit(0);
 ```
 
-	Save this file then execute it with either Hassium.exe HelloWorldPrgm.hs (on Windows) or 
+Save this file then execute it with either Hassium.exe HelloWorldPrgm.hs (on Windows) or 
 mono Hassium.exe HelloWorldPrgm.hs (on *nix). You should see the text Hello, World! on your console
 window.
 
-	You should note the different parts of the program that are shown here. We have the first line which
+You should note the different parts of the program that are shown here. We have the first line which
 is a comment. In Hassium comments start with a $ and they end with a $, much like /* and */ in mainstream
 languagaes. The next part of the code is the function call print(). This invokes a builtin function called
 print whose job is to write text to the console. Inside of the print function is called arguments.
@@ -50,7 +50,7 @@ exit code is 0 (EXIT_SUCCESS).
 
 ## Part 3: Variables
 
-	If you've ever programmed before or if you have taken 8th grade algebra you should know about
+If you've ever programmed before or if you have taken 8th grade algebra you should know about
 variables. Variables are data represented by an identifier that you specify. Take the following
 program VariablesPrgm.hs:
 ```
@@ -62,7 +62,7 @@ print(myVar, "\n");
 exit(0);
 ```
 
-	Now again let's look at the different parts of this program. We have the comment at the beginning that
+Now again let's look at the different parts of this program. We have the comment at the beginning that
 tells us what our program is going to do. Then the next line we have something new. We have the identifier
 myVar, which is the name of our variable, then the symbols :=. The := is an assignment operator in Hassium,
 meaning that it stores data from the right hand side to the left. In this case it is storing the string
@@ -74,7 +74,7 @@ it doesn't print \n to the screen after the first string. \n is a special charac
 to print a newline (like pressing the enter key) to the console. \n can go anywhere inside a string and
 when encountered will create a newline on the console.
 
-	Let's take a look at another program that uses another function call and demonstrates variable 
+Let's take a look at another program that uses another function call and demonstrates variable 
 reassignment. We'll call this Variables2Prgm.hs:
 ```
 $SUMMARY: Uses variable reassignment and concatanation";
@@ -87,7 +87,7 @@ print("\n", myVar);
 exit(0);
 ```
 
-	The first part of this should look the same to you, myVar gets assigned to a string and is then printed
+The first part of this should look the same to you, myVar gets assigned to a string and is then printed
 out to the console. But then on the third line of code things are a little differant. myVar is assigned
 again to another string. On the right hand side of := you can see that the string it's getting asigned 
 to starts with another function call, this time to strcat(). Strcat() is another builtin function whose
@@ -96,14 +96,14 @@ give strcat in this example is the variable myVar and another string. These get 
 strcat into one final string and then passed to myVar. On the next line is a call to print with the
 arguments of a newline and then myVar.
 
-	Hopefully by now you have a pretty good grasp of how variables are assigned and how function calls
+Hopefully by now you have a pretty good grasp of how variables are assigned and how function calls
 are made. If not please go back to the start and try and read over it again. I also reccomend that throughout
 all of this that you are trying the examples and making your own similar programs, as that is truely
 the only effective way to learn to program.
 
 ## Part 4: Reading User Input and the Rest Of the Console Functions
 
-	From this point on we will be focusing less on the program design and more on the functions that are
+From this point on we will be focusing less on the program design and more on the functions that are
 builtin to Hassium. One of the most important is the input() function call. Input reads user input
 from the keyboard and returns it in the form of a string. Take InputPrgm.hs:
 ```
@@ -116,18 +116,18 @@ print("The text you entered was: ", in, "\n");
 exit(0);
 ```
 
-	This first call to print() writes some text to the console that asks the user to enter in a string.
+This first call to print() writes some text to the console that asks the user to enter in a string.
 Then we have the variable in, which gets assigned the result of a call to the input() function, effectively
 storing the user's input inside the variable in. The last line prints out a string, the contents of
 the variable in, then a newline character.
 
-	The functions print() and input() are all part of the console family of functions. In this documentation
+The functions print() and input() are all part of the console family of functions. In this documentation
 there should be a folder called Console that contains descriptions and examples of these functions. The
 source code for them can also be found in the folder src/Hassium/Functions/ConsoleFunctions.cs. These
 functions deal primarily with management of the console. We've covered the first two functions and now we'll
 deal with the last one, the cls() function.
 
-	Cls is a function call that clears the console of all text. Let's look at it in action in ClearPrgm.cs:
+Cls is a function call that clears the console of all text. Let's look at it in action in ClearPrgm.cs:
 ```
 $SUMMARY: Demonstrates clearing of console$
 
@@ -140,14 +140,14 @@ print("The console has been cleared\n");
 exit(0);
 ```
 
-	In this program we prompt the user to press enter, and we call pause() to simply hang the program until
+In this program we prompt the user to press enter, and we call pause() to simply hang the program until
 a key is pressed. From there there is a print call that is meant to show that cls will erase the text
 outputed by that in a few miliseconds when the very next line, cls, is called. The last print call
 comes after the cls() and can be seen by the user.
 
 ## Part 5: Math in Hassium
 
-	Hassium is capable of parsing most mathematical expressions. Take the program SampleMathPrgm.hs:
+Hassium is capable of parsing most mathematical expressions. Take the program SampleMathPrgm.hs:
 ```
 $SUMMARY: Demonstrates math capabilities$
 
@@ -165,16 +165,16 @@ print(x, "/", y, "=", (x / y), "\n");
 exit(0);
 ```
 
-	This program gets two numbers from the user then prints out four different ways the numbers can be
+This program gets two numbers from the user then prints out four different ways the numbers can be
 operated upon, being addition, subtraction, multiplication, and division. These can be combined in
 many differant ways, for example this line is perfectly valid: 
 ``` 
 print(((3 * 5) / 2) + 1); 
 ```
 
-	Hassium uses PEMDAS to evaluate mathematical expressions such as that above.
+Hassium uses PEMDAS to evaluate mathematical expressions such as that above.
 
-	Hassium also includes a math family of functions. As this documentation is being written there
+Hassium also includes a math family of functions. As this documentation is being written there
 isn't that many at the moment but I will demonstrate the ones that are there in the file MathPrgm.hs:
 ```
 $SUMMARY: Shows math family$
@@ -194,16 +194,16 @@ print("Number raised to power is: ", pow(x, y), "\n");
 exit(0);
 ```
 
-	The two differant math functions being called here are sqrt() and pow(). Sqrt is a function that
+The two differant math functions being called here are sqrt() and pow(). Sqrt is a function that
 takes the square root of the argument given and returns it. Pow is a function that takes in two
 arguments and raises the first argument to the power of the second.
 
-	More math functions will continue to roll in by the time you read this, so check in the file
+More math functions will continue to roll in by the time you read this, so check in the file
 src/Hassium/Functions/MathFunctions.cs or in the documentation for all of the current functions.
 
 ## Part 6: File System access in Hassium
 
-	Hassium comes with many differant filesystem operations (see src/Hassium/Functions/FileSystemFunctions.cs)
+Hassium comes with many differant filesystem operations (see src/Hassium/Functions/FileSystemFunctions.cs)
 that can preform such operations as creating/deleting files and directories or setting/getting the
 current directory or determining if a file/directory exists. Take a gander at FileCreatePrgm.hs:
 ```
@@ -221,7 +221,7 @@ puts(path, contents);
 exit(0);
 ```
 
-	This starts with getting a file path from the user and checking if it exists or not using the
+This starts with getting a file path from the user and checking if it exists or not using the
 function fexists() to return a boolean true or false depending on if the file already exists.
 Then the program prompts the user for some contents to put in the file and uses the puts
 function to put the variable contents into the file at variable path. Now look at DeletePrgm.cs:
@@ -237,7 +237,7 @@ dfile(path);
 exit(0);
 ```
 
-	Another useful function in the filesystem family is the system() function. System can execute
+Another useful function in the filesystem family is the system() function. System can execute
 another process on your computer with command line arguments. The syntax is system(path, arguments).
 It is important to note that even if the process you are starting requires no arguments that
 you need to still provide an empty string "" where the argument for arguments should be.
@@ -255,12 +255,12 @@ system(path, args);
 exit(0);
 ```
 
-	The program prompts and gets the path and arguments from the user, then uses them as the
+The program prompts and gets the path and arguments from the user, then uses them as the
 arguments for the system function to execute the process.
 
 ## Part 7: Program Flow with If Statements
 
-	So far all of our programs have been pretty static, the user types something in which
+So far all of our programs have been pretty static, the user types something in which
 causes a set output, and the Hassium Interpreter reads from top to bottom without stopping,
 but for a program to truely have functionality it has to have statements to modify the
 program flow. One of the most common examples of these are if statements. If statements work
@@ -271,7 +271,7 @@ if (<condition>)
 	<statement>
 ```
 
-	When the Hassium interpreter encounters the if statement it first determins if the condition
+When the Hassium interpreter encounters the if statement it first determins if the condition
 returns true. If the condition is true then it will procede to execute the code between the 
 curly brackets { } called a "code block". There is also optionally an else statement, that
 also has a code block, but this code block is only executed if the first condition returns
@@ -283,7 +283,7 @@ else
 	<statement>
 ```
 
-	Lastly there is also something called else if, which isn't it's own statement so much as
+Lastly there is also something called else if, which isn't it's own statement so much as
 as combination of the if and else statements, this checks a second condition and, if true,
 executes it's own code block. An if-else if-else structure looks like:
 ```
@@ -297,7 +297,7 @@ else
 	<statements>
 ```
 
-	There can be as many else if statements as you need, so long as they are part of an if
+There can be as many else if statements as you need, so long as they are part of an if
 chain, likewise the else statement is not nessecarily needed either, and you can have a
 lone if statement or an if-else with out an else. Let's revisit the DeletePrgm.hs
 which used the function fexists to determine if a file existed, but the program wouldn't
@@ -323,7 +323,7 @@ if (fexists(path)) {
 }
 ```
 
-	Let's pick apart this program piece by piece. We start with prompting the user for a
+Let's pick apart this program piece by piece. We start with prompting the user for a
 path to a file. Next we have our if statement. This if statement has the condition
 fexists(path). How this works is that fexists returns a variable that is of type
 boolean (true or false). Since if statements operate on booleans if the fexists function
@@ -332,7 +332,7 @@ the file and terminates peacefully. If the fexists function returns false then i
 cause the if statement to evaluate to false, meaning that the code in the else block
 will execute, printing an error message and exiting with status code 1 (error).
 
-	Now let's make a program that uses if-else if-else to work on. This program will
+Now let's make a program that uses if-else if-else to work on. This program will
 prompt the user to enter two numbers and an operation to evaluate them on. We will use
 our if-else if-else statements to determine which statement to evaluate and display
 the results to the user. We'll call this ArithmeticPrgm.hs:
@@ -368,13 +368,13 @@ print("\n");
 exit(0);
 ```
 
-	This program should be fairly straight-forward. We get the two numbers and operation, then
+This program should be fairly straight-forward. We get the two numbers and operation, then
 evaluate based on that operation, meaning if the operation is + we add the two numbers, etc.
 If the user's input wasn't a +, -, *, or / then we display an error and exit.
 
 ## Part 8: Looping with While Loops
 
-	Another important feature of program flow control and of all programming is the loop, a basic
+Another important feature of program flow control and of all programming is the loop, a basic
 loop works by evaluating if a condition is true, and executing a statement multiple times until
 that condition is false. The basic syntax of a while loop is:
 ```
@@ -382,7 +382,7 @@ while (<condition>)
 	<statement>
 ```
 
-	While loops can also have an else section, just like our if statements, that executes if the
+While loops can also have an else section, just like our if statements, that executes if the
 initial condition retuns false. This structure looks like:
 ```
 while(<condition>)
@@ -391,11 +391,11 @@ else
 	<statement>
 ```
 
-	When using loops it is important to make sure you don't enter an infinite loop, this means
+When using loops it is important to make sure you don't enter an infinite loop, this means
 that you need to have some ability for the condition in your loop to return false so the code can
 continue to execute.
 
-	Let's take a look at a program that displays the numbers one-ten without looping, called LamePrgm.hs:
+Let's take a look at a program that displays the numbers one-ten without looping, called LamePrgm.hs:
 ```
 $SUMMARY: Prints 1-10$
 
@@ -413,7 +413,7 @@ print("10\n");
 exit(0);
 ```
 
-	As you can see, this code is really long and boring, and if you wanted to iterate to 100 it would take
+As you can see, this code is really long and boring, and if you wanted to iterate to 100 it would take
 a LONG time to code. Let's revisit this program with while loops. NumPrgm.hs:
 ```
 $SUMMARY: Increments and displays 1-10$
@@ -429,14 +429,14 @@ print("All done.\n");
 
 exit(0);
 
-	This code starts by initializing the variable x with the value 1, then a while loop is encountered which
+This code starts by initializing the variable x with the value 1, then a while loop is encountered which
 first evaluates if x is less than 11, which it is. It then executes the print statement and the variable 
 incrementation. After those two lines are executed it reevaluates if x is less than 11, which it is again, and will
 execute the same statements again. But the variable x is incrementing each time, so when it gets to the point
 where x equals 11 the statements will stop exxecuting and the loop will terminate, running the line after which
 prints the "all done" message onto the screen.
 
-	Sometimes it is useful to have an else statement on a while loop for if the condition initially returned
+Sometimes it is useful to have an else statement on a while loop for if the condition initially returned
 false. Here's an example of Num2Prgm.hs:
 ```
 $SUMMARY: Increments and displays numbers from two points of user input$
@@ -457,5 +457,5 @@ while (x < (y + 1)) {
 exit(0);
 ```
 
-	If the user entered 20 and 18, the else statement would execute since 20 is not less than 18, otherwise
+If the user entered 20 and 18, the else statement would execute since 20 is not less than 18, otherwise
 the program would run normally.
