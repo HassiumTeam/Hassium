@@ -267,9 +267,8 @@ program flow. One of the most common examples of these are if statements. If sta
 by determining if a condition is true and running a block of code based on that. The basic
 format of an if statement is:
 ```
-if (<condition>) {
-	<statements>
-}
+if (<condition>)
+	<statement>
 ```
 
 When the Hassium interpreter encounters the if statement it first determins if the condition
@@ -278,26 +277,24 @@ curly brackets { } called a "code block". There is also optionally an else state
 also has a code block, but this code block is only executed if the first condition returns
 false. Here's the structure of an if statement with an else:
 ```
-if (<condition>) {
-	<statements>
-} else {
-	<statements>
-}
+if (<condition>)
+	<statement>
+else
+	<statement>
 ```
 
 Lastly there is also something called else if, which isn't it's own statement so much as
 as combination of the if and else statements, this checks a second condition and, if true,
 executes it's own code block. An if-else if-else structure looks like:
 ```
-if (<condition>) {
+if (<condition>)
 	<statements>
-} else if (<condition>) {
+else if (<condition>)
 	<statements>
-} else if (<condition>) {
+else if (<condition>)
 	<statements>
-} else {
+else
 	<statements>
-}
 ```
 
 There can be as many else if statements as you need, so long as they are part of an if
