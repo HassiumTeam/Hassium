@@ -319,7 +319,7 @@ if (fexists(path)) {
 } else {
 	print("File does not exist!");
 
-	exit(-1);
+	exit(1);
 }
 ```
 
@@ -330,7 +330,7 @@ boolean (true or false). Since if statements operate on booleans if the fexists 
 returns true, and the file does exist, it will execute the code block that deletes
 the file and terminates peacefully. If the fexists function returns false then it will
 cause the if statement to evaluate to false, meaning that the code in the else block
-will execute, printing an error message and exiting with status code -1 (error).
+will execute, printing an error message and exiting with status code 1 (error).
 
 Now let's make a program that uses if-else if-else to work on. This program will
 prompt the user to enter two numbers and an operation to evaluate them on. We will use
@@ -360,7 +360,7 @@ if (op = "+") {
 	print(x / y);
 } else {
 	print("Unrecognized operation: ", op, "\n");
-	exit(-1);
+	exit(1);
 }
 
 print("\n");

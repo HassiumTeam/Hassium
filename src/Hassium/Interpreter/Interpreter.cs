@@ -14,7 +14,7 @@ namespace Hassium
             this.code = code;
             variables.Add("print", new InternalFunction(BuiltInFunctions.Print));
             variables.Add("pause", new InternalFunction(BuiltInFunctions.Pause));
-            variables.Add("s\ttrcat", new InternalFunction(BuiltInFunctions.Strcat));
+            variables.Add("strcat", new InternalFunction(BuiltInFunctions.Strcat));
             variables.Add("input", new InternalFunction(BuiltInFunctions.Input));
             variables.Add("strlen", new InternalFunction(BuiltInFunctions.Strlen));
             variables.Add("cls", new InternalFunction(BuiltInFunctions.Cls));
