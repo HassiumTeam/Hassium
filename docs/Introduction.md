@@ -257,3 +257,120 @@ exit(0);
 
 The program prompts and gets the path and arguments from the user, then uses them as the
 arguments for the system function to execute the process.
+
+## Part 7: Program Flow with If Statements
+
+So far all of our programs have been pretty static, the user types something in which
+causes a set output, and the Hassium Interpreter reads from top to bottom without stopping,
+but for a program to truely have functionality it has to have statements to modify the
+program flow. One of the most common examples of these are if statements. If statements work
+by determining if a condition is true and running a block of code based on that. The basic
+format of an if statement is:
+```
+if (<condition>) {
+	<statements>
+}
+```
+
+When the Hassium interpreter encounters the if statement it first determins if the condition
+returns true. If the condition is true then it will procede to execute the code between the 
+curly brackets { } called a "code block". There is also optionally an else statement, that
+also has a code block, but this code block is only executed if the first condition returns
+false. Here's the structure of an if statement with an else:
+```
+if (<condition>) {
+	<statements>
+} else {
+	<statements>
+}
+```
+
+Lastly there is also something called else if, which isn't it's own statement so much as
+as combination of the if and else statements, this checks a second condition and, if true,
+executes it's own code block. An if-if else-else structure looks like:
+```
+if (<condition>) {
+	<statements>
+} else if (<condition>) {
+	<statements>
+} else if (<condition>) {
+	<statements>
+} else {
+	<statements>
+}
+```
+
+There can be as many if else statements as you need, so long as they are part of an if
+chain, likewise the else statement is not nessecarily needed either, and you can have a
+lone if statement or an if-if else with out an else. Let's revisit the DeletePrgm.hs
+which used the function fexists to determine if a file existed, but the program wouldn't
+do anything if the file didn't exist! To see what I mean run the program again and provide
+an invalid path, you should see an exception raised about filenotfound. To prevent this
+we can use an if statement to see if the file exists, and only attempt to delete the file
+if that if statement is true. Here's the revised DeletePrgm.hs:
+```
+$SUMMARY: Checks if a file exists, and if so, deletes it, otherwise sends a message to the user$
+
+print("Enter a file path: ");
+path := input();
+
+if (fexists(path)) {
+	dfile(path);
+	print("File successfully deleted!");
+
+	exit(0);
+} else {
+	print("File does not exist!");
+
+	exit(-1);
+}
+```
+
+Let's pick apart this program piece by piece. We start with prompting the user for a
+path to a file. Next we have our if statement. This if statement has the condition
+fexists(path). How this works is that fexists returns a variable that is of type
+boolean (true or false). Since if statements operate on booleans if the fexists function
+returns true, and the file does exist, it will execute the code block that deletes
+the file and terminates peacefully. If the fexists function returns false then it will
+cause the if statement to evaluate to false, meaning that the code in the else block
+will execute, printing an error message and exiting with status code -1 (error).
+
+Now let's make a program that uses if-else if-else to work on. This program will
+prompt the user to enter two numbers and an operation to evaluate them on. We will use
+our if-else if-else statements to determine which statement to evaluate and display
+the results to the user. We'll call this ArithmeticPrgm.hs:
+```
+$SUMMARY: Gets two numbers and an operation from the user, then evaluates the math involved$
+
+print("Enter the first number: ");
+x := input();
+
+print("Enter the second number: ");
+y := input();
+
+print("Enter the operation: ");
+op := input();
+
+print("Result: ");
+
+if (op = "+") {
+	print(x + y);
+} else if (op = "-") {
+	print(x - y);
+} else if (op = "*") {
+	print(x * y);
+} else if (op = "/") {
+	print(x / y);
+} else {
+	print("Unrecognized operation: ", op, "\n");
+	exit(-1);
+}
+
+print("\n");
+
+exit(0);
+```
+
+This program should be fairly straight-forward. We get the two numbers and operation, then
+evaluate based on that operation, meaning if the operation is + we add the two numbers, etc.
+If the user's input wasn't a +, -, *, or / then we display an error and exit.
