@@ -12,7 +12,12 @@ namespace Hassium
         Equals,
         LessThan,
         GreaterThan,
-        NotEqualTo
+        NotEqualTo,
+        And,
+        Or,
+        Xor,
+        BitshiftLeft,
+        BitshiftRight
     }
 
     public class BinOpNode : AstNode

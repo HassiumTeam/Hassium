@@ -39,6 +39,9 @@ namespace Hassium
             variables.Add("dexists", new InternalFunction(BuiltInFunctions.Dexists));
             variables.Add("getdir", new InternalFunction(BuiltInFunctions.Getdir));
             variables.Add("setdir", new InternalFunction(BuiltInFunctions.Setdir));
+            variables.Add("tostr", new InternalFunction(BuiltInFunctions.ToStr));
+            variables.Add("tonum", new InternalFunction(BuiltInFunctions.ToNum));
+            variables.Add("tobyte", new InternalFunction(BuiltInFunctions.ToByte));
         }
 
         public void Execute()
@@ -71,12 +74,22 @@ namespace Hassium
                     return right.ToString();
                 case BinaryOperation.Equals:
                     return evaluateNode(node.Left).GetHashCode() == evaluateNode(node.Right).GetHashCode();
+                case BinaryOperation.And:
+                    return (bool)(evaluateNode(node.Left)) && (bool)(evaluateNode(node.Right));
+                case BinaryOperation.Or:
+                    return (bool)(evaluateNode(node.Left)) || (bool)(evaluateNode(node.Right));
                 case BinaryOperation.NotEqualTo:
                     return evaluateNode(node.Left).GetHashCode() != evaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.LessThan:
                     return Convert.ToDouble(evaluateNode(node.Left)) < Convert.ToDouble(evaluateNode(node.Right));
                 case BinaryOperation.GreaterThan:
                     return Convert.ToDouble(evaluateNode(node.Left)) > Convert.ToDouble(evaluateNode(node.Right));
+                case BinaryOperation.Xor:
+                    return (bool)(evaluateNode(node.Left)) ^ (bool)(evaluateNode(node.Right));
+                case BinaryOperation.BitshiftLeft:
+                    return (byte)(evaluateNode(node.Left)) << (byte)(evaluateNode(node.Right));
+                case BinaryOperation.BitshiftRight:
+                    return (byte)(evaluateNode(node.Left)) >> (byte)(evaluateNode(node.Right));
             }
             // Raise error
             return -1;

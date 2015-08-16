@@ -15,7 +15,9 @@ namespace Hassium
         Store,
         Exception,
         EndOfLine,
-        Not
+        Not,
+        Xor,
+        Bitshift
 
     }
     public class Token

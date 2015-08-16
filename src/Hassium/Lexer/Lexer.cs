@@ -22,54 +22,37 @@ namespace Hassium
             while (peekChar() != -1)
             {
                 if (char.IsLetterOrDigit((char)peekChar()))
-                {
                     result.Add(scanData());
-                }
                 else if ((char)(peekChar()) == '\"')
-                {
                     result.Add(scanString());
-                }
                 else if ((char)(peekChar()) == '$')
-                {
                     scanComment();
-                }
+                else if (((char)(peekChar()) == '<' && (char)(peekChar(1)) == '<') || ((char)(peekChar()) == '>' && (char)(peekChar(1)) == '>'))
+                    result.Add(new Token(TokenType.Bitshift, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
                 else if ((char)(peekChar()) == ';')
-                {
                     result.Add(new Token(TokenType.EndOfLine, ((char)readChar()).ToString()));
-                }
                 else if ((char)(peekChar()) == '(' || (char)(peekChar()) == ')')
-                {
                     result.Add(new Token(TokenType.Parentheses, ((char)readChar()).ToString()));
-                }
                 else if ((char)(peekChar()) == '{' || (char)(peekChar()) == '}')
-                {
                     result.Add(new Token(TokenType.Bracket, ((char)readChar()).ToString()));
-                }
                 else if ((char)(peekChar()) == ',')
-                {
                     result.Add(new Token(TokenType.Comma, ((char)readChar()).ToString()));
-                }
                 else if ("+-/*".Contains((((char)peekChar()).ToString())))
-                {
                     result.Add(new Token(TokenType.Operation, ((char)readChar()).ToString()));
-                }
                 else if ("=<>".Contains((((char)peekChar()).ToString())))
-                {
                     result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString()));
-                }
                 else if ((char)(peekChar()) == '!' && (char)(peekChar(1)) == '=')
-                {
                     result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
-                }
                 else if ((char)(peekChar()) == ':' && (char)(peekChar(1)) == '=')
-                {
                     result.Add(new Token(TokenType.Store, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
-
-                }
                 else if ((char)(peekChar()) == '!' && !((char)(peekChar(1)) == '='))
-                {
                     result.Add(new Token(TokenType.Not, ((char)readChar()).ToString()));
-                }
+                else if ((char)(peekChar()) == '&' && (char)(peekChar(1)) == '&')
+                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
+                else if ((char)(peekChar()) == '|' && (char)(peekChar(1)) == '|')
+                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
+                else if ((char)(peekChar()) == '^')
+                    result.Add(new Token(TokenType.Xor, ((char)readChar()).ToString()));
                 else
                 {
                     result.Add(new Token(TokenType.Exception, "Unexpected " + ((char)peekChar()).ToString() + " encountered"));

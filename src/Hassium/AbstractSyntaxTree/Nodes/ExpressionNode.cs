@@ -48,6 +48,31 @@ namespace Hassium
                 AstNode right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.GreaterThan, left, right);
             }
+            else if (parser.AcceptToken(TokenType.Comparison, "&&"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.And, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Comparison, "||"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.Or, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Xor, "^"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.Xor, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Bitshift, "<<"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.BitshiftLeft, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Bitshift, ">>"))
+            {
+                AstNode right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.BitshiftRight, left, right);
+            }
             else
             {
                 return left;
