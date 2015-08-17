@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Hassium
 {
@@ -12,42 +14,9 @@ namespace Hassium
         {
             variables = new Dictionary<string, object>();
             this.code = code;
-            variables.Add("print", new InternalFunction(BuiltInFunctions.Print));
-            variables.Add("pause", new InternalFunction(BuiltInFunctions.Pause));
-            variables.Add("strcat", new InternalFunction(BuiltInFunctions.Strcat));
-            variables.Add("input", new InternalFunction(BuiltInFunctions.Input));
-            variables.Add("strlen", new InternalFunction(BuiltInFunctions.Strlen));
-            variables.Add("cls", new InternalFunction(BuiltInFunctions.Cls));
-            variables.Add("getch", new InternalFunction(BuiltInFunctions.Getch));
-            variables.Add("puts", new InternalFunction(BuiltInFunctions.Puts));
-            variables.Add("free", new InternalFunction(BuiltInFunctions.Free));
-            variables.Add("exit", new InternalFunction(BuiltInFunctions.Exit));
-            variables.Add("system", new InternalFunction(BuiltInFunctions.System));
-            variables.Add("mdir", new InternalFunction(BuiltInFunctions.Mdir));
-            variables.Add("ddir", new InternalFunction(BuiltInFunctions.DDir));
-            variables.Add("dfile", new InternalFunction(BuiltInFunctions.Dfile));
-            variables.Add("sstr", new InternalFunction(BuiltInFunctions.Sstr));
-            variables.Add("begins", new InternalFunction(BuiltInFunctions.Begins));
-            variables.Add("type", new InternalFunction(BuiltInFunctions.Type));
-            variables.Add("pow", new InternalFunction(BuiltInFunctions.Pow));
-            variables.Add("sqrt", new InternalFunction(BuiltInFunctions.Sqrt));
-            variables.Add("dowstr", new InternalFunction(BuiltInFunctions.DowStr));
-            variables.Add("dowfile", new InternalFunction(BuiltInFunctions.DowFile));
-            variables.Add("upfile", new InternalFunction(BuiltInFunctions.UpFile));
-            variables.Add("throw", new InternalFunction(BuiltInFunctions.Throw));
-            variables.Add("fexists", new InternalFunction(BuiltInFunctions.Fexists));
-            variables.Add("dexists", new InternalFunction(BuiltInFunctions.Dexists));
-            variables.Add("getdir", new InternalFunction(BuiltInFunctions.Getdir));
-            variables.Add("setdir", new InternalFunction(BuiltInFunctions.Setdir));
-            variables.Add("tostr", new InternalFunction(BuiltInFunctions.ToStr));
-            variables.Add("tonum", new InternalFunction(BuiltInFunctions.ToNum));
-            variables.Add("tobyte", new InternalFunction(BuiltInFunctions.ToByte));
-            variables.Add("setfcol", new InternalFunction(BuiltInFunctions.Setfcol));
-            variables.Add("setbcol", new InternalFunction(BuiltInFunctions.Setbcol));
-            variables.Add("getfcol", new InternalFunction(BuiltInFunctions.Getfcol));
-            variables.Add("getbcol", new InternalFunction(BuiltInFunctions.Getbcol));
-            variables.Add("toupper", new InternalFunction(BuiltInFunctions.ToUpper));
-            variables.Add("tolower", new InternalFunction(BuiltInFunctions.ToLower));
+            foreach (string file in Directory.GetFiles(HassiumInterpreter.LibPath))
+                foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(file))
+                    variables.Add(entry.Key, entry.Value);
         }
 
         public void Execute()
@@ -191,6 +160,21 @@ namespace Hassium
 
             return 0;
         }
+
+        private Dictionary<string, InternalFunction> GetFunctions(string path)
+        {
+            Assembly testAss = Assembly.LoadFrom(path);
+            foreach(Type type in testAss.GetTypes())
+            {
+                if (type.GetInterface (typeof (ILibrary).FullName) != null)
+                {
+                    ILibrary ilib = (ILibrary)Activator.CreateInstance(type);
+                    return ilib.GetFunctions();
+                }
+            }
+            return new Dictionary<string, InternalFunction>();
+        }
+
     }
 }
 
