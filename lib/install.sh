@@ -1,4 +1,3 @@
 #!/bin/bash
 
-mkdir ~/.Hassium/
-mv */*.dll ~/.Hassium/
+mv ../bin/*.dll ~/.Hassium/

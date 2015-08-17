@@ -1,13 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/Interpreter/Interpreter.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/MyClass.cs">
     <Files>
-      <File FileName="Hassium/AbstractSyntaxTree/Nodes/IfNode.cs" Line="1" Column="1" />
-      <File FileName="Hassium/AbstractSyntaxTree/Nodes/BinaryOpNode.cs" Line="1" Column="1" />
-      <File FileName="Hassium/AbstractSyntaxTree/Nodes/ExpressionNode.cs" Line="1" Column="1" />
       <File FileName="Hassium/Lexer/Lexer.cs" Line="1" Column="1" />
-      <File FileName="Hassium/MyClass.cs" Line="1" Column="1" />
-      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="212" Column="63" />
+      <File FileName="Hassium/MyClass.cs" Line="30" Column="14" />
+      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="19" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,10 +15,9 @@
             </Node>
             <Node name="Debug" expanded="True" />
             <Node name="Functions" expanded="True" />
-            <Node name="Interpreter" expanded="True">
-              <Node name="Interpreter.cs" selected="True" />
-            </Node>
+            <Node name="Interpreter" expanded="True" />
             <Node name="Lexer" expanded="True" />
+            <Node name="MyClass.cs" selected="True" />
           </Node>
         </State>
       </Pad>

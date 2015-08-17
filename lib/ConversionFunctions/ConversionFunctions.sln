@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionFunctions", "ConversionFunctions\ConversionFunctions.csproj", "{A31FB969-DBFD-4CBC-9D90-AF8D524FE19C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A31FB969-DBFD-4CBC-9D90-AF8D524FE19C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31FB969-DBFD-4CBC-9D90-AF8D524FE19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31FB969-DBFD-4CBC-9D90-AF8D524FE19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31FB969-DBFD-4CBC-9D90-AF8D524FE19C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ConversionFunctions\ConversionFunctions.csproj
+	EndGlobalSection
+EndGlobal

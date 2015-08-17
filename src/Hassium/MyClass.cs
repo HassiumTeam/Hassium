@@ -25,7 +25,7 @@ namespace Hassium
 
             if (!Directory.Exists("C:\\Users\\" + Environment.UserName + "\\.Hassium\\") && !Directory.Exists("/home/" + Environment.UserName + "/.Hassium/"))
             {
-                Console.WriteLine("If you are on linux you need to run the dll install script in Hassium/lib/ to install the standard library. If you are on Windows then move all of the .dll files from the folders in Hassium/lib to C:\\Users\\YourName\\.Hassium\\");
+                Console.WriteLine("If you are on linux you need to run the dll install script in Hassium/lib/ to install the standard library. If you are on Windows then move all of the .dll files from the folder /bin to C:\\Users\\YourName\\.Hassium\\");
                 Environment.Exit(0);
             }
             List<Token> tokens = new Lexer(File.ReadAllText(args[0])).Tokenize();
