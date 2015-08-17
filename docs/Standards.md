@@ -14,7 +14,7 @@ Variables in Hassium are created like:
 myVar := 4;
 ```
 
-Variable names should be pascelCase always. This means that variable names
+Variable names should be camelCase always. This means that variable names
 containing more than one word shouldLookLikeThis, where the first word is
 lower case and the rest of the words start with uppercase.
 
@@ -33,7 +33,7 @@ getch();
 
 ## Spacing
 
-Every progrmmer has their own ideas on what spacing should look like, and for
+Every programmer has their own ideas on what spacing should look like, and for
 the most part, that's okay, and in Hassium it shouldn't be that big of a deal
 either, but here are the best practices in my mind on spacing.
 
@@ -44,19 +44,19 @@ thisVar := (4 + 20) - 10;
 ```
 
 When you are making a function call, there should be no space between the function
-name and the opening parentheses ( like so:
+name and the opening parenthesis `(` like so:
 ```
 print("Hello, World!");
 ```
 
 Also in functions where you are specifying multiple arguments there should be a space
-after the comma that seperates the arguments:
+after the comma that separates the arguments:
 ```
 strcat("Hello", "there");
 ```
 
 When creating an if statement or while loop, have a space between the keyword and the
-opening parentheses:
+opening parenthesis:
 ```
 if (x > 4) {
 	print("x is greater than 4");
@@ -74,7 +74,7 @@ while (x < 10) {
 
 ## Brackets
 
-Brackets (or curly braces, if you are a terrorist) { }, are used to create a code block
+Brackets (or curly braces, if you are a terrorist) (`{ }`), are used to create a code block
 around different expressions or statements. Brackets are used in if statements as well
 as while loops. The opening bracket  { should be on the first line of the statements,
 then after the last statement, press return and add the closing curly bracket. If you
