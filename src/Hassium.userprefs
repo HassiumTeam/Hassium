@@ -3,13 +3,13 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/MyClass.cs">
     <Files>
       <File FileName="Hassium/Lexer/Lexer.cs" Line="1" Column="1" />
-      <File FileName="Hassium/MyClass.cs" Line="30" Column="14" />
-      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="19" Column="21" />
+      <File FileName="Hassium/MyClass.cs" Line="28" Column="106" />
+      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Hassium" expanded="True">
+          <Node name="Hassium" expanded="True" selected="True">
             <Node name="AbstractSyntaxTree" expanded="True">
               <Node name="Nodes" expanded="True" />
             </Node>
@@ -17,7 +17,6 @@
             <Node name="Functions" expanded="True" />
             <Node name="Interpreter" expanded="True" />
             <Node name="Lexer" expanded="True" />
-            <Node name="MyClass.cs" selected="True" />
           </Node>
         </State>
       </Pad>
