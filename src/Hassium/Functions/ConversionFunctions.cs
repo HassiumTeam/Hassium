@@ -11,6 +11,7 @@ namespace Hassium
             result.Add("tonum", new InternalFunction(ConversionFunctions.ToNum));
             result.Add("tostr", new InternalFunction(ConversionFunctions.ToStr));
             result.Add("tobyte", new InternalFunction(ConversionFunctions.ToByte));
+            result.Add("toarr", new InternalFunction(ConversionFunctions.ToArr));
 
             return result;
         }

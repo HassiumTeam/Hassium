@@ -140,7 +140,7 @@ namespace Hassium
                 if (variables.ContainsKey(node.ToString()))
                     return variables[node.ToString()];
                 else
-                    throw new Exception("Undefined variable");
+                    throw new Exception("Undefined variable: " + node.ToString());
             }
             else if (node is FunctionCallNode)
             {

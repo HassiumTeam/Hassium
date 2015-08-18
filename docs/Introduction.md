@@ -460,3 +460,74 @@ exit(0);
 
 If the user entered 20 and 18, the else statement would execute since 20 is not less than 18, otherwise
 the program would run normally.
+
+## Part 9: Arrays
+
+Arrays are data structures in prograamming that can store differant variables inside of it to be
+referanced later in the program.
+
+Arrays can be initialized eaither with a series of values or with a nnumber indicating how many
+entries are to be in the array. Here are examples of both:
+```
+myArr := newarr(6); $Creates a blank array with 6 values inside$
+
+anotherArr := toarr("this", "that", "the", "other"); $Creates an array with 4 string values$
+```
+
+From there you can get elements from the array with the getarr function:
+```
+anotherArr := toarr("this", "that", "the", "other");
+
+print(getarr(anotherArr, 2)); $Returns "the"$
+```
+
+To change the value of an entry in the array you can use the setarr function to return a new
+array with the modified value:
+```
+anotherArr := toarr("this", "that", "the", "other");
+anotherArr := setarr(anotherArr, "thing", 3); $Changes "other" to "thing"$
+```
+
+As always, arrays are zero indexed, meaning that when you get entry 2 from an array you are
+really getting the 3rd element in that array. Length of arrays, as shown in this next example
+are not zero referenced, and contain the normal count of the elements in the array. Let's
+take a look at the arrlen function:
+```
+anotherArr := toarr("this", "that", "the", "other");
+print(arrlen(anotherArr)); $Displays 4$
+```
+
+Now if you had an array with 4 elements in it and you tried to change the 5th element, you
+would get an exception saying that you are trying to access an element that does not exist.
+This is because the array in questioned was initialized with only enough room for 4 values,
+and you are trying to get at one that does not exist. Luckily Hassium includes a function
+to resize arrays to a new size. Here's how that is used:
+```
+myArr := toarr("hello", "world");
+myArr := resizearr(myArr, 3);
+myArr := setarr(myArr, "w00", 2);
+print(getarr(myArr, 2)); $Prints w00$
+```
+
+Here's an example of a program that uses arrays called ArrayPrgm.hs:
+```
+$SUMMARY: Get's input from user into arrays then reads it back to them$
+
+first := newarr(5);
+last := newarr(5);
+
+x := 0;
+
+while(x < 5) {
+	print("Enter a first name: ");
+	first := setarr(first, input(), x);
+	print("Enter a last name: ");
+	last := setarr(last, input(), x);
+}
+
+print("The names are:\n");
+print(concatarr(first), "\n");
+print(concatarr(last), "\n");
+
+exit(0);
+```

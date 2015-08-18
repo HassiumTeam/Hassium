@@ -2,13 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/Functions/ArrayFunctions.cs">
     <Files>
-      <File FileName="Hassium/Lexer/Lexer.cs" Line="1" Column="1" />
-      <File FileName="Hassium/MyClass.cs" Line="30" Column="32" />
-      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="15" Column="15" />
-      <File FileName="Hassium/Functions/StringFunctions.cs" Line="1" Column="1" />
-      <File FileName="Hassium/Functions/ConsoleFunctions.cs" Line="1" Column="1" />
-      <File FileName="Hassium/Functions/FilesystemFunctions.cs" Line="35" Column="10" />
-      <File FileName="Hassium/Functions/ArrayFunctions.cs" Line="14" Column="1" />
+      <File FileName="Hassium/Functions/ArrayFunctions.cs" Line="16" Column="13" />
+      <File FileName="Hassium/Functions/ConversionFunctions.cs" Line="1" Column="14" />
+      <File FileName="Hassium/Parser/Ast/ExpressionNode.cs" Line="193" Column="1" />
+      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="187" Column="1" />
+      <File FileName="Hassium/MyClass.cs" Line="24" Column="13" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,6 +16,10 @@
               <Node name="ArrayFunctions.cs" selected="True" />
             </Node>
             <Node name="Interpreter" expanded="True" />
+            <Node name="Lexer" expanded="True" />
+            <Node name="Parser" expanded="True">
+              <Node name="Ast" expanded="True" />
+            </Node>
           </Node>
         </State>
       </Pad>
