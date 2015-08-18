@@ -14,8 +14,8 @@ namespace Hassium
         {
             variables = new Dictionary<string, object>();
             this.code = code;
-            foreach (string file in Directory.GetFiles(HassiumInterpreter.LibPath))
-                foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(file))
+            foreach (Dictionary<string, InternalFunction> entries in GetFunctions())
+                foreach (KeyValuePair<string, InternalFunction> entry in entries)
                     variables.Add(entry.Key, entry.Value);
         }
 
@@ -161,18 +161,25 @@ namespace Hassium
             return 0;
         }
 
-        private Dictionary<string, InternalFunction> GetFunctions(string path)
+        private List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
         {
-            Assembly testAss = Assembly.LoadFrom(path);
+            List<Dictionary<string, InternalFunction>> result = new List<Dictionary<string, InternalFunction>>();
+            Assembly testAss;
+
+            if (path != "")
+                testAss = Assembly.LoadFrom(path);
+            else
+                testAss = Assembly.GetExecutingAssembly();
+
             foreach(Type type in testAss.GetTypes())
             {
                 if (type.GetInterface (typeof (ILibrary).FullName) != null)
                 {
                     ILibrary ilib = (ILibrary)Activator.CreateInstance(type);
-                    return ilib.GetFunctions();
+                    result.Add(ilib.GetFunctions());
                 }
             }
-            return new Dictionary<string, InternalFunction>();
+            return result;
         }
 
     }

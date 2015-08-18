@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-<configuration>
-   <runtime>
-      <loadFromRemoteSources enabled="true"/>
-   </runtime>
-</configuration>
+    <configuration>
+      <runtime>
+        <loadFromRemoteSources enabled="true" />
+      </runtime>
+    </configuration>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
@@ -64,6 +64,13 @@
     <Compile Include="AbstractSyntaxTree\Nodes\WhileNode.cs" />
     <Compile Include="AbstractSyntaxTree\Nodes\UnaryOpNode.cs" />
     <Compile Include="Functions\ILibrary.cs" />
+    <Compile Include="Functions\ConsoleFunctions.cs" />
+    <Compile Include="Functions\ConversionFunctions.cs" />
+    <Compile Include="Functions\FilesystemFunctions.cs" />
+    <Compile Include="Functions\MathFunctions.cs" />
+    <Compile Include="Functions\MiscFunctions.cs" />
+    <Compile Include="Functions\NetworkingFunctions.cs" />
+    <Compile Include="Functions\StringFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
