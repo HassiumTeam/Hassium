@@ -46,23 +46,23 @@
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Lexer.cs" />
     <Compile Include="Debug\Debug.cs" />
-    <Compile Include="AbstractSyntaxTree\AstNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\NumberNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\BinaryOpNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\StringNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\ExpressionNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Parser.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\ExceptionNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\ArgListNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\FunctionCallNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\CodeBlock.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\StatementNode.cs" />
+    <Compile Include="Parser\AstNode.cs" />
+    <Compile Include="Parser\Ast\NumberNode.cs" />
+    <Compile Include="Parser\Ast\BinaryOpNode.cs" />
+    <Compile Include="Parser\Ast\StringNode.cs" />
+    <Compile Include="Parser\Ast\ExpressionNode.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\Ast\ExceptionNode.cs" />
+    <Compile Include="Parser\Ast\ArgListNode.cs" />
+    <Compile Include="Parser\Ast\FunctionCallNode.cs" />
+    <Compile Include="Parser\Ast\CodeBlock.cs" />
+    <Compile Include="Parser\Ast\StatementNode.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\IdentifierNode.cs" />
+    <Compile Include="Parser\Ast\IdentifierNode.cs" />
     <Compile Include="Functions\InternalFunction.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\IfNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\WhileNode.cs" />
-    <Compile Include="AbstractSyntaxTree\Nodes\UnaryOpNode.cs" />
+    <Compile Include="Parser\Ast\IfNode.cs" />
+    <Compile Include="Parser\Ast\WhileNode.cs" />
+    <Compile Include="Parser\Ast\UnaryOpNode.cs" />
     <Compile Include="Functions\ILibrary.cs" />
     <Compile Include="Functions\ConsoleFunctions.cs" />
     <Compile Include="Functions\ConversionFunctions.cs" />
@@ -71,14 +71,15 @@
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Functions\NetworkingFunctions.cs" />
     <Compile Include="Functions\StringFunctions.cs" />
+    <Compile Include="Functions\ArrayFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Lexer\" />
     <Folder Include="Debug\" />
     <Folder Include="Functions\" />
-    <Folder Include="AbstractSyntaxTree\" />
-    <Folder Include="AbstractSyntaxTree\Nodes\" />
+    <Folder Include="Parser\" />
+    <Folder Include="Parser\Ast\" />
     <Folder Include="Interpreter\" />
   </ItemGroup>
 </Project>

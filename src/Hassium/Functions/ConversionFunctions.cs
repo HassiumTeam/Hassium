@@ -40,5 +40,10 @@ namespace Hassium
                 return args[0].ToString();
             }
         }
+
+        public static object ToArr(object[] args)
+        {
+            return args;
+        }
     }
 }

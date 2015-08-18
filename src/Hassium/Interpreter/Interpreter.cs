@@ -12,7 +12,7 @@ namespace Hassium
 
         public Interpreter(AstNode code)
         {
-            variables = new Dictionary<string, object>();
+            //variables = new Dictionary<string, object>();
             this.code = code;
             foreach (Dictionary<string, InternalFunction> entries in GetFunctions())
                 foreach (KeyValuePair<string, InternalFunction> entry in entries)
