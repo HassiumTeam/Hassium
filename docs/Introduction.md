@@ -18,10 +18,6 @@ mono ~/Hassium/src/Hassium/bin/Debug/Hassium.exe $1
 Change the path accordingly to where your Hassium.exe is located. On windows you will just move the
 Hassium.exe to your Desktop folder where you will then create your scripts.
 
-The next step is to install the standard library. If you are on linux, all you have to do is run the
-./make.sh and then the ./install.sh scripts in the lib/ directory. If you are on windows, you need
-to create the directory C:\Users\YourName\.Hassium and copy the dlls in lib/*Functions/*.dll to.
-
 ## Part 2: Running Your First Program
 
 Now it's time to create our first program. In the folder where Hassium is located open up your favorite
