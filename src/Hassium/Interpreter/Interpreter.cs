@@ -135,6 +135,18 @@ namespace Hassium
                     executeStatement(forStmt.Right);
                 }
             }
+            else if (node is TryNode)
+            {
+                TryNode tryStmt = (TryNode)(node);
+                try
+                {
+                    executeStatement(tryStmt.Body);
+                }
+                catch
+                {
+                    executeStatement(tryStmt.CatchBody);
+                }
+            }
             else
             {
                 evaluateNode(node);

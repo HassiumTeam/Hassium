@@ -559,3 +559,32 @@ for (x := 1; x < 11; x := x + 1) {
 
 exit(0);
 ```
+
+## Part 11: Try Catch
+
+Trying and catching is an extremely useful way to prevent your program from crashing and
+creating confusing errors and stack traces that can confuse your user. When an exception
+is thrown normally it prints a stack trace and exits the program, you can prevent this from
+happening by "catching" the exception. When you catch an exception instead of the program
+exiting on it's own, you can to choose the code that you want to execute if some thing goes
+wrong.
+
+For instance, say your program took user's input and converted it into a number, but what
+if the user types "pig" instead of a number? Well normally this would cause the program to
+crash with an exception saying "cannot convert" or similar. But if you catch this exception
+you can print out a friendly message saying "Please enter a valid number". We can see this
+in ConvertNumPrgm.hs:
+```
+$SUMMARY: Takes input, converts to number, and displays it + 5$
+
+try {
+	num := tonum(input());
+} catch {
+	print("Enter a valid number!");
+	exit(1);
+}
+
+print(num + 5);
+
+exit(0);
+```

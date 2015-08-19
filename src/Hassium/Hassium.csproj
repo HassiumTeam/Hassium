@@ -74,6 +74,7 @@
     <Compile Include="Functions\StringFunctions.cs" />
     <Compile Include="Functions\ArrayFunctions.cs" />
     <Compile Include="Parser\Ast\ForNode.cs" />
+    <Compile Include="Parser\Ast\TryNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

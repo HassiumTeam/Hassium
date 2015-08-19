@@ -1,14 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/MyClass.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Hassium/Parser/Ast/TryNode.cs">
     <Files>
       <File FileName="Hassium/Functions/ArrayFunctions.cs" Line="57" Column="52" />
-      <File FileName="Hassium/Functions/ConversionFunctions.cs" Line="47" Column="20" />
-      <File FileName="Hassium/Parser/Ast/ExpressionNode.cs" Line="1" Column="1" />
-      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="143" Column="81" />
-      <File FileName="Hassium/MyClass.cs" Line="35" Column="38" />
-      <File FileName="Hassium/Functions/MathFunctions.cs" Line="31" Column="80" />
-      <File FileName="Hassium/Functions/FilesystemFunctions.cs" Line="40" Column="37" />
+      <File FileName="Hassium/Parser/Ast/StatementNode.cs" Line="16" Column="46" />
+      <File FileName="Hassium/Interpreter/Interpreter.cs" Line="149" Column="14" />
+      <File FileName="Hassium/Parser/Ast/WhileNode.cs" Line="47" Column="52" />
+      <File FileName="Hassium/Parser/Ast/TryNode.cs" Line="34" Column="42" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,9 +16,10 @@
             <Node name="Interpreter" expanded="True" />
             <Node name="Lexer" expanded="True" />
             <Node name="Parser" expanded="True">
-              <Node name="Ast" expanded="True" />
+              <Node name="Ast" expanded="True">
+                <Node name="TryNode.cs" selected="True" />
+              </Node>
             </Node>
-            <Node name="MyClass.cs" selected="True" />
           </Node>
         </State>
       </Pad>
