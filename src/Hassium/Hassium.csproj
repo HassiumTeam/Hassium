@@ -73,6 +73,7 @@
     <Compile Include="Functions\NetworkingFunctions.cs" />
     <Compile Include="Functions\StringFunctions.cs" />
     <Compile Include="Functions\ArrayFunctions.cs" />
+    <Compile Include="Parser\Ast\ForNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

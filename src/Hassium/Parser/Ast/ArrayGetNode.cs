@@ -2,8 +2,21 @@ namespace Hassium
 {
     public class ArrayGetNode: AstNode
     {
-        public AstNode Target => Children[0];
-        public AstNode Arguments => Children[1];
+        public AstNode Target
+        {
+            get
+            {
+                return this.Children[0];
+            }
+        }
+
+        public AstNode Arguments
+        {
+            get
+            {
+                return this.Children[1];
+            }
+        }
 
         public ArrayGetNode(AstNode target, AstNode arguments)
         {

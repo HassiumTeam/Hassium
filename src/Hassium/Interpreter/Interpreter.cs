@@ -125,6 +125,16 @@ namespace Hassium
                 else
                     executeStatement(whileStmt.ElseBody);
             }
+            else if (node is ForNode)
+            {
+                ForNode forStmt = (ForNode)(node);
+                executeStatement(forStmt.Left);
+                while (((bool)(evaluateNode(forStmt.Predicate))))
+                {
+                    executeStatement(forStmt.Body);
+                    executeStatement(forStmt.Right);
+                }
+            }
             else
             {
                 evaluateNode(node);

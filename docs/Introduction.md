@@ -531,3 +531,31 @@ print(concatarr(last), "\n");
 
 exit(0);
 ```
+
+## Part 10: For Loops
+
+For loops are another essential part of most programming languages that make looping a
+simpler process. A for loop is similar to a while loop, but inside of the parentheses of
+the for loop you can initilize and increment variables.
+
+Here is the basic structure of a for loop:
+```
+for (<statement>; <condition>; <statement>)
+	<statements>;
+
+```
+
+The first statement is usually used for creating a new counter variable. The expression
+part of it is like what you would put inside of a while loop, it is the condition that
+must return true for the statements in the for loop to execute. The third statement is
+generally used to increment the counter variable. Here is an example of a program that
+counts from 1 to 10 using a for loop called ForPrgm.hs:
+```
+$SUMMARY: Counts from 1 to 10 using a for loop$
+
+for (x := 1; x < 11; x := x + 1) {
+	print(x, "\n");
+}
+
+exit(0);
+```
