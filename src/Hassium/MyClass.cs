@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Hassium
 {
@@ -18,6 +19,7 @@ namespace Hassium
 
         public static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
             Interpreter.variables.Add("args", shiftArray(args, 1));
 
             List<Token> tokens = new Lexer(File.ReadAllText(args[0])).Tokenize();
