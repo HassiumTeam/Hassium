@@ -1,3 +1,6 @@
+/* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
+implementation of string concat */
+
 using System;
 using System.IO;
 using System.Collections.Generic;
