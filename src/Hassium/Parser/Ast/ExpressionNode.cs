@@ -152,12 +152,19 @@ namespace Hassium
         }
         private static AstNode ParseFunctionCall(Parser parser, AstNode left)
         {
-            if (parser.AcceptToken(TokenType.Parentheses, "("))
+            while (true)
             {
-                return ParseFunctionCall(parser, new FunctionCallNode(left, ArgListNode.Parse(parser)));
-            }
-            else
-            {
+                if (parser.AcceptToken(TokenType.Parentheses, "("))
+                {
+                    return ParseFunctionCall(parser, new FunctionCallNode(left, ArgListNode.Parse(parser)));
+                    continue;
+                }
+                else if (parser.AcceptToken(TokenType.Bracket, "["))
+                {
+                    var parser1 = parser;
+                    left = new ArrayGetNode(left, ArrayIndexerNode.Parse(parser1));
+                    continue;
+                }
                 return left;
             }
         }

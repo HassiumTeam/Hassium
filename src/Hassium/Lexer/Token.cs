@@ -5,6 +5,7 @@ namespace Hassium
     public enum TokenType
     {
         Identifier,
+        Brace,
         Bracket,
         String,
         Number,

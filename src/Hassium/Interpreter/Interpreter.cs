@@ -153,6 +153,23 @@ namespace Hassium
                 else
                     throw new Exception("Undefined variable: " + node.ToString());
             }
+            else if (node is ArrayGetNode)
+            {
+                var call = (ArrayGetNode)node;
+                var arrname = call.Target.ToString();
+                Array monarr = null;
+                if (variables.ContainsKey(arrname))
+                    monarr = (Array)variables[arrname];
+                else
+                    throw new Exception("Undefined variable: " + node);
+                var arguments = new object[call.Arguments.Children.Count];
+                for (var x = 0; x < call.Arguments.Children.Count; x++)
+                    arguments[x] = evaluateNode(call.Arguments.Children[x]);
+
+                var arid = (int)double.Parse(string.Join("", arguments));
+                if (arid < 0 || arid >= monarr.Length) throw new ArgumentOutOfRangeException();
+                return monarr.GetValue(arid);
+            }
             else if (node is FunctionCallNode)
             {
                 FunctionCallNode call = node as FunctionCallNode;
