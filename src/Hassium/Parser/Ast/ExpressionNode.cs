@@ -181,6 +181,12 @@ namespace Hassium
                 parser.ExpectToken(TokenType.Parentheses, ")");
                 return statement;
             }
+            else if (parser.AcceptToken(TokenType.Bracket, "["))
+            {
+                AstNode statement = ExpressionNode.Parse(parser);
+                parser.ExpectToken(TokenType.Bracket, "]");
+                return statement;
+            }
             else if (parser.MatchToken(TokenType.String))
             {
                 return new StringNode(parser.ExpectToken(TokenType.String).Value);
