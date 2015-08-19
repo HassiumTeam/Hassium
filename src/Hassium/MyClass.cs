@@ -32,7 +32,7 @@ namespace Hassium
             string[] result = new string[args.Length];
 
             for (int x = startIndex; x < args.Length; x++)
-                result[x] += args[x].ToString();
+                result[x - startIndex] += args[x].ToString();
 
             return result;
         }

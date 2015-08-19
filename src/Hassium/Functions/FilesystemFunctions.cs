@@ -12,6 +12,7 @@ namespace Hassium
             Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
             result.Add("puts", new InternalFunction(FilesystemFunctions.Puts));
             result.Add("readf", new InternalFunction(FilesystemFunctions.Readf));
+            result.Add("readfarr", new InternalFunction(FilesystemFunctions.Readfarr));
             result.Add("mdir", new InternalFunction(FilesystemFunctions.Mdir));
             result.Add("ddir", new InternalFunction(FilesystemFunctions.Ddir));
             result.Add("dfile", new InternalFunction(FilesystemFunctions.Dfile));
@@ -32,6 +33,11 @@ namespace Hassium
         public static object Readf(object[] args)
         {
             return File.ReadAllText(args[0].ToString());
+        }
+
+        public static object Readfarr(object[] args)
+        {
+            return File.ReadAllLines(args[0].ToString());
         }
 
         public static object Mdir(object[] args)
