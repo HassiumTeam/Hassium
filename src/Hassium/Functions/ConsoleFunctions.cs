@@ -12,6 +12,7 @@ namespace Hassium
         {
             Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
             result.Add("print", new InternalFunction(ConsoleFunctions.Print));
+            result.Add("println", new InternalFunction(ConsoleFunctions.PrintLn));
             result.Add("input", new InternalFunction(ConsoleFunctions.Input));
             result.Add("cls", new InternalFunction(ConsoleFunctions.Cls));
             result.Add("pause", new InternalFunction(ConsoleFunctions.Pause));
@@ -25,7 +26,13 @@ namespace Hassium
 
         public static object Print(object[] args)
         {
-            Console.Write(String.Join("", args).Replace("\\n", "\n"));
+            Console.Write(String.Join("", args));
+            return null;
+        }
+
+        public static object PrintLn(object[] args)
+        {
+            Console.WriteLine(String.Join("", args));
             return null;
         }
 

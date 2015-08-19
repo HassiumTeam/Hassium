@@ -14,7 +14,7 @@ namespace Hassium
             {
                 return WhileNode.Parse(parser);
             }
-            else if (parser.MatchToken(TokenType.Bracket, "{"))
+            else if (parser.MatchToken(TokenType.Brace, "{"))
             {
                 return CodeBlock.Parse(parser);
             }

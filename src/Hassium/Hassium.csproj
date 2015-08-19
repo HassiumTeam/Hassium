@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <configuration>
@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyClass.cs" />
+    <Compile Include="Parser\Ast\ArrayGetNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Lexer\Token.cs" />
@@ -74,12 +75,5 @@
     <Compile Include="Functions\ArrayFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Lexer\" />
-    <Folder Include="Debug\" />
-    <Folder Include="Functions\" />
-    <Folder Include="Parser\" />
-    <Folder Include="Parser\Ast\" />
-    <Folder Include="Interpreter\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
