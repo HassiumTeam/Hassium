@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Hassium
@@ -89,25 +90,94 @@ namespace Hassium
         private Token scanString()
         {
             readChar();
-            string result = "";
+            var finalstr = "";
+            var escaping = false;
+            var unicode = false;
+            var curuni = "";
 
-            while (peekChar() != '\"' && peekChar() != -1)
-                result += ((char)readChar()).ToString();
+            while ((escaping || peekChar() != '\"') && peekChar() != -1)
+            {
+                var curch = (char)readChar();
+                if (unicode)
+                {
+                    if (char.IsLetter(curch) || "abcdefABCDEF".Contains(curch + "")) curuni += curch;
+                    else
+                    {
+                        unicode = false;
+                        finalstr += char.ConvertFromUtf32(int.Parse(curuni, NumberStyles.HexNumber));
+                        curuni = "";
+                    }
+                }
+                if (escaping)
+                {
+                    if (curch == '\\') finalstr += '\\';
+                    if (curch == 'n') finalstr += '\n';
+                    if (curch == 'r') finalstr += '\r';
+                    if (curch == 't') finalstr += '\t';
+                    if (curch == '"') finalstr += '"';
+                    if (curch == 'x') unicode = true;
+
+                    escaping = false;
+                }
+                else
+                {
+                    if (curch == '\\') escaping = true;
+                    else finalstr += (curch).ToString();
+                }
+            }
 
             readChar();
 
-            return new Token(TokenType.String, result);
+            return new Token(TokenType.String, finalstr);
         }
 
         private Token scanData()
         {
-            string result = "";
-            double temp = 0;;
-            while ((char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1) || ((char)(peekChar()) == '.'))
-                result += ((char)readChar()).ToString();
-            if (double.TryParse(result, out temp))
-                return new Token(TokenType.Number, result);
-            return new Token(TokenType.Identifier, result);
+            var finaldata = "";
+            double temp = 0;
+            int temp1 = 0;
+            while ((char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1) ||
+                   ".-_".Contains("" + (char)(peekChar())))
+            {
+                finaldata += ((char)readChar()).ToString();
+            }
+            if (finaldata.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (finaldata.Length == 2) throw new Exception("Invalid hex number: " + finaldata);
+                if (int.TryParse(finaldata.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out temp1))
+                {
+                    return new Token(TokenType.Number, temp1.ToString());
+                }
+                else
+                {
+                    throw new Exception("Invalid hex number: " + finaldata);
+                }
+            }
+            if (finaldata.StartsWith("0o", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (finaldata.Length == 2) throw new Exception("Invalid octal number: " + finaldata);
+                try
+                {
+                    return new Token(TokenType.Number, Convert.ToInt32(finaldata.Substring(2), 8).ToString());
+                }
+                catch
+                {
+                    throw new Exception("Invalid octal number: " + finaldata);
+                }
+            }
+            if (finaldata.StartsWith("0b", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (finaldata.Length == 2) throw new Exception("Invalid binary number: " + finaldata);
+                try
+                {
+                    return new Token(TokenType.Number, Convert.ToInt32(finaldata.Substring(2), 2).ToString());
+                }
+                catch
+                {
+                    throw new Exception("Invalid binary number: " + finaldata);
+                }
+            }
+            return double.TryParse(finaldata, out temp) ? new Token(TokenType.Number, finaldata) : new Token(TokenType.Identifier, finaldata);
         }
 
         private void whiteSpaceMonster()
