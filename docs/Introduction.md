@@ -532,6 +532,28 @@ print(concatarr(last), "\n");
 exit(0);
 ```
 
+You should know that by default, Hassium already has an array on runtime, called args
+that holds the command line arguments that are being passed to Hassium. For however
+many arguments the user passes is how large the array will be. Here's an example
+of a program that uses this array called CheckFilePrgm.hs:
+```
+$SUMMARY: Checks to see if file exists$
+$ARGUMENTS: args 0: FILE_PATH$
+
+if (arrlen(args) < 1) {
+	print("Not enough arguments! Syntax is: CheckFilePrgm.hs [FILE_PATH]\n");
+	exit(1);
+}
+
+if (fexists(getarr(args, 0))) {
+	print("File exists.\n");
+} else {
+	print("File does not exist.\n");
+}
+
+exit(0);
+```
+
 ## Part 10: For Loops
 
 For loops are another essential part of most programming languages that make looping a
