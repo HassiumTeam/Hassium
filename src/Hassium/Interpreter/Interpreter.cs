@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Hassium
@@ -40,6 +41,14 @@ namespace Hassium
                 case BinaryOperation.Division:
                     return Convert.ToDouble((evaluateNode(node.Left))) / Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Multiplication:
+                    if ((evaluateNode(node.Left) is string && evaluateNode(node.Right) is double) ||
+                        evaluateNode(node.Right) is string && evaluateNode(node.Left) is double)
+                    {
+                        var p1 = evaluateNode(node.Left);
+                        var p2 = evaluateNode(node.Right);
+                        if (p1 is string) return string.Concat(Enumerable.Repeat(p1, Convert.ToInt32(p2)));
+                        else return string.Concat(Enumerable.Repeat(p2, Convert.ToInt32(p1)));
+                    }
                     return Convert.ToDouble((evaluateNode(node.Left))) * Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Assignment:
                     if (!(node.Left is IdentifierNode))
