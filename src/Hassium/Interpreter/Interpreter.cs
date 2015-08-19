@@ -32,6 +32,8 @@ namespace Hassium
             switch (node.BinOp)
             {
                 case BinaryOperation.Addition:
+                    if (evaluateNode(node.Left) is string || evaluateNode(node.Right) is string)
+                        return evaluateNode(node.Left) + evaluateNode(node.Right).ToString();
                     return Convert.ToDouble((evaluateNode(node.Left))) + Convert.ToDouble((evaluateNode(node.Right)));
                 case BinaryOperation.Subtraction:
                     return Convert.ToDouble((evaluateNode(node.Left))) - Convert.ToDouble((evaluateNode(node.Right)));
