@@ -1,17 +1,19 @@
 /* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
-implementation of string concat */
+implementation of string concat amoung other additions*/
 
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Hassium
 {
     public class Interpreter
     {
         public static Dictionary<string, object> variables = new Dictionary<string, object>();
+        public static Dictionary<string, AstNode[]> methods = new Dictionary<string, AstNode[]>();
         private AstNode code;
 
         public Interpreter(AstNode code)
@@ -147,6 +149,18 @@ namespace Hassium
                     executeStatement(tryStmt.CatchBody);
                 }
             }
+            else if (node is ThreadNode)
+            {
+                ThreadNode threadStmt = (ThreadNode)(node);
+                Task.Factory.StartNew(() => executeStatement(threadStmt.Node));
+            }
+            else if (node is FuncNode)
+            {
+                FuncNode funcStmt = (FuncNode)(node);
+                if (methods.ContainsKey(funcStmt.Name))
+                    throw new Exception("Method " + funcStmt.Name + " already exists in dictionary!");
+                methods.Add(funcStmt.Name, new AstNode[2] { funcStmt.Arguments, funcStmt.Body } );
+            }
             else
             {
                 evaluateNode(node);
@@ -171,12 +185,32 @@ namespace Hassium
             {
                 return interpretUnaryOp((UnaryOpNode)node);
             }
+            else if (node is FunctionCallNode)
+            {
+                FunctionCallNode call = node as FunctionCallNode;
+                if (methods.ContainsKey(call.Target.ToString()))
+                {
+                    executeStatement(methods[call.Target.ToString()][1]);
+                    return null;
+                }
+                IFunction target = evaluateNode(call.Target) as IFunction;
+                if (target == null)
+                    throw new Exception("Attempt to run a non-valid function!");
+                object[] arguments = new object[call.Arguments.Children.Count];
+                for (int x = 0; x < call.Arguments.Children.Count; x++)
+                    arguments[x] = evaluateNode(call.Arguments.Children[x]);
+                return target.Invoke(arguments);
+            }
             else if (node is IdentifierNode)
             {
                 if (variables.ContainsKey(node.ToString()))
                     return variables[node.ToString()];
+                else if (methods.ContainsKey(node.ToString()))
+                    return methods[node.ToString()][1];
                 else
+                {
                     throw new Exception("Undefined variable: " + node.ToString());
+                }
             }
             else if (node is ArrayGetNode)
             {
@@ -194,17 +228,6 @@ namespace Hassium
                 var arid = (int)double.Parse(string.Join("", arguments));
                 if (arid < 0 || arid >= monarr.Length) throw new ArgumentOutOfRangeException();
                 return monarr.GetValue(arid);
-            }
-            else if (node is FunctionCallNode)
-            {
-                FunctionCallNode call = node as FunctionCallNode;
-                IFunction target = evaluateNode(call.Target) as IFunction;
-                if (target == null)
-                    throw new Exception("Attempt to run a non-valid function!");
-                object[] arguments = new object[call.Arguments.Children.Count];
-                for (int x = 0; x < call.Arguments.Children.Count; x++)
-                    arguments[x] = evaluateNode(call.Arguments.Children[x]);
-                return target.Invoke(arguments);
             }
             else
             {

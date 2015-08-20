@@ -21,6 +21,8 @@ namespace Hassium
         {
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
             Interpreter.variables.Add("args", shiftArray(args, 1));
+            Interpreter.variables.Add("true", true);
+            Interpreter.variables.Add("false", false);
 
             List<Token> tokens = new Lexer(File.ReadAllText(args[0])).Tokenize();
             //Debug.PrintTokens(tokens);

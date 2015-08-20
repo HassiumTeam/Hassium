@@ -15,6 +15,7 @@ namespace Hassium
             result.Add("begins", new InternalFunction(StringFunctions.Begins));
             result.Add("toupper", new InternalFunction(StringFunctions.ToUpper));
             result.Add("tolower", new InternalFunction(StringFunctions.ToLower));
+            result.Add("contains", new InternalFunction(StringFunctions.Contains));
 
             return result;
         }
@@ -51,6 +52,11 @@ namespace Hassium
         public static object ToLower(object[] args)
         {
             return String.Join("", args).ToLower();
+        }
+
+        public static object Contains(object[] args)
+        {
+            return args[0].ToString().Contains(args[1].ToString());
         }
 
         private static string arrayToString(object[] args, int startIndex = 0)

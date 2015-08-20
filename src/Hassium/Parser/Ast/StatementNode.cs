@@ -14,6 +14,10 @@ namespace Hassium
                 return ForNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "try"))
                 return TryNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "func"))
+                return FuncNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "thread"))
+                return ThreadNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Brace, "{"))
                 return CodeBlock.Parse(parser);
             else
