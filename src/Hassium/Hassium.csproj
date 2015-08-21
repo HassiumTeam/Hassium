@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="MyClass.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />
+    <Compile Include="Parser\Ast\ForEachNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Lexer\Token.cs" />
