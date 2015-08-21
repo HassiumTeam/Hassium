@@ -199,7 +199,15 @@ namespace Hassium
                 object[] arguments = new object[call.Arguments.Children.Count];
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = evaluateNode(call.Arguments.Children[x]);
-                return target.Invoke(arguments);
+                if (call.Target.ToString() == "import")
+                {
+                    var fullname = string.Join("", arguments);
+                    if (File.Exists(fullname))
+                        foreach (Dictionary<string, InternalFunction> entries in GetFunctions(fullname))
+                            foreach (KeyValuePair<string, InternalFunction> entry in entries)
+                                variables.Add(entry.Key, entry.Value);
+                }
+                else return target.Invoke(arguments);
             }
             else if (node is IdentifierNode)
             {
