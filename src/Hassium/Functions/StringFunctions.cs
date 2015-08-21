@@ -18,6 +18,7 @@ namespace Hassium
             result.Add("tolower", new InternalFunction(StringFunctions.ToLower));
             result.Add("contains", new InternalFunction(StringFunctions.Contains));
             result.Add("sformat", new InternalFunction(StringFunctions.SFormat));
+            result.Add("split", new InternalFunction(StringFunctions.Split));
 
             return result;
         }
@@ -43,7 +44,7 @@ namespace Hassium
 
         public static object Begins(object[] args)
         {
-            return args[0].ToString().StartsWith(arrayToString(args, 1));
+            return args[0].ToString().StartsWith(args[1].ToString());
         }
 
         public static object ToUpper(object[] args)
@@ -64,6 +65,11 @@ namespace Hassium
         public static object SFormat(object[] args)
         {
             return string.Format(args[0].ToString(), args.Skip(1).ToArray());
+        }
+
+        public static object Split(object[] args)
+        {
+            return args[0].ToString().Split(Convert.ToChar(args[1]));
         }
 
         private static string arrayToString(object[] args, int startIndex = 0)
