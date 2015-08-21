@@ -144,6 +144,10 @@ namespace Hassium
             {
                 return new UnaryOpNode(UnaryOperation.Negate, ParseUnary(parser));
             }
+            else if (parser.AcceptToken(TokenType.Complement, "~"))
+            {
+                return new UnaryOpNode(UnaryOperation.Complement, ParseUnary(parser));
+            }
             else
             {
                 return ParseFunctionCall(parser);

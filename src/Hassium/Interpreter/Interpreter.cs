@@ -100,6 +100,8 @@ namespace Hassium
                     return !(bool)((evaluateNode(node.Value)));
                 case UnaryOperation.Negate:
                     return -(double)((evaluateNode(node.Value)));
+                case UnaryOperation.Complement:
+                    return ~(int)(double)((evaluateNode(node.Value)));
             }
             //Raise error
             return -1;

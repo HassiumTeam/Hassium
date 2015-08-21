@@ -19,7 +19,8 @@ namespace Hassium
         Not,
         Xor,
         Bitshift,
-        Modulus
+        Modulus,
+        Complement
 
     }
     public class Token
