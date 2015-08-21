@@ -29,7 +29,7 @@ namespace Hassium
             {
                 options.Debug = true;
                 options.FilePath = args[1];
-                Interpreter.variables.Add("args", shiftArray(args, 2));
+                Interpreter.SetVar("args", shiftArray(args, 2));
             }
             else if (args[0].StartsWith("-h") || args[0].StartsWith("--help"))
             {
@@ -39,13 +39,10 @@ namespace Hassium
             else
             {
                 options.FilePath = args[0];
-                Interpreter.variables.Add("args", shiftArray(args, 1));
+                Interpreter.SetVar("args", shiftArray(args, 1));
             }
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
-
-            Interpreter.variables.Add("true", true);
-            Interpreter.variables.Add("false", false);
 
             List<Token> tokens = new Lexer(File.ReadAllText(options.FilePath)).Tokenize();
             if (options.Debug)

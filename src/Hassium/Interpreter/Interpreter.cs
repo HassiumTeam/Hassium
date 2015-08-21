@@ -13,17 +13,27 @@ namespace Hassium
 {
     public class Interpreter
     {
-        public static Dictionary<string, object> variables = new Dictionary<string, object>();
-        public static Dictionary<string, AstNode[]> methods = new Dictionary<string, AstNode[]>();
+        private static Dictionary<string, object> variables = new Dictionary<string, object>();
+
+        private static Dictionary<string, object> constants = new Dictionary<string, object>
+        {
+            {"true", true},
+            {"false", false},
+            {"null", null }
+        };
+
+        private static Dictionary<string, IFunction> ext_methods = new Dictionary<string, IFunction>();
+
+        private static Dictionary<string, AstNode[]> methods = new Dictionary<string, AstNode[]>();
         private AstNode code;
 
         public Interpreter(AstNode code)
         {
             //variables = new Dictionary<string, object>();
             this.code = code;
-            foreach (Dictionary<string, InternalFunction> entries in GetFunctions())
-                foreach (KeyValuePair<string, InternalFunction> entry in entries)
-                    variables.Add(entry.Key, entry.Value);
+            foreach (var entries in GetFunctions())
+                foreach (var entry in entries)
+                    SetFunction(entry.Key, entry.Value);
         }
 
         public void Execute()
@@ -59,11 +69,9 @@ namespace Hassium
                 case BinaryOperation.Assignment:
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
-                    object right = evaluateNode(node.Right);
-                    if (variables.ContainsKey(node.Left.ToString()))
-                        variables.Remove(node.Left.ToString());
-                    variables.Add(node.Left.ToString(), right);
-                    return right.ToString();
+                    var right = evaluateNode(node.Right);
+                    SetVar(node.Left.ToString(), right);
+                    return right;
                 case BinaryOperation.Equals:
                     return evaluateNode(node.Left).GetHashCode() == evaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.And:
@@ -108,6 +116,60 @@ namespace Hassium
             return -1;
         }
 
+        public static void SetVar(string varName, object val)
+        {
+            if(constants.ContainsKey(varName)) throw new ArgumentException("'" + varName + "' is an internal constant and can not be used as an assignment target.");
+            if (!variables.ContainsKey(varName)) variables.Add(varName, val);
+            else variables[varName] = val;
+        }
+
+        public static void SetFunction(string funcName, IFunction func)
+        {
+            if (constants.ContainsKey(funcName)) throw new ArgumentException("'" + funcName + "' is an internal constant and can not be used as an assignment target.");
+            if (variables.ContainsKey(funcName)) throw new ArgumentException("A variable with the name '" + funcName + "' already exists.");
+            if (ext_methods.ContainsKey(funcName) || methods.ContainsKey(funcName)) throw new ArgumentException("A function with the name '" + funcName + "' already exists.");
+            else ext_methods.Add(funcName, func);
+        }
+
+        public static void SetFunction(string funcName, AstNode[] func)
+        {
+            if (constants.ContainsKey(funcName)) throw new ArgumentException("'" + funcName + "' is an internal constant and can not be used as an assignment target.");
+            if (variables.ContainsKey(funcName)) throw new ArgumentException("A variable with the name '" + funcName + "' already exists.");
+            if (ext_methods.ContainsKey(funcName) || methods.ContainsKey(funcName)) throw new ArgumentException("A function with the name '" + funcName + "' already exists.");
+            else methods.Add(funcName, func);
+        }
+
+        public static object GetVar(string varName)
+        {
+            if (constants.ContainsKey(varName)) return constants[varName];
+            if (variables.ContainsKey(varName)) return variables[varName];
+            else throw new ArgumentException("The variable '" + varName + "' doesn't exist.");
+        }
+
+        public static object GetFunction(string varName)
+        {
+            if (methods.ContainsKey(varName)) return methods[varName];
+            if (ext_methods.ContainsKey(varName)) return ext_methods[varName];
+            else throw new ArgumentException("The function '" + varName + "' doesn't exist.");
+        }
+
+        public static bool HasVar(string varName)
+        {
+            return constants.ContainsKey(varName) || variables.ContainsKey(varName);
+        }
+
+        public static bool HasFunction(string varName)
+        {
+            return methods.ContainsKey(varName) || ext_methods.ContainsKey(varName);
+        }
+
+        public static void FreeVar(string varName)
+        {
+            if (constants.ContainsKey(varName)) throw new ArgumentException("'" + varName + "' is an internal constant and can not be removed.");
+            if (!variables.ContainsKey(varName)) throw new ArgumentException("The variable '" + varName + "' doesn't exist.");
+            else variables.Remove(varName);
+        }
+
         private void executeStatement(AstNode node)
         {
             if (node is CodeBlock)
@@ -147,15 +209,14 @@ namespace Hassium
                 ForEachNode forStmt = (ForEachNode)(node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = evaluateNode(forStmt.Haystack);
-                if (!variables.ContainsKey(needlestmt)) variables.Add(needlestmt, null);
-                if((haystack as IEnumerable) == null) throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
+                if((haystack as IEnumerable) == null) throw new ArgumentException("'" + haystack + "' is not an array and therefore can not be used in foreach.");
                 
                 foreach(var needle in (IEnumerable)haystack)
                 {
-                    variables[needlestmt] = needle;
+                    SetVar(needlestmt, needle);
                     executeStatement(forStmt.Body);
                 }
-                variables.Remove(needlestmt);
+                FreeVar(needlestmt);
             }
             else if (node is TryNode)
             {
@@ -177,9 +238,7 @@ namespace Hassium
             else if (node is FuncNode)
             {
                 FuncNode funcStmt = (FuncNode)(node);
-                if (methods.ContainsKey(funcStmt.Name))
-                    throw new Exception("Method " + funcStmt.Name + " already exists in dictionary!");
-                methods.Add(funcStmt.Name, new AstNode[2] { funcStmt.Arguments, funcStmt.Body } );
+                SetFunction(funcStmt.Name, new AstNode[2] { funcStmt.Arguments, funcStmt.Body } );
             }
             else
             {
@@ -230,24 +289,13 @@ namespace Hassium
             }
             else if (node is IdentifierNode)
             {
-                if (variables.ContainsKey(node.ToString()))
-                    return variables[node.ToString()];
-                else if (methods.ContainsKey(node.ToString()))
-                    return methods[node.ToString()][1];
-                else
-                {
-                    throw new Exception("Undefined variable: " + node.ToString());
-                }
+                return HasFunction(node.ToString()) ? GetFunction(node.ToString()) : GetVar(node.ToString());
             }
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
                 var arrname = call.Target.ToString();
-                Array monarr = null;
-                if (variables.ContainsKey(arrname))
-                    monarr = (Array)variables[arrname];
-                else
-                    throw new Exception("Undefined variable: " + node);
+                Array monarr = (Array)GetVar(arrname);
                 var arguments = new object[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = evaluateNode(call.Arguments.Children[x]);

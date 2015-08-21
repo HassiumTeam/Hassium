@@ -19,7 +19,7 @@ namespace Hassium
         }
         public static object Free(object[] args)
         {
-            Interpreter.variables.Remove(args[0].ToString());
+            Interpreter.FreeVar(args[0].ToString());
             return null;
         }
 
@@ -53,7 +53,7 @@ namespace Hassium
             if (File.Exists(path))
                 foreach (Dictionary<string, InternalFunction> entries in Interpreter.GetFunctions(path))
                     foreach (KeyValuePair<string, InternalFunction> entry in entries)
-                        Interpreter.variables.Add(entry.Key, entry.Value);
+                        Interpreter.SetVar(entry.Key, entry.Value);
             return null;
         }
     }
