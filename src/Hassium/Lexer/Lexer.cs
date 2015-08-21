@@ -42,6 +42,8 @@ namespace Hassium
                     result.Add(new Token(TokenType.Bracket, ((char) readChar()).ToString()));
                 else if ((char) (peekChar()) == ',')
                     result.Add(new Token(TokenType.Comma, ((char) readChar()).ToString()));
+                else if ((char)(peekChar()) == '~')
+                    result.Add(new Token(TokenType.Complement, ((char)readChar()).ToString()));
                 else if ("+-/*".Contains((((char) peekChar()).ToString())))
                     result.Add(new Token(TokenType.Operation, ((char) readChar()).ToString()));
                 else if ("=<>".Contains((((char) peekChar()).ToString())))

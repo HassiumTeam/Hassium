@@ -4,7 +4,9 @@ namespace Hassium
 {
     public enum UnaryOperation
     {
-        Not
+        Not,
+        Negate,
+        Complement
     }
 
     //Class for the urinary operations

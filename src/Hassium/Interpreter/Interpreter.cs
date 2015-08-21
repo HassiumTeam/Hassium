@@ -98,6 +98,10 @@ namespace Hassium
             {
                 case UnaryOperation.Not:
                     return !(bool)((evaluateNode(node.Value)));
+                case UnaryOperation.Negate:
+                    return -(double)((evaluateNode(node.Value)));
+                case UnaryOperation.Complement:
+                    return ~(int)(double)((evaluateNode(node.Value)));
             }
             //Raise error
             return -1;
@@ -198,8 +202,20 @@ namespace Hassium
                     throw new Exception("Attempt to run a non-valid function!");
                 object[] arguments = new object[call.Arguments.Children.Count];
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
+                {
                     arguments[x] = evaluateNode(call.Arguments.Children[x]);
-                return target.Invoke(arguments);
+                    if (arguments[x] is double && (((double) (arguments[x])) % 1 == 0))
+                        arguments[x] = (int) (double) arguments[x];
+                }
+                if (call.Target.ToString() == "import")
+                {
+                    var fullname = string.Join("", arguments);
+                    if (File.Exists(fullname))
+                        foreach (Dictionary<string, InternalFunction> entries in GetFunctions(fullname))
+                            foreach (KeyValuePair<string, InternalFunction> entry in entries)
+                                variables.Add(entry.Key, entry.Value);
+                }
+                else return target.Invoke(arguments);
             }
             else if (node is IdentifierNode)
             {
