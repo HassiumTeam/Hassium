@@ -77,9 +77,6 @@
     <Compile Include="Parser\Ast\TryNode.cs" />
     <Compile Include="Parser\Ast\FuncNode.cs" />
     <Compile Include="Parser\Ast\ThreadNode.cs" />
-    <Compile Include="Functions\IRCFunctions.cs" />
-    <Compile Include="Functions\JRCLib.cs" />
-    <Compile Include="Functions\IRCMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

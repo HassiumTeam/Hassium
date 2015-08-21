@@ -197,9 +197,12 @@ namespace Hassium
                     executeStatement(methods[call.Target.ToString()][1]);
                     return null;
                 }
+
                 IFunction target = evaluateNode(call.Target) as IFunction;
+
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
+
                 object[] arguments = new object[call.Arguments.Children.Count];
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
                 {
@@ -207,15 +210,7 @@ namespace Hassium
                     if (arguments[x] is double && (((double) (arguments[x])) % 1 == 0))
                         arguments[x] = (int) (double) arguments[x];
                 }
-                if (call.Target.ToString() == "import")
-                {
-                    var fullname = string.Join("", arguments);
-                    if (File.Exists(fullname))
-                        foreach (Dictionary<string, InternalFunction> entries in GetFunctions(fullname))
-                            foreach (KeyValuePair<string, InternalFunction> entry in entries)
-                                variables.Add(entry.Key, entry.Value);
-                }
-                else return target.Invoke(arguments);
+                return target.Invoke(arguments);
             }
             else if (node is IdentifierNode)
             {
@@ -253,7 +248,7 @@ namespace Hassium
             return 0;
         }
 
-        private List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
+        public static List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
         {
             List<Dictionary<string, InternalFunction>> result = new List<Dictionary<string, InternalFunction>>();
             Assembly testAss;

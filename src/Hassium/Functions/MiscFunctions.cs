@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Hassium
 {
@@ -12,6 +13,7 @@ namespace Hassium
             result.Add("exit", new InternalFunction(MiscFunctions.Exit));
             result.Add("type", new InternalFunction(MiscFunctions.Type));
             result.Add("throw", new InternalFunction(MiscFunctions.Throw));
+            result.Add("import", new InternalFunction(MiscFunctions.Import));
 
             return result;
         }
@@ -43,6 +45,16 @@ namespace Hassium
         public static object Throw(object[] args)
         {
             throw new Exception(String.Join("", args));
+        }
+
+        public static object Import(object[] args)
+        {
+            string path = string.Join("", args);
+            if (File.Exists(path))
+                foreach (Dictionary<string, InternalFunction> entries in Interpreter.GetFunctions(path))
+                    foreach (KeyValuePair<string, InternalFunction> entry in entries)
+                        Interpreter.variables.Add(entry.Key, entry.Value);
+            return null;
         }
     }
 }
