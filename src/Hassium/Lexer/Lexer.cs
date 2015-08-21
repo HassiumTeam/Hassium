@@ -24,6 +24,8 @@ namespace Hassium
             {
                 if (char.IsLetterOrDigit((char)peekChar()))
                     result.Add(scanData());
+                else if((char)(peekChar()) == '@' && (char)(peekChar(1)) == '\"')
+                    result.Add(scanString(true));
                 else if ((char)(peekChar()) == '\"')
                     result.Add(scanString());
                 else if ((char)(peekChar()) == '$')
@@ -89,13 +91,18 @@ namespace Hassium
             readChar();
         }
 
-        private Token scanString()
+        private Token scanString(bool verbatim = false)
         {
             readChar();
             var finalstr = "";
             var escaping = false;
             var unicode = false;
             var curuni = "";
+
+            if(verbatim)
+            {
+                readChar();
+            }
 
             while ((escaping || peekChar() != '\"') && peekChar() != -1)
             {
@@ -123,7 +130,7 @@ namespace Hassium
                 }
                 else
                 {
-                    if (curch == '\\') escaping = true;
+                    if (curch == '\\' && !verbatim) escaping = true;
                     else finalstr += (curch).ToString();
                 }
             }
