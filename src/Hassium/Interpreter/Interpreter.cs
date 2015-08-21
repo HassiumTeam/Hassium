@@ -1,7 +1,8 @@
 /* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
-implementation of string concat amoung other additions*/
+implementation of string concat amoung other additions and foreach loop*/
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,6 +141,21 @@ namespace Hassium
                     executeStatement(forStmt.Body);
                     executeStatement(forStmt.Right);
                 }
+            }
+            else if (node is ForEachNode)
+            {
+                ForEachNode forStmt = (ForEachNode)(node);
+                var needlestmt = forStmt.Needle.ToString();
+                var haystack = evaluateNode(forStmt.Haystack);
+                if (!variables.ContainsKey(needlestmt)) variables.Add(needlestmt, null);
+                if((haystack as IEnumerable) == null) throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
+                
+                foreach(var needle in (IEnumerable)haystack)
+                {
+                    variables[needlestmt] = needle;
+                    executeStatement(forStmt.Body);
+                }
+                variables.Remove(needlestmt);
             }
             else if (node is TryNode)
             {

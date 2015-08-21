@@ -12,6 +12,8 @@ namespace Hassium
                 return WhileNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "for"))
                 return ForNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "foreach"))
+                return ForEachNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "try"))
                 return TryNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "func"))
