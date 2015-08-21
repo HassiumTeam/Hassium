@@ -98,6 +98,8 @@ namespace Hassium
             {
                 case UnaryOperation.Not:
                     return !(bool)((evaluateNode(node.Value)));
+                case UnaryOperation.Negate:
+                    return -(double)((evaluateNode(node.Value)));
             }
             //Raise error
             return -1;
