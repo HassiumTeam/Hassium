@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hassium
 {
@@ -16,6 +17,7 @@ namespace Hassium
             result.Add("toupper", new InternalFunction(StringFunctions.ToUpper));
             result.Add("tolower", new InternalFunction(StringFunctions.ToLower));
             result.Add("contains", new InternalFunction(StringFunctions.Contains));
+            result.Add("sformat", new InternalFunction(StringFunctions.SFormat));
 
             return result;
         }
@@ -57,6 +59,11 @@ namespace Hassium
         public static object Contains(object[] args)
         {
             return args[0].ToString().Contains(args[1].ToString());
+        }
+
+        public static object SFormat(object[] args)
+        {
+            return string.Format(args[0].ToString(), args.Skip(1).ToArray());
         }
 
         private static string arrayToString(object[] args, int startIndex = 0)

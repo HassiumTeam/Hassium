@@ -202,7 +202,11 @@ namespace Hassium
                     throw new Exception("Attempt to run a non-valid function!");
                 object[] arguments = new object[call.Arguments.Children.Count];
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
+                {
                     arguments[x] = evaluateNode(call.Arguments.Children[x]);
+                    if (arguments[x] is double && (((double) (arguments[x])) % 1 == 0))
+                        arguments[x] = (int) (double) arguments[x];
+                }
                 if (call.Target.ToString() == "import")
                 {
                     var fullname = string.Join("", arguments);
