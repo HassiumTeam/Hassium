@@ -610,3 +610,36 @@ print(num + 5);
 
 exit(0);
 ```
+
+## Part 12: For Each Loops
+
+For each loops are similar to for loops, but more useful if you want to iterate over an Array.
+
+Here is the basic structure of a for loop:
+```
+foreach (<needle> in <haystack>)
+	<statements>;
+
+```
+
+The needle thing is the variable that will, similarly to the for-loop, be changed at every iteration. It's the "current item".
+The haystack is the array you will iterate on.
+Example from ForEachPrgm.hs:
+```
+$SUMMARY: Print every item of an array$
+
+myarray := toarr("abcd", 36/3, "defg", 3.1415);
+
+foreach (myvar in myarray {
+	println(myvar);
+}
+
+exit(0);
+```
+This will print :
+```
+abcd
+12
+defg
+3.1415
+```
