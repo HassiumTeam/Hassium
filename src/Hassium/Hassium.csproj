@@ -78,7 +78,15 @@
     <Compile Include="Parser\Ast\TryNode.cs" />
     <Compile Include="Parser\Ast\FuncNode.cs" />
     <Compile Include="Parser\Ast\ThreadNode.cs" />
+    <Compile Include="Semantics\SymbolTable.cs" />
+    <Compile Include="Semantics\LocalScope.cs" />
+    <Compile Include="Semantics\SemanticAnalyser.cs" />
+    <Compile Include="Interpreter\StackFrame.cs" />
+    <Compile Include="Interpreter\HassiumFunction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Semantics\" />
+  </ItemGroup>
 </Project>

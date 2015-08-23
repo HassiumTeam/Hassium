@@ -13,24 +13,36 @@ namespace Hassium
 {
     public class Interpreter
     {
-        public static Dictionary<string, object> variables = new Dictionary<string, object>();
-        public static Dictionary<string, AstNode[]> methods = new Dictionary<string, AstNode[]>();
+        public Stack<StackFrame> CallStack = new Stack<StackFrame>();
+        public static Dictionary<string, object> Globals = new Dictionary<string, object>();
+        private SymbolTable table;
+
         private AstNode code;
 
-        public Interpreter(AstNode code)
+        public Interpreter(SymbolTable symbolTable, AstNode code)
         {
-            //variables = new Dictionary<string, object>();
+            //Globals = new Dictionary<string, object>();
             this.code = code;
+            this.table = symbolTable;
             foreach (Dictionary<string, InternalFunction> entries in GetFunctions())
                 foreach (KeyValuePair<string, InternalFunction> entry in entries)
-                    variables.Add(entry.Key, entry.Value);
+                    Globals.Add(entry.Key, entry.Value);
         }
 
         public void Execute()
         {
             foreach (AstNode node in this.code.Children)
             {
-                executeStatement(node);
+                if (node is FuncNode)
+                {
+                    FuncNode fnode = ((FuncNode)node);
+                    LocalScope scope = this.table.ChildScopes[fnode.Name];
+                    Globals[fnode.Name] = new HassiumFunction(this, fnode, scope);
+                }
+            }
+            foreach (AstNode node in this.code.Children)
+            {
+                ExecuteStatement(node);
             }
         }
 
@@ -39,55 +51,57 @@ namespace Hassium
             switch (node.BinOp)
             {
                 case BinaryOperation.Addition:
-                    if (evaluateNode(node.Left) is string || evaluateNode(node.Right) is string)
-                        return evaluateNode(node.Left) + evaluateNode(node.Right).ToString();
-                    return Convert.ToDouble((evaluateNode(node.Left))) + Convert.ToDouble((evaluateNode(node.Right)));
+                    if (EvaluateNode(node.Left) is string || EvaluateNode(node.Right) is string)
+                        return EvaluateNode(node.Left) + EvaluateNode(node.Right).ToString();
+                    return Convert.ToDouble((EvaluateNode(node.Left))) + Convert.ToDouble((EvaluateNode(node.Right)));
                 case BinaryOperation.Subtraction:
-                    return Convert.ToDouble((evaluateNode(node.Left))) - Convert.ToDouble((evaluateNode(node.Right)));
+                    return Convert.ToDouble((EvaluateNode(node.Left))) - Convert.ToDouble((EvaluateNode(node.Right)));
                 case BinaryOperation.Division:
-                    return Convert.ToDouble((evaluateNode(node.Left))) / Convert.ToDouble((evaluateNode(node.Right)));
+                    return Convert.ToDouble((EvaluateNode(node.Left))) / Convert.ToDouble((EvaluateNode(node.Right)));
                 case BinaryOperation.Multiplication:
-                    if ((evaluateNode(node.Left) is string && evaluateNode(node.Right) is double) ||
-                        evaluateNode(node.Right) is string && evaluateNode(node.Left) is double)
+                    if ((EvaluateNode(node.Left) is string && EvaluateNode(node.Right) is double) ||
+                        EvaluateNode(node.Right) is string && EvaluateNode(node.Left) is double)
                     {
-                        var p1 = evaluateNode(node.Left);
-                        var p2 = evaluateNode(node.Right);
+                        var p1 = EvaluateNode(node.Left);
+                        var p2 = EvaluateNode(node.Right);
                         if (p1 is string) return string.Concat(Enumerable.Repeat(p1, Convert.ToInt32(p2)));
                         else return string.Concat(Enumerable.Repeat(p2, Convert.ToInt32(p1)));
                     }
-                    return Convert.ToDouble((evaluateNode(node.Left))) * Convert.ToDouble((evaluateNode(node.Right)));
+                    return Convert.ToDouble((EvaluateNode(node.Left))) * Convert.ToDouble((EvaluateNode(node.Right)));
                 case BinaryOperation.Assignment:
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
-                    object right = evaluateNode(node.Right);
-                    if (variables.ContainsKey(node.Left.ToString()))
-                        variables.Remove(node.Left.ToString());
-                    variables.Add(node.Left.ToString(), right);
-                    return right.ToString();
+                    object right = EvaluateNode(node.Right);
+
+                    if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
+                        CallStack.Peek().Locals[node.Left.ToString()] = right;
+                    else
+                        Globals[node.Left.ToString()] = right;
+                    return right;
                 case BinaryOperation.Equals:
-                    return evaluateNode(node.Left).GetHashCode() == evaluateNode(node.Right).GetHashCode();
+                    return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.And:
-                    return (bool)(evaluateNode(node.Left)) && (bool)(evaluateNode(node.Right));
+                    return (bool)(EvaluateNode(node.Left)) && (bool)(EvaluateNode(node.Right));
                 case BinaryOperation.Or:
-                    return (bool)(evaluateNode(node.Left)) || (bool)(evaluateNode(node.Right));
+                    return (bool)(EvaluateNode(node.Left)) || (bool)(EvaluateNode(node.Right));
                 case BinaryOperation.NotEqualTo:
-                    return evaluateNode(node.Left).GetHashCode() != evaluateNode(node.Right).GetHashCode();
+                    return EvaluateNode(node.Left).GetHashCode() != EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.LessThan:
-                    return Convert.ToDouble(evaluateNode(node.Left)) < Convert.ToDouble(evaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) < Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.GreaterThan:
-                    return Convert.ToDouble(evaluateNode(node.Left)) > Convert.ToDouble(evaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) > Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.GreaterOrEqual:
-                    return Convert.ToDouble(evaluateNode(node.Left)) >= Convert.ToDouble(evaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) >= Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.LesserOrEqual:
-                    return Convert.ToDouble(evaluateNode(node.Left)) <= Convert.ToDouble(evaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) <= Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.Xor:
-                    return (bool)(evaluateNode(node.Left)) ^ (bool)(evaluateNode(node.Right));
+                    return (bool)(EvaluateNode(node.Left)) ^ (bool)(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftLeft:
-                    return (byte)(evaluateNode(node.Left)) << (byte)(evaluateNode(node.Right));
+                    return (byte)(EvaluateNode(node.Left)) << (byte)(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftRight:
-                    return (byte)(evaluateNode(node.Left)) >> (byte)(evaluateNode(node.Right));
+                    return (byte)(EvaluateNode(node.Left)) >> (byte)(EvaluateNode(node.Right));
                 case BinaryOperation.Modulus:
-                    return (double)(evaluateNode(node.Left)) % (double)(evaluateNode(node.Right));
+                    return (double)(EvaluateNode(node.Left)) % (double)(EvaluateNode(node.Right));
             }
             // Raise error
             return -1;
@@ -98,96 +112,89 @@ namespace Hassium
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !(bool)((evaluateNode(node.Value)));
+                    return !(bool)((EvaluateNode(node.Value)));
                 case UnaryOperation.Negate:
-                    return -(double)((evaluateNode(node.Value)));
+                    return -(double)((EvaluateNode(node.Value)));
                 case UnaryOperation.Complement:
-                    return ~(int)(double)((evaluateNode(node.Value)));
+                    return ~(int)(double)((EvaluateNode(node.Value)));
             }
             //Raise error
             return -1;
         }
 
-        private void executeStatement(AstNode node)
+        public void ExecuteStatement(AstNode node)
         {
             if (node is CodeBlock)
                 foreach (AstNode anode in node.Children)
-                    executeStatement(anode);
+                    ExecuteStatement(anode);
             else if (node is IfNode)
             {
                 IfNode ifStmt = (IfNode)(node);
-                if ((bool)(evaluateNode(ifStmt.Predicate)))
-                    executeStatement(ifStmt.Body);
+                if ((bool)(EvaluateNode(ifStmt.Predicate)))
+                    ExecuteStatement(ifStmt.Body);
                 else
-                    executeStatement(ifStmt.ElseBody);
+                    ExecuteStatement(ifStmt.ElseBody);
             }
             else if (node is WhileNode)
             {
                 WhileNode whileStmt = (WhileNode)(node);
-                if ((bool)(evaluateNode(whileStmt.Predicate)))
-                    while ((bool)(evaluateNode(whileStmt.Predicate)))
+                if ((bool)(EvaluateNode(whileStmt.Predicate)))
+                    while ((bool)(EvaluateNode(whileStmt.Predicate)))
                     {
-                        executeStatement(whileStmt.Body);
+                        ExecuteStatement(whileStmt.Body);
                     }
                 else
-                    executeStatement(whileStmt.ElseBody);
+                    ExecuteStatement(whileStmt.ElseBody);
             }
             else if (node is ForNode)
             {
                 ForNode forStmt = (ForNode)(node);
-                executeStatement(forStmt.Left);
-                while (((bool)(evaluateNode(forStmt.Predicate))))
+                ExecuteStatement(forStmt.Left);
+                while (((bool)(EvaluateNode(forStmt.Predicate))))
                 {
-                    executeStatement(forStmt.Body);
-                    executeStatement(forStmt.Right);
+                    ExecuteStatement(forStmt.Body);
+                    ExecuteStatement(forStmt.Right);
                 }
             }
             else if (node is ForEachNode)
             {
                 ForEachNode forStmt = (ForEachNode)(node);
                 var needlestmt = forStmt.Needle.ToString();
-                var haystack = evaluateNode(forStmt.Haystack);
-                if (!variables.ContainsKey(needlestmt)) variables.Add(needlestmt, null);
+                var haystack = EvaluateNode(forStmt.Haystack);
+                if (!Globals.ContainsKey(needlestmt)) Globals.Add(needlestmt, null);
                 if((haystack as IEnumerable) == null) throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
                 
                 foreach(var needle in (IEnumerable)haystack)
                 {
-                    variables[needlestmt] = needle;
-                    executeStatement(forStmt.Body);
+                    Globals[needlestmt] = needle;
+                    ExecuteStatement(forStmt.Body);
                 }
-                variables.Remove(needlestmt);
+                Globals.Remove(needlestmt);
             }
             else if (node is TryNode)
             {
                 TryNode tryStmt = (TryNode)(node);
                 try
                 {
-                    executeStatement(tryStmt.Body);
+                    ExecuteStatement(tryStmt.Body);
                 }
                 catch
                 {
-                    executeStatement(tryStmt.CatchBody);
+                    ExecuteStatement(tryStmt.CatchBody);
                 }
             }
             else if (node is ThreadNode)
             {
                 ThreadNode threadStmt = (ThreadNode)(node);
-                Task.Factory.StartNew(() => executeStatement(threadStmt.Node));
-            }
-            else if (node is FuncNode)
-            {
-                FuncNode funcStmt = (FuncNode)(node);
-                if (methods.ContainsKey(funcStmt.Name))
-                    throw new Exception("Method " + funcStmt.Name + " already exists in dictionary!");
-                methods.Add(funcStmt.Name, new AstNode[2] { funcStmt.Arguments, funcStmt.Body } );
+                Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
             }
             else
             {
-                evaluateNode(node);
+                EvaluateNode(node);
             }
         }
 
-        private object evaluateNode(AstNode node)
+        public object EvaluateNode(AstNode node)
         {
             if (node is NumberNode)
             {
@@ -208,13 +215,8 @@ namespace Hassium
             else if (node is FunctionCallNode)
             {
                 FunctionCallNode call = node as FunctionCallNode;
-                if (methods.ContainsKey(call.Target.ToString()))
-                {
-                    executeStatement(methods[call.Target.ToString()][1]);
-                    return null;
-                }
 
-                IFunction target = evaluateNode(call.Target) as IFunction;
+                IFunction target = EvaluateNode(call.Target) as IFunction;
 
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
@@ -222,7 +224,7 @@ namespace Hassium
                 object[] arguments = new object[call.Arguments.Children.Count];
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
                 {
-                    arguments[x] = evaluateNode(call.Arguments.Children[x]);
+                    arguments[x] = EvaluateNode(call.Arguments.Children[x]);
                     if (arguments[x] is double && (((double) (arguments[x])) % 1 == 0))
                         arguments[x] = (int) (double) arguments[x];
                 }
@@ -230,27 +232,24 @@ namespace Hassium
             }
             else if (node is IdentifierNode)
             {
-                if (variables.ContainsKey(node.ToString()))
-                    return variables[node.ToString()];
-                else if (methods.ContainsKey(node.ToString()))
-                    return methods[node.ToString()][1];
+                string name = ((IdentifierNode)node).Identifier;
+                if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
+                    return CallStack.Peek().Locals[name];
                 else
-                {
-                    throw new Exception("Undefined variable: " + node.ToString());
-                }
+                    return Globals[name];
             }
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
                 var arrname = call.Target.ToString();
                 Array monarr = null;
-                if (variables.ContainsKey(arrname))
-                    monarr = (Array)variables[arrname];
+                if (Globals.ContainsKey(arrname))
+                    monarr = (Array)Globals[arrname];
                 else
                     throw new Exception("Undefined variable: " + node);
                 var arguments = new object[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
-                    arguments[x] = evaluateNode(call.Arguments.Children[x]);
+                    arguments[x] = EvaluateNode(call.Arguments.Children[x]);
 
                 var arid = (int)double.Parse(string.Join("", arguments));
                 if (arid < 0 || arid >= monarr.Length) throw new ArgumentOutOfRangeException();
