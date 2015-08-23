@@ -1,6 +1,5 @@
 /* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
 implementation of string concat amoung other additions and foreach loop*/
-
 using System;
 using System.Collections;
 using System.IO;
@@ -16,7 +15,6 @@ namespace Hassium
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public static Dictionary<string, object> Globals = new Dictionary<string, object>();
         private SymbolTable table;
-
         private AstNode code;
 
         public Interpreter(SymbolTable symbolTable, AstNode code)
@@ -64,8 +62,10 @@ namespace Hassium
                     {
                         var p1 = EvaluateNode(node.Left);
                         var p2 = EvaluateNode(node.Right);
-                        if (p1 is string) return string.Concat(Enumerable.Repeat(p1, Convert.ToInt32(p2)));
-                        else return string.Concat(Enumerable.Repeat(p2, Convert.ToInt32(p1)));
+                        if (p1 is string)
+                            return string.Concat(Enumerable.Repeat(p1, Convert.ToInt32(p2)));
+                        else
+                            return string.Concat(Enumerable.Repeat(p2, Convert.ToInt32(p1)));
                     }
                     return Convert.ToDouble((EvaluateNode(node.Left))) * Convert.ToDouble((EvaluateNode(node.Right)));
                 case BinaryOperation.Assignment:
@@ -124,6 +124,8 @@ namespace Hassium
 
         public void ExecuteStatement(AstNode node)
         {
+            if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
+                return;
             if (node is CodeBlock)
                 foreach (AstNode anode in node.Children)
                     ExecuteStatement(anode);
@@ -161,10 +163,12 @@ namespace Hassium
                 ForEachNode forStmt = (ForEachNode)(node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = EvaluateNode(forStmt.Haystack);
-                if (!Globals.ContainsKey(needlestmt)) Globals.Add(needlestmt, null);
-                if((haystack as IEnumerable) == null) throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
-                
-                foreach(var needle in (IEnumerable)haystack)
+                if (!Globals.ContainsKey(needlestmt))
+                    Globals.Add(needlestmt, null);
+                if ((haystack as IEnumerable) == null)
+                    throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
+                    
+                foreach (var needle in (IEnumerable)haystack)
                 {
                     Globals[needlestmt] = needle;
                     ExecuteStatement(forStmt.Body);
@@ -187,6 +191,11 @@ namespace Hassium
             {
                 ThreadNode threadStmt = (ThreadNode)(node);
                 Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
+            }
+            else if (node is ReturnNode)
+            {
+                ReturnNode returnStmt = (ReturnNode)(node);
+                CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
             }
             else
             {
@@ -225,8 +234,8 @@ namespace Hassium
                 for (int x = 0; x < call.Arguments.Children.Count; x++)
                 {
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
-                    if (arguments[x] is double && (((double) (arguments[x])) % 1 == 0))
-                        arguments[x] = (int) (double) arguments[x];
+                    if (arguments[x] is double && (((double)(arguments[x])) % 1 == 0))
+                        arguments[x] = (int)(double)arguments[x];
                 }
                 return target.Invoke(arguments);
             }
@@ -252,7 +261,8 @@ namespace Hassium
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
 
                 var arid = (int)double.Parse(string.Join("", arguments));
-                if (arid < 0 || arid >= monarr.Length) throw new ArgumentOutOfRangeException();
+                if (arid < 0 || arid >= monarr.Length)
+                    throw new ArgumentOutOfRangeException();
                 return monarr.GetValue(arid);
             }
             else
@@ -273,9 +283,9 @@ namespace Hassium
             else
                 testAss = Assembly.GetExecutingAssembly();
 
-            foreach(Type type in testAss.GetTypes())
+            foreach (Type type in testAss.GetTypes())
             {
-                if (type.GetInterface (typeof (ILibrary).FullName) != null)
+                if (type.GetInterface(typeof(ILibrary).FullName) != null)
                 {
                     ILibrary ilib = (ILibrary)Activator.CreateInstance(type);
                     result.Add(ilib.GetFunctions());
@@ -283,7 +293,6 @@ namespace Hassium
             }
             return result;
         }
-
     }
 }
 

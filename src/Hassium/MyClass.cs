@@ -21,9 +21,34 @@ namespace Hassium
         {
             public static bool Debug = false;
             public static string FilePath = "";
+
+            public static string Code = "";
         }
 
         public static void Main(string[] args)
+        {
+            preformSetUp(args);
+
+            List<Token> tokens = new Lexer(options.Code).Tokenize();
+            if (options.Debug)
+                Debug.PrintTokens(tokens);
+            Parser hassiumParser = new Parser(tokens);
+            AstNode ast = hassiumParser.Parse();
+
+            new Interpreter(new SemanticAnalyser(ast).Analyse(), ast).Execute();
+        }
+
+        private static string[] shiftArray(string[] args, int startIndex = 1)
+        {
+            string[] result = new string[args.Length];
+
+            for (int x = startIndex; x < args.Length; x++)
+                result[x - startIndex] += args[x].ToString();
+
+            return result;
+        }
+
+        private static void preformSetUp(string[] args)
         {
             if (args[0].StartsWith("-d") || args[0].StartsWith("--debug"))
             {
@@ -47,23 +72,18 @@ namespace Hassium
             Interpreter.Globals.Add("true", true);
             Interpreter.Globals.Add("false", false);
 
-            List<Token> tokens = new Lexer(File.ReadAllText(options.FilePath)).Tokenize();
-            if (options.Debug)
-                Debug.PrintTokens(tokens);
-            Parser hassiumParser = new Parser(tokens);
-            AstNode ast = hassiumParser.Parse();
+            options.Code = File.ReadAllText(options.FilePath);
 
-            new Interpreter(new SemanticAnalyser(ast).Analyse(), ast).Execute();
+            preprocessorDirectives();
         }
 
-        private static string[] shiftArray(string[] args, int startIndex = 1)
+        private static void preprocessorDirectives()
         {
-            string[] result = new string[args.Length];
-
-            for (int x = startIndex; x < args.Length; x++)
-                result[x - startIndex] += args[x].ToString();
-
-            return result;
+            foreach (string line in File.ReadAllLines(options.FilePath))
+            {
+                if (line.StartsWith("$INCLUDE"))
+                    options.Code += File.ReadAllText(line.Substring(9, line.Substring(9).LastIndexOf("$")));
+            }
         }
     }
 }

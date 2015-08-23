@@ -24,9 +24,12 @@ namespace Hassium
                 stackFrame.Locals[this.funcNode.Parameters[x]] = args[x];
 
             interpreter.ExecuteStatement(funcNode.Body);
+
+            object ret = interpreter.CallStack.Peek().ReturnValue;
+            
             interpreter.CallStack.Pop();
 
-            return null;
+            return ret;
         }
     }
 }

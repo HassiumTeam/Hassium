@@ -10,6 +10,8 @@ namespace Hassium
 
         public Dictionary<string, object> Locals { get; private set; }
 
+        public object ReturnValue { get; set; }
+
         public StackFrame(LocalScope scope)
         {
             this.Scope = scope;

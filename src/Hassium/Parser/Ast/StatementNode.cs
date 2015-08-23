@@ -20,6 +20,8 @@ namespace Hassium
                 return FuncNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "thread"))
                 return ThreadNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "return"))
+                return ReturnNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Brace, "{"))
                 return CodeBlock.Parse(parser);
             else
