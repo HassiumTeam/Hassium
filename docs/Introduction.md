@@ -21,7 +21,7 @@ Hassium.exe to your Desktop folder where you will then create your scripts.
 ## Part 2: Running Your First Program
 
 Now it's time to create our first program. In the folder where Hassium is located open up your favorite
-text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.hs:
+text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.has:
 ```
 $SUMMARY: Shows a greeting to the user$
 
@@ -30,8 +30,8 @@ print("Hello, World!");
 exit(0);
 ```
 
-Save this file then execute it with either Hassium.exe HelloWorldPrgm.hs (on Windows) or 
-mono Hassium.exe HelloWorldPrgm.hs (on *nix). You should see the text Hello, World! on your console
+Save this file then execute it with either Hassium.exe HelloWorldPrgm.has (on Windows) or 
+mono Hassium.exe HelloWorldPrgm.has (on *nix). You should see the text Hello, World! on your console
 window.
 
 You should note the different parts of the program that are shown here. We have the first line which
@@ -52,7 +52,7 @@ exit code is 0 (EXIT_SUCCESS).
 
 If you've ever programmed before or if you have taken 8th grade algebra you should know about
 variables. Variables are data represented by an identifier that you specify. Take the following
-program VariablesPrgm.hs:
+program VariablesPrgm.has:
 ```
 $SUMMARY: Uses variables$
 
@@ -75,7 +75,7 @@ to print a newline (like pressing the enter key) to the console. \n can go anywh
 when encountered will create a newline on the console.
 
 Let's take a look at another program that uses another function call and demonstrates variable 
-reassignment. We'll call this Variables2Prgm.hs:
+reassignment. We'll call this Variables2Prgm.has:
 ```
 $SUMMARY: Uses variable reassignment and concatanation";
 
@@ -105,7 +105,7 @@ the only effective way to learn to program.
 
 From this point on we will be focusing less on the program design and more on the functions that are
 builtin to Hassium. One of the most important is the input() function call. Input reads user input
-from the keyboard and returns it in the form of a string. Take InputPrgm.hs:
+from the keyboard and returns it in the form of a string. Take InputPrgm.has:
 ```
 $SUMMARY: Reads user input and returns it back$
 
@@ -147,7 +147,7 @@ comes after the cls() and can be seen by the user.
 
 ## Part 5: Math in Hassium
 
-Hassium is capable of parsing most mathematical expressions. Take the program SampleMathPrgm.hs:
+Hassium is capable of parsing most mathematical expressions. Take the program SampleMathPrgm.has:
 ```
 $SUMMARY: Demonstrates math capabilities$
 
@@ -175,7 +175,7 @@ print(((3 * 5) / 2) + 1);
 Hassium uses PEMDAS to evaluate mathematical expressions such as that above.
 
 Hassium also includes a math family of functions. As this documentation is being written there
-isn't that many at the moment but I will demonstrate the ones that are there in the file MathPrgm.hs:
+isn't that many at the moment but I will demonstrate the ones that are there in the file MathPrgm.has:
 ```
 $SUMMARY: Shows math family$
 
@@ -205,7 +205,7 @@ src/Hassium/Functions/MathFunctions.cs or in the documentation for all of the cu
 
 Hassium comes with many differant filesystem operations (see src/Hassium/Functions/FileSystemFunctions.cs)
 that can preform such operations as creating/deleting files and directories or setting/getting the
-current directory or determining if a file/directory exists. Take a gander at FileCreatePrgm.hs:
+current directory or determining if a file/directory exists. Take a gander at FileCreatePrgm.has:
 ```
 $SUMMARY: Creates file with specified text$
 
@@ -241,7 +241,7 @@ Another useful function in the filesystem family is the system() function. Syste
 another process on your computer with command line arguments. The syntax is system(path, arguments).
 It is important to note that even if the process you are starting requires no arguments that
 you need to still provide an empty string "" where the argument for arguments should be.
-Here's SystemPrgm.hs:
+Here's SystemPrgm.has:
 ```
 $SUMMARY: Runs an exe with arguments$
 
@@ -299,12 +299,12 @@ else
 
 There can be as many else if statements as you need, so long as they are part of an if
 chain, likewise the else statement is not nessecarily needed either, and you can have a
-lone if statement or an if-else with out an else. Let's revisit the DeletePrgm.hs
+lone if statement or an if-else with out an else. Let's revisit the DeletePrgm.has
 which used the function fexists to determine if a file existed, but the program wouldn't
 do anything if the file didn't exist! To see what I mean run the program again and provide
 an invalid path, you should see an exception raised about filenotfound. To prevent this
 we can use an if statement to see if the file exists, and only attempt to delete the file
-if that if statement is true. Here's the revised DeletePrgm.hs:
+if that if statement is true. Here's the revised DeletePrgm.has:
 ```
 $SUMMARY: Checks if a file exists, and if so, deletes it, otherwise sends a message to the user$
 
@@ -335,7 +335,7 @@ will execute, printing an error message and exiting with status code 1 (error).
 Now let's make a program that uses if-else if-else to work on. This program will
 prompt the user to enter two numbers and an operation to evaluate them on. We will use
 our if-else if-else statements to determine which statement to evaluate and display
-the results to the user. We'll call this ArithmeticPrgm.hs:
+the results to the user. We'll call this ArithmeticPrgm.has:
 ```
 $SUMMARY: Gets two numbers and an operation from the user, then evaluates the math involved$
 
@@ -395,7 +395,7 @@ When using loops it is important to make sure you don't enter an infinite loop, 
 that you need to have some ability for the condition in your loop to return false so the code can
 continue to execute.
 
-Let's take a look at a program that displays the numbers one-ten without looping, called LamePrgm.hs:
+Let's take a look at a program that displays the numbers one-ten without looping, called LamePrgm.has:
 ```
 $SUMMARY: Prints 1-10$
 
@@ -414,7 +414,7 @@ exit(0);
 ```
 
 As you can see, this code is really long and boring, and if you wanted to iterate to 100 it would take
-a LONG time to code. Let's revisit this program with while loops. NumPrgm.hs:
+a LONG time to code. Let's revisit this program with while loops. NumPrgm.has:
 ```
 $SUMMARY: Increments and displays 1-10$
 
@@ -438,7 +438,7 @@ where x equals 11 the statements will stop exxecuting and the loop will terminat
 prints the "all done" message onto the screen.
 
 Sometimes it is useful to have an else statement on a while loop for if the condition initially returned
-false. Here's an example of Num2Prgm.hs:
+false. Here's an example of Num2Prgm.has:
 ```
 $SUMMARY: Increments and displays numbers from two points of user input$
 
@@ -509,7 +509,7 @@ myArr := setarr(myArr, "w00", 2);
 print(getarr(myArr, 2)); $Prints w00$
 ```
 
-Here's an example of a program that uses arrays called ArrayPrgm.hs:
+Here's an example of a program that uses arrays called ArrayPrgm.has:
 ```
 $SUMMARY: Get's input from user into arrays then reads it back to them$
 
@@ -535,13 +535,13 @@ exit(0);
 You should know that by default, Hassium already has an array on runtime, called args
 that holds the command line arguments that are being passed to Hassium. For however
 many arguments the user passes is how large the array will be. Here's an example
-of a program that uses this array called CheckFilePrgm.hs:
+of a program that uses this array called CheckFilePrgm.has:
 ```
 $SUMMARY: Checks to see if file exists$
 $ARGUMENTS: args 0: FILE_PATH$
 
 if (arrlen(args) < 1) {
-	print("Not enough arguments! Syntax is: CheckFilePrgm.hs [FILE_PATH]\n");
+	print("Not enough arguments! Syntax is: CheckFilePrgm.has [FILE_PATH]\n");
 	exit(1);
 }
 
@@ -571,7 +571,7 @@ The first statement is usually used for creating a new counter variable. The exp
 part of it is like what you would put inside of a while loop, it is the condition that
 must return true for the statements in the for loop to execute. The third statement is
 generally used to increment the counter variable. Here is an example of a program that
-counts from 1 to 10 using a for loop called ForPrgm.hs:
+counts from 1 to 10 using a for loop called ForPrgm.has:
 ```
 $SUMMARY: Counts from 1 to 10 using a for loop$
 
@@ -595,7 +595,7 @@ For instance, say your program took user's input and converted it into a number,
 if the user types "pig" instead of a number? Well normally this would cause the program to
 crash with an exception saying "cannot convert" or similar. But if you catch this exception
 you can print out a friendly message saying "Please enter a valid number". We can see this
-in ConvertNumPrgm.hs:
+in ConvertNumPrgm.has:
 ```
 $SUMMARY: Takes input, converts to number, and displays it + 5$
 
@@ -624,7 +624,7 @@ foreach (<needle> in <haystack>)
 
 The needle thing is the variable that will, similarly to the for-loop, be changed at every iteration. It's the "current item".
 The haystack is the array you will iterate on.
-Example from ForEachPrgm.hs:
+Example from ForEachPrgm.has:
 ```
 $SUMMARY: Print every item of an array$
 

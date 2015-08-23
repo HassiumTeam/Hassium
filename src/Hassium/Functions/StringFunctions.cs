@@ -19,6 +19,7 @@ namespace Hassium
             result.Add("contains", new InternalFunction(StringFunctions.Contains));
             result.Add("sformat", new InternalFunction(StringFunctions.SFormat));
             result.Add("split", new InternalFunction(StringFunctions.Split));
+            result.Add("replace", new InternalFunction(StringFunctions.Replace));
 
             return result;
         }
@@ -70,6 +71,11 @@ namespace Hassium
         public static object Split(object[] args)
         {
             return args[0].ToString().Split(Convert.ToChar(args[1]));
+        }
+
+        public static object Replace(object[] args)
+        {
+            return args[0].ToString().Replace(args[1].ToString(), args[2].ToString());
         }
 
         private static string arrayToString(object[] args, int startIndex = 0)
