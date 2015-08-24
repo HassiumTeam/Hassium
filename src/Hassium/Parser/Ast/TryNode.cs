@@ -24,6 +24,7 @@ namespace Hassium
         {
             get
             {
+                if (Children.Count < 3) return null;
                 return this.Children[2];
             }
         }
