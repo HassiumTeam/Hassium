@@ -35,7 +35,19 @@ namespace Hassium
             Parser hassiumParser = new Parser(tokens);
             AstNode ast = hassiumParser.Parse();
 
-            new Interpreter(new SemanticAnalyser(ast).Analyse(), ast).Execute();
+            try
+            {
+                new Interpreter(new SemanticAnalyser(ast).Analyse(), ast).Execute();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+                Console.WriteLine("Press Y to show full stack trace");
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
 
         private static string[] shiftArray(string[] args, int startIndex = 1)
