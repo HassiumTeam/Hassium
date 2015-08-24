@@ -40,7 +40,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
+    <Compile Include="Interpreter\HassiumObject.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />
     <Compile Include="Parser\Ast\ArrayInitializerNode.cs" />
     <Compile Include="Parser\Ast\ForEachNode.cs" />
