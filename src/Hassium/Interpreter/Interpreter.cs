@@ -386,10 +386,11 @@ namespace Hassium
                             var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
                             foreach (var theattr in theattr1.OfType<IntFunc>())
                             {
-                                result.Add(theattr.Name,
-                                    new InternalFunction(
-                                        (HassiumFunctionDelegate)
-                                            Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc)));
+                                var rfunc = new InternalFunction(
+                                    (HassiumFunctionDelegate)
+                                        Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc));
+                                result.Add(theattr.Name, rfunc);
+                                if(theattr.Alias != "") result.Add(theattr.Alias, rfunc);
                             }
                         }
                     }

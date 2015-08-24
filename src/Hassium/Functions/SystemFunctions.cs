@@ -35,5 +35,11 @@ namespace Hassium.Functions
             }
             return global::System.DateTime.Now;
         }
+
+        [IntFunc("currentuser")]
+        public static object CurrentUser(object[] args)
+        {
+            return Environment.UserName;
+        }
     }
 }

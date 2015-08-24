@@ -35,9 +35,11 @@ namespace Hassium
                 if (char.IsLetterOrDigit((char)PeekChar()))
                     Add(scanData());
 
-                else if ((char)(PeekChar()) == '"')
+                else if (current == '@' && next1 == '"')
+                    Add(scanString(true));
+                else if (current == '"')
                     Add(scanString());
-                else if ((char)(PeekChar()) == '$')
+                else if (current == '$')
                     scanComment();
 
                 else if (current == ';')
@@ -124,9 +126,10 @@ namespace Hassium
             ReadChar();
         }
 
-        private Token scanString()
+        private Token scanString(bool verbatim = false)
         {
             ReadChar();
+            if (verbatim) ReadChar();
             var finalstr = "";
             var escaping = false;
             var unicode = false;
@@ -147,18 +150,36 @@ namespace Hassium
                 }
                 if (escaping)
                 {
-                    if (curch == '\\') finalstr += '\\';
-                    if (curch == 'n') finalstr += '\n';
-                    if (curch == 'r') finalstr += '\r';
-                    if (curch == 't') finalstr += '\t';
-                    if (curch == '"') finalstr += '"';
-                    if (curch == 'x') unicode = true;
+                    switch (curch)
+                    {
+                        case '\\':
+                            finalstr += '\\';
+                            break;
+                        case 'n':
+                            finalstr += '\n';
+                            break;
+                        case 'r':
+                            finalstr += '\r';
+                            break;
+                        case 't':
+                            finalstr += '\t';
+                            break;
+                        case '"':
+                            finalstr += '"';
+                            break;
+                        case 'x':
+                            unicode = true;
+                            break;
+                        default:
+                            finalstr += curch;
+                            break;
+                    }
 
                     escaping = false;
                 }
                 else
                 {
-                    if (curch == '\\') escaping = true;
+                    if (curch == '\\' && !verbatim) escaping = true;
                     else finalstr += (curch).ToString();
                 }
             }
