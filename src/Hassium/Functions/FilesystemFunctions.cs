@@ -85,12 +85,7 @@ namespace Hassium
 			return Directory.Exists(arrayToString(args));
 		}
 
-		[IntFunc("system")]
-		public static object System(object[] args)
-		{
-			Process.Start(args[0].ToString(), string.Join(" ", args.Skip(1)));
-			return null;
-		}
+		
 
 		private static string arrayToString(IList<object> args, int startIndex = 0)
 		{

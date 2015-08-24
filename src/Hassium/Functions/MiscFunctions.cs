@@ -15,13 +15,7 @@ namespace Hassium
 			return null;
 		}
 
-		[IntFunc("exit")]
-		public static object Exit(object[] args)
-		{
-			Environment.Exit(args.Length > 0 ? Convert.ToInt32(args[0]) : 0);
-
-			return null;
-		}
+		
 
 		[IntFunc("type")]
 		public static object Type(object[] args)

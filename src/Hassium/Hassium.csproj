@@ -42,6 +42,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />
     <Compile Include="Parser\Ast\ArrayInitializerNode.cs" />
