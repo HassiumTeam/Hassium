@@ -5,7 +5,7 @@ namespace Hassium
 {
     public interface ILibrary
     {
-        Dictionary<string, InternalFunction> GetFunctions();
+        //Dictionary<string, InternalFunction> GetFunctions();
     }
 }
 

@@ -15,16 +15,85 @@ namespace Hassium
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public static Dictionary<string, object> Globals = new Dictionary<string, object>();
+
+        public static Dictionary<string, object> Constants = new Dictionary<string, object>
+        {
+            {"true", true},
+            {"false", false},
+            {"null", null},
+        };
+
         private SymbolTable table;
         private AstNode code;
 
         public Interpreter(SymbolTable symbolTable, AstNode code)
         {
-            //Globals = new Dictionary<string, object>();
             this.code = code;
             table = symbolTable;
-            foreach (var entry in GetFunctions().SelectMany(entries => entries))
+            foreach (var entry in GetFunctions())
                 Globals.Add(entry.Key, entry.Value);
+        }
+
+        public object GetVariable(string name)
+        {
+            if (Constants.ContainsKey(name))
+                return Constants[name];
+            if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
+                return CallStack.Peek().Locals[name];
+            if (Globals.ContainsKey(name))
+                return Globals[name];
+            else throw new ArgumentException("The variable '" + name + "' doesn't exist.");
+        }
+
+        public bool HasVariable(string name, bool onlyglobal = false)
+        {
+            return onlyglobal
+                ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
+                : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
+                  (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name));
+        }
+
+        public void SetGlobalVariable(string name, object value)
+        {
+            if (Constants.ContainsKey(name))
+                throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
+
+            Globals[name] = value;
+        }
+
+        public void SetLocalVariable(string name, object value)
+        {
+            if (Constants.ContainsKey(name))
+                throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
+
+            if (CallStack.Count > 0)
+                CallStack.Peek().Locals[name] = value;
+        }
+
+        public void SetVariable(string name, object value, bool forceglobal = false, bool onlyexist = false)
+        {
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || CallStack.Peek().Scope.Symbols.Contains(name)))
+                SetLocalVariable(name, value);
+            else
+                SetGlobalVariable(name, value);
+        }
+
+        public void FreeVariable(string name, bool forceglobal = false)
+        {
+            if(Constants.ContainsKey(name)) throw new ArgumentException("Can't delete internal constant '" + name + "'.");
+            if (forceglobal)
+            {
+                if(!Globals.ContainsKey(name)) throw new ArgumentException("The global variable '" + name + "' doesn't exist.");
+                Globals.Remove(name);
+            }
+            else
+            {
+                if(!HasVariable(name)) throw new ArgumentException("The variable '" + name + "' doesn't exist.");
+                if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
+                    CallStack.Peek().Locals.Remove(name);
+                else
+                    Globals.Remove(name);
+            }
         }
 
         public void Execute()
@@ -35,7 +104,7 @@ namespace Hassium
                 {
                     var fnode = ((FuncNode)node);
                     var scope = table.ChildScopes[fnode.Name];
-                    Globals[fnode.Name] = new HassiumFunction(this, fnode, scope);
+                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
                 }
             }
             foreach (var node in code.Children)
@@ -46,11 +115,7 @@ namespace Hassium
 
         private void interpretBinaryAssign(BinOpNode node)
         {
-            object right = interpretBinaryOp(node, true);
-            if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
-                CallStack.Peek().Locals[node.Left.ToString()] = right;
-            else
-                Globals[node.Left.ToString()] = right;
+            SetVariable(node.Left.ToString(), interpretBinaryOp(node, true), false, true);         
         }
 
         private object interpretBinaryOp(BinOpNode node, bool isAssign = false)
@@ -81,11 +146,7 @@ namespace Hassium
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
                     var right = EvaluateNode(node.Right);
-
-                    if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
-                        CallStack.Peek().Locals[node.Left.ToString()] = right;
-                    else
-                        Globals[node.Left.ToString()] = right;
+                    SetVariable(node.Left.ToString(), right);
                     return right;
                 case BinaryOperation.Equals:
                     return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
@@ -177,17 +238,16 @@ namespace Hassium
                 var forStmt = (ForEachNode)(node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = EvaluateNode(forStmt.Haystack);
-                if (!Globals.ContainsKey(needlestmt))
-                    Globals.Add(needlestmt, null);
+                SetVariable(needlestmt, null);
                 if ((haystack as IEnumerable) == null)
                     throw new ArgumentException("'" + haystack + "' is not an array and therefore can not be used in foreach.");
                     
                 foreach (var needle in (IEnumerable)haystack)
                 {
-                    Globals[needlestmt] = needle;
+                    SetVariable(needlestmt, needle);
                     ExecuteStatement(forStmt.Body);
                 }
-                Globals.Remove(needlestmt);
+                FreeVariable(needlestmt);
             }
             else if (node is TryNode)
             {
@@ -264,11 +324,7 @@ namespace Hassium
             }
             else if (node is IdentifierNode)
             {
-                var name = ((IdentifierNode)node).Identifier;
-                if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
-                    return CallStack.Peek().Locals[name];
-                else
-                    return Globals[name];
+                return GetVariable(((IdentifierNode)node).Identifier);
             }
             else if(node is ArrayInitializerNode)
             {
@@ -277,10 +333,10 @@ namespace Hassium
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
-                Array monarr = null;
+                Array theArray = null;
                 var evaluated = EvaluateNode(call.Target);
-                if (evaluated is string) monarr = evaluated.ToString().ToArray();
-                else if (evaluated is Array) monarr = (Array) evaluated;
+                if (evaluated is string) theArray = evaluated.ToString().ToArray();
+                else if (evaluated is Array) theArray = (Array) evaluated;
                 else
                 {
                     throw new Exception("The [] operator only applies to objects of type Array or String.");
@@ -290,9 +346,9 @@ namespace Hassium
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
 
                 var arid = (int)double.Parse(string.Join("", arguments));
-                if (arid < 0 || arid >= monarr.Length)
+                if (arid < 0 || arid >= theArray.Length)
                     throw new ArgumentOutOfRangeException();
-                var retvalue = monarr.GetValue(arid);
+                var retvalue = theArray.GetValue(arid);
                 if (retvalue is AstNode) return EvaluateNode((AstNode) retvalue);
                 else return retvalue;
             }
@@ -304,9 +360,9 @@ namespace Hassium
             return 0;
         }
 
-        public static List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
+        public static Dictionary<string, InternalFunction> GetFunctions(string path = "")
         {
-            var result = new List<Dictionary<string, InternalFunction>>();
+            var result = new Dictionary<string, InternalFunction>();
 
             var testAss = path == "" ? Assembly.GetExecutingAssembly() : Assembly.LoadFrom(path);
 
@@ -314,8 +370,29 @@ namespace Hassium
             {
                 if (type.GetInterface(typeof(ILibrary).FullName) != null)
                 {
-                    var ilib = (ILibrary)Activator.CreateInstance(type);
-                    result.Add(ilib.GetFunctions());
+                    if (type.GetMethod("GetFunctions") != null) // TODO: DEPRECATED
+                    {
+                        var method = type.GetMethod("GetFunctions");
+                        var rdict =
+                            (Dictionary<string, InternalFunction>)
+                                (method.Invoke(Activator.CreateInstance(type, null), null));
+                        foreach (var entry in rdict)
+                            result.Add(entry.Key, entry.Value);
+                    }
+                    else
+                    {
+                        foreach (var myfunc in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                        {
+                            var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
+                            foreach (var theattr in theattr1.OfType<IntFunc>())
+                            {
+                                result.Add(theattr.Name,
+                                    new InternalFunction(
+                                        (HassiumFunctionDelegate)
+                                            Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc)));
+                            }
+                        }
+                    }
                 }
             }
             return result;

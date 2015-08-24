@@ -7,23 +7,16 @@ namespace Hassium
 {
     public class NetworkingFunctions : ILibrary
     {
-        public Dictionary<string, InternalFunction> GetFunctions()
-        {
-            Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
-            result.Add("dowstr", new InternalFunction(NetworkingFunctions.DowStr));
-            result.Add("dowfile", new InternalFunction(NetworkingFunctions.DowFile));
-            result.Add("upfile", new InternalFunction(NetworkingFunctions.UpFile));
-
-            return result;
-        }
         private static WebClient client = new WebClient();
 
+        [IntFunc("dowstr")]
         public static object DowStr(object[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             return client.DownloadString(args[0].ToString());
         }
 
+        [IntFunc("dowfile")]
         public static object DowFile(object[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -31,6 +24,7 @@ namespace Hassium
             return null;
         }
 
+        [IntFunc("upfile")]
         public static object UpFile(object[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
