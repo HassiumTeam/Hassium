@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
-namespace Hassium
+namespace Hassium.Functions
 {
 	public class ArrayFunctions : ILibrary
 	{
@@ -36,7 +36,7 @@ namespace Hassium
 
 			return objarr;
 		}
-
+        [IntFunc("arrlen")]
 		public static object ArrLen(object[] args)
 		{
 			object arr = args[0];
@@ -62,6 +62,13 @@ namespace Hassium
 		public static object NewArr(object[] args)
 		{
 			return new object[Convert.ToInt32(args[0])];
+		}
+		[IntFunc("arrayfill")]
+		public static object ArrayFill(object[] args)
+		{
+			int num = Convert.ToInt32(args[0]);
+			object thing = args[1];
+			return Enumerable.Repeat(thing, num).ToArray();
 		}
 	}
 }

@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.IO;
 
-namespace Hassium
+namespace Hassium.Functions
 {
     public class ConsoleFunctions : ILibrary
     {

@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Hassium
+namespace Hassium.Functions
 {
     public class NetworkingFunctions : ILibrary
     {

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace Hassium
+namespace Hassium.Functions
 {
     public interface ILibrary
     {
