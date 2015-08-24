@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hassium
+namespace Hassium.Parser
 {
     public class Parser
     {

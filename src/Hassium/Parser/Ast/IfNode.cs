@@ -41,7 +41,7 @@ namespace Hassium
             this.Children.Add(elseBody);
         }
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "if");
             parser.ExpectToken(TokenType.Parentheses, "(");

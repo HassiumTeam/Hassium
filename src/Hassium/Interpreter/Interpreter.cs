@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -269,6 +270,10 @@ namespace Hassium
                 else
                     return Globals[name];
             }
+            else if(node is ArrayInitializerNode)
+            {
+                return ((ArrayInitializerNode) node).Value.Select(x => EvaluateNode((AstNode)x)).ToArray();
+            }
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
@@ -287,7 +292,9 @@ namespace Hassium
                 var arid = (int)double.Parse(string.Join("", arguments));
                 if (arid < 0 || arid >= monarr.Length)
                     throw new ArgumentOutOfRangeException();
-                return monarr.GetValue(arid);
+                var retvalue = monarr.GetValue(arid);
+                if (retvalue is AstNode) return EvaluateNode((AstNode) retvalue);
+                else return retvalue;
             }
             else
             {

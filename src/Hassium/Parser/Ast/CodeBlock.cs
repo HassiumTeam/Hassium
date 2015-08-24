@@ -4,7 +4,7 @@ namespace Hassium
 {
     public class CodeBlock: AstNode
     {
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             CodeBlock block = new CodeBlock();
             parser.ExpectToken(TokenType.Brace, "{");

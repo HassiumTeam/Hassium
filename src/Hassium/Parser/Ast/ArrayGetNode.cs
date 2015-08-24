@@ -27,7 +27,7 @@ namespace Hassium
 
     public class ArrayIndexerNode : AstNode
     {
-        public static ArrayIndexerNode Parse(Parser parser)
+        public static ArrayIndexerNode Parse(Parser.Parser parser)
         {
             var ret = new ArrayIndexerNode();
             parser.ExpectToken(TokenType.Bracket, "[");

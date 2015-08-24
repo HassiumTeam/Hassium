@@ -17,7 +17,7 @@ namespace Hassium
             this.Children.Add(node);
         }
 
-        public static ThreadNode Parse(Parser parser)
+        public static ThreadNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "thread");
             AstNode node = StatementNode.Parse(parser);

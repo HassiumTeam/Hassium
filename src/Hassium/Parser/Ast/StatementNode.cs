@@ -4,7 +4,7 @@ namespace Hassium
 {
     public class StatementNode: AstNode
     {
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             if (parser.MatchToken(TokenType.Identifier, "if"))
                 return IfNode.Parse(parser);

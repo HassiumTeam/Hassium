@@ -23,7 +23,7 @@ namespace Hassium
             this.Children.Add(body);
         }
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier);
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();

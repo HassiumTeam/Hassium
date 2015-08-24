@@ -1,4 +1,5 @@
 using System;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -44,9 +45,9 @@ namespace Hassium
                 case "^":
                 case "^=":
                     return BinaryOperation.Xor;
-                case "=":
+                case ":=":
                     return BinaryOperation.Assignment;
-                case "==":
+                case "=":
                     return BinaryOperation.Equals;
                 case "!=":
                     return BinaryOperation.NotEqualTo;
@@ -68,13 +69,13 @@ namespace Hassium
         }
 
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             return ParseAssignment(parser);
         }
 
 
-        private static AstNode ParseAssignment (Parser parser)
+        private static AstNode ParseAssignment (Parser.Parser parser)
         {
             AstNode left = ParseEquality(parser);
 
@@ -95,7 +96,7 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseEquality (Parser parser)
+        private static AstNode ParseEquality (Parser.Parser parser)
         {
             AstNode left = ParseAdditive(parser);
             if (parser.AcceptToken(TokenType.Comparison, "="))
@@ -174,7 +175,7 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseAdditive (Parser parser)
+        private static AstNode ParseAdditive (Parser.Parser parser)
         {
             AstNode left = ParseMultiplicative(parser);
 
@@ -194,7 +195,7 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseMultiplicative (Parser parser)
+        private static AstNode ParseMultiplicative (Parser.Parser parser)
         {
             AstNode left = ParseUnary(parser);
             
@@ -219,7 +220,7 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseUnary(Parser parser)
+        private static AstNode ParseUnary(Parser.Parser parser)
         {
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
             {
@@ -239,12 +240,12 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseFunctionCall(Parser parser)
+        private static AstNode ParseFunctionCall(Parser.Parser parser)
         {
             return ParseFunctionCall(parser, ParseTerm(parser));
         }
 
-        private static AstNode ParseFunctionCall(Parser parser, AstNode left)
+        private static AstNode ParseFunctionCall(Parser.Parser parser, AstNode left)
         {
             if (parser.AcceptToken(TokenType.Parentheses, "("))
             {
@@ -260,7 +261,7 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseTerm (Parser parser)
+        private static AstNode ParseTerm (Parser.Parser parser)
         {
             if (parser.MatchToken(TokenType.Number))
             {
@@ -274,7 +275,7 @@ namespace Hassium
             }
             else if (parser.AcceptToken(TokenType.Bracket, "["))
             {
-                AstNode statement = ExpressionNode.Parse(parser);
+                AstNode statement = ArrayInitializerNode.Parse(parser);
                 parser.ExpectToken(TokenType.Bracket, "]");
                 return statement;
             }
