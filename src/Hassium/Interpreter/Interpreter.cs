@@ -275,7 +275,9 @@ namespace Hassium
                 var arrname = call.Target.ToString();
                 Array monarr = null;
                 if (Globals.ContainsKey(arrname))
-                    monarr = (Array)Globals[arrname];
+                    if (Globals[arrname] is string)
+                        monarr = ((IEnumerable<char>) Globals[arrname]).ToArray();
+                    else monarr = (Array)Globals[arrname];
                 else
                     throw new Exception("Undefined variable: " + node);
                 var arguments = new object[call.Arguments.Children.Count];
