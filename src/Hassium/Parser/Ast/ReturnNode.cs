@@ -11,7 +11,7 @@ namespace Hassium
             this.Value = value;
         }
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier);
 

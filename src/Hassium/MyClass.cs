@@ -32,7 +32,7 @@ namespace Hassium
             List<Token> tokens = new Lexer(options.Code).Tokenize();
             if (options.Debug)
                 Debug.PrintTokens(tokens);
-            Parser hassiumParser = new Parser(tokens);
+            Parser.Parser hassiumParser = new Parser.Parser(tokens);
             AstNode ast = hassiumParser.Parse();
 
             try

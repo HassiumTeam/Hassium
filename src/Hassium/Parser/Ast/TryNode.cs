@@ -41,7 +41,7 @@ namespace Hassium
             Children.Add(finallyBody);
         }
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "try");
             AstNode tryBody = StatementNode.Parse(parser);

@@ -17,7 +17,7 @@ namespace Hassium
                                       token.TokenClass.ToString().Length) + "Value: " + token.Value);
                 position++;
             }
-            Console.WriteLine("End of token list");
+            Console.WriteLine("-- END OF TOKEN LIST --");
             Console.WriteLine();
         }
     }

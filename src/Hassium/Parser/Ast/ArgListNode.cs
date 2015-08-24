@@ -4,7 +4,7 @@ namespace Hassium
 {
     public class ArgListNode: AstNode
     {
-        public static ArgListNode Parse(Parser parser)
+        public static ArgListNode Parse(Parser.Parser parser)
         {
             ArgListNode ret = new ArgListNode();
             parser.ExpectToken(TokenType.Parentheses, "(");

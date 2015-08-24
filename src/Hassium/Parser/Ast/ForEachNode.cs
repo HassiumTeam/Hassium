@@ -35,7 +35,7 @@ namespace Hassium
             this.Children.Add(body);
         }
 
-        public static AstNode Parse(Parser parser)
+        public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.Parentheses, "(");
