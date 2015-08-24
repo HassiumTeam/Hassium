@@ -45,9 +45,9 @@ namespace Hassium
                 case "^":
                 case "^=":
                     return BinaryOperation.Xor;
-                case "=":
+                case ":=":
                     return BinaryOperation.Assignment;
-                case "==":
+                case "=":
                     return BinaryOperation.Equals;
                 case "!=":
                     return BinaryOperation.NotEqualTo;
