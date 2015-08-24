@@ -83,6 +83,7 @@ namespace Hassium
 
             Interpreter.Globals.Add("true", true);
             Interpreter.Globals.Add("false", false);
+            Interpreter.Globals.Add("null", null);
 
             options.Code = File.ReadAllText(options.FilePath);
 
