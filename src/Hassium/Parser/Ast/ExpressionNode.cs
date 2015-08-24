@@ -1,4 +1,5 @@
 using System;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -274,7 +275,7 @@ namespace Hassium
             }
             else if (parser.AcceptToken(TokenType.Bracket, "["))
             {
-                AstNode statement = ExpressionNode.Parse(parser);
+                AstNode statement = ArrayInitializerNode.Parse(parser);
                 parser.ExpectToken(TokenType.Bracket, "]");
                 return statement;
             }

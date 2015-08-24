@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hassium
 {
@@ -27,7 +28,14 @@ namespace Hassium
 
         public static object ToStr(object[] args)
         {
-            return String.Join("", args);
+            if (args[0] is Array)
+                return ((Array) (args[0])).Cast<object>()
+                    .Aggregate("Array { ",
+                        (current, item) =>
+                            current +
+                            ((item is Array ? ToStr(new[] {item}) : (item.ToString().Replace("\"", "\\\""))) +
+                             " ")) + "}";
+            return string.Join("", args);
         }
 
         public static object ToByte(object[] args)
