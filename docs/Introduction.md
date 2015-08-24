@@ -643,3 +643,59 @@ abcd
 defg
 3.1415
 ```
+
+## Part 13: Functions
+
+Functions are probably the most intregal part to any language there is. Functions are blocks of
+code that can be ran multiple times to both save space and to preform operations on. Here is an
+example of the most basic function there is being called twice:
+```
+func sayHello() {
+	print("Hello, World!");
+}
+
+sayHello();
+sayHello();
+```
+
+This outputs "Hello, World!" twice onto the console. The function called sayHello has a code block
+containing a print statement. When sayHello() is called twice later it runs that code block each time,
+causing that output on the console.
+
+Many functions take in arguments, just like the built in functions that Hassium provides, your own functions
+can also take in those arguments and preform operations on them. Take a look at a function that takes in
+two arguments, multiplies them together, and displays them on the console:
+```
+func mult(x, y) {
+	print(x * y);
+}
+```
+
+The variables x and y become part of the variables that the function uses, and are subsequently multiplied
+together, so if we ran mult(4, 7) the output would be 28.
+
+Functions can also do something called returning. Returning is when your function sends a value back to whatever
+it is that called it. You've already expirenced this with builtin functions like toupper(), which returns back
+an uppercase version of the argument it was given. Here's a program with a function that takes in a string argument, turns it
+all into lowercase, then makes every other character uppercase, called AlternatePrgm.hs:
+```
+func alternateUpper(text) {
+        text := tolower(text);
+        result := "";
+
+        for (x := 0; x < strlen(text); x := x + 1) {
+                if ((x % 2) = 0)
+                        result := result + toupper(getch(text, x));
+                else
+                        result := result + getch(text, x);
+        }
+
+        return result;
+}
+
+print(alternateUpper("hello world"));
+```
+
+The alternateUpper function will take the argument and alternate the cases of it, and
+when it is done it will return that alternated string called result back into the print
+statement, displaying it onto the console.
