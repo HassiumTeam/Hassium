@@ -98,7 +98,7 @@ namespace Hassium
         private static AstNode ParseEquality (Parser parser)
         {
             AstNode left = ParseAdditive(parser);
-            if (parser.AcceptToken(TokenType.Comparison, "=="))
+            if (parser.AcceptToken(TokenType.Comparison, "="))
             {
                 var right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.Equals, left, right);

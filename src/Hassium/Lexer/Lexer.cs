@@ -55,7 +55,7 @@ namespace Hassium
                 else if (current == ':' && next1 == '=')
                     Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
 
-                else if (current == '=' && next1 == '=')
+                else if (current == '=')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
                 else if (current == '!' && next1 == '=')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
