@@ -81,9 +81,9 @@ namespace Hassium
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
 
-            Interpreter.Globals.Add("true", true);
+            /*Interpreter.Globals.Add("true", true); <- now in Interpreter.Constants
             Interpreter.Globals.Add("false", false);
-            Interpreter.Globals.Add("null", null);
+            Interpreter.Globals.Add("null", null);*/
 
             options.Code = File.ReadAllText(options.FilePath);
 
