@@ -4,55 +4,60 @@ using System.Linq;
 
 namespace Hassium
 {
-    public class ConversionFunctions : ILibrary
-    {
-        public Dictionary<string, InternalFunction> GetFunctions()
-        {
-            Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
-            result.Add("tonum", new InternalFunction(ConversionFunctions.ToNum));
-            result.Add("tostr", new InternalFunction(ConversionFunctions.ToStr));
-            result.Add("tobyte", new InternalFunction(ConversionFunctions.ToByte));
-            result.Add("toarr", new InternalFunction(ConversionFunctions.ToArr));
+	public class ConversionFunctions : ILibrary
+	{
+		[IntFunc("tonum")]
+		public static object ToNum(object[] args)
+		{
+			double tmp = 0;
+			if (double.TryParse(args[0].ToString(), out tmp))
+				return tmp;
+			else
+				return args[0].ToString();
+		}
 
-            return result;
-        }
+		[IntFunc("tostr")]
+		public static object ToStr(object[] args)
+		{
+			if(args[0] is Array)
+			{
+				return ((Array)(args[0])).Cast<object>()
+						.Aggregate("Array { ",
+							(current, item) => current + ((item is Array ? ToStr(new[] { item }) : (item.ToString().Replace("\"", "\\\""))) + " ")) + "}";
+			}
+			return String.Join("", args);
+		}
 
-        public static object ToNum(object[] args)
-        {
-            double tmp = 0;
-            if (double.TryParse(args[0].ToString(), out tmp))
-                return tmp;
-            else
-                return args[0].ToString();
-        }
+		[IntFunc("tohex")]
+		public static object ToHex(object[] args)
+		{
+			try
+			{
+			    return Convert.ToInt32(args[0]).ToString("{0:X}");
+			}
+			catch
+			{
+				return args[0].ToString();
+			}
+		}
 
-        public static object ToStr(object[] args)
-        {
-            if (args[0] is Array)
-                return ((Array) (args[0])).Cast<object>()
-                    .Aggregate("Array { ",
-                        (current, item) =>
-                            current +
-                            ((item is Array ? ToStr(new[] {item}) : (item.ToString().Replace("\"", "\\\""))) +
-                             " ")) + "}";
-            return string.Join("", args);
-        }
+		[IntFunc("tobyte")]
+		public static object ToByte(object[] args)
+		{
+			try
+			{
+				return Convert.ToByte(args[0]);
+			}
+			catch
+			{
+				return args[0].ToString();
+			}
+		}
 
-        public static object ToByte(object[] args)
-        {
-            try
-            {
-                return Convert.ToByte(args[0]);
-            }
-            catch
-            {
-                return args[0].ToString();
-            }
-        }
-
-        public static object ToArr(object[] args)
-        {
-            return args;
-        }
-    }
+		[IntFunc("toarr")]
+		public static object ToArr(object[] args)
+		{
+			return args;
+		}
+	}
 }

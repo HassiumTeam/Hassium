@@ -18,5 +18,16 @@ namespace Hassium
             return this.target(args);
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class IntFunc : Attribute
+    {
+        public string Name { get; set; }
+
+        public IntFunc(string name)
+        {
+            Name = name;
+        }
+    }
 }
 

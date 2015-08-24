@@ -6,73 +6,67 @@ namespace Hassium
 {
     public class StringFunctions : ILibrary
     {
-        public Dictionary<string, InternalFunction> GetFunctions()
-        {
-            Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
-            result.Add("strcat", new InternalFunction(StringFunctions.Strcat));
-            result.Add("strlen", new InternalFunction(StringFunctions.Strlen));
-            result.Add("getch", new InternalFunction(StringFunctions.Getch));
-            result.Add("sstr", new InternalFunction(StringFunctions.Sstr));
-            result.Add("begins", new InternalFunction(StringFunctions.Begins));
-            result.Add("toupper", new InternalFunction(StringFunctions.ToUpper));
-            result.Add("tolower", new InternalFunction(StringFunctions.ToLower));
-            result.Add("contains", new InternalFunction(StringFunctions.Contains));
-            result.Add("sformat", new InternalFunction(StringFunctions.SFormat));
-            result.Add("split", new InternalFunction(StringFunctions.Split));
-            result.Add("replace", new InternalFunction(StringFunctions.Replace));
-
-            return result;
-        }
+        [IntFunc("strcat")]
         public static object Strcat(object[] args)
         {
             return String.Join("", args);
         }
 
+        [IntFunc("strlen")]
         public static object Strlen(object[] args)
         {
             return args[0].ToString().Length;
         }
 
+        [IntFunc("getch")]
         public static object Getch(object[] args)
         {
             return args[0].ToString()[Convert.ToInt32(args[1])].ToString();
         }
 
+        [IntFunc("sstr")]
         public static object Sstr(object[] args)
         {
             return args[0].ToString().Substring(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
         }
 
+        [IntFunc("begins")]
         public static object Begins(object[] args)
         {
             return args[0].ToString().StartsWith(args[1].ToString());
         }
 
+        [IntFunc("toupper")]
         public static object ToUpper(object[] args)
         {
             return String.Join("", args).ToUpper();
         }
 
+        [IntFunc("tolower")]
         public static object ToLower(object[] args)
         {
             return String.Join("", args).ToLower();
         }
 
+		[IntFunc("contains")]
         public static object Contains(object[] args)
         {
             return args[0].ToString().Contains(args[1].ToString());
         }
 
+		[IntFunc("sformat")]
         public static object SFormat(object[] args)
         {
             return string.Format(args[0].ToString(), args.Skip(1).ToArray());
         }
 
+		[IntFunc("split")]
         public static object Split(object[] args)
         {
             return args[0].ToString().Split(Convert.ToChar(args[1]));
         }
 
+		[IntFunc("replace")]
         public static object Replace(object[] args)
         {
             return args[0].ToString().Replace(args[1].ToString(), args[2].ToString());

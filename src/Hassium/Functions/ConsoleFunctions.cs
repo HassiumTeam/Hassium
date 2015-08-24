@@ -8,68 +8,68 @@ namespace Hassium
 {
     public class ConsoleFunctions : ILibrary
     {
-        public Dictionary<string, InternalFunction> GetFunctions()
-        {
-            Dictionary<string, InternalFunction> result = new Dictionary<string, InternalFunction>();
-            result.Add("print", new InternalFunction(ConsoleFunctions.Print));
-            result.Add("println", new InternalFunction(ConsoleFunctions.PrintLn));
-            result.Add("input", new InternalFunction(ConsoleFunctions.Input));
-            result.Add("cls", new InternalFunction(ConsoleFunctions.Cls));
-            result.Add("pause", new InternalFunction(ConsoleFunctions.Pause));
-            result.Add("setfcol", new InternalFunction(ConsoleFunctions.Setfcol));
-            result.Add("setbcol", new InternalFunction(ConsoleFunctions.Setbcol));
-            result.Add("getfcol", new InternalFunction(ConsoleFunctions.Getfcol));
-            result.Add("getbcol", new InternalFunction(ConsoleFunctions.Setbcol));
-
-            return result;
-        }
-
+        [IntFunc("print")]
         public static object Print(object[] args)
         {
             Console.Write(String.Join("", args));
             return null;
         }
 
+        [IntFunc("println")]
         public static object PrintLn(object[] args)
         {
             Console.WriteLine(String.Join("", args));
             return null;
         }
 
+        [IntFunc("printarr")]
+        public static object PrintArr(object[] args)
+        {
+            Console.WriteLine(ConversionFunctions.ToStr(args));
+            return null;
+        }
+
+        [IntFunc("input")]
         public static object Input(object[] args)
         {
             return Console.ReadLine();
         }
 
+        [IntFunc("cls")]
         public static object Cls(object[] args)
         {
             Console.Clear();
             return null;
         }
 
+        [IntFunc("pause")]
         public static object Pause(object[] args)
         {
             Console.ReadKey(true);
             return null;
         }
 
+        [IntFunc("setfcol")]
         public static object Setfcol(object[] args)
         {
             Console.ForegroundColor = parseColor(args[0].ToString());
             return null;
         }
 
+        [IntFunc("setbcol")]
         public static object Setbcol(object[] args)
         {
             Console.BackgroundColor = parseColor(args[0].ToString());
             return null;
         }
 
+        [IntFunc("getfcol")]
         public static object Getfcol(object[] args)
         {
             return Console.ForegroundColor.ToString();
         }
 
+        [IntFunc("getbcol")]
         public static object Getbcol(object[] args)
         {
             return Console.BackgroundColor.ToString();

@@ -30,7 +30,7 @@ namespace Hassium
         {
             this.code = code;
             table = symbolTable;
-            foreach (var entry in GetFunctions().SelectMany(entries => entries))
+            foreach (var entry in GetFunctions())
                 Globals.Add(entry.Key, entry.Value);
         }
 
@@ -360,9 +360,9 @@ namespace Hassium
             return 0;
         }
 
-        public static List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
+        public static Dictionary<string, InternalFunction> GetFunctions(string path = "")
         {
-            var result = new List<Dictionary<string, InternalFunction>>();
+            var result = new Dictionary<string, InternalFunction>();
 
             var testAss = path == "" ? Assembly.GetExecutingAssembly() : Assembly.LoadFrom(path);
 
@@ -370,8 +370,29 @@ namespace Hassium
             {
                 if (type.GetInterface(typeof(ILibrary).FullName) != null)
                 {
-                    var ilib = (ILibrary)Activator.CreateInstance(type);
-                    result.Add(ilib.GetFunctions());
+                    if (type.GetMethod("GetFunctions") != null) // TODO: DEPRECATED
+                    {
+                        var method = type.GetMethod("GetFunctions");
+                        var rdict =
+                            (Dictionary<string, InternalFunction>)
+                                (method.Invoke(Activator.CreateInstance(type, null), null));
+                        foreach (var entry in rdict)
+                            result.Add(entry.Key, entry.Value);
+                    }
+                    else
+                    {
+                        foreach (var myfunc in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                        {
+                            var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
+                            foreach (var theattr in theattr1.OfType<IntFunc>())
+                            {
+                                result.Add(theattr.Name,
+                                    new InternalFunction(
+                                        (HassiumFunctionDelegate)
+                                            Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc)));
+                            }
+                        }
+                    }
                 }
             }
             return result;
