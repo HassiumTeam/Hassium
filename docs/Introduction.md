@@ -25,7 +25,7 @@ text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.has:
 ```
 $SUMMARY: Shows a greeting to the user$
 
-print("Hello, World!");
+println("Hello, World!");
 
 exit(0);
 ```
@@ -57,7 +57,7 @@ program VariablesPrgm.has:
 $SUMMARY: Uses variables$
 
 myVar := "Hassium is free as in free beer and in freedom!";
-print(myVar, "\n");
+println(myVar);
 
 exit(0);
 ```
@@ -111,7 +111,7 @@ $SUMMARY: Reads user input and returns it back$
 
 print("Enter some text: ");
 in := input();
-print("The text you entered was: ", in, "\n");
+println("The text you entered was: ", in);;
 
 exit(0);
 ```
@@ -157,10 +157,10 @@ x := input();
 print("Enter the second number: ");
 y := input();
 
-print(x, "+", y, "=", (x + y), "\n");
-print(x, "-", y, "=", (x - y), "\n");
-print(x, "*", y, "=", (x * y), "\n");
-print(x, "/", y, "=", (x / y), "\n");
+println(x, "+", y, "=", (x + y));;
+println(x, "-", y, "=", (x - y));;
+println(x, "*", y, "=", (x * y));;
+println(x, "/", y, "=", (x / y));;
 
 exit(0);
 ```
@@ -182,14 +182,14 @@ $SUMMARY: Shows math family$
 print("Enter a number to square root: ");
 x := input();
 
-print("Square root is: ", sqrt(x), "\n");
+println("Square root is: ", sqrt(x));;
 
 print("Enter a base number: ");
 x := input();
 print("Enter a power: ");
 y := input();
 
-print("Number raised to power is: ", pow(x, y), "\n");
+println("Number raised to power is: ", pow(x, y));;
 
 exit(0);
 ```
@@ -231,7 +231,7 @@ $SUMMARY: Deletes a file we specify$
 print("Enter a file path: ");
 path := input();
 
-print("File exists: ", fexists(path), "\n");
+println("File exists: ", fexists(path));;
 dfile(path);
 
 exit(0);
@@ -359,7 +359,7 @@ if (op = "+") {
 } else if (op = "/") {
 	print(x / y);
 } else {
-	print("Unrecognized operation: ", op, "\n");
+	println("Unrecognized operation: ", op);;
 	exit(1);
 }
 
@@ -421,7 +421,7 @@ $SUMMARY: Increments and displays 1-10$
 x := 1;
 
 while(x < 11) {
-	print(x, "\n");
+	println(x);;
 	x := x + 1;
 }
 
@@ -449,7 +449,7 @@ print("Enter the end number: ");
 y := input();
 
 while (x < (y + 1)) {
-	print(x, "\n");
+	println(x);;
 	x := x + 1;
 } else {
 	print("The initial number is not less than the end number dummy!");
@@ -526,8 +526,8 @@ while(x < 5) {
 }
 
 print("The names are:\n");
-print(concatarr(first), "\n");
-print(concatarr(last), "\n");
+println(concatarr(first));;
+println(concatarr(last));;
 
 exit(0);
 ```
@@ -576,7 +576,7 @@ counts from 1 to 10 using a for loop called ForPrgm.has:
 $SUMMARY: Counts from 1 to 10 using a for loop$
 
 for (x := 1; x < 11; x := x + 1) {
-	print(x, "\n");
+	println(x);;
 }
 
 exit(0);
