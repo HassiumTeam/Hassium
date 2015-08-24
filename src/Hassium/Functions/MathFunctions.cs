@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Hassium;
 
-namespace BSharp
+namespace Hassium
 {
 	public class MathFunctions : ILibrary
 	{
