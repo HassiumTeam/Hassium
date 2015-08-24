@@ -39,7 +39,7 @@ namespace Hassium
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
-            if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
+            if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
                 return CallStack.Peek().Locals[name];
             if (Globals.ContainsKey(name))
                 return Globals[name];
@@ -51,7 +51,7 @@ namespace Hassium
             return onlyglobal
                 ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
                 : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
-                  (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name));
+                  (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)));
         }
 
         public void SetGlobalVariable(string name, object value)
@@ -73,7 +73,7 @@ namespace Hassium
 
         public void SetVariable(string name, object value, bool forceglobal = false, bool onlyexist = false)
         {
-            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || CallStack.Peek().Scope.Symbols.Contains(name)))
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))))
                 SetLocalVariable(name, value);
             else
                 SetGlobalVariable(name, value);
@@ -90,7 +90,7 @@ namespace Hassium
             else
             {
                 if(!HasVariable(name)) throw new ArgumentException("The variable '" + name + "' doesn't exist.");
-                if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
+                if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
                     CallStack.Peek().Locals.Remove(name);
                 else
                     Globals.Remove(name);
