@@ -111,9 +111,10 @@ namespace Hassium
                 case BinaryOperation.Modulus:
                     return Convert.ToDouble(EvaluateNode(node.Left)) % Convert.ToDouble(EvaluateNode(node.Right));
 
-                    case BinaryOperation.Pow:
-                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)),
-                        Convert.ToDouble(EvaluateNode(node.Right)));
+                case BinaryOperation.Pow:
+                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), Convert.ToDouble(EvaluateNode(node.Right)));
+                case BinaryOperation.Root:
+                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), 1.0 / Convert.ToDouble(EvaluateNode(node.Right)));
             }
             // Raise error
             return -1;
@@ -124,11 +125,11 @@ namespace Hassium
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !(bool)((EvaluateNode(node.Value)));
+                    return !Convert.ToBoolean((EvaluateNode(node.Value)));
                 case UnaryOperation.Negate:
-                    return -(double)((EvaluateNode(node.Value)));
+                    return -Convert.ToDouble((EvaluateNode(node.Value)));
                 case UnaryOperation.Complement:
-                    return ~(int)(double)((EvaluateNode(node.Value)));
+                    return ~(int)Convert.ToDouble((EvaluateNode(node.Value)));
             }
             //Raise error
             return -1;
