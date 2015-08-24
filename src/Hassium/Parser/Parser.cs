@@ -36,6 +36,11 @@ namespace Hassium
             return tokens[position];
         }
 
+        public Token PreviousToken()
+        {
+            return tokens[position - 1];
+        }
+
         public bool MatchToken(TokenType clazz)
         {
             return position < tokens.Count && tokens[position].TokenClass == clazz;
@@ -43,7 +48,7 @@ namespace Hassium
 
         public bool MatchToken(TokenType clazz, string value)
         {
-            return position < tokens.Count && tokens[position].TokenClass == clazz && tokens[position].Value == value;
+            return position < tokens.Count && tokens[position].TokenClass == clazz && tokens[position].Value.ToString() == value.ToString();
         }
 
         public bool AcceptToken(TokenType clazz)

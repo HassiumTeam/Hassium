@@ -26,13 +26,13 @@ namespace Hassium
         public static AstNode Parse(Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier);
-            string name = parser.ExpectToken(TokenType.Identifier).Value;
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
             parser.ExpectToken(TokenType.Parentheses, "(");
 
             List<string> result = new List<string>();
             while (parser.MatchToken(TokenType.Identifier))
             {
-                result.Add(parser.ExpectToken(TokenType.Identifier).Value);
+                result.Add(parser.ExpectToken(TokenType.Identifier).Value.ToString());
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }

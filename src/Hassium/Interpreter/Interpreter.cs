@@ -43,9 +43,18 @@ namespace Hassium
             }
         }
 
-        private object interpretBinaryOp(BinOpNode node)
+        private void interpretBinaryAssign(BinOpNode node)
         {
-            switch (node.BinOp)
+            object right = interpretBinaryOp(node, true);
+            if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
+                CallStack.Peek().Locals[node.Left.ToString()] = right;
+            else
+                Globals[node.Left.ToString()] = right;
+        }
+
+        private object interpretBinaryOp(BinOpNode node, bool isAssign = false)
+        {
+            switch (isAssign ? node.AssignOperation : node.BinOp)
             {
                 case BinaryOperation.Addition:
                     if (EvaluateNode(node.Left) is string || EvaluateNode(node.Right) is string)
@@ -80,9 +89,9 @@ namespace Hassium
                 case BinaryOperation.Equals:
                     return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.And:
-                    return (bool)(EvaluateNode(node.Left)) && (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) && Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.Or:
-                    return (bool)(EvaluateNode(node.Left)) || (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) || Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.NotEqualTo:
                     return EvaluateNode(node.Left).GetHashCode() != EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.LessThan:
@@ -94,13 +103,17 @@ namespace Hassium
                 case BinaryOperation.LesserOrEqual:
                     return Convert.ToDouble(EvaluateNode(node.Left)) <= Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.Xor:
-                    return (bool)(EvaluateNode(node.Left)) ^ (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) ^ Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftLeft:
-                    return (byte)(EvaluateNode(node.Left)) << (byte)(EvaluateNode(node.Right));
+                    return Convert.ToInt32(EvaluateNode(node.Left)) << Convert.ToInt32(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftRight:
-                    return (byte)(EvaluateNode(node.Left)) >> (byte)(EvaluateNode(node.Right));
+                    return Convert.ToInt32(EvaluateNode(node.Left)) >> Convert.ToInt32(EvaluateNode(node.Right));
                 case BinaryOperation.Modulus:
-                    return (double)(EvaluateNode(node.Left)) % (double)(EvaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) % Convert.ToDouble(EvaluateNode(node.Right));
+
+                    case BinaryOperation.Pow:
+                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)),
+                        Convert.ToDouble(EvaluateNode(node.Right)));
             }
             // Raise error
             return -1;
@@ -218,6 +231,11 @@ namespace Hassium
             }
             else if (node is BinOpNode)
             {
+                if (((BinOpNode)node).IsAssign)
+                {
+                    interpretBinaryAssign((BinOpNode)node);
+                    return null;
+                }
                 return interpretBinaryOp((BinOpNode)node);
             }
             else if (node is UnaryOpNode)

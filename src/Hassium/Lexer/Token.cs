@@ -4,31 +4,28 @@ namespace Hassium
 {
     public enum TokenType
     {
-        Identifier,
         Brace,
         Bracket,
+        Identifier,
         String,
         Number,
         Parentheses,
         Comma,
         Operation,
+        OpAssign,
         Comparison,
-        Store,
+        Assignment,
         Exception,
         EndOfLine,
-        Not,
-        Xor,
-        Bitshift,
-        Modulus,
-        Complement
+        UnaryOperation
 
     }
     public class Token
     {
         public TokenType TokenClass { get; private set; }
-        public string Value { get; private set; }
+        public object Value { get; private set; }
 
-        public Token(TokenType type, string value)
+        public Token(TokenType type, object value)
         {
             this.TokenClass = type;
             this.Value = value;

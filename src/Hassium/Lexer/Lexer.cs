@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Hassium
 {
@@ -16,61 +17,95 @@ namespace Hassium
             this.code = code;
         }
 
+        private void Add(Token token)
+        {
+            result.Add(token);
+        }
+
         public List<Token> Tokenize()
         {
             whiteSpaceMonster();
 
-            while (peekChar() != -1)
+            while (HasChar())
             {
-                if (char.IsLetterOrDigit((char)peekChar()))
-                    result.Add(scanData());
-                else if ((char)(peekChar()) == '\"')
-                    result.Add(scanString());
-                else if ((char)(peekChar()) == '$')
+                var current = PeekChar();
+                var next1 = HasChar() ? PeekChar(1) : '\0';
+                var next2 = HasChar(1) ? PeekChar(2) : '\0';
+
+                if (char.IsLetterOrDigit((char)PeekChar()))
+                    Add(scanData());
+
+                else if ((char)(PeekChar()) == '"')
+                    Add(scanString());
+                else if ((char)(PeekChar()) == '$')
                     scanComment();
-                else if (((char)(peekChar()) == '>' || (char)(peekChar()) == '<') && (char)(peekChar(1)) == '=')
-                    result.Add(new Token(TokenType.Comparison, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
-                else if (((char)(peekChar()) == '<' && (char)(peekChar(1)) == '<') || ((char)(peekChar()) == '>' && (char)(peekChar(1)) == '>'))
-                    result.Add(new Token(TokenType.Bitshift, ((char)readChar()).ToString() + ((char)readChar()).ToString()));
-                else if ((char)(peekChar()) == ';')
-                    result.Add(new Token(TokenType.EndOfLine, ((char)readChar()).ToString()));
-                else if ((char)(peekChar()) == '(' || (char)(peekChar()) == ')')
-                    result.Add(new Token(TokenType.Parentheses, ((char)readChar()).ToString()));
-                else if ((char)(peekChar()) == '{' || (char)(peekChar()) == '}')
-                    result.Add(new Token(TokenType.Brace, ((char)readChar()).ToString()));
-                else if ((char) (peekChar()) == '[' || (char) (peekChar()) == ']')
-                    result.Add(new Token(TokenType.Bracket, ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == ',')
-                    result.Add(new Token(TokenType.Comma, ((char) readChar()).ToString()));
-                else if ((char)(peekChar()) == '~')
-                    result.Add(new Token(TokenType.Complement, ((char)readChar()).ToString()));
-                else if ("+-/*".Contains((((char) peekChar()).ToString())))
-                    result.Add(new Token(TokenType.Operation, ((char) readChar()).ToString()));
-                else if ("=<>".Contains((((char) peekChar()).ToString())))
-                    result.Add(new Token(TokenType.Comparison, ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '!' && (char) (peekChar(1)) == '=')
-                    result.Add(new Token(TokenType.Comparison,
-                        ((char) readChar()).ToString() + ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '%')
-                    result.Add(new Token(TokenType.Modulus, ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == ':' && (char) (peekChar(1)) == '=')
-                    result.Add(new Token(TokenType.Store,
-                        ((char) readChar()).ToString() + ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '!' && (char) (peekChar(1)) != '=')
-                    result.Add(new Token(TokenType.Not, ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '&' && (char) (peekChar(1)) == '&')
-                    result.Add(new Token(TokenType.Comparison,
-                        ((char) readChar()).ToString() + ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '|' && (char) (peekChar(1)) == '|')
-                    result.Add(new Token(TokenType.Comparison,
-                        ((char) readChar()).ToString() + ((char) readChar()).ToString()));
-                else if ((char) (peekChar()) == '^')
-                    result.Add(new Token(TokenType.Xor, ((char) readChar()).ToString()));
+
+                else if (current == ';')
+                    Add(new Token(TokenType.EndOfLine, ReadChar()));
+                else if (current == ',')
+                    Add(new Token(TokenType.Comma, ReadChar()));
+
+                else if (current == '(' || current == ')')
+                    Add(new Token(TokenType.Parentheses, ReadChar()));
+                else if (current == '[' || current == ']')
+                    Add(new Token(TokenType.Bracket, ReadChar()));
+                else if (current == '{' || current == '}')
+                    Add(new Token(TokenType.Brace, ReadChar()));
+
+                else if (current == ':' && next1 == '=')
+                    Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
+
+                else if (current == '=' && next1 == '=')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if (current == '!' && next1 == '=')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if ((current == '<' || current == '>') && next1 == '=')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if (current == '<' || current == '>')
+                    Add(new Token(TokenType.Comparison, ReadChar()));
+                else if (current == '&' && next1 == '&')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if (current == '|' && next1 == '|')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+
+
+
+                else if (current == '*' && next1 == '*' && next2 != '=')
+                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if (current == '/' && next1 == '/' && next2 != '=')
+                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if (current == '>' && next1 == '>' && next2 != '=')
+                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if (current == '<' && next1 == '<' && next2 != '=')
+                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if ("+-*/%".Contains(current) && !("/*=".Contains(next1)))
+                    Add(new Token(TokenType.Operation, ReadChar()));
+                else if ("&|^".Contains(current) && next1 != '=')
+                    Add(new Token(TokenType.Operation, ReadChar()));
+
+                else if ("~!-".Contains(current))
+                    Add(new Token(TokenType.UnaryOperation, ReadChar()));
+
+                else if (current == '*' && next1 == '*' && next2 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
+                else if (current == '/' && next1 == '/' && next2 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
+                else if (current == '>' && next1 == '>' && next2 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
+                else if (current == '<' && next1 == '<' && next2 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
+
+                else if ("+-*/%".Contains(current) && next1 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
+                else if ("&|^".Contains(current) && next1 == '=')
+                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
+
+
                 else
                 {
                     result.Add(new Token(TokenType.Exception,
-                        "Unexpected " + ((char) peekChar()).ToString() + " encountered"));
-                    readChar();
+                        "Unexpected " + ((char) PeekChar()).ToString() + " encountered"));
+                    ReadChar();
                 }
 
                 whiteSpaceMonster();
@@ -81,25 +116,25 @@ namespace Hassium
 
         private void scanComment()
         {
-            readChar();
-            while(peekChar() != '$' && peekChar() != -1)
+            ReadChar();
+            while(PeekChar() != '$' && HasChar())
             {
-                readChar();
+                ReadChar();
             }
-            readChar();
+            ReadChar();
         }
 
         private Token scanString()
         {
-            readChar();
+            ReadChar();
             var finalstr = "";
             var escaping = false;
             var unicode = false;
             var curuni = "";
 
-            while ((escaping || peekChar() != '\"') && peekChar() != -1)
+            while ((escaping || PeekChar() != '\"') && HasChar())
             {
-                var curch = (char)readChar();
+                var curch = (char)ReadChar();
                 if (unicode)
                 {
                     if (char.IsLetter(curch) || "abcdefABCDEF".Contains(curch + "")) curuni += curch;
@@ -128,7 +163,7 @@ namespace Hassium
                 }
             }
 
-            readChar();
+            ReadChar();
 
             return new Token(TokenType.String, finalstr);
         }
@@ -138,10 +173,10 @@ namespace Hassium
             var finaldata = "";
             double temp = 0;
             int temp1 = 0;
-            while ((char.IsLetterOrDigit((char)peekChar()) && peekChar() != -1) ||
-                   ".-_".Contains("" + (char)(peekChar())))
+            while ((char.IsLetterOrDigit((char)PeekChar()) && HasChar()) ||
+                   ".-_".Contains("" + (char)(PeekChar())))
             {
-                finaldata += ((char)readChar()).ToString();
+                finaldata += ((char)ReadChar()).ToString();
             }
             if (finaldata.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -184,30 +219,25 @@ namespace Hassium
 
         private void whiteSpaceMonster()
         {
-            while(char.IsWhiteSpace((char)peekChar())) readChar();
+            while(char.IsWhiteSpace((char)PeekChar())) ReadChar();
         }
 
-        private int peekChar()
+        private char PeekChar(int n = 0)
         {
-            if (position < code.Length)
-                return code[position];
-            else
-                return -1;
-        }
-        private int peekChar(int n)
-        {
-            if (position + n < code.Length)
-                return code[position + n];
-            else
-                return -1;
+            return position + n < code.Length ? code[position + n] : '\0';
         }
 
-        private int readChar()
+        private bool HasChar(int number = 0)
         {
-            if (position < code.Length)
-                return code[position++];
-            else
-                return -1;
+            return position + number < code.Length;
+        }
+
+        private char ReadChar()
+        {
+            if (position >= code.Length)
+                throw new IndexOutOfRangeException();
+            
+            return code[position++];
         }
     }
 }
