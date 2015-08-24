@@ -1,8 +1,8 @@
 /* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
 implementation of string concat amoung other additions and foreach loop*/
+
 using System;
 using System.Collections;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,32 +21,40 @@ namespace Hassium
         {
             //Globals = new Dictionary<string, object>();
             this.code = code;
-            this.table = symbolTable;
-            foreach (Dictionary<string, InternalFunction> entries in GetFunctions())
-                foreach (KeyValuePair<string, InternalFunction> entry in entries)
-                    Globals.Add(entry.Key, entry.Value);
+            table = symbolTable;
+            foreach (var entry in GetFunctions().SelectMany(entries => entries))
+                Globals.Add(entry.Key, entry.Value);
         }
 
         public void Execute()
         {
-            foreach (AstNode node in this.code.Children)
+            foreach (var node in code.Children)
             {
                 if (node is FuncNode)
                 {
-                    FuncNode fnode = ((FuncNode)node);
-                    LocalScope scope = this.table.ChildScopes[fnode.Name];
+                    var fnode = ((FuncNode)node);
+                    var scope = table.ChildScopes[fnode.Name];
                     Globals[fnode.Name] = new HassiumFunction(this, fnode, scope);
                 }
             }
-            foreach (AstNode node in this.code.Children)
+            foreach (var node in code.Children)
             {
                 ExecuteStatement(node);
             }
         }
 
-        private object interpretBinaryOp(BinOpNode node)
+        private void interpretBinaryAssign(BinOpNode node)
         {
-            switch (node.BinOp)
+            object right = interpretBinaryOp(node, true);
+            if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
+                CallStack.Peek().Locals[node.Left.ToString()] = right;
+            else
+                Globals[node.Left.ToString()] = right;
+        }
+
+        private object interpretBinaryOp(BinOpNode node, bool isAssign = false)
+        {
+            switch (isAssign ? node.AssignOperation : node.BinOp)
             {
                 case BinaryOperation.Addition:
                     if (EvaluateNode(node.Left) is string || EvaluateNode(node.Right) is string)
@@ -71,7 +79,7 @@ namespace Hassium
                 case BinaryOperation.Assignment:
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
-                    object right = EvaluateNode(node.Right);
+                    var right = EvaluateNode(node.Right);
 
                     if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(node.Left.ToString()))
                         CallStack.Peek().Locals[node.Left.ToString()] = right;
@@ -81,9 +89,9 @@ namespace Hassium
                 case BinaryOperation.Equals:
                     return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.And:
-                    return (bool)(EvaluateNode(node.Left)) && (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) && Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.Or:
-                    return (bool)(EvaluateNode(node.Left)) || (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) || Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.NotEqualTo:
                     return EvaluateNode(node.Left).GetHashCode() != EvaluateNode(node.Right).GetHashCode();
                 case BinaryOperation.LessThan:
@@ -95,13 +103,18 @@ namespace Hassium
                 case BinaryOperation.LesserOrEqual:
                     return Convert.ToDouble(EvaluateNode(node.Left)) <= Convert.ToDouble(EvaluateNode(node.Right));
                 case BinaryOperation.Xor:
-                    return (bool)(EvaluateNode(node.Left)) ^ (bool)(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(EvaluateNode(node.Left)) ^ Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftLeft:
-                    return (byte)(EvaluateNode(node.Left)) << (byte)(EvaluateNode(node.Right));
+                    return Convert.ToInt32(EvaluateNode(node.Left)) << Convert.ToInt32(EvaluateNode(node.Right));
                 case BinaryOperation.BitshiftRight:
-                    return (byte)(EvaluateNode(node.Left)) >> (byte)(EvaluateNode(node.Right));
+                    return Convert.ToInt32(EvaluateNode(node.Left)) >> Convert.ToInt32(EvaluateNode(node.Right));
                 case BinaryOperation.Modulus:
-                    return (double)(EvaluateNode(node.Left)) % (double)(EvaluateNode(node.Right));
+                    return Convert.ToDouble(EvaluateNode(node.Left)) % Convert.ToDouble(EvaluateNode(node.Right));
+
+                case BinaryOperation.Pow:
+                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), Convert.ToDouble(EvaluateNode(node.Right)));
+                case BinaryOperation.Root:
+                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), 1.0 / Convert.ToDouble(EvaluateNode(node.Right)));
             }
             // Raise error
             return -1;
@@ -112,11 +125,11 @@ namespace Hassium
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !(bool)((EvaluateNode(node.Value)));
+                    return !Convert.ToBoolean((EvaluateNode(node.Value)));
                 case UnaryOperation.Negate:
-                    return -(double)((EvaluateNode(node.Value)));
+                    return -Convert.ToDouble((EvaluateNode(node.Value)));
                 case UnaryOperation.Complement:
-                    return ~(int)(double)((EvaluateNode(node.Value)));
+                    return ~(int)Convert.ToDouble((EvaluateNode(node.Value)));
             }
             //Raise error
             return -1;
@@ -127,11 +140,11 @@ namespace Hassium
             if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
                 return;
             if (node is CodeBlock)
-                foreach (AstNode anode in node.Children)
+                foreach (var anode in node.Children)
                     ExecuteStatement(anode);
             else if (node is IfNode)
             {
-                IfNode ifStmt = (IfNode)(node);
+                var ifStmt = (IfNode)(node);
                 if ((bool)(EvaluateNode(ifStmt.Predicate)))
                     ExecuteStatement(ifStmt.Body);
                 else
@@ -139,9 +152,9 @@ namespace Hassium
             }
             else if (node is WhileNode)
             {
-                WhileNode whileStmt = (WhileNode)(node);
+                var whileStmt = (WhileNode)(node);
                 if ((bool)(EvaluateNode(whileStmt.Predicate)))
-                    while ((bool)(EvaluateNode(whileStmt.Predicate)))
+                    while ((bool)EvaluateNode(whileStmt.Predicate))
                     {
                         ExecuteStatement(whileStmt.Body);
                     }
@@ -150,9 +163,9 @@ namespace Hassium
             }
             else if (node is ForNode)
             {
-                ForNode forStmt = (ForNode)(node);
+                var forStmt = (ForNode)(node);
                 ExecuteStatement(forStmt.Left);
-                while (((bool)(EvaluateNode(forStmt.Predicate))))
+                while ((bool)EvaluateNode(forStmt.Predicate))
                 {
                     ExecuteStatement(forStmt.Body);
                     ExecuteStatement(forStmt.Right);
@@ -160,13 +173,13 @@ namespace Hassium
             }
             else if (node is ForEachNode)
             {
-                ForEachNode forStmt = (ForEachNode)(node);
+                var forStmt = (ForEachNode)(node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = EvaluateNode(forStmt.Haystack);
                 if (!Globals.ContainsKey(needlestmt))
                     Globals.Add(needlestmt, null);
                 if ((haystack as IEnumerable) == null)
-                    throw new ArgumentException("'" + haystack.ToString() + "' is not an array and therefore can not be used in foreach.");
+                    throw new ArgumentException("'" + haystack + "' is not an array and therefore can not be used in foreach.");
                     
                 foreach (var needle in (IEnumerable)haystack)
                 {
@@ -177,7 +190,7 @@ namespace Hassium
             }
             else if (node is TryNode)
             {
-                TryNode tryStmt = (TryNode)(node);
+                var tryStmt = (TryNode)(node);
                 try
                 {
                     ExecuteStatement(tryStmt.Body);
@@ -186,15 +199,19 @@ namespace Hassium
                 {
                     ExecuteStatement(tryStmt.CatchBody);
                 }
+                finally
+                {
+                    ExecuteStatement(tryStmt.FinallyBody);
+                }
             }
             else if (node is ThreadNode)
             {
-                ThreadNode threadStmt = (ThreadNode)(node);
+                var threadStmt = (ThreadNode)(node);
                 Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
             }
             else if (node is ReturnNode)
             {
-                ReturnNode returnStmt = (ReturnNode)(node);
+                var returnStmt = (ReturnNode)(node);
                 CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
             }
             else
@@ -215,6 +232,11 @@ namespace Hassium
             }
             else if (node is BinOpNode)
             {
+                if (((BinOpNode)node).IsAssign)
+                {
+                    interpretBinaryAssign((BinOpNode)node);
+                    return null;
+                }
                 return interpretBinaryOp((BinOpNode)node);
             }
             else if (node is UnaryOpNode)
@@ -223,15 +245,15 @@ namespace Hassium
             }
             else if (node is FunctionCallNode)
             {
-                FunctionCallNode call = node as FunctionCallNode;
+                var call = (FunctionCallNode) node;
 
-                IFunction target = EvaluateNode(call.Target) as IFunction;
+                var target = EvaluateNode(call.Target) as IFunction;
 
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
 
-                object[] arguments = new object[call.Arguments.Children.Count];
-                for (int x = 0; x < call.Arguments.Children.Count; x++)
+                var arguments = new object[call.Arguments.Children.Count];
+                for (var x = 0; x < call.Arguments.Children.Count; x++)
                 {
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
                     if (arguments[x] is double && (((double)(arguments[x])) % 1 == 0))
@@ -241,7 +263,7 @@ namespace Hassium
             }
             else if (node is IdentifierNode)
             {
-                string name = ((IdentifierNode)node).Identifier;
+                var name = ((IdentifierNode)node).Identifier;
                 if (CallStack.Count > 0 && CallStack.Peek().Scope.Symbols.Contains(name))
                     return CallStack.Peek().Locals[name];
                 else
@@ -250,12 +272,14 @@ namespace Hassium
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
-                var arrname = call.Target.ToString();
                 Array monarr = null;
-                if (Globals.ContainsKey(arrname))
-                    monarr = (Array)Globals[arrname];
+                var evaluated = EvaluateNode(call.Target);
+                if (evaluated is string) monarr = evaluated.ToString().ToArray();
+                else if (evaluated is Array) monarr = (Array) evaluated;
                 else
-                    throw new Exception("Undefined variable: " + node);
+                {
+                    throw new Exception("The [] operator only applies to objects of type Array or String.");
+                }
                 var arguments = new object[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
@@ -275,19 +299,15 @@ namespace Hassium
 
         public static List<Dictionary<string, InternalFunction>> GetFunctions(string path = "")
         {
-            List<Dictionary<string, InternalFunction>> result = new List<Dictionary<string, InternalFunction>>();
-            Assembly testAss;
+            var result = new List<Dictionary<string, InternalFunction>>();
 
-            if (path != "")
-                testAss = Assembly.LoadFrom(path);
-            else
-                testAss = Assembly.GetExecutingAssembly();
+            var testAss = path == "" ? Assembly.GetExecutingAssembly() : Assembly.LoadFrom(path);
 
-            foreach (Type type in testAss.GetTypes())
+            foreach (var type in testAss.GetTypes())
             {
                 if (type.GetInterface(typeof(ILibrary).FullName) != null)
                 {
-                    ILibrary ilib = (ILibrary)Activator.CreateInstance(type);
+                    var ilib = (ILibrary)Activator.CreateInstance(type);
                     result.Add(ilib.GetFunctions());
                 }
             }
