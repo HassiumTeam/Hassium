@@ -7,15 +7,15 @@ namespace Hassium.Functions
     {
         private static WebClient client = new WebClient();
 
-        [IntFunc("dowstr")]
-        public static object DowStr(object[] args)
+        [IntFunc("downstr", "dowstr")]
+        public static object DownStr(object[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             return client.DownloadString(args[0].ToString());
         }
 
-        [IntFunc("dowfile")]
-        public static object DowFile(object[] args)
+        [IntFunc("downfile", "dowfile")]
+        public static object DownFile(object[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             client.DownloadFile(args[0].ToString(), args[1].ToString());
