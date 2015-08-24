@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
-namespace Hassium
+namespace Hassium.Functions
 {
 	public class ConversionFunctions : ILibrary
 	{

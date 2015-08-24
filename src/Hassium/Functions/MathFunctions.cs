@@ -2,9 +2,8 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using Hassium;
 
-namespace Hassium
+namespace Hassium.Functions
 {
 	public class MathFunctions : ILibrary
 	{
