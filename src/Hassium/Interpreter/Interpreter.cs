@@ -272,14 +272,14 @@ namespace Hassium
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
-                var arrname = call.Target.ToString();
                 Array monarr = null;
-                if (Globals.ContainsKey(arrname))
-                    if (Globals[arrname] is string)
-                        monarr = ((IEnumerable<char>) Globals[arrname]).ToArray();
-                    else monarr = (Array)Globals[arrname];
+                var evaluated = EvaluateNode(call.Target);
+                if (evaluated is string) monarr = evaluated.ToString().ToArray();
+                else if (evaluated is Array) monarr = (Array) evaluated;
                 else
-                    throw new Exception("Undefined variable: " + node);
+                {
+                    throw new Exception("The [] operator only applies to objects of type Array or String.");
+                }
                 var arguments = new object[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
