@@ -101,7 +101,12 @@ namespace Hassium
         {
             foreach (var node in code.Children)
             {
-                
+                if (node is FuncNode)
+                {
+                    var fnode = ((FuncNode)node);
+                    var scope = table.ChildScopes[fnode.Name];
+                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
+                }
             }
             foreach (var node in code.Children)
             {
@@ -210,12 +215,6 @@ namespace Hassium
                     ExecuteStatement(anode);
                     if (continueLoop || returnFunc) return;
                 }
-            }
-            else if (node is FuncNode)
-            {
-                var fnode = ((FuncNode)node);
-                var scope = table.ChildScopes[fnode.Name];
-                SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
             }
             else if (node is IfNode)
             {
