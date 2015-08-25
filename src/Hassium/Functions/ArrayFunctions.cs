@@ -78,5 +78,55 @@ namespace Hassium.Functions
 		{
 			return ((object[]) args[0]).Aggregate((a, b) => HassiumFunction.GetFunc2(args[1])(a, b));
 		}
+
+		#region LINQ-like functions
+		[IntFunc("array_select")]
+		public static object ArraySelect(object[] args)
+		{
+			return ((object[]) args[0]).Select(x => HassiumFunction.GetFunc1(args[1])(x)).ToArray();
+		}
+
+		[IntFunc("array_where")]
+		public static object ArrayWhere(object[] args)
+		{
+			return ((object[])args[0]).Where(x => (bool)HassiumFunction.GetFunc1(args[1])(x)).ToArray();
+		}
+
+		[IntFunc("array_any")]
+		public static object ArrayAny(object[] args)
+		{
+			return ((object[])args[0]).Any(x => (bool)HassiumFunction.GetFunc1(args[1])(x));
+		}
+
+		[IntFunc("array_first")]
+		public static object ArrayFirst(object[] args)
+		{
+			if (args[1] is IFunction)
+				return ((object[]) args[0]).First(x => (bool) HassiumFunction.GetFunc1(args[1])(x));
+			else
+				return ((object[]) args[0]).First();
+		}
+
+		[IntFunc("array_last")]
+		public static object ArrayLast(object[] args)
+		{
+			if (args[1] is IFunction)
+				return ((object[])args[0]).Last(x => (bool)HassiumFunction.GetFunc1(args[1])(x));
+			else
+				return ((object[])args[0]).Last();
+		}
+
+		[IntFunc("array_contains")]
+		public static object ArrayContains(object[] args)
+		{
+			return ((object[]) args[0]).Contains(args[1]);
+		}
+
+		[IntFunc("array_zip")]
+		public static object ArrayZip(object[] args)
+		{
+			return ((object[]) args[0]).Zip((object[]) args[1], HassiumFunction.GetFunc2(args[2])).ToArray();
+		}
+		#endregion
 	}
 }
