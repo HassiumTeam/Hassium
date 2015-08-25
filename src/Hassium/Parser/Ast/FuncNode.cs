@@ -25,7 +25,7 @@ namespace Hassium
 
         public static AstNode Parse(Parser.Parser parser)
         {
-            parser.ExpectToken(TokenType.Identifier);
+            parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
             parser.ExpectToken(TokenType.Parentheses, "(");
 
