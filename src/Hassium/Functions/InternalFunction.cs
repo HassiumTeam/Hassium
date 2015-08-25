@@ -1,6 +1,6 @@
 using System;
 
-namespace Hassium.Functions
+namespace Hassium
 {
     public delegate object HassiumFunctionDelegate (object[] arguments);
 
