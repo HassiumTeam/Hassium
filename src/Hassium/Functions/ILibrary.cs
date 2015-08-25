@@ -1,4 +1,4 @@
-namespace Hassium.Functions
+namespace Hassium
 {
     public interface ILibrary
     {
