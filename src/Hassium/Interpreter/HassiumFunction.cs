@@ -18,11 +18,11 @@ namespace Hassium
 
         public object Invoke(object[] args)
         {
-            StackFrame stackFrame = new StackFrame(this.localScope);
+            StackFrame stackFrame = new StackFrame(localScope);
 
             interpreter.CallStack.Push(stackFrame);
-            for (int x = 0; x < this.funcNode.Parameters.Count; x++)
-                stackFrame.Locals[this.funcNode.Parameters[x]] = args[x];
+            for (int x = 0; x < funcNode.Parameters.Count; x++)
+                stackFrame.Locals[funcNode.Parameters[x]] = args[x];
 
             interpreter.ExecuteStatement(funcNode.Body);
 

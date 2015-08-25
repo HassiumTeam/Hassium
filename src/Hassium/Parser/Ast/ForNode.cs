@@ -8,7 +8,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
@@ -16,7 +16,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
 
@@ -24,7 +24,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[2];
+                return Children[2];
             }
         }
 
@@ -32,16 +32,16 @@ namespace Hassium
         {
             get
             {
-                return this.Children[3];
+                return Children[3];
             }
         }
 
         public ForNode(AstNode left, AstNode predicate, AstNode right, AstNode body)
         {
-            this.Children.Add(left);
-            this.Children.Add(predicate);
-            this.Children.Add(right);
-            this.Children.Add(body);
+            Children.Add(left);
+            Children.Add(predicate);
+            Children.Add(right);
+            Children.Add(body);
         }
 
         public static AstNode Parse(Parser.Parser parser)

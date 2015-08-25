@@ -15,7 +15,7 @@ namespace Hassium.Functions
 
         public object Invoke(object[] args)
         {
-            return this.target(args);
+            return target(args);
         }
     }
 

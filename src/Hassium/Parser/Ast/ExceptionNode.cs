@@ -8,7 +8,7 @@ namespace Hassium
 
         public ExceptionNode(string value)
         {
-            this.Value = value;
+            Value = value;
         }
     }
 }

@@ -8,21 +8,21 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
         public AstNode Arguments
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
 
         public FunctionCallNode(AstNode target, ArgListNode arguments)
         {
-            this.Children.Add(target);
-            this.Children.Add(arguments);
+            Children.Add(target);
+            Children.Add(arguments);
         }
     }
 }

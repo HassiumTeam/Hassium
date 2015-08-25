@@ -13,7 +13,7 @@ namespace Hassium
 
         public AstNode ()
         {
-            this.Children = new List<AstNode>();
+            Children = new List<AstNode>();
         }
     }
 }

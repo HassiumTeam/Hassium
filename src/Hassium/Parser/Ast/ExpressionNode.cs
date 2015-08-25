@@ -269,7 +269,7 @@ namespace Hassium
             }
             else if (parser.AcceptToken(TokenType.Parentheses, "("))
             {
-                AstNode statement = ExpressionNode.Parse(parser);
+                AstNode statement = Parse(parser);
                 parser.ExpectToken(TokenType.Parentheses, ")");
                 return statement;
             }

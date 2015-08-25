@@ -18,14 +18,14 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
         public UnaryOpNode(UnaryOperation type, AstNode value)
         {
-            this.UnOp = type;
-            this.Children.Add(value);
+            UnOp = type;
+            Children.Add(value);
         }
     }
 }

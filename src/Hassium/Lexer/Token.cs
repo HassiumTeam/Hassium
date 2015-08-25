@@ -27,8 +27,8 @@ namespace Hassium
 
         public Token(TokenType type, object value)
         {
-            this.TokenClass = type;
-            this.Value = value;
+            TokenClass = type;
+            Value = value;
         }
     }
 }

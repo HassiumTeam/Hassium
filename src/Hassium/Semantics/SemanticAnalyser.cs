@@ -11,14 +11,14 @@ namespace Hassium
 
         public SemanticAnalyser(AstNode code)
         {
-            this.Code = code;
+            Code = code;
         }
 
         public SymbolTable Analyse()
         {
-            checkout(this.Code);
+            checkout(Code);
 
-            return this.result;
+            return result;
         }
 
         private void checkout(AstNode theNode)

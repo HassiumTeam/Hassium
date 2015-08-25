@@ -12,15 +12,15 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
         public FuncNode(string name, List<string> paramaters, AstNode body)
         {
-            this.Parameters = paramaters;
-            this.Name = name;
-            this.Children.Add(body);
+            Parameters = paramaters;
+            Name = name;
+            Children.Add(body);
         }
 
         public static AstNode Parse(Parser.Parser parser)

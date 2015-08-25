@@ -8,7 +8,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
@@ -16,7 +16,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
 
@@ -25,20 +25,20 @@ namespace Hassium
             get
             {
                 if (Children.Count < 3) return null;
-                return this.Children[2];
+                return Children[2];
             }
         }
 
         public TryNode(AstNode body, AstNode catchBody)
         {
-            this.Children.Add(body);
-            this.Children.Add(catchBody);
+            Children.Add(body);
+            Children.Add(catchBody);
         }
 
         public TryNode(AstNode body, AstNode catchBody, AstNode finallyBody)
         {
-            this.Children.Add(body);
-            this.Children.Add(catchBody);
+            Children.Add(body);
+            Children.Add(catchBody);
             Children.Add(finallyBody);
         }
 

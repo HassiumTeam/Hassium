@@ -198,61 +198,82 @@ namespace Hassium
             return -1;
         }
 
+        private bool isInLoop = false;
+        private bool continueLoop = false;
+
+        private bool isInFunc = false;
+        private bool returnFunc = false;
+
         public void ExecuteStatement(AstNode node)
         {
             if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
                 return;
             if (node is CodeBlock)
+            {
                 foreach (var anode in node.Children)
+                {
                     ExecuteStatement(anode);
+                    if (continueLoop || returnFunc) return;
+                }
+            }
             else if (node is IfNode)
             {
-                var ifStmt = (IfNode)(node);
-                if ((bool)(EvaluateNode(ifStmt.Predicate)))
+                var ifStmt = (IfNode) (node);
+                if ((bool) (EvaluateNode(ifStmt.Predicate)))
                     ExecuteStatement(ifStmt.Body);
                 else
                     ExecuteStatement(ifStmt.ElseBody);
             }
             else if (node is WhileNode)
             {
-                var whileStmt = (WhileNode)(node);
-                if ((bool)(EvaluateNode(whileStmt.Predicate)))
-                    while ((bool)EvaluateNode(whileStmt.Predicate))
+                var whileStmt = (WhileNode) (node);
+                isInLoop = true;
+                if ((bool) (EvaluateNode(whileStmt.Predicate)))
+                    while ((bool) EvaluateNode(whileStmt.Predicate))
                     {
                         ExecuteStatement(whileStmt.Body);
+                        if (continueLoop) continueLoop = false;
                     }
                 else
                     ExecuteStatement(whileStmt.ElseBody);
+                isInLoop = false;
             }
             else if (node is ForNode)
             {
-                var forStmt = (ForNode)(node);
+                var forStmt = (ForNode) (node);
+                isInLoop = true;
                 ExecuteStatement(forStmt.Left);
-                while ((bool)EvaluateNode(forStmt.Predicate))
+                while ((bool) EvaluateNode(forStmt.Predicate))
                 {
                     ExecuteStatement(forStmt.Body);
+                    if (continueLoop) continueLoop = false;
                     ExecuteStatement(forStmt.Right);
                 }
+                isInLoop = false;
             }
             else if (node is ForEachNode)
             {
-                var forStmt = (ForEachNode)(node);
+                var forStmt = (ForEachNode) (node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = EvaluateNode(forStmt.Haystack);
+                isInLoop = true;
                 SetVariable(needlestmt, null);
                 if ((haystack as IEnumerable) == null)
-                    throw new ArgumentException("'" + haystack + "' is not an array and therefore can not be used in foreach.");
-                    
-                foreach (var needle in (IEnumerable)haystack)
+                    throw new ArgumentException("'" + haystack +
+                                                "' is not an array and therefore can not be used in foreach.");
+
+                foreach (var needle in (IEnumerable) haystack)
                 {
                     SetVariable(needlestmt, needle);
                     ExecuteStatement(forStmt.Body);
+                    if (continueLoop) continueLoop = false;
                 }
                 FreeVariable(needlestmt);
+                isInLoop = false;
             }
             else if (node is TryNode)
             {
-                var tryStmt = (TryNode)(node);
+                var tryStmt = (TryNode) (node);
                 try
                 {
                     ExecuteStatement(tryStmt.Body);
@@ -268,17 +289,13 @@ namespace Hassium
             }
             else if (node is ThreadNode)
             {
-                var threadStmt = (ThreadNode)(node);
+                var threadStmt = (ThreadNode) (node);
                 Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
-            }
-            else if (node is ReturnNode)
-            {
-                var returnStmt = (ReturnNode)(node);
-                CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
             }
             else
             {
                 EvaluateNode(node);
+                if (continueLoop || returnFunc) return;
             }
         }
 
@@ -321,7 +338,11 @@ namespace Hassium
                     if (arguments[x] is double && (((double)(arguments[x])) % 1 == 0))
                         arguments[x] = (int)(double)arguments[x];
                 }
-                return target.Invoke(arguments);
+                isInFunc = true;
+                var rval = target.Invoke(arguments);
+                if (returnFunc) returnFunc = false;
+                isInFunc = false;
+                return rval;
             }
             else if (node is IdentifierNode)
             {
@@ -352,6 +373,18 @@ namespace Hassium
                 var retvalue = theArray.GetValue(arid);
                 if (retvalue is AstNode) return EvaluateNode((AstNode) retvalue);
                 else return retvalue;
+            }
+            else if (node is ReturnNode)
+            {
+                if (!isInFunc) throw new Exception("'return' cannot be used outside a function");
+                var returnStmt = (ReturnNode)(node);
+                CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
+                returnFunc = true;
+            }
+            else if (node is ContinueNode)
+            {
+                if (!isInLoop) throw new Exception("'continue' cannot be used outside a loop");
+                continueLoop = true;
             }
             else
             {

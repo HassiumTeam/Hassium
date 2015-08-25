@@ -36,7 +36,7 @@ namespace Hassium
         {
             get 
             {
-                return this.Children [0];
+                return Children [0];
             }
         }
 
@@ -44,15 +44,15 @@ namespace Hassium
         {
             get
             {
-                return this.Children [1];
+                return Children [1];
             }
         }
 
         public BinOpNode(BinaryOperation type, AstNode left, AstNode right)
         {
-            this.BinOp = type;
-            this.Children.Add(left);
-            this.Children.Add(right);
+            BinOp = type;
+            Children.Add(left);
+            Children.Add(right);
         }
 
         public BinOpNode(BinaryOperation type, BinaryOperation assign, AstNode left, AstNode right)

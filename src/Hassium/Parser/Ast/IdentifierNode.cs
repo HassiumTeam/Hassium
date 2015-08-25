@@ -8,12 +8,17 @@ namespace Hassium
 
         public IdentifierNode(string value)
         {
-            this.Identifier = value;
+            Identifier = value;
         }
 
         public override string ToString()
         {
             return Identifier;
+        }
+
+        public static AstNode Parse(Parser.Parser parser)
+        {
+            return new IdentifierNode(parser.ExpectToken(TokenType.Identifier).Value.ToString());
         }
     }
 }

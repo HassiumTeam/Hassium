@@ -6,7 +6,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
@@ -14,7 +14,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
 

@@ -14,8 +14,8 @@ namespace Hassium
 
         public StackFrame(LocalScope scope)
         {
-            this.Scope = scope;
-            this.Locals = new Dictionary<string, object>();
+            Scope = scope;
+            Locals = new Dictionary<string, object>();
         }
     }
 }

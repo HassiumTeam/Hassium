@@ -8,7 +8,7 @@ namespace Hassium
 
         public NumberNode (double value)
         {
-            this.Value = value;
+            Value = value;
         }
     }
 }

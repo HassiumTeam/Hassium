@@ -8,13 +8,13 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
         public ThreadNode(AstNode node)
         {
-            this.Children.Add(node);
+            Children.Add(node);
         }
 
         public static ThreadNode Parse(Parser.Parser parser)

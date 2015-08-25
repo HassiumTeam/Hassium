@@ -1,18 +1,17 @@
-using System;
 using System.Collections.Generic;
 
 namespace Hassium.Parser
 {
     public class Parser
     {
-        private List<Token> tokens = new List<Token>();
-        private int position = 0;
+        private List<Token> tokens;
+        private int position;
 
         public bool EndOfStream
         {
             get
             {
-                return this.tokens.Count <= position;
+                return tokens.Count <= position;
             }
         }
 
@@ -48,7 +47,7 @@ namespace Hassium.Parser
 
         public bool MatchToken(TokenType clazz, string value)
         {
-            return position < tokens.Count && tokens[position].TokenClass == clazz && tokens[position].Value.ToString() == value.ToString();
+            return position < tokens.Count && tokens[position].TokenClass == clazz && tokens[position].Value.ToString() == value;
         }
 
         public bool AcceptToken(TokenType clazz)
@@ -75,26 +74,13 @@ namespace Hassium.Parser
 
         public Token ExpectToken(TokenType clazz)
         {
-            if (!MatchToken(clazz))
-            {
-                return new Token(TokenType.Exception, "Tokens did not match");
-            }
-
-            return tokens[position++];
+            return MatchToken(clazz) ? tokens[position++] : new Token(TokenType.Exception, "Tokens did not match");
         }
 
         public Token ExpectToken(TokenType clazz, string value)
         {
-            if (!MatchToken(clazz, value))
-            {
-                return new Token(TokenType.Exception, "Tokens did not match");
-            }
-
-            return tokens[position++];
+            return MatchToken(clazz, value) ? tokens[position++] : new Token(TokenType.Exception, "Tokens did not match");
         }
-
-
-
     }
 }
 

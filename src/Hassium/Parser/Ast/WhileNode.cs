@@ -8,37 +8,37 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
         public AstNode Body
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
         public AstNode ElseBody
         {
             get
             {
-                return this.Children[2];
+                return Children[2];
             }
         }
 
         public WhileNode(AstNode predicate, AstNode body)
         {
 
-            this.Children.Add(predicate);
-            this.Children.Add(body);
-            this.Children.Add(new CodeBlock());
+            Children.Add(predicate);
+            Children.Add(body);
+            Children.Add(new CodeBlock());
         }
 
         public WhileNode(AstNode predicate, AstNode body, AstNode elseBody)
         {
-            this.Children.Add(predicate);
-            this.Children.Add(body);
-            this.Children.Add(elseBody);
+            Children.Add(predicate);
+            Children.Add(body);
+            Children.Add(elseBody);
         }
 
         public static AstNode Parse(Parser.Parser parser)

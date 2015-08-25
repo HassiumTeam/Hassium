@@ -8,7 +8,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
@@ -16,7 +16,7 @@ namespace Hassium
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
 
@@ -24,22 +24,22 @@ namespace Hassium
         {
             get
             {
-                return this.Children[2];
+                return Children[2];
             }
         }
 
         public ForEachNode(AstNode needle, AstNode haystack, AstNode body)
         {
-            this.Children.Add(needle);
-            this.Children.Add(haystack);
-            this.Children.Add(body);
+            Children.Add(needle);
+            Children.Add(haystack);
+            Children.Add(body);
         }
 
         public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.Parentheses, "(");
-            AstNode needle = StatementNode.Parse(parser);
+            AstNode needle = IdentifierNode.Parse(parser);
             parser.ExpectToken(TokenType.Identifier, "in");
             AstNode haystack = StatementNode.Parse(parser);
             parser.ExpectToken(TokenType.Parentheses, ")");

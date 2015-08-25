@@ -1,4 +1,5 @@
 using System;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -22,6 +23,8 @@ namespace Hassium
                 return ThreadNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "return"))
                 return ReturnNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "continue"))
+                return ContinueNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Brace, "{"))
                 return CodeBlock.Parse(parser);
             else

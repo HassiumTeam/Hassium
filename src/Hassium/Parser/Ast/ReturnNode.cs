@@ -8,14 +8,13 @@ namespace Hassium
 
         public ReturnNode(AstNode value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public static AstNode Parse(Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier);
-
-            return new ReturnNode(StatementNode.Parse(parser));
+            return parser.AcceptToken(TokenType.EndOfLine, ";") ? new ReturnNode(null) : new ReturnNode(StatementNode.Parse(parser));
         }
     }
 }
