@@ -25,6 +25,8 @@ namespace Hassium
                 return ReturnNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "continue"))
                 return ContinueNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "break"))
+                return BreakNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Brace, "{"))
                 return CodeBlock.Parse(parser);
             else
