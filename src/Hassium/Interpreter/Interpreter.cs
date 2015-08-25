@@ -101,12 +101,7 @@ namespace Hassium
         {
             foreach (var node in code.Children)
             {
-                if (node is FuncNode)
-                {
-                    var fnode = ((FuncNode)node);
-                    var scope = table.ChildScopes[fnode.Name];
-                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
-                }
+                
             }
             foreach (var node in code.Children)
             {
@@ -198,10 +193,10 @@ namespace Hassium
             return -1;
         }
 
-        private bool isInLoop = false;
+        private int inLoop = 0;
         private bool continueLoop = false;
 
-        private bool isInFunc = false;
+        private int inFunc = 0;
         private bool returnFunc = false;
 
         public void ExecuteStatement(AstNode node)
@@ -216,6 +211,12 @@ namespace Hassium
                     if (continueLoop || returnFunc) return;
                 }
             }
+            else if (node is FuncNode)
+            {
+                var fnode = ((FuncNode)node);
+                var scope = table.ChildScopes[fnode.Name];
+                SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
+            }
             else if (node is IfNode)
             {
                 var ifStmt = (IfNode) (node);
@@ -227,7 +228,7 @@ namespace Hassium
             else if (node is WhileNode)
             {
                 var whileStmt = (WhileNode) (node);
-                isInLoop = true;
+                inLoop++;
                 if ((bool) (EvaluateNode(whileStmt.Predicate)))
                     while ((bool) EvaluateNode(whileStmt.Predicate))
                     {
@@ -236,12 +237,12 @@ namespace Hassium
                     }
                 else
                     ExecuteStatement(whileStmt.ElseBody);
-                isInLoop = false;
+                inLoop--;
             }
             else if (node is ForNode)
             {
                 var forStmt = (ForNode) (node);
-                isInLoop = true;
+                inLoop++;
                 ExecuteStatement(forStmt.Left);
                 while ((bool) EvaluateNode(forStmt.Predicate))
                 {
@@ -249,14 +250,14 @@ namespace Hassium
                     if (continueLoop) continueLoop = false;
                     ExecuteStatement(forStmt.Right);
                 }
-                isInLoop = false;
+                inLoop--;
             }
             else if (node is ForEachNode)
             {
                 var forStmt = (ForEachNode) (node);
                 var needlestmt = forStmt.Needle.ToString();
                 var haystack = EvaluateNode(forStmt.Haystack);
-                isInLoop = true;
+                inLoop++;
                 SetVariable(needlestmt, null);
                 if ((haystack as IEnumerable) == null)
                     throw new ArgumentException("'" + haystack +
@@ -269,7 +270,7 @@ namespace Hassium
                     if (continueLoop) continueLoop = false;
                 }
                 FreeVariable(needlestmt);
-                isInLoop = false;
+                inLoop--;
             }
             else if (node is TryNode)
             {
@@ -338,10 +339,10 @@ namespace Hassium
                     if (arguments[x] is double && (((double)(arguments[x])) % 1 == 0))
                         arguments[x] = (int)(double)arguments[x];
                 }
-                isInFunc = true;
+                inFunc++;
                 var rval = target.Invoke(arguments);
                 if (returnFunc) returnFunc = false;
-                isInFunc = false;
+                inFunc--;
                 return rval;
             }
             else if (node is IdentifierNode)
@@ -376,14 +377,14 @@ namespace Hassium
             }
             else if (node is ReturnNode)
             {
-                if (!isInFunc) throw new Exception("'return' cannot be used outside a function");
+                if (inFunc == 0) throw new Exception("'return' cannot be used outside a function");
                 var returnStmt = (ReturnNode)(node);
                 CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
                 returnFunc = true;
             }
             else if (node is ContinueNode)
             {
-                if (!isInLoop) throw new Exception("'continue' cannot be used outside a loop");
+                if (inLoop == 0) throw new Exception("'continue' cannot be used outside a loop");
                 continueLoop = true;
             }
             else
