@@ -188,7 +188,7 @@ namespace Hassium
         {
             var finaldata = "";
             double temp = 0;
-            while ((char.IsLetterOrDigit(PeekChar()) && HasChar()) || "._".Contains(PeekChar()) || (finaldata.Trim().Length == 0 && PeekChar() == '-'))
+            while ((char.IsLetterOrDigit(PeekChar()) && HasChar()) || "._".Contains(PeekChar()))
             {
                 finaldata += ReadChar().ToString();
             }
