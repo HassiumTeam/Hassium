@@ -121,10 +121,8 @@ namespace Hassium
                         return;
                     }
                 }
-            }
-            foreach (var node in code.Children)
-            {
-                ExecuteStatement(node);
+                else
+                    ExecuteStatement(node);
             }
         }
 
