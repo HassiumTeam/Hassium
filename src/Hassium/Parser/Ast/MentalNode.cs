@@ -8,10 +8,13 @@ namespace Hassium
 
         public string Name { get; private set; }
 
-        public MentalNode(string type, string name)
+        public bool IsBefore { get; private set; }
+
+        public MentalNode(string type, string name, bool before)
         {
             this.OpType = type;
             this.Name = name;
+            this.IsBefore = before;
         }
     }
 }

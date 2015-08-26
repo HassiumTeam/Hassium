@@ -384,12 +384,19 @@ namespace Hassium
             else if (node is MentalNode)
             {
                 var mnode = ((MentalNode)node);
-                if (mnode.OpType == "++")
-                    SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) + 1);
-                else if (mnode.OpType == "--")
-                    SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) - 1);
-                else
-                    throw new Exception("Unknown operation " + mnode.OpType);
+                switch (mnode.OpType)
+                {
+                    case "++":
+                        SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) + 1);
+                        break;
+                    case "--":
+                        SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) - 1);
+                        break;
+                    default:
+                        throw new Exception("Unknown operation " + mnode.OpType);
+                }
+                if (mnode.IsBefore) return GetVariable(mnode.Name);
+                return Convert.ToDouble(GetVariable(mnode.Name)) - 1;
             }
             else if (node is ArrayGetNode)
             {

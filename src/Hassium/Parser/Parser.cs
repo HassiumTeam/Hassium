@@ -35,9 +35,9 @@ namespace Hassium.Parser
             return tokens[position];
         }
 
-        public Token PreviousToken()
+        public Token PreviousToken(int delay = 1)
         {
-            return tokens[position - 1];
+            return tokens[position - delay];
         }
 
         public bool MatchToken(TokenType clazz)
