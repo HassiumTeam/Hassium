@@ -353,6 +353,14 @@ namespace Hassium
             {
                 return interpretUnaryOp((UnaryOpNode)node);
             }
+            else if (node is ConditionalOpNode)
+            {
+                var ifStmt = (ConditionalOpNode)(node);
+                if ((bool)(EvaluateNode(ifStmt.Predicate)))
+                    return EvaluateNode(ifStmt.Body);
+                else
+                    return EvaluateNode(ifStmt.ElseBody);
+            }
             else if (node is FunctionCallNode)
             {
                 var call = (FunctionCallNode)node;

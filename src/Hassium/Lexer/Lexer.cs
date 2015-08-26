@@ -56,6 +56,8 @@ namespace Hassium
                     Add(new Token(TokenType.Brace, ReadChar()));
                 else if (current == ':' && next1 == '=')
                     Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
+                else if(current == ':')
+                    Add(new Token(TokenType.Identifier, ReadChar()));
                 else if (current == '=')
                     Add(new Token(TokenType.Comparison, ReadChar()));
                 else if (current == '!' && next1 == '=')
@@ -68,8 +70,10 @@ namespace Hassium
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
                 else if (current == '|' && next1 == '|')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if(current == '?' && next1 == '?')
+                else if (current == '?' && next1 == '?')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if(current == '?')
+                    Add(new Token(TokenType.Operation, ReadChar()));
                 else if (current == '*' && next1 == '*' && next2 != '=')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '/' && next1 == '/' && next2 != '=')

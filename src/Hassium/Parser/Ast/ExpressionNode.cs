@@ -176,6 +176,13 @@ namespace Hassium
                 var right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.NullCoalescing, left, right);
             }
+            else if(parser.AcceptToken(TokenType.Operation, "?"))
+            {
+                var ifbody = ParseEquality(parser);
+                parser.ExpectToken(TokenType.Identifier, ":");
+                var elsebody = ParseEquality(parser);
+                return new ConditionalOpNode(left, ifbody, elsebody);
+            }
             else
             {
                 return left;
