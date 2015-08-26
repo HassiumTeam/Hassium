@@ -190,6 +190,9 @@ namespace Hassium
                     return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), Convert.ToDouble(EvaluateNode(node.Right)));
                 case BinaryOperation.Root:
                     return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), 1.0 / Convert.ToDouble(EvaluateNode(node.Right)));
+                    
+                case BinaryOperation.NullCoalescing:
+                    return EvaluateNode(node.Left) ?? EvaluateNode(node.Right);
             }
             // Raise error
             return -1;

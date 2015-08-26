@@ -24,7 +24,8 @@ namespace Hassium
         BitwiseAnd,
         BitwiseOr,
         Pow,
-        Root
+        Root,
+        NullCoalescing
     }
 
     public class BinOpNode : AstNode

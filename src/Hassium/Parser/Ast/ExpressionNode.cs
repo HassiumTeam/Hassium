@@ -63,6 +63,8 @@ namespace Hassium
                     return BinaryOperation.And;
                 case "||":
                     return BinaryOperation.Or;
+                case "??":
+                    return BinaryOperation.NullCoalescing;
                 default:
                     throw new ArgumentException("Invalid binary operation: " + value);
             }
@@ -168,6 +170,11 @@ namespace Hassium
             {
                 var right = ParseEquality(parser);
                 return new BinOpNode(BinaryOperation.BitwiseOr, left, right);
+            }
+            else if (parser.AcceptToken(TokenType.Operation, "??"))
+            {
+                var right = ParseEquality(parser);
+                return new BinOpNode(BinaryOperation.NullCoalescing, left, right);
             }
             else
             {

@@ -68,6 +68,8 @@ namespace Hassium
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
                 else if (current == '|' && next1 == '|')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if(current == '?' && next1 == '?')
+                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '*' && next1 == '*' && next2 != '=')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '/' && next1 == '/' && next2 != '=')
@@ -229,7 +231,12 @@ namespace Hassium
                     throw new Exception("Invalid binary number: " + finaldata);
                 }
             }
-            return double.TryParse(finaldata, out temp) ? new Token(TokenType.Number, finaldata) : new Token(TokenType.Identifier, finaldata);
+            if (double.TryParse(finaldata, out temp)) return new Token(TokenType.Number, finaldata);
+            else
+            {
+                if(finaldata.Contains('.')) throw new Exception("Invalid character in Identifier: . (period)");
+                return new Token(TokenType.Identifier, finaldata);
+            }
         }
 
         private void whiteSpaceMonster()
