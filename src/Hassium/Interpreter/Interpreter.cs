@@ -214,6 +214,7 @@ namespace Hassium
 
         private int inLoop = 0;
         private bool continueLoop = false;
+        private bool breakLoop = false;
 
         private int inFunc = 0;
         private bool returnFunc = false;
@@ -227,7 +228,7 @@ namespace Hassium
                 foreach (var anode in node.Children)
                 {
                     ExecuteStatement(anode);
-                    if (continueLoop || returnFunc) return;
+                    if (continueLoop || breakLoop || returnFunc) return;
                 }
             }
             else if (node is IfNode)
@@ -247,6 +248,11 @@ namespace Hassium
                     {
                         ExecuteStatement(whileStmt.Body);
                         if (continueLoop) continueLoop = false;
+                        if(breakLoop)
+                        {
+                            breakLoop = false;
+                            break;
+                        }
                     }
                 else
                     ExecuteStatement(whileStmt.ElseBody);
@@ -261,6 +267,11 @@ namespace Hassium
                 {
                     ExecuteStatement(forStmt.Body);
                     if (continueLoop) continueLoop = false;
+                    if(breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
                     ExecuteStatement(forStmt.Right);
                 }
                 inLoop--;
@@ -281,6 +292,11 @@ namespace Hassium
                     SetVariable(needlestmt, needle);
                     ExecuteStatement(forStmt.Body);
                     if (continueLoop) continueLoop = false;
+                    if(breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
                 }
                 FreeVariable(needlestmt);
                 inLoop--;
@@ -309,7 +325,7 @@ namespace Hassium
             else
             {
                 EvaluateNode(node);
-                if (continueLoop || returnFunc) return;
+                if (continueLoop || breakLoop || returnFunc) return;
             }
         }
 
@@ -399,6 +415,11 @@ namespace Hassium
             {
                 if (inLoop == 0) throw new Exception("'continue' cannot be used outside a loop");
                 continueLoop = true;
+            }
+            else if (node is BreakNode)
+            {
+                if (inLoop == 0) throw new Exception("'break' cannot be used outside a loop");
+                breakLoop = true;
             }
             else
             {
