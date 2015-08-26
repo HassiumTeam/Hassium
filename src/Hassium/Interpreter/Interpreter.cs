@@ -12,6 +12,9 @@ using Hassium.Parser.Ast;
 
 namespace Hassium
 {
+    /// <summary>
+    /// Interpreter.
+    /// </summary>
     public class Interpreter
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
@@ -26,7 +29,11 @@ namespace Hassium
 
         private SymbolTable table;
         private AstNode code;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Hassium.Interpreter"/> class.
+        /// </summary>
+        /// <param name="symbolTable">Symbol table.</param>
+        /// <param name="code">Code.</param>
         public Interpreter(SymbolTable symbolTable, AstNode code)
         {
             this.code = code;
@@ -96,7 +103,9 @@ namespace Hassium
                     Globals.Remove(name);
             }
         }
-
+        /// <summary>
+        /// Execute this instance.
+        /// </summary>
         public void Execute()
         {
             foreach (var node in code.Children)
@@ -130,7 +139,12 @@ namespace Hassium
         {
             SetVariable(node.Left.ToString(), interpretBinaryOp(node, true), false, true);         
         }
-
+        /// <summary>
+        /// Interprets the binary op.
+        /// </summary>
+        /// <returns>The binary op.</returns>
+        /// <param name="node">Node.</param>
+        /// <param name="isAssign">If set to <c>true</c> is assign.</param>
         private object interpretBinaryOp(BinOpNode node, bool isAssign = false)
         {
             switch (isAssign ? node.AssignOperation : node.BinOp)
@@ -197,7 +211,11 @@ namespace Hassium
             // Raise error
             return -1;
         }
-
+        /// <summary>
+        /// Interprets the unary op.
+        /// </summary>
+        /// <returns>The unary op.</returns>
+        /// <param name="node">Node.</param>
         private object interpretUnaryOp(UnaryOpNode node)
         {
             switch (node.UnOp)
@@ -219,7 +237,10 @@ namespace Hassium
 
         private int inFunc = 0;
         private bool returnFunc = false;
-
+        /// <summary>
+        /// Executes the statement.
+        /// </summary>
+        /// <param name="node">Node.</param>
         public void ExecuteStatement(AstNode node)
         {
             if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
@@ -329,7 +350,11 @@ namespace Hassium
                 if (continueLoop || breakLoop || returnFunc) return;
             }
         }
-
+        /// <summary>
+        /// Evaluates the node.
+        /// </summary>
+        /// <returns>The node.</returns>
+        /// <param name="node">Node.</param>
         public object EvaluateNode(AstNode node)
         {
             if (node is NumberNode)
@@ -455,7 +480,11 @@ namespace Hassium
 
             return 0;
         }
-
+        /// <summary>
+        /// Gets the functions.
+        /// </summary>
+        /// <returns>The functions.</returns>
+        /// <param name="path">Path.</param>
         public static Dictionary<string, InternalFunction> GetFunctions(string path = "")
         {
             var result = new Dictionary<string, InternalFunction>();

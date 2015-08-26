@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Hassium
 {
+    /// <summary>
+    /// Lexer.
+    /// </summary>
     public class Lexer
     {
         private string code;
@@ -22,6 +25,9 @@ namespace Hassium
             result.Add(token);
         }
 
+        /// <summary>
+        /// Tokenize this instance.
+        /// </summary>
         public List<Token> Tokenize()
         {
             whiteSpaceMonster();
@@ -118,7 +124,9 @@ namespace Hassium
 
             return result;
         }
-
+        /// <summary>
+        /// Scans Comment
+        /// </summary>
         private void scanComment()
         {
             ReadChar();
@@ -128,7 +136,9 @@ namespace Hassium
             }
             ReadChar();
         }
-
+        /// <summary>
+        /// Single line comment.
+        /// </summary>
         private void singleComment()
         {
             ReadChar();
@@ -138,7 +148,11 @@ namespace Hassium
             }
             ReadChar();
         }
-
+        /// <summary>
+        /// Scans the string.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="verbatim">If set to <c>true</c> verbatim.</param>
         private Token scanString(bool verbatim = false)
         {
             ReadChar();
@@ -201,7 +215,10 @@ namespace Hassium
 
             return new Token(TokenType.String, finalstr);
         }
-
+        /// <summary>
+        /// Scans the data.
+        /// </summary>
+        /// <returns>The data.</returns>
         private Token scanData()
         {
             var finaldata = "";

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Hassium.Parser
 {
+    /// <summary>
+    /// Parser.
+    /// </summary>
     public class Parser
     {
         private List<Token> tokens;
@@ -19,7 +22,9 @@ namespace Hassium.Parser
         {
             this.tokens = tokens;
         }
-
+        /// <summary>
+        /// Parse this instance.
+        /// </summary>
         public AstNode Parse()
         {
             CodeBlock block = new CodeBlock();
