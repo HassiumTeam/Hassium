@@ -384,6 +384,7 @@ namespace Hassium
             else if (node is MentalNode)
             {
                 var mnode = ((MentalNode)node);
+                var oldValue = GetVariable(mnode.Name);
                 switch (mnode.OpType)
                 {
                     case "++":
@@ -395,8 +396,7 @@ namespace Hassium
                     default:
                         throw new Exception("Unknown operation " + mnode.OpType);
                 }
-                if (mnode.IsBefore) return GetVariable(mnode.Name);
-                return Convert.ToDouble(GetVariable(mnode.Name)) - 1;
+                return mnode.IsBefore ? GetVariable(mnode.Name) : oldValue;
             }
             else if (node is ArrayGetNode)
             {

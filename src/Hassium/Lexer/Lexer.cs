@@ -8,8 +8,8 @@ namespace Hassium
 {
     public class Lexer
     {
-        private string code = "";
-        private int position = 0;
+        private string code;
+        private int position;
         private List<Token> result = new List<Token>();
 
         public Lexer(string code)
@@ -32,7 +32,7 @@ namespace Hassium
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
-                if (char.IsLetterOrDigit((char)PeekChar()))
+                if (char.IsLetterOrDigit(current))
                     Add(scanData());
                 else if (current == '@' && next1 == '"')
                     Add(scanString(true));
@@ -41,9 +41,9 @@ namespace Hassium
                 else if (current == '$')
                     scanComment();
                 else if (current == '+' && next1 == '+')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar() + ""));
+                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
                 else if (current == '-' && next1 == '-')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar() + ""));
+                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
                 else if (current == ';')
                     Add(new Token(TokenType.EndOfLine, ReadChar()));
                 else if (current == ',')
@@ -101,7 +101,7 @@ namespace Hassium
                 else
                 {
                     result.Add(new Token(TokenType.Exception,
-                        "Unexpected " + ((char) PeekChar()).ToString() + " encountered"));
+                        "Unexpected " + PeekChar().ToString() + " encountered"));
                     ReadChar();
                 }
 
@@ -132,7 +132,7 @@ namespace Hassium
 
             while ((escaping || PeekChar() != '\"') && HasChar())
             {
-                var curch = (char)ReadChar();
+                var curch = ReadChar();
                 if (unicode)
                 {
                     if (char.IsLetter(curch) || "abcdefABCDEF".Contains(curch + "")) curuni += curch;
@@ -188,15 +188,14 @@ namespace Hassium
         {
             var finaldata = "";
             double temp = 0;
-            int temp1 = 0;
-            while ((char.IsLetterOrDigit((char)PeekChar()) && HasChar()) ||
-                   ".-_".Contains("" + (char)(PeekChar())))
+            while ((char.IsLetterOrDigit(PeekChar()) && HasChar()) || "._".Contains(PeekChar()) || (finaldata.Trim().Length == 0 && PeekChar() == '-'))
             {
-                finaldata += ((char)ReadChar()).ToString();
+                finaldata += ReadChar().ToString();
             }
             if (finaldata.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (finaldata.Length == 2) throw new Exception("Invalid hex number: " + finaldata);
+                var temp1 = 0;
                 if (int.TryParse(finaldata.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out temp1))
                 {
                     return new Token(TokenType.Number, temp1.ToString());
@@ -235,7 +234,7 @@ namespace Hassium
 
         private void whiteSpaceMonster()
         {
-            while(char.IsWhiteSpace((char)PeekChar())) ReadChar();
+            while(char.IsWhiteSpace(PeekChar())) ReadChar();
         }
 
         private char PeekChar(int n = 0)
