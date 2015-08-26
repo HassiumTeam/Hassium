@@ -64,16 +64,5 @@ namespace Hassium.Functions
 			}
 			return null;
 		}
-
-		[IntFunc("import")]
-		public static object Import(object[] args)
-		{
-			string path = string.Join("", args);
-			if (File.Exists(path))
-				foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(path))
-					Interpreter.Globals.Add(entry.Key, entry.Value);
-
-			return null;
-		}
 	}
 }

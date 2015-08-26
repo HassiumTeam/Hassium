@@ -110,6 +110,20 @@ namespace Hassium
             }
             foreach (var node in code.Children)
             {
+                if (node is FuncNode)
+                {
+                    var fnode = ((FuncNode)node);
+                    var scope = table.ChildScopes[fnode.Name];
+                    //If there is a main, let it be the main entry point of the program
+                    if (fnode.Name == "main")
+                    {
+                        new HassiumFunction(this, fnode, scope).Invoke(new object[0]);
+                        return;
+                    }
+                }
+            }
+            foreach (var node in code.Children)
+            {
                 ExecuteStatement(node);
             }
         }
