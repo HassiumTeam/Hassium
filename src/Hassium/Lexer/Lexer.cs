@@ -40,6 +40,8 @@ namespace Hassium
                     Add(scanString());
                 else if (current == '$')
                     scanComment();
+                else if (current == '#')
+                    singleComment();
                 else if (current == '+' && next1 == '+')
                     Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
                 else if (current == '-' && next1 == '-')
@@ -121,6 +123,16 @@ namespace Hassium
         {
             ReadChar();
             while(PeekChar() != '$' && HasChar())
+            {
+                ReadChar();
+            }
+            ReadChar();
+        }
+
+        private void singleComment()
+        {
+            ReadChar();
+            while (PeekChar() != '\n' && HasChar())
             {
                 ReadChar();
             }
