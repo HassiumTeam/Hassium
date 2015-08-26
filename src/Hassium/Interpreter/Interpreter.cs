@@ -352,7 +352,7 @@ namespace Hassium
             }
             else if (node is FunctionCallNode)
             {
-                var call = (FunctionCallNode) node;
+                var call = (FunctionCallNode)node;
 
                 var target = EvaluateNode(call.Target) as IFunction;
 
@@ -368,7 +368,8 @@ namespace Hassium
                 }
                 inFunc++;
                 var rval = target.Invoke(arguments);
-                if (returnFunc) returnFunc = false;
+                if (returnFunc)
+                    returnFunc = false;
                 inFunc--;
                 return rval;
             }
@@ -376,9 +377,19 @@ namespace Hassium
             {
                 return GetVariable(((IdentifierNode)node).Identifier);
             }
-            else if(node is ArrayInitializerNode)
+            else if (node is ArrayInitializerNode)
             {
-                return ((ArrayInitializerNode) node).Value.Select(x => EvaluateNode((AstNode)x)).ToArray();
+                return ((ArrayInitializerNode)node).Value.Select(x => EvaluateNode((AstNode)x)).ToArray();
+            }
+            else if (node is MentalNode)
+            {
+                var mnode = ((MentalNode)node);
+                if (mnode.OpType == "++")
+                    SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) + 1);
+                else if (mnode.OpType == "--")
+                    SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) - 1);
+                else
+                    throw new Exception("Unknown operation " + mnode.OpType);
             }
             else if (node is ArrayGetNode)
             {

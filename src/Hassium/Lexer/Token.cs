@@ -17,7 +17,8 @@ namespace Hassium
         Assignment,
         Exception,
         EndOfLine,
-        UnaryOperation
+        UnaryOperation,
+        MentalOperation
 
     }
     public class Token

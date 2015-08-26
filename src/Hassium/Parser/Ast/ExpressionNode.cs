@@ -223,21 +223,17 @@ namespace Hassium
         private static AstNode ParseUnary(Parser.Parser parser)
         {
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
-            {
                 return new UnaryOpNode(UnaryOperation.Not, ParseUnary(parser));
-            }
+            else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
+                return new MentalNode("++", parser.ExpectToken(TokenType.Identifier).Value.ToString());
+            else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
+                return new MentalNode("--", parser.ExpectToken(TokenType.Identifier).Value.ToString());
             else if (parser.AcceptToken(TokenType.Operation, "-"))
-            {
                 return new UnaryOpNode(UnaryOperation.Negate, ParseUnary(parser));
-            }
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))
-            {
                 return new UnaryOpNode(UnaryOperation.Complement, ParseUnary(parser));
-            }
             else
-            {
                 return ParseFunctionCall(parser);
-            }
         }
 
         private static AstNode ParseFunctionCall(Parser.Parser parser)

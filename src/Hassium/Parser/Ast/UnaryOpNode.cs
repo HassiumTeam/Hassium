@@ -6,7 +6,7 @@ namespace Hassium
     {
         Not,
         Negate,
-        Complement
+        Complement,
     }
 
     //Class for the urinary operations

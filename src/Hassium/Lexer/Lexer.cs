@@ -34,29 +34,28 @@ namespace Hassium
 
                 if (char.IsLetterOrDigit((char)PeekChar()))
                     Add(scanData());
-
                 else if (current == '@' && next1 == '"')
                     Add(scanString(true));
                 else if (current == '"')
                     Add(scanString());
                 else if (current == '$')
                     scanComment();
-
+                else if (current == '+' && next1 == '+')
+                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar() + ""));
+                else if (current == '-' && next1 == '-')
+                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar() + ""));
                 else if (current == ';')
                     Add(new Token(TokenType.EndOfLine, ReadChar()));
                 else if (current == ',')
                     Add(new Token(TokenType.Comma, ReadChar()));
-
                 else if (current == '(' || current == ')')
                     Add(new Token(TokenType.Parentheses, ReadChar()));
                 else if (current == '[' || current == ']')
                     Add(new Token(TokenType.Bracket, ReadChar()));
                 else if (current == '{' || current == '}')
                     Add(new Token(TokenType.Brace, ReadChar()));
-
                 else if (current == ':' && next1 == '=')
                     Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
-
                 else if (current == '=')
                     Add(new Token(TokenType.Comparison, ReadChar()));
                 else if (current == '!' && next1 == '=')
@@ -69,9 +68,6 @@ namespace Hassium
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
                 else if (current == '|' && next1 == '|')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-
-
-
                 else if (current == '*' && next1 == '*' && next2 != '=')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '/' && next1 == '/' && next2 != '=')
@@ -87,7 +83,6 @@ namespace Hassium
 
                 else if ("~!-".Contains(current))
                     Add(new Token(TokenType.UnaryOperation, ReadChar()));
-
                 else if (current == '*' && next1 == '*' && next2 == '=')
                     Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
                 else if (current == '/' && next1 == '/' && next2 == '=')
