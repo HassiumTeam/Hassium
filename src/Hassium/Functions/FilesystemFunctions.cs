@@ -83,7 +83,17 @@ namespace Hassium.Functions
 			return Directory.Exists(arrayToString(args));
 		}
 
-		
+        [IntFunc("getfiles")]
+        public static object Getfiles(object[] args)
+        {
+            return Directory.GetFiles(args[0].ToString());
+        }
+
+        [IntFunc("getdirs")]
+        public static object GetDirs(object[] args)
+        {
+            return Directory.GetDirectories(args[0].ToString());
+        }
 
 		private static string arrayToString(IList<object> args, int startIndex = 0)
 		{
