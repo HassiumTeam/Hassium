@@ -62,16 +62,16 @@ namespace Hassium
 
         private static void preformSetUp(string[] args)
         {
-            if (args[0].StartsWith("-d") || args[0].StartsWith("--debug"))
+            if (args.Length <= 0 || args[0].StartsWith("-h") || args[0].StartsWith("--help"))
+            {
+                Console.WriteLine("USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\nArguments:\n-h  --help\tShows this help\n-d  --debug\tDisplays tokens from lexer\n");
+                Environment.Exit(0);
+            }
+            else if (args[0].StartsWith("-d") || args[0].StartsWith("--debug"))
             {
                 options.Debug = true;
                 options.FilePath = args[1];
                 Interpreter.Globals.Add("args", shiftArray(args, 2));
-            }
-            else if (args[0].StartsWith("-h") || args[0].StartsWith("--help"))
-            {
-                Console.WriteLine("USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\nArguments:\n-h  --help\tShows this help\n-d  --debug\tDisplays tokens from lexer\n");
-                Environment.Exit(0);
             }
             else
             {
@@ -93,9 +93,16 @@ namespace Hassium
                 if (line.StartsWith("$INCLUDE"))
                     options.Code = File.ReadAllText(line.Substring(9, line.Substring(9).LastIndexOf("$"))) + options.Code;
                 else if (line.StartsWith("$IMPORT"))
+                {
                     if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
                     foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
                             Interpreter.Globals.Add(entry.Key, entry.Value);
+                }
+                else if (line.StartsWith("$DEFINE"))
+                {
+                    string[] parts = line.Substring(8, line.Substring(8).LastIndexOf("$")).Split(' ');
+                    options.Code = options.Code.Replace(parts[0], parts[1]);
+                }
             }
         }
     }
