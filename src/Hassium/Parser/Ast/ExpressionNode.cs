@@ -236,10 +236,9 @@ namespace Hassium
         {
             AstNode left = ParseMultiplicative(parser);
 
-            while ((parser.CurrentToken().TokenClass == TokenType.Operation &&
-                    (parser.CurrentToken().Value.ToString() == "+" || parser.CurrentToken().Value.ToString() == "-")))
+            while (parser.CurrentToken().TokenClass == TokenType.Operation || parser.CurrentToken().TokenClass == TokenType.MentalOperation)
             {
-                var curToken = parser.ExpectToken(TokenType.Operation);
+                var curToken = parser.CurrentToken().TokenClass == TokenType.MentalOperation ? parser.ExpectToken(TokenType.MentalOperation) : parser.ExpectToken(TokenType.Operation);
                 if (curToken.Value.ToString() == "+")
                 {
                     AstNode right = ParseMultiplicative(parser);
@@ -250,7 +249,37 @@ namespace Hassium
                     AstNode right = ParseMultiplicative(parser);
                     left = new BinOpNode(BinaryOperation.Subtraction, left, right);
                 }
-                
+                else if (curToken.Value.ToString() == "++")
+                {
+                    var varname = "";
+                    var before = false;
+                    if (parser.AcceptToken(TokenType.Identifier))
+                    {
+                        varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                        before = true;
+                    }
+                    else
+                    {
+                        varname = parser.PreviousToken(2).Value.ToString();
+                    }
+                    return new MentalNode("++", varname, before);
+                }
+                else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
+                {
+                    var varname = "";
+                    var before = false;
+                    if (parser.AcceptToken(TokenType.Identifier))
+                    {
+                        varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                        before = true;
+                    }
+                    else
+                    {
+                        varname = parser.PreviousToken(2).Value.ToString();
+                    }
+                    left = new MentalNode("--", varname, before);
+                }
+
             }
             return left;
             /*if (parser.AcceptToken(TokenType.MentalOperation, "++"))
@@ -319,35 +348,9 @@ namespace Hassium
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
                 return new UnaryOpNode(UnaryOperation.Not, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-            {
-                var varname = "";
-                var before = false;
-                if (parser.AcceptToken(TokenType.Identifier))
-                {
-                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                    before = true;
-                }
-                else
-                {
-                    varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new MentalNode("++", varname, before);
-            }
+                return new MentalNode("++", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-            {
-                var varname = "";
-                var before = false;
-                if (parser.AcceptToken(TokenType.Identifier))
-                {
-                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                    before = true;
-                }
-                else
-                {
-                    varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new MentalNode("--", varname, before);
-            }
+                return new MentalNode("--", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
             else if (parser.AcceptToken(TokenType.Operation, "-"))
                 return new UnaryOpNode(UnaryOperation.Negate, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))

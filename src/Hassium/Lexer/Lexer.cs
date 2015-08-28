@@ -146,7 +146,7 @@ namespace Hassium
             {
                 ReadChar();
             }
-            ReadChar();
+            if(HasChar()) ReadChar(); //causes exception if at end of file
         }
         /// <summary>
         /// Scans the string.
