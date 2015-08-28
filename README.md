@@ -9,7 +9,9 @@ learn to program in it.
 
 Hassium HelloWorldPrgm.hs:
 ```
-print("Hello, World!");
+func main() {
+	print("Hello, World!");
+}
 ```
 
 In docs/Introduction.md There is a guide to Hassium that also doubles

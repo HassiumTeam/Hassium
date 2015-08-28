@@ -25,9 +25,11 @@ text editor (I reccomend vim for *nix) and type the code in HelloWorldPrgm.has:
 ```
 $SUMMARY: Shows a greeting to the user$
 
-println("Hello, World!");
+func main() {
+	println("Hello, World!");
 
-exit(0);
+	exit(0);
+}
 ```
 
 Save this file then execute it with either Hassium.exe HelloWorldPrgm.has (on Windows) or 
@@ -36,7 +38,9 @@ window.
 
 You should note the different parts of the program that are shown here. We have the first line which
 is a comment. In Hassium comments start with a $ and they end with a $, much like /* and */ in mainstream
-languagaes. The next part of the code is the function call print(). This invokes a builtin function called
+languagaes. Then we have the line "func main()". main() is a function that is called when the program
+is executed. The code inside the { } brackets will be ran before any other code.
+The next part of the code is the function call print(). This invokes a builtin function called
 print whose job is to write text to the console. Inside of the print function is called arguments.
 Arguments are essentially specifications to the function about what it should be doing. Since it's print's
 job to write to the screen, the argument "Hello, world!" will cause it to specifically write the text
@@ -56,10 +60,12 @@ program VariablesPrgm.has:
 ```
 $SUMMARY: Uses variables$
 
-myVar := "Hassium is free as in free beer and in freedom!";
-println(myVar);
+func main() {
+	myVar := "Hassium is free as in free beer and in freedom!";
+	println(myVar);
 
-exit(0);
+	exit(0);
+}
 ```
 
 Now again let's look at the different parts of this program. We have the comment at the beginning that
@@ -79,12 +85,14 @@ reassignment. We'll call this Variables2Prgm.has:
 ```
 $SUMMARY: Uses variable reassignment and concatanation";
 
-myVar := "Hassium is free as in free beer and in freedom!";
-print(myVar);
-myVar := strcat(myVar, " The github is https://github.com/JacobMisirian/Hassium");
-print("\n", myVar);
+func main() {
+	myVar := "Hassium is free as in free beer and in freedom!";
+	print(myVar);
+	myVar := strcat(myVar, " The github is https://github.com/JacobMisirian/Hassium");
+	print("\n", myVar);
 
-exit(0);
+	exit(0);
+}
 ```
 
 The first part of this should look the same to you, myVar gets assigned to a string and is then printed
@@ -109,11 +117,13 @@ from the keyboard and returns it in the form of a string. Take InputPrgm.has:
 ```
 $SUMMARY: Reads user input and returns it back$
 
-print("Enter some text: ");
-in := input();
-println("The text you entered was: ", in);;
+func main() {
+	print("Enter some text: ");
+	in := input();
+	println("The text you entered was: ", in);;
 
-exit(0);
+	exit(0);
+}
 ```
 
 This first call to print() writes some text to the console that asks the user to enter in a string.
@@ -131,13 +141,15 @@ Cls is a function call that clears the console of all text. Let's look at it in 
 ```
 $SUMMARY: Demonstrates clearing of console$
 
-print("When you press a key next the console will clear");
-pause();
-print("You should not see me");
-cls();
-print("The console has been cleared\n");
+func main() {
+	print("When you press a key next the console will clear");
+	pause();
+	print("You should not see me");
+	cls();
+	print("The console has been cleared\n");
 
-exit(0);
+	exit(0);
+}
 ```
 
 In this program we prompt the user to press enter, and we call pause() to simply hang the program until
@@ -151,18 +163,20 @@ Hassium is capable of parsing most mathematical expressions. Take the program Sa
 ```
 $SUMMARY: Demonstrates math capabilities$
 
-print("Enter the first number: ");
-x := input();
+func main() {
+	print("Enter the first number: ");
+	x := input();
 
-print("Enter the second number: ");
-y := input();
+	print("Enter the second number: ");
+	y := input();
 
-println(x, "+", y, "=", (x + y));;
-println(x, "-", y, "=", (x - y));;
-println(x, "*", y, "=", (x * y));;
-println(x, "/", y, "=", (x / y));;
+	println(x, "+", y, "=", (x + y));;
+	println(x, "-", y, "=", (x - y));;
+	println(x, "*", y, "=", (x * y));;
+	println(x, "/", y, "=", (x / y));;
 
-exit(0);
+	exit(0);
+}
 ```
 
 This program gets two numbers from the user then prints out four different ways the numbers can be
@@ -179,19 +193,21 @@ isn't that many at the moment but I will demonstrate the ones that are there in 
 ```
 $SUMMARY: Shows math family$
 
-print("Enter a number to square root: ");
-x := input();
+func main() {
+	print("Enter a number to square root: ");
+	x := input();
 
-println("Square root is: ", sqrt(x));;
+	println("Square root is: ", sqrt(x));;
 
-print("Enter a base number: ");
-x := input();
-print("Enter a power: ");
-y := input();
+	print("Enter a base number: ");
+	x := input();
+	print("Enter a power: ");
+	y := input();
 
-println("Number raised to power is: ", pow(x, y));;
+	println("Number raised to power is: ", pow(x, y));;
 
-exit(0);
+	exit(0);
+}
 ```
 
 The two differant math functions being called here are sqrt() and pow(). Sqrt is a function that
@@ -209,16 +225,18 @@ current directory or determining if a file/directory exists. Take a gander at Fi
 ```
 $SUMMARY: Creates file with specified text$
 
-print("Enter a filename: ");
-path := input();
-print("File already exists: ", fexists(path));
+func main() {
+	print("Enter a filename: ");
+	path := input();
+	print("File already exists: ", fexists(path));
 
-print("\nEnter text to put in file: ");
-contents := input();
+	print("\nEnter text to put in file: ");
+	contents := input();
 
-puts(path, contents);
+	puts(path, contents);
 
-exit(0);
+	exit(0);
+}
 ```
 
 This starts with getting a file path from the user and checking if it exists or not using the
@@ -228,13 +246,15 @@ function to put the variable contents into the file at variable path. Now look a
 ```
 $SUMMARY: Deletes a file we specify$
 
-print("Enter a file path: ");
-path := input();
+func main() {
+	print("Enter a file path: ");
+	path := input();
 
-println("File exists: ", fexists(path));;
-dfile(path);
+	println("File exists: ", fexists(path));;
+	dfile(path);
 
-exit(0);
+	exit(0);
+}
 ```
 
 Another useful function in the filesystem family is the system() function. System can execute
@@ -245,14 +265,16 @@ Here's SystemPrgm.has:
 ```
 $SUMMARY: Runs an exe with arguments$
 
-print("Enter the path to an exe: ");
-path := input();
-print("Enter the arguments (optional): ");
-args := input();
+func main() {
+	print("Enter the path to an exe: ");
+	path := input();
+	print("Enter the arguments (optional): ");
+	args := input();
 
-system(path, args);
+	system(path, args);
 
-exit(0);
+	exit(0);
+}
 ```
 
 The program prompts and gets the path and arguments from the user, then uses them as the
@@ -308,18 +330,20 @@ if that if statement is true. Here's the revised DeletePrgm.has:
 ```
 $SUMMARY: Checks if a file exists, and if so, deletes it, otherwise sends a message to the user$
 
-print("Enter a file path: ");
-path := input();
+func main() {
+	print("Enter a file path: ");
+	path := input();
 
-if (fexists(path)) {
-	dfile(path);
-	print("File successfully deleted!");
+	if (fexists(path)) {
+		dfile(path);
+		print("File successfully deleted!");
 
-	exit(0);
-} else {
-	print("File does not exist!");
+		exit(0);
+	} else {
+		print("File does not exist!");
 
-	exit(1);
+		exit(1);
+	}
 }
 ```
 
@@ -339,33 +363,35 @@ the results to the user. We'll call this ArithmeticPrgm.has:
 ```
 $SUMMARY: Gets two numbers and an operation from the user, then evaluates the math involved$
 
-print("Enter the first number: ");
-x := input();
+func main() {
+	print("Enter the first number: ");
+	x := input();
 
-print("Enter the second number: ");
-y := input();
+	print("Enter the second number: ");
+	y := input();
 
-print("Enter the operation: ");
-op := input();
+	print("Enter the operation: ");
+	op := input();
 
-print("Result: ");
+	print("Result: ");
 
-if (op = "+") {
-	print(x + y);
-} else if (op = "-") {
-	print(x - y);
-} else if (op = "*") {
-	print(x * y);
-} else if (op = "/") {
-	print(x / y);
-} else {
-	println("Unrecognized operation: ", op);;
-	exit(1);
+	if (op = "+") {
+		print(x + y);
+	} else if (op = "-") {
+		print(x - y);
+	} else if (op = "*") {
+		print(x * y);
+	} else if (op = "/") {
+		print(x / y);
+	} else {
+		println("Unrecognized operation: ", op);;
+		exit(1);
+	}
+
+	print("\n");
+
+	exit(0);
 }
-
-print("\n");
-
-exit(0);
 ```
 
 This program should be fairly straight-forward. We get the two numbers and operation, then
@@ -399,18 +425,20 @@ Let's take a look at a program that displays the numbers one-ten without looping
 ```
 $SUMMARY: Prints 1-10$
 
-print("1\n");
-print("2\n");
-print("3\n");
-print("4\n");
-print("5\n");
-print("6\n");
-print("7\n");
-print("8\n");
-print("9\n");
-print("10\n");
+func main() {
+	print("1\n");
+	print("2\n");
+	print("3\n");
+	print("4\n");
+	print("5\n");
+	print("6\n");
+	print("7\n");
+	print("8\n");
+	print("9\n");
+	print("10\n");
 
-exit(0);
+	exit(0);
+}
 ```
 
 As you can see, this code is really long and boring, and if you wanted to iterate to 100 it would take
@@ -418,16 +446,18 @@ a LONG time to code. Let's revisit this program with while loops. NumPrgm.has:
 ```
 $SUMMARY: Increments and displays 1-10$
 
-x := 1;
+func main() {
+	x := 1;
 
-while(x < 11) {
-	println(x);;
-	x := x + 1;
+	while(x < 11) {
+		println(x);;
+		x := x + 1;
+	}
+
+	print("All done.\n");
+
+	exit(0);
 }
-
-print("All done.\n");
-
-exit(0);
 ```
 
 This code starts by initializing the variable x with the value 1, then a while loop is encountered which
@@ -442,20 +472,22 @@ false. Here's an example of Num2Prgm.has:
 ```
 $SUMMARY: Increments and displays numbers from two points of user input$
 
-print("Enter the initial number: ");
-x := input();
+func main() {
+	print("Enter the initial number: ");
+	x := input();
 
-print("Enter the end number: ");
-y := input();
+	print("Enter the end number: ");
+	y := input();
 
-while (x < (y + 1)) {
-	println(x);;
-	x := x + 1;
-} else {
-	print("The initial number is not less than the end number dummy!");
+	while (x < (y + 1)) {
+		println(x);;
+		x := x + 1;
+	} else {
+		print("The initial number is not less than the end number dummy!");
+	}
+
+	exit(0);
 }
-
-exit(0);
 ```
 
 If the user entered 20 and 18, the else statement would execute since 20 is not less than 18, otherwise
@@ -513,23 +545,25 @@ Here's an example of a program that uses arrays called ArrayPrgm.has:
 ```
 $SUMMARY: Get's input from user into arrays then reads it back to them$
 
-first := newarr(5);
-last := newarr(5);
+func main() {
+	first := newarr(5);
+	last := newarr(5);
 
-x := 0;
+	x := 0;
 
-while(x < 5) {
-	print("Enter a first name: ");
-	first := setarr(first, input(), x);
-	print("Enter a last name: ");
-	last := setarr(last, input(), x);
+	while(x < 5) {
+		print("Enter a first name: ");
+		first := setarr(first, input(), x);
+		print("Enter a last name: ");
+		last := setarr(last, input(), x);
+	}
+
+	print("The names are:\n");
+	println(concatarr(first));;
+	println(concatarr(last));;
+
+	exit(0);
 }
-
-print("The names are:\n");
-println(concatarr(first));;
-println(concatarr(last));;
-
-exit(0);
 ```
 
 You should know that by default, Hassium already has an array on runtime, called args
@@ -540,18 +574,20 @@ of a program that uses this array called CheckFilePrgm.has:
 $SUMMARY: Checks to see if file exists$
 $ARGUMENTS: args 0: FILE_PATH$
 
-if (arrlen(args) < 1) {
-	print("Not enough arguments! Syntax is: CheckFilePrgm.has [FILE_PATH]\n");
-	exit(1);
-}
+func main() {
+	if (arrlen(args) < 1) {
+		print("Not enough arguments! Syntax is: CheckFilePrgm.has [FILE_PATH]\n");
+		exit(1);
+	}
 
-if (fexists(getarr(args, 0))) {
-	print("File exists.\n");
-} else {
-	print("File does not exist.\n");
-}
+	if (fexists(getarr(args, 0))) {
+		print("File exists.\n");
+	} else {
+		print("File does not exist.\n");
+	}
 
-exit(0);
+	exit(0);
+}
 ```
 
 ## Part 10: For Loops
@@ -575,11 +611,13 @@ counts from 1 to 10 using a for loop called ForPrgm.has:
 ```
 $SUMMARY: Counts from 1 to 10 using a for loop$
 
-for (x := 1; x < 11; x := x + 1) {
-	println(x);;
-}
+func main() {
+	for (x := 1; x < 11; x := x + 1) {
+		println(x);;
+	}
 
-exit(0);
+	exit(0);
+}
 ```
 
 ## Part 11: Try Catch
@@ -599,16 +637,18 @@ in ConvertNumPrgm.has:
 ```
 $SUMMARY: Takes input, converts to number, and displays it + 5$
 
-try {
-	num := tonum(input());
-} catch {
-	print("Enter a valid number!");
-	exit(1);
+func main() {
+	try {
+		num := tonum(input());
+	} catch {
+		print("Enter a valid number!");
+		exit(1);
+	}
+
+	print(num + 5);
+
+	exit(0);
 }
-
-print(num + 5);
-
-exit(0);
 ```
 
 ## Part 12: For Each Loops
@@ -628,13 +668,15 @@ Example from ForEachPrgm.has:
 ```
 $SUMMARY: Print every item of an array$
 
-myarray := toarr("abcd", 36/3, "defg", 3.1415);
+func main() {
+	myarray := toarr("abcd", 36/3, "defg", 3.1415);
 
-foreach (myvar in myarray) {
-	println(myvar);
+	foreach (myvar in myarray) {
+		println(myvar);
+	}
+
+	exit(0);
 }
-
-exit(0);
 ```
 This will print :
 ```
@@ -679,6 +721,12 @@ it is that called it. You've already expirenced this with builtin functions like
 an uppercase version of the argument it was given. Here's a program with a function that takes in a string argument, turns it
 all into lowercase, then makes every other character uppercase, called AlternatePrgm.hs:
 ```
+$SUMMARY: Takes input and alternates the cases of the letters$
+
+func main() {
+	print(alternateUpper("hello world"));
+}
+
 func alternateUpper(text) {
         text := tolower(text);
         result := "";
@@ -693,7 +741,6 @@ func alternateUpper(text) {
         return result;
 }
 
-print(alternateUpper("hello world"));
 ```
 
 The alternateUpper function will take the argument and alternate the cases of it, and
