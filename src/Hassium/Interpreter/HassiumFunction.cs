@@ -12,19 +12,22 @@ namespace Hassium
         private Interpreter interpreter;
         private FuncNode funcNode;
         private LocalScope localScope;
+        private StackFrame stackFrame;
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, LocalScope localScope)
         {
             this.interpreter = interpreter;
             this.funcNode = funcNode;
             this.localScope = localScope;
+            this.stackFrame = null;
         }
 
-        public HassiumFunction(Interpreter interpreter, LambdaFuncNode funcNode, LocalScope localScope)
+        public HassiumFunction(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame)
         {
             this.interpreter = interpreter;
-            this.funcNode = new FuncNode("", funcNode.Parameters, funcNode.Body);
-            this.localScope = localScope;
+            this.funcNode = funcNode;
+            this.localScope = stackFrame == null ? null : stackFrame.Scope;
+            this.stackFrame = stackFrame;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace Hassium
         /// <returns>The return value</returns>
         public object Invoke(object[] args)
         {
-            StackFrame stackFrame = new StackFrame(localScope);
+            if(stackFrame == null) stackFrame = new StackFrame(localScope);
 
             interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < funcNode.Parameters.Count; x++)

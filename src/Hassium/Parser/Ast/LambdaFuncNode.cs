@@ -43,5 +43,10 @@ namespace Hassium.Parser.Ast
 
             return new LambdaFuncNode(result, body);
         }
+
+        public static explicit operator FuncNode (LambdaFuncNode funcNode)
+        {
+            return new FuncNode("", funcNode.Parameters, funcNode.Body);
+        }
     }
 }

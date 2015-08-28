@@ -46,7 +46,7 @@ namespace Hassium
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
-            if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
+            if (CallStack.Count > 0 && CallStack.Peek().Locals.ContainsKey(name))
                 return CallStack.Peek().Locals[name];
             if (Globals.ContainsKey(name))
                 return Globals[name];
@@ -103,6 +103,8 @@ namespace Hassium
                     Globals.Remove(name);
             }
         }
+
+        private bool firstExecute = true;
         /// <summary>
         /// Execute this instance.
         /// </summary>
@@ -110,13 +112,14 @@ namespace Hassium
         {
             foreach (var node in code.Children)
             {
-                if (node is FuncNode)
+                if (node is FuncNode && firstExecute)
                 {
                     var fnode = ((FuncNode)node);
                     var scope = table.ChildScopes[fnode.Name];
                     SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
                 }
             }
+            firstExecute = false;
             foreach (var node in code.Children)
             {
                 if (node is FuncNode)
@@ -280,6 +283,21 @@ namespace Hassium
                     ExecuteStatement(whileStmt.ElseBody);
                 inLoop--;
             }
+            else if (node is FuncNode && !firstExecute)
+            {
+                var fnode = ((FuncNode)node);
+                var stackFrame = new StackFrame(table.ChildScopes[fnode.Name]);
+                if (CallStack.Count > 0)
+                {
+                    stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
+                    CallStack.Peek().Locals.All(x =>
+                    {
+                        stackFrame.Locals.Add(x.Key, x.Value);
+                        return true;
+                    });
+                }
+                SetVariable(fnode.Name, new HassiumFunction(this, fnode, stackFrame));
+            }
             else if (node is ForNode)
             {
                 var forStmt = (ForNode) (node);
@@ -389,7 +407,17 @@ namespace Hassium
             else if(node is LambdaFuncNode)
             {
                 var funcNode = (LambdaFuncNode)(node);
-                return new HassiumFunction(this, funcNode, table.ChildScopes["lambda_" + funcNode.GetHashCode()]);
+                var stackFrame = new StackFrame(table.ChildScopes["lambda_" + funcNode.GetHashCode()]);
+                if (CallStack.Count > 0)
+                {
+                    stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
+                    CallStack.Peek().Locals.All(x =>
+                    {
+                        stackFrame.Locals.Add(x.Key, x.Value);
+                        return true;
+                    });
+                }
+                return new HassiumFunction(this, (FuncNode)funcNode, stackFrame);
             }
             else if (node is FunctionCallNode)
             {

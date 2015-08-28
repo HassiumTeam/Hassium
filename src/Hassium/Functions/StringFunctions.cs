@@ -71,17 +71,17 @@ namespace Hassium.Functions
 			return args[0].ToString().Replace(args[1].ToString(), args[2].ToString());
 		}
 
-        [IntFunc("index")]
-        public static object Index(object[] args)
-        {
-            return args[0].ToString().IndexOf(args[1].ToString());
-        }
+		[IntFunc("index")]
+		public static object Index(object[] args)
+		{
+			return args[0].ToString().IndexOf(args[1].ToString());
+		}
 
-        [IntFunc("lastindex")]
-        public static object LastIndex(object[] args)
-        {
-            return args[0].ToString().LastIndexOf(args[1].ToString());
-        }
+		[IntFunc("lastindex")]
+		public static object LastIndex(object[] args)
+		{
+			return args[0].ToString().LastIndexOf(args[1].ToString());
+		}
 
 		[IntFunc("addslashes")]
 		public static object AddSlashes(object[] args)

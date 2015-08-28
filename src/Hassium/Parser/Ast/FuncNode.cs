@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -41,6 +42,11 @@ namespace Hassium
             AstNode body = StatementNode.Parse(parser);
 
             return new FuncNode(name, result, body);
+        }
+
+        public static explicit operator LambdaFuncNode(FuncNode funcNode)
+        {
+            return new LambdaFuncNode(funcNode.Parameters, funcNode.Body);
         }
     }
 }
