@@ -70,10 +70,7 @@ namespace Hassium
                     Add(new Token(TokenType.Comparison, ReadChar()));
                 else if (current == '!' && next1 == '=')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if ((current == '<' || current == '>') && next1 == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '<' || current == '>')
-                    Add(new Token(TokenType.Comparison, ReadChar()));
+                
                 else if (current == '&' && next1 == '&')
                     Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
                 else if (current == '|' && next1 == '|')
@@ -105,6 +102,11 @@ namespace Hassium
                     Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
                 else if (current == '<' && next1 == '<' && next2 == '=')
                     Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
+
+                else if ((current == '<' || current == '>') && next1 == '=')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
+                else if (current == '<' || current == '>')
+                    Add(new Token(TokenType.Comparison, ReadChar()));
 
                 else if ("+-*/%".Contains(current) && next1 == '=')
                     Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
