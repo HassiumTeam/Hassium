@@ -71,6 +71,49 @@ namespace Hassium.Functions
             return Console.BackgroundColor.ToString();
         }
 
+        [IntFunc("setposition")]
+        public static object ScursorPosition(object[] args)
+        {
+            Console.SetCursorPosition(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]));
+            return null;
+        }
+
+        [IntFunc("getleft")]
+        public static object GetLeft(object[] args)
+        {
+            return Console.CursorLeft;
+        }
+
+        [IntFunc("gettop")]
+        public static object GetTop(object[] args)
+        {
+            return Console.CursorTop;
+        }
+
+        [IntFunc("gettitle")]
+        public static object GetTitle(object[] args)
+        {
+            return Console.Title;
+        }
+
+        [IntFunc("settitle")]
+        public static object SetTitle(object[] args)
+        {
+            Console.Title = args[0].ToString();
+            return null;
+        }
+
+        [IntFunc("beep")]
+        public static object Beep(object[] args)
+        {
+            if (args.Length <= 1)
+                Console.Beep();
+            else
+                Console.Beep(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]));
+            
+            return null;
+        }
+
         private static ConsoleColor parseColor(string color)
         {
             switch (color)

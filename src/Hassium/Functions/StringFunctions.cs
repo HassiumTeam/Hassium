@@ -35,6 +35,12 @@ namespace Hassium.Functions
 			return args[0].ToString().StartsWith(args[1].ToString());
 		}
 
+        [IntFunc("ends")]
+        public static object Ends(object[] args)
+        {
+            return args[0].ToString().EndsWith(args[1].ToString());
+        }
+
 		[IntFunc("toupper")]
 		public static object ToUpper(object[] args)
 		{
@@ -82,6 +88,42 @@ namespace Hassium.Functions
 		{
 			return args[0].ToString().LastIndexOf(args[1].ToString());
 		}
+
+        [IntFunc("padleft")]
+        public static object PadLeft(object[] args)
+        {
+            return args[0].ToString().PadLeft(Convert.ToInt32(args[1]));
+        }
+
+        [IntFunc("padright")]
+        public static object PadRight(object[] args)
+        {
+            return args[0].ToString().PadRight(Convert.ToInt32(args[1]));
+        }
+
+        [IntFunc("remove")]
+        public static object Remove(object[] args)
+        {
+            return args[0].ToString().Replace(Convert.ToChar(args[1]), Convert.ToChar(args[2]));
+        }
+
+        [IntFunc("trim")]
+        public static object Trim(object[] args)
+        {
+            return args[0].ToString().Trim();
+        }
+
+        [IntFunc("trimleft")]
+        public static object TrimLeft(object[] args)
+        {
+            return args[0].ToString().TrimStart();
+        }
+
+        [IntFunc("trimright")]
+        public static object TrimRight(object[] args)
+        {
+            return args[0].ToString().TrimEnd();
+        }
 
 		[IntFunc("addslashes")]
 		public static object AddSlashes(object[] args)
