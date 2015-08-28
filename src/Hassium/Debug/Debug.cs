@@ -6,6 +6,10 @@ namespace Hassium
 {
     public static class Debug
     {
+        /// <summary>
+        /// Prints the tokens
+        /// </summary>
+        /// <param name="tokens">The list of tokens to print</param>
         public static void PrintTokens(List<Token> tokens)
         {
             var position = 0;

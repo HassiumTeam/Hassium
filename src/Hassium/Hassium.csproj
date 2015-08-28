@@ -47,6 +47,7 @@
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
     <Compile Include="Parser\Ast\ContinueNode.cs" />
+    <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />
     <Compile Include="Parser\Ast\ArrayInitializerNode.cs" />

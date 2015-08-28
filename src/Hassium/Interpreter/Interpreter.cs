@@ -386,6 +386,11 @@ namespace Hassium
                 else
                     return EvaluateNode(ifStmt.ElseBody);
             }
+            else if(node is LambdaFuncNode)
+            {
+                var funcNode = (LambdaFuncNode)(node);
+                return new HassiumFunction(this, funcNode, table.ChildScopes["lambda_" + funcNode.GetHashCode()]);
+            }
             else if (node is FunctionCallNode)
             {
                 var call = (FunctionCallNode)node;

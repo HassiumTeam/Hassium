@@ -1,4 +1,5 @@
 using System;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -23,30 +24,44 @@ namespace Hassium
 
         private void checkout(AstNode theNode)
         {
-            foreach(AstNode node in theNode.Children)
+            foreach (AstNode node in theNode.Children)
+            {
                 if (node is BinOpNode)
                 {
-                    BinOpNode bnode = ((BinOpNode)node);
-                    if (((BinOpNode)node).BinOp == BinaryOperation.Assignment)
+                    BinOpNode bnode = ((BinOpNode) node);
+                    if (((BinOpNode) node).BinOp == BinaryOperation.Assignment)
                     {
                         if (!result.Symbols.Contains(bnode.Left.ToString()))
                         {
                             result.Symbols.Add(bnode.Left.ToString());
+                            checkout(node);
                         }
                     }
                 }
                 else
                     checkout(node);
+            }
 
-            foreach(AstNode node in theNode.Children)
+            foreach (AstNode node in theNode.Children)
+            {
                 if (node is FuncNode)
                 {
-                    FuncNode fnode = ((FuncNode)node);
+                    FuncNode fnode = ((FuncNode) node);
                     currentLocalScope = new LocalScope();
                     result.ChildScopes[fnode.Name] = currentLocalScope;
                     currentLocalScope.Symbols.AddRange(fnode.Parameters);
                     analyseLocalCode(fnode.Body);
                 }
+                else if (node is LambdaFuncNode)
+                {
+                    LambdaFuncNode fnode = ((LambdaFuncNode)node);
+                    currentLocalScope = new LocalScope();
+                    result.ChildScopes["lambda_" + fnode.GetHashCode()] = currentLocalScope;
+                    currentLocalScope.Symbols.AddRange(fnode.Parameters);
+                    analyseLocalCode(fnode.Body);
+                }
+
+            }
         }
 
         private void analyseLocalCode(AstNode theNode)

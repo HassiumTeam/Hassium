@@ -323,6 +323,10 @@ namespace Hassium
             {
                 return new StringNode(parser.ExpectToken(TokenType.String).Value.ToString());
             }
+            else if(parser.MatchToken(TokenType.Identifier, "lambda"))
+            {
+                return LambdaFuncNode.Parse(parser);
+            }
             else if (parser.MatchToken(TokenType.Identifier))
             {
                 return new IdentifierNode(parser.ExpectToken(TokenType.Identifier).Value.ToString());
