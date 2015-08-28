@@ -119,6 +119,13 @@ namespace Hassium
                     SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
                 }
             }
+
+            if (!Globals.ContainsKey("main"))
+            {
+                Console.WriteLine("Could not execute, no main entry point of program!");
+                Environment.Exit(-1);
+            }
+
             firstExecute = false;
             foreach (var node in code.Children)
             {

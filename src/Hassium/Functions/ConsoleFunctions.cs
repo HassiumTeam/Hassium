@@ -110,7 +110,7 @@ namespace Hassium.Functions
                 Console.Beep();
             else
                 Console.Beep(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]));
-            
+
             return null;
         }
 
