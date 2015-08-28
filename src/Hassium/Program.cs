@@ -34,10 +34,11 @@ namespace Hassium
                 Debug.PrintTokens(tokens);
             Parser.Parser hassiumParser = new Parser.Parser(tokens);
             AstNode ast = hassiumParser.Parse();
+            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast);
 
             try
             {
-                new Interpreter(new SemanticAnalyser(ast).Analyse(), ast).Execute();
+                intp.Execute();
             }
             catch (Exception e)
             {

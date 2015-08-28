@@ -12,7 +12,7 @@ namespace Hassium
         private Interpreter interpreter;
         private FuncNode funcNode;
         private LocalScope localScope;
-        private StackFrame stackFrame;
+        public StackFrame stackFrame;
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, LocalScope localScope)
         {
@@ -37,7 +37,7 @@ namespace Hassium
         /// <returns>The return value</returns>
         public object Invoke(object[] args)
         {
-            if(stackFrame == null) stackFrame = new StackFrame(localScope);
+            /*if(stackFrame == null)*/ stackFrame = new StackFrame(localScope);
 
             interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < funcNode.Parameters.Count; x++)

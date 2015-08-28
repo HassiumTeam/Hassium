@@ -180,9 +180,9 @@ namespace Hassium
                     return right;
                 case BinaryOperation.Equals:
                     return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
-                case BinaryOperation.And:
+                case BinaryOperation.LogicalAnd:
                     return Convert.ToBoolean(EvaluateNode(node.Left)) && Convert.ToBoolean(EvaluateNode(node.Right));
-                case BinaryOperation.Or:
+                case BinaryOperation.LogicalOr:
                     return Convert.ToBoolean(EvaluateNode(node.Left)) || Convert.ToBoolean(EvaluateNode(node.Right));
                 case BinaryOperation.NotEqualTo:
                     return EvaluateNode(node.Left).GetHashCode() != EvaluateNode(node.Right).GetHashCode();
@@ -424,6 +424,7 @@ namespace Hassium
                 var call = (FunctionCallNode)node;
 
                 var target = EvaluateNode(call.Target) as IFunction;
+                //if (target is HassiumFunction) ((HassiumFunction) target).stackFrame = null;
 
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
