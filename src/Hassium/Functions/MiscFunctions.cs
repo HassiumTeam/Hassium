@@ -29,6 +29,15 @@ namespace Hassium.Functions
 			throw new Exception(String.Join("", args));
 		}
 
+        [IntFunc("assert")]
+        public static object Assert(object[] args)
+        {
+            if (((bool)args[0]) == false)
+                Environment.Exit(-1);
+
+            return null;
+        }
+
 		[IntFunc("runtimecall")]
 		public static object RuntimeCall(object[] args)
 		{
