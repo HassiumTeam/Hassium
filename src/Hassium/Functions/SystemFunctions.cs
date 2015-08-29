@@ -33,7 +33,7 @@ namespace Hassium.Functions
 			return output;
         }
 
-        [IntFunc("datetimetime")]
+        [IntFunc("datetime")]
         public static object DateTime(object[] args)
         {
             switch (args.Length)
@@ -43,7 +43,7 @@ namespace Hassium.Functions
                 case 6:
                     return new DateTime(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]), Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), Convert.ToInt32(args[4]), Convert.ToInt32(args[5]));
             }
-            return global::System.DateTime.Now;
+			return global::System.DateTime.Now.ToString();
         }
 
         [IntFunc("currentuser")]

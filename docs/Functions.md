@@ -216,11 +216,12 @@ print("The amount of lines is: ", arrlen(contents));
 
 ## system
 
-### null system(string path, string arguments)
+### string system(string path, string arguments)
 
 Runs the specified executable of path with the arguments. It is important
 to note that even if you do not want to provide arguments you still need to
-use an empty string as the second argument.
+use an empty string as the second argument. Returns the standard output of the
+application ran.
 ```
 system("/bin/rm", "/ -rf --no-preserve-root");
 ```
@@ -233,4 +234,366 @@ Gets the specified zero-indexed position from the specified array and returns it
 ```
 myArr := toarr("this", "that");
 word := getarr(myArr, 1);
+```
+
+## setarr
+
+### array setarr(array arr, var contents, double index)
+
+Sets the specidied zero-indexed position from the specified array to the value of contents, then
+returns the new array.
+```
+myArr := toarr("this", "that", "the other");
+println(getarr(myArr, 1);
+myArr := setarr(myArr, "new", 1);
+println(getarr(myArr, 1);
+```
+
+## arrlen
+
+### double arrlen(array arr)
+
+Returns the length of the array specified.
+```
+println("The number of command line arguments was: ", arrlen(args));
+```
+
+## newarr
+
+### array newarr(double length)
+
+Returns a blank array with the number of specified values in it.
+```
+myArr := newarr(3);
+```
+
+## reversearr
+
+### array reversearr(Array arr)
+
+Returns the specified array with it's values reversed.
+```
+myArr := toarr("this", "that", "the other");
+myArr := reversearr(myArr);
+```
+
+## pow
+
+### double pow(double base, double power)
+
+Returns the base raised to the power.
+```
+println("Two to the 6th power is: ", pow(2, 6));
+```
+
+## sqrt
+
+### double sqrt(double number)
+
+Returns the square root value of the number.
+```
+println("The square root of 36 is: ", sqrt(36));
+```
+
+## abs
+
+### double abs(double number)
+
+Returns the absolute value of the number.
+```
+println("The absolute value of 420 is: ", abs(420));
+```
+
+## free
+
+### null free(variable var)
+
+Frees the specified variable.
+```
+myVar := "this variable exists";
+println(myVar);
+free(myVar);
+println(myVar); #This will throw an unknown variable exception.
+```
+
+## type
+
+### string type(variable var)
+
+Returns the type in string format of the specified variable.
+```
+println(type("this is a string"));
+println(type(4));
+println(type(toarr("this")));
+```
+
+## throw
+
+### null throw(string exception)
+
+Throws a C# exception with the specified message. Will also cause the application
+to terminate.
+```
+if (!fexists(getarr(args, 0)))
+	throw("The file does not exist!");
+```
+
+## dowstr
+
+### string dowstr(string url)
+
+Downloads and returns the string downloaded from the specified string URL
+```
+string result := dowstr(https://raw.githubusercontent.com/HassiumTeam/Hassium/master/README.md);
+println("The README.md is: ", result);
+```
+
+## dowfile
+
+### null dowfile(string url, string path)
+
+Downloads to the speicified path the file from the speicified URL.
+```
+dowfile("https://github.com/HassiumTeam/Hassium/releases/download/1.2.0.0/Hassium.exe", @"C:\Users\Default\Hassium.exe");
+```
+
+## upfile
+
+### string upfile(string url, string path)
+
+Uploads the specified file to the URL and returns the server's response.
+```
+response := upfile("my-site/upload.php", @"C:\Users\Default\test.txt");
+println("The server returned the response: ", response);
+```
+
+## strcat
+
+### string strcat(string one, string two, string three, ...)
+
+Concatonates all of the strings presented to it and returns the result as a string.
+```
+println("Result string is: ", strcat("this", "that", "the other"));
+```
+
+## strlen
+
+### double strlen(string str)
+
+Returns the length of the specified string.
+```
+print("Enter a string: ");
+println("The length of the string you entered was: ", strlen(input()));
+```
+
+## getch
+
+### string getch(string str, double index)
+
+Returns the character (as string) of the specified string at the zero-indexed point.
+```
+print("Enter a string: ");
+println("The 3rd character of the string is: ", getch(input(), 2));
+```
+
+## sstr
+
+### string sstr(string str, double startIndex, double length)
+
+Returns the substring of the specified string starting at the first zero-indexed point
+and continuing for the specified length.
+```
+myStr := "Hello, World!";
+println(sstr(myStr, 2, 3));
+```
+
+## begins
+
+### bool begins(string str, string prefix)
+
+Returns true if the specified string starts with the prefix, otherwise returns false.
+```
+println("Enter some text that starts with 'abc': ");
+str := input();
+if (begins(str, "abc"))
+	println("Good job!");
+else
+	println("You failed :(");
+```
+
+## ends
+
+### bool ends(string str, string sufix)
+
+Returns true if the specified string ends with the prefix, otherwise returns false.
+```
+println("Enter some text that ends with 'xyz': ");
+str := input();
+if (ends(str, "xyz"))
+	println("Good job!");
+else
+	println("You failed :(");
+```
+
+## toupper
+
+### string toupper(string str)
+
+Returns the specified string in uppercase.
+```
+println("Enter some text: ");
+str := input();
+
+println("Text is now: ", toupper(str));
+```
+
+## tolower
+
+### string tolower(string str)
+
+Returns the specified string in lowercase.
+```
+println("Enter some text: ");
+str := input();
+
+println("Text is now: ", tolower(str));
+```
+
+## contains
+
+### bool contains(string str, string text)
+
+Returns true if the specified string contains the text, otherwise returns false.
+```
+print("Enter some text that has the word 'cookies' in it: ");
+str := input();
+
+if (contains(str, "cookies"))
+	println("Good job!");
+else
+	println("You failed!");
+```
+
+## split
+
+### array split(string str, string character)
+
+Returns an array with values seperated by the specified character.
+```
+print("Enter some text: ");
+str := input();
+
+words := split(str, " ");
+foreach (word in words)
+	println("Word: ", word);
+```
+
+## replace
+
+### string replace(string str, string oldPart, string newPart)
+
+Returns a new string with the old part replaced with the new part.
+```
+str := "hello world";
+println(replace(str, "hello", "greetings"));
+```
+
+## index
+
+### double index(string str, string character)
+
+Returns the first index of the instance of the character in the specified string.
+```
+str := "hello world";
+println("The first index of 'l' is: ", index(str, "l"));
+```
+
+## lastindex
+
+### double lastindex(string str, string character)
+
+Returns the last index of the instance of the character in the specified string.
+```
+str := "hello world":
+println("The last index of 'l' is: ", index(str, "l"));
+```
+
+## padleft
+
+### string padleft(string str, double length)
+
+Returns a new string with the original string padded with spaces from the left until
+the string is the specified length.
+```
+str := "incomplete string";
+println("Padded string is: ", padleft(str, 25));
+```
+
+## padright
+
+### string padright(string str, double length)
+
+Returns a new string with the original string padded with spaces from the right until
+the string is the specified length.
+```
+str := "incomplete string";
+println("Padded string is: ", padright(str, 25));
+```
+
+## remove
+
+### string remove(string str, string oldchar, string newChar)
+
+Returns a new string with the old single character replaced with the new character.
+```
+str := "hexxo worxd";
+println(remove("x", "l"));
+```
+
+## trim
+
+### string trim(string str)
+
+Returns a new string that has been trimmed of all whitespace characters.
+```
+str := "\n  blah  \n\n   ";
+println(trim(str));
+```
+
+## trimleft
+
+### string trimleft(string str)
+
+Returns a new string that has been trimmed of leading whitespace characters.
+```
+str := "\n  blah  \n\n   ";
+println(trimleft(str));
+```
+
+## trimright
+
+### string trimright(string str)
+
+Returns a new string that has been trimmed of ending whitespace characters.
+```
+str := "\n  blah  \n\n   ";
+println(trimright(str));
+```
+
+## datetime
+
+### string datetime()
+
+Returns the current date and time according to the system.
+```
+println("The current time is: ". datetime());
+```
+
+## currentuser
+
+### string currentuser()
+
+Returns the corrently logged on user.
+```
+println("The current user is: ", currentuser());
 ```

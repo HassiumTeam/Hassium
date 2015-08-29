@@ -66,12 +66,12 @@ namespace Hassium.Functions
 			return Enumerable.Repeat(thing, num).ToArray();
 		}
 
-		[IntFunc("array_reverse")]
+		[IntFunc("reversearr", "array_reverse")]
 		public static object ArrayReverse(object[] args)
 		{
 			return GetArr(args[0]).ToArray().Reverse();
 		}
-
+	
 		[IntFunc("array_op")]
 		public static object ArrayOp(object[] args)
 		{
