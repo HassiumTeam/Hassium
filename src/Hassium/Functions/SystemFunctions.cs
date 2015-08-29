@@ -50,7 +50,9 @@ namespace Hassium.Functions
                 Debug.PrintTokens(tokens);
             Parser.Parser hassiumParser = new Parser.Parser(tokens);
             AstNode ast = hassiumParser.Parse();
-            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast);
+            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false);
+            intp.Globals = HassiumInterpreter.CurrentInterpreter.Globals;
+            intp.CallStack = HassiumInterpreter.CurrentInterpreter.CallStack;
             intp.Execute();
             return null;
         }

@@ -17,7 +17,7 @@ namespace Hassium
             }
         }
 
-        private static bool disableTryCatch = true;
+        private static bool disableTryCatch = false; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
 
         private static class options
         {
@@ -27,8 +27,11 @@ namespace Hassium
             public static string Code = "";
         }
 
+        public static Interpreter CurrentInterpreter = null;
+
         public static void Main(string[] args)
         {
+            CurrentInterpreter = new Interpreter();
             preformSetUp(args);
 
             List<Token> tokens = new Lexer(options.Code).Tokenize();
@@ -36,14 +39,15 @@ namespace Hassium
                 Debug.PrintTokens(tokens);
             Parser.Parser hassiumParser = new Parser.Parser(tokens);
             AstNode ast = hassiumParser.Parse();
-            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast);
+            CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+            CurrentInterpreter.Code = ast;
 
-            if (disableTryCatch) intp.Execute();
+            if (disableTryCatch) CurrentInterpreter.Execute();
             else
             {
                 try
                 {
-                    intp.Execute();
+                    CurrentInterpreter.Execute();
                 }
                 catch (Exception e)
                 {
@@ -78,12 +82,12 @@ namespace Hassium
             {
                 options.Debug = true;
                 options.FilePath = args[1];
-                Interpreter.Globals.Add("args", shiftArray(args, 2));
+                CurrentInterpreter.SetVariable("args", shiftArray(args, 2), true);
             }
             else
             {
                 options.FilePath = args[0];
-                Interpreter.Globals.Add("args", shiftArray(args, 1));
+                CurrentInterpreter.SetVariable("args", shiftArray(args), true);
             }
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
@@ -103,7 +107,7 @@ namespace Hassium
                 {
                     if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
                     foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
-                            Interpreter.Globals.Add(entry.Key, entry.Value);
+                            CurrentInterpreter.SetVariable(entry.Key, entry.Value, true);
                 }
                 else if (line.StartsWith("$DEFINE"))
                 {

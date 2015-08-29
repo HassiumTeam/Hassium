@@ -37,6 +37,7 @@ namespace Hassium.Parser
 
         public Token CurrentToken()
         {
+            if(position >= tokens.Count) return new Token(TokenType.Identifier, "");
             return tokens[position];
         }
 

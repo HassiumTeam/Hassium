@@ -11,7 +11,7 @@ namespace Hassium.Functions
 		[IntFunc("free")]
 		public static object Free(object[] args)
 		{
-			Interpreter.Globals.Remove(args[0].ToString());
+			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString());
 			return null;
 		}
 

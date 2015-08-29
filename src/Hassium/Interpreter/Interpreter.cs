@@ -18,28 +18,52 @@ namespace Hassium
     public class Interpreter
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
-        public static Dictionary<string, object> Globals = new Dictionary<string, object>();
+        public Dictionary<string, object> Globals = new Dictionary<string, object>();
 
-        public static Dictionary<string, object> Constants = new Dictionary<string, object>
+        public Dictionary<string, object> Constants = new Dictionary<string, object>
         {
             {"true", true},
             {"false", false},
             {"null", null},
         };
 
-        private SymbolTable table;
-        private AstNode code;
+        public AstNode Code { get; set; }
+
+        public SymbolTable SymbolTable { get; set; }
+
+
+
+        private bool forceMain;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Hassium.Interpreter"/> class.
+        /// </summary>
+        public Interpreter(bool forcemain = true)
+        {
+            SymbolTable = new SymbolTable();
+            forceMain = forcemain;
+            LoadInternalFunctions();
+        }
+
+        public void LoadInternalFunctions()
+        {
+            foreach (var entry in GetFunctions())
+                Globals.Add(entry.Key, entry.Value);
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Hassium.Interpreter"/> class.
         /// </summary>
         /// <param name="symbolTable">Symbol table.</param>
         /// <param name="code">Code.</param>
-        public Interpreter(SymbolTable symbolTable, AstNode code)
+        public Interpreter(SymbolTable symbolTable, AstNode code, bool forcemain = true)
         {
-            this.code = code;
-            table = symbolTable;
-            foreach (var entry in GetFunctions())
-                Globals.Add(entry.Key, entry.Value);
+            this.Code = code;
+            SymbolTable = symbolTable;
+            forceMain = forcemain;
+            LoadInternalFunctions();
         }
 
         public object GetVariable(string name)
@@ -110,29 +134,29 @@ namespace Hassium
         /// </summary>
         public void Execute()
         {
-            foreach (var node in code.Children)
+            foreach (var node in Code.Children)
             {
                 if (node is FuncNode && firstExecute)
                 {
                     var fnode = ((FuncNode)node);
-                    var scope = table.ChildScopes[fnode.Name];
+                    var scope = SymbolTable.ChildScopes[fnode.Name];
                     SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
                 }
             }
 
-            if (!Globals.ContainsKey("main"))
+            if (!Globals.ContainsKey("main") && forceMain)
             {
                 Console.WriteLine("Could not execute, no main entry point of program!");
                 Environment.Exit(-1);
             }
 
             firstExecute = false;
-            foreach (var node in code.Children)
+            foreach (var node in Code.Children)
             {
                 if (node is FuncNode)
                 {
                     var fnode = ((FuncNode)node);
-                    var scope = table.ChildScopes[fnode.Name];
+                    var scope = SymbolTable.ChildScopes[fnode.Name];
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
@@ -347,7 +371,7 @@ namespace Hassium
             else if (node is FuncNode && !firstExecute)
             {
                 var fnode = ((FuncNode)node);
-                var stackFrame = new StackFrame(table.ChildScopes[fnode.Name]);
+                var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
                 if (CallStack.Count > 0)
                 {
                     stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
@@ -483,7 +507,7 @@ namespace Hassium
             else if(node is LambdaFuncNode)
             {
                 var funcNode = (LambdaFuncNode)(node);
-                var stackFrame = new StackFrame(table.ChildScopes["lambda_" + funcNode.GetHashCode()]);
+                var stackFrame = new StackFrame(SymbolTable.ChildScopes["lambda_" + funcNode.GetHashCode()]);
                 if (CallStack.Count > 0)
                 {
                     stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
