@@ -7,7 +7,7 @@ namespace Hassium
         public static ArgListNode Parse(Parser.Parser parser)
         {
             ArgListNode ret = new ArgListNode();
-            parser.ExpectToken(TokenType.Parentheses, "(");
+            //parser.ExpectToken(TokenType.Parentheses, "(");
 
             while (!parser.MatchToken(TokenType.Parentheses, ")"))
             {

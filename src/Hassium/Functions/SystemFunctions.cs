@@ -41,5 +41,18 @@ namespace Hassium.Functions
         {
             return Environment.UserName;
         }
+
+        [IntFunc("eval")]
+        public static object Eval(object[] args)
+        {
+            List<Token> tokens = new Lexer(args[0].ToString()).Tokenize();
+            if (false)
+                Debug.PrintTokens(tokens);
+            Parser.Parser hassiumParser = new Parser.Parser(tokens);
+            AstNode ast = hassiumParser.Parse();
+            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast);
+            intp.Execute();
+            return null;
+        }
     }
 }

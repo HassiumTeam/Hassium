@@ -8,7 +8,7 @@ namespace Hassium.Parser
     public class Parser
     {
         private List<Token> tokens;
-        private int position;
+        public int position;
 
         public bool EndOfStream
         {

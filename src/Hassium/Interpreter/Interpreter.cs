@@ -152,7 +152,7 @@ namespace Hassium
 
         /// <summary>
         /// Interprets the binary op.
-        /// </summary>
+        /// </summary
         /// <returns>The binary op.</returns>
         /// <param name="node">Node.</param>
         private object interpretBinaryOp(BinOpNode node)
@@ -211,7 +211,9 @@ namespace Hassium
         private object interpretBinaryOp(object left, object right, BinaryOperation _op = default(BinaryOperation))
         {
             if (left is AstNode) left = EvaluateNode((AstNode) left);
+            if (left is int) left = (double) (int) left; 
             if (right is AstNode) right = EvaluateNode((AstNode)right);
+            if (right is int) left = (double)(int)right;
             switch (_op)
             {
                 case BinaryOperation.Addition:
@@ -233,7 +235,8 @@ namespace Hassium
                     }
                     return Convert.ToDouble(left) * Convert.ToDouble(right);
                 case BinaryOperation.Equals:
-                    return left.GetHashCode() == right.GetHashCode();
+                    //if (left is double || right is double) return ((double) left) == ((double) right);
+                    return left.ToString() == right.ToString();
                 case BinaryOperation.LogicalAnd:
                     return Convert.ToBoolean(left) && Convert.ToBoolean(right);
                 case BinaryOperation.LogicalOr:
@@ -249,7 +252,11 @@ namespace Hassium
                 case BinaryOperation.LesserOrEqual:
                     return Convert.ToDouble(left) <= Convert.ToDouble(right);
                 case BinaryOperation.Xor:
-                    return Convert.ToBoolean(left) ^ Convert.ToBoolean(right);
+                    return Convert.ToInt32(left) ^ Convert.ToInt32(right);
+                case BinaryOperation.BitwiseAnd:
+                    return Convert.ToInt32(left) & Convert.ToInt32(right);
+                case BinaryOperation.BitwiseOr:
+                    return Convert.ToInt32(left) | Convert.ToInt32(right);
                 case BinaryOperation.BitshiftLeft:
                     return Convert.ToInt32(left) << Convert.ToInt32(right);
                 case BinaryOperation.BitshiftRight:

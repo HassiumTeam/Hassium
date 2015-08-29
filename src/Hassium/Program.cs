@@ -17,6 +17,8 @@ namespace Hassium
             }
         }
 
+        private static bool disableTryCatch = true;
+
         private static class options
         {
             public static bool Debug = false;
@@ -36,17 +38,21 @@ namespace Hassium
             AstNode ast = hassiumParser.Parse();
             Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast);
 
-            try
+            if (disableTryCatch) intp.Execute();
+            else
             {
-                intp.Execute();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("ERROR: " + e.Message);
-                Console.WriteLine("Press Y to show full stack trace");
-                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                try
                 {
-                    Console.WriteLine(e);
+                    intp.Execute();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ERROR: " + e.Message);
+                    Console.WriteLine("Press Y to show full stack trace");
+                    if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
             }
         }
