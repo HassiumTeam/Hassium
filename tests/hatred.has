@@ -27,7 +27,7 @@ $func assert(this, and, that, msg)
 
 func assert(that, msg)
 {
-	theMsg := msg + " [" + (that ? "✓y" : "✗n") + "]";
+	theMsg := msg + " [" + (that ? "✓" : "✗") + "]";
 	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
 	println(theMsg);
 }
