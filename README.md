@@ -1,3 +1,5 @@
+[![Unit tests status](https://travis-ci.org/HassiumTeam/Hassium.svg?branch=master)](https://travis-ci.org/HassiumTeam/Hassium)
+
 # Hassium
 
 ##New: Hassium Website
