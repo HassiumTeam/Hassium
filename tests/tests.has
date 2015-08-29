@@ -1,4 +1,56 @@
+$INCLUDE hatred.has$
+
 func main()
 {
-	println("hello from travis-ci");
+	println("--- BEGIN TESTS FOR HASSIUM ---");
+	
+	opTests();
+	
+	
+	
+	
+	println("--- END TESTS FOR HASSIUM ---");
+}
+
+func opTests()
+{
+println("Operators tests");
+println();
+
+# basic operators
+assert(13 + 8 = 21, "should pass if addition result is correct");
+assert(29 - 56 = -27, "should pass if substraction result is correct");
+assert(36 / 3 = 12, "should pass if division result is correct");
+assert(41 * 3 = 123, "should pass if multiplication result is correct");
+assert(117 % 17 = 15, "should pass if modulo result is correct");
+
+# comparison
+assert(5 = 5, "object should be equals to itself");
+assert(14 < 21, "object should be less than value");
+assert(38 > -8, "object should be greater than value");
+assert(1 != 2, "object should not be equal to value");
+assert(38 <= 41 - 3, "object should be less or equal than value");
+assert (21 >= 14 + 7, "object should be greater or equal than value");
+
+# logical
+assert(2 + 2 = 4 && 3 + 3 = 6, "should pass if both values are true");
+assert(8 * 3 = 1515 || 3 * 9 = 27, "should pass if any of the values is true");
+
+# bitwise
+assert(5 ^ 3 = 6, "should pass if XOR result is correct");
+assert(23 << 2 = 92, "should pass if Bitshift Left result is correct");
+assert(-105 >> 1 = -53, "should pass if Bitshift right result is correct");
+assert(6 & 13 = 4, "should pass if AND result is correct");
+assert(5 | 3 = 7, "should pass if OR result is correct");
+
+# other
+assert(12 ** 3 = 1728, "should pass if ** (power) result is correct");
+assert(512 // 3 = 8, "should pass if // (root) result is correct");
+
+ab := null;
+cd := 5;
+assert((ab ?? cd) = 5, "should pass if ?? (null-coalescing) result is correct");
+
+println();
+println("End of operator tests");
 }
