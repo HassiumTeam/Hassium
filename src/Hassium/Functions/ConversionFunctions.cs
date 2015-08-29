@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Hassium.Functions
@@ -18,11 +19,16 @@ namespace Hassium.Functions
 		[IntFunc("tostr")]
 		public static object ToStr(object[] args)
 		{
+			if(args[0] is Dictionary<object, object>)
+			{
+				return "Array { " +
+					   string.Join(", ", ((Dictionary<object, object>)(args[0])).Select(x => "[" + x.Key + "] => " + x.Value)) + " }";
+			}
 			if(args[0] is Array)
 			{
-				return ((Array)(args[0])).Cast<object>()
+				return ((object[])(args[0]))
 						.Aggregate("Array { ",
-							(current, item) => current + ((item is Array ? ToStr(new[] { item }) : (item.ToString().Replace("\"", "\\\""))) + " ")) + "}";
+							(current, item) => current + ((item is Array ? ToStr(new[] { item }) : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
 			}
 			return String.Join("", args);
 		}
@@ -32,7 +38,7 @@ namespace Hassium.Functions
 		{
 			try
 			{
-			    return Convert.ToInt32(args[0]).ToString("{0:X}");
+				return Convert.ToInt32(args[0]).ToString("{0:X}");
 			}
 			catch
 			{

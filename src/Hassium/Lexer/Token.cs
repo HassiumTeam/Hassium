@@ -18,8 +18,8 @@ namespace Hassium
         Exception,
         EndOfLine,
         UnaryOperation,
-        MentalOperation
-
+        MentalOperation,
+        Lambda,
     }
     public class Token
     {

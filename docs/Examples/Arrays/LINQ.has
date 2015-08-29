@@ -6,12 +6,11 @@ func main()
 	# As you can see, the syntax is pretty simple, it's just like this :
 	# variable_name := [element, element, element, element];
 	
-	
 	# the array_op function, similar to LINQ Aggregate function
 	# performs an operation on each element of the array
 	# for example, here it will do x + y for each element
 	# so abc + 123 + def + abdef + 456 + qwerty
-	println(array_op(theArray, lambda(x,y) { return x + y; }));
+	println(array_op(theArray, [x, y] => x + y));
 	# should print: abc123defabdef456qwerty
 	
 	# the array_select function, similar to LINQ Select
@@ -19,13 +18,13 @@ func main()
 	# and return the resulting elements
 	# here, it returns an array of the length of the elements
 	# abc (3), 123 (3), def (3), abdef (5), 456 (3), qwerty (6)
-	printarr(array_select(theArray, lambda(x) { return strlen(tostr(x)); }));
+	printarr(array_select(theArray, x => strlen(tostr(x))));
 	# should print: Array { 3 3 3 5 3 6 }
 	
 	# the array_where function, similar to LINQ Where
 	# will return all the elements that satisfies the specified condition
 	# here, all elements that contains the letter "e"
-	printarr(array_where(theArray, lambda(x) { return contains(tostr(x), "e"); }));
+	printarr(array_where(theArray, x => contains(tostr(x), "e")));
 	# should print: Array { def abdef qwerty }
 	
 	# the array_any function, similar to LINQ Any
@@ -33,21 +32,21 @@ func main()
 	# in the array that satisfies the specified condition
 	# here it checks if there's any element in the array whose length is
 	# greater than 7
-	println(array_any(theArray, lambda(x) { return strlen(tostr(x)) > 7; }));
+	println(array_any(theArray, x => strlen(tostr(x)) > 7));
 	# should print: False (because there isn't any element with length > 7)
 	
 	# the array_first function, similar to LINQ First
 	# if no argument are specified, it returns the first element on an array
 	# otherwise it returns the first element to satisfy a condition
 	# here, the first element to contains the letter "d"
-	println(array_first(theArray, lambda(x) { return contains(tostr(x), "d"); }));
+	println(array_first(theArray, x => contains(tostr(x), "d")));
 	# should print: def
 	
 	# the array_last function, opposite of array_first, similar to LINQ Last
 	# if no argument are specified, it returns the last element on an array
 	# otherwise it returns the last element to satisfy a condition
 	# here, the last element to contains the letter "f"
-	println(array_last(theArray, lambda(x) { return contains(tostr(x), "f"); }));
+	println(array_last(theArray, x => contains(tostr(x), "f")));
 	# should print: abdef
 	
 	# the array_zip function, a bit more complicated, similar to LINQ Zip
@@ -61,6 +60,25 @@ func main()
 	# containing the results.
 	test1 := [1, 2, 3, 4, 5];
 	test2 := [6, 7, 8, 9, 10];
-	printarr(array_zip(test1, test2, lambda(x,y) { return x + y; }));
+	printarr(array_zip(test1, test2, [x, y] => x + y));
 	# should print: Array { 7 9 11 13 15 }
+	
+	# DICTIONARIES
+	# you can define a dictionary by using the syntax [key: value, key: value]
+	theDict := ["abc" : "def", 123 : "jkl", "lol" : "qwerty"];
+	theDict["test"] := "lolol";
+	theDict[] := "troll";
+	println(theDict["abc"]);
+	println(theDict[120 + 3]);
+	println(theDict[]); # if you use the [] operator with nothing inside, it takes the last element
+	printarr(theDict);
+	foreach(v in theDict) # if you use one var in foreach with a dictionary, it converts the dictionary to an array of values
+	{
+		println(v);
+	}
+	
+	foreach([key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
+	{
+		println("Key: " + key + "   Value: " + value;
+	}
 }

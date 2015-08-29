@@ -1,4 +1,5 @@
 using System;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -39,7 +40,9 @@ namespace Hassium
         {
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.Parentheses, "(");
-            AstNode needle = IdentifierNode.Parse(parser);
+            AstNode needle = null;
+            if (parser.CurrentToken().Value.ToString() == "[") needle = ArrayInitializerNode.Parse(parser);
+            else needle = IdentifierNode.Parse(parser);
             parser.ExpectToken(TokenType.Identifier, "in");
             AstNode haystack = StatementNode.Parse(parser);
             parser.ExpectToken(TokenType.Parentheses, ")");

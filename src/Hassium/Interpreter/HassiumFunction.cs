@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Hassium.Functions;
 using Hassium.Parser.Ast;
 
@@ -48,6 +50,8 @@ namespace Hassium
             object ret = interpreter.CallStack.Peek().ReturnValue;
             
             interpreter.CallStack.Pop();
+
+            if (ret is object[]) ret = ((object[]) ret).Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
 
             return ret;
         }

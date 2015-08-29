@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Hassium.Parser.Ast;
 
 namespace Hassium
@@ -305,6 +307,15 @@ namespace Hassium
             {
                 AstNode right = ParseMultiplicative(parser);
                 return new BinOpNode(BinaryOperation.Modulus, left, right);
+            }
+            else if(parser.AcceptToken(TokenType.Lambda, "=>"))
+            {
+                AstNode body = new ReturnNode(StatementNode.Parse(parser));
+
+                if (parser.AcceptToken(TokenType.EndOfLine)) parser.ExpectToken(TokenType.EndOfLine);
+
+                if(left is ArrayInitializerNode) return new LambdaFuncNode(((ArrayInitializerNode)left).Value.Values.Select(x => x.ToString()).ToList(), body);
+                return new LambdaFuncNode(new List<string>() {left.ToString()}, body);
             }
             else
             {

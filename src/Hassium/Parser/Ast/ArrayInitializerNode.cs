@@ -7,26 +7,31 @@ namespace Hassium.Parser.Ast
 {
     public class ArrayInitializerNode : AstNode
     {
-        private readonly List<object> _value;
+        private readonly Dictionary<object, object> _value;
 
-        public object[] Value
+        public Dictionary<object, object> Value
         {
-            get { return Children.ToArray(); }
+            get { return _value; }
         }
 
-        public ArrayInitializerNode(List<object> items)
+        public ArrayInitializerNode(Dictionary<object, object> items)
         {
             _value = items;
         }
 
         public ArrayInitializerNode()
         {
-            _value = new List<object>();
+            _value = new Dictionary<object, object>();
         }
 
         public void AddItem(object item)
         {
-            _value.Add(item);
+            _value.Add(_value.Count, item);
+        }
+
+        public void AddItem(object key, object item)
+        {
+            _value.Add(key, item);
         }
 
         public static ArrayInitializerNode Parse(Parser parser)
@@ -36,7 +41,15 @@ namespace Hassium.Parser.Ast
 
             while (!parser.MatchToken(TokenType.Bracket, "]"))
             {              
-                ret.Children.Add(ExpressionNode.Parse(parser));
+                var ct1 = ExpressionNode.Parse(parser);
+                if(parser.AcceptToken(TokenType.Identifier, ":"))
+                {
+                    ret.AddItem(ct1, ExpressionNode.Parse(parser));
+                }
+                else
+                {
+                    ret.AddItem(ct1);
+                }
                 if (!parser.AcceptToken(TokenType.Comma))
                 {
                     break;
