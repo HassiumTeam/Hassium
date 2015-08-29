@@ -197,4 +197,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-src/Hassium/Hassium.csproj.DotSettings
+
+# VS 2015 settings file (user specific)
+*.DotSettings
