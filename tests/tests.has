@@ -8,7 +8,7 @@ func main()
 	
 	opTests();
 	
-	
+	closureTest();
 	
 	
 	println("--- END TESTS FOR HASSIUM ---");
@@ -73,6 +73,21 @@ func opTests()
 	println();
 	println("End of function tests");
 
+}
+
+func startAt (x) {
+	return lambda (y) {
+		return x + y;
+	}
+}
+
+func closureTest() {
+	closure1 := startAt (1);
+	closure2 := startAt (5);
+	a := closure1(3);
+	b := closure2(3);
+	assert(a = 4, "closure1(3) should equal 4");
+	assert(b = 8, "closure2(3) should equal 8");
 }
 
 func test(x) {
