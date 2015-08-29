@@ -51,7 +51,7 @@ namespace Hassium
             
             interpreter.CallStack.Pop();
 
-            if (ret is object[]) ret = ((object[]) ret).Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
+            if (ret is Array) ret = ((Array) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
 
             return ret;
         }

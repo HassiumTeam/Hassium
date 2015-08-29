@@ -128,9 +128,34 @@ namespace Hassium.Functions
 		}
 		#endregion
 
+		[IntFunc("range")]
+		public static object Range(object[] args)
+		{
+			var from = Convert.ToDouble(args[0]);
+			var to = Convert.ToDouble(args[1]);
+			if(args.Length > 2)
+			{
+				var step = Convert.ToDouble(args[2]);
+				var list = new List<double>();
+				if(step == 0) throw new Exception("The step for range() can't be zero");
+				if (to < from && step > 0) step = -step;
+				if (to > from && step < 0) step = -step;
+				for (var i = from; step < 0 ? i > to : i < to; i += step)
+				{
+					list.Add(i);
+				}
+				return list.ToArray();
+			}
+			return from == to
+				? new[] {from}.Cast<object>()
+				: (to < from 
+					? Enumerable.Range((int)to, (int)from).Reverse() 
+					: Enumerable.Range((int)from, (int)to)).ToArray().Cast<object>();
+		}
+
 		public static object[] GetArr(object arg)
 		{
-            return ((Dictionary<object, object>) arg).Values.ToArray();
+			return ((Dictionary<object, object>) arg).Values.ToArray();
 		}
 	}
 }

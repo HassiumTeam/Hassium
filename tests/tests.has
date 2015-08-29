@@ -1,5 +1,7 @@
 $INCLUDE hatred.has$
 
+exitcode := 0;
+
 func main()
 {
 	println("--- BEGIN TESTS FOR HASSIUM ---");
@@ -10,6 +12,13 @@ func main()
 	
 	
 	println("--- END TESTS FOR HASSIUM ---");
+	
+	exit(exitcode);
+}
+
+func setExitCode(code)
+{
+	exitcode := code;
 }
 
 func opTests()
@@ -21,6 +30,7 @@ println();
 assert(13 + 8 = 21, "should pass if addition result is correct");
 assert(29 - 56 = -27, "should pass if substraction result is correct");
 assert(36 / 3 = 12, "should pass if division result is correct");
+assertfail("38 / 0 = 1", "should fail (division by zero)");
 assert(41 * 3 = 123, "should pass if multiplication result is correct");
 assert(117 % 17 = 15, "should pass if modulo result is correct");
 
@@ -50,6 +60,8 @@ assert(512 // 3 = 8, "should pass if // (root) result is correct");
 ab := null;
 cd := 5;
 assert((ab ?? cd) = 5, "should pass if ?? (null-coalescing) result is correct");
+
+assert(1 <=> 2 = -1, "should pass if <=> result is correct");
 
 
 println();

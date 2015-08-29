@@ -30,4 +30,20 @@ func assert(that, msg)
 	theMsg := msg + " [" + (that ? "✓" : "✗") + "]";
 	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
 	println(theMsg);
+	
+	if(!that) setExitCode(1);
+}
+
+func assertfail(that, msg)
+{
+	failed := false;
+	try 
+	{
+		eval(that);
+	}
+	catch
+	{
+		failed := true;
+	}
+	theMsg := msg + " [" + (failed ? "✓" : "✗") + "]";
 }
