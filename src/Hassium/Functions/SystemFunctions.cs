@@ -19,8 +19,18 @@ namespace Hassium.Functions
         [IntFunc("system")]
         public static object System(object[] args)
         {
-            Process.Start(args[0].ToString(), string.Join(" ", args.Skip(1)));
-            return null;
+			Process process = new Process();
+			process.StartInfo.FileName = args[0].ToString();
+			process.StartInfo.Arguments = String.Join("", args.Skip(1));
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = false;
+			process.Start();
+
+			string output = process.StandardOutput.ReadToEnd();
+			process.WaitForExit();
+
+			return output;
         }
 
         [IntFunc("datetimetime")]
