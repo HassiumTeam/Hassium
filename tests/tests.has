@@ -28,7 +28,7 @@ func opTests()
 
 	# basic operators
 	assert(13 + 8 = 21, "should pass if addition result is correct");
-	assert(29 - 56 = -27, "should pass if substraction result is correct");
+	assert(29 - 56 = -28, "should pass if substraction result is correct");
 	assert(36 / 3 = 12, "should pass if division result is correct");
 	assertfail("38 / 0 = 1", "should fail (division by zero)");
 	assert(41 * 3 = 123, "should pass if multiplication result is correct");
