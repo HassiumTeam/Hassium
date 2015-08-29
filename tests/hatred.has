@@ -46,4 +46,5 @@ func assertfail(that, msg)
 		failed := true;
 	}
 	theMsg := msg + " [" + (failed ? "✓" : "✗") + "]";
+	println(theMsg);
 }
