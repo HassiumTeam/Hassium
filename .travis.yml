@@ -1,0 +1,7 @@
+script:
+  - ./test.sh
+language: csharp
+mono:
+  - latest
+notifications:
+  irc: "int0x10.com#Hassium"
