@@ -85,6 +85,8 @@ namespace Hassium
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '/' && next1 == '/' && next2 != '=')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                else if(current == '<' && next1 == '=' && next2 == '>')
+                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar() + "" + ReadChar()));
                 else if (current == '>' && next1 == '>' && next2 != '=')
                     Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                 else if (current == '<' && next1 == '<' && next2 != '=')

@@ -1,28 +1,50 @@
 ﻿# Welcome to HATRED.
 # Hassium Testing Runtime Environment Distribution
 
-$func assert(this, and, that, msg) {
+$func assert(this, and, that, msg)
+{
 	result := null;
-	if(and == "equals") {
+	if(and == "equals")
+	{
 		result := this == that;
 	}
-	else if(and == "not equals") {
+	else if(and == "not equals")
+	{
 		result := this != that;
 	}
-	else if(and == "greater") {
+	else if(and == "greater")
+	{
 		result := this > that;
 	}
-	else if(and == "greater or equal") {
+	else if(and == "greater or equal")
+	{
 		result := this != that;
 	}
-
 	thePrint := (msg + " [" + (result ? "✓" : "✗") + "]");
 	if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
 	println(thePrint);
 }$
 
-func assert(that, msg) {
+func assert(that, msg)
+{
 	theMsg := msg + " [" + (that ? "✓" : "✗") + "]";
 	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
+	println(theMsg);
+	
+	if(!that) setExitCode(1);
+}
+
+func assertfail(that, msg)
+{
+	failed := false;
+	try 
+	{
+		eval(that);
+	}
+	catch
+	{
+		failed := true;
+	}
+	theMsg := msg + " [" + (failed ? "✓" : "✗") + "]";
 	println(theMsg);
 }

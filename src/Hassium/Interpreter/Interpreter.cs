@@ -232,7 +232,7 @@ namespace Hassium
         /// <param name="right">The right-hand parameter</param>
         /// <param name="_op">The operation type</param>
         /// <returns>The result of the operation</returns>
-        private object interpretBinaryOp(object left, object right, BinaryOperation _op = default(BinaryOperation))
+        private object interpretBinaryOp(object left, object right, BinaryOperation _op)
         {
             if (left is AstNode) left = EvaluateNode((AstNode) left);
             if (left is int) left = (double) (int) left; 
@@ -247,6 +247,7 @@ namespace Hassium
                 case BinaryOperation.Subtraction:
                     return Convert.ToDouble(left) - Convert.ToDouble(right);
                 case BinaryOperation.Division:
+                    if(Convert.ToDouble(right) == 0.0) throw new DivideByZeroException("Cannot divide by zero");
                     return Convert.ToDouble(left) / Convert.ToDouble(right);
                 case BinaryOperation.Multiplication:
                     if ((left is string && right is double) ||
@@ -275,6 +276,10 @@ namespace Hassium
                     return Convert.ToDouble(left) >= Convert.ToDouble(right);
                 case BinaryOperation.LesserOrEqual:
                     return Convert.ToDouble(left) <= Convert.ToDouble(right);
+                case BinaryOperation.CombinedComparison:
+                    if ((bool) interpretBinaryOp(left, right, BinaryOperation.GreaterThan)) return 1;
+                    if ((bool)interpretBinaryOp(left, right, BinaryOperation.LessThan)) return -1;
+                    return 0;
                 case BinaryOperation.Xor:
                     return Convert.ToInt32(left) ^ Convert.ToInt32(right);
                 case BinaryOperation.BitwiseAnd:
@@ -541,7 +546,7 @@ namespace Hassium
                 if (returnFunc)
                     returnFunc = false;
                 inFunc--;
-                if (ret is object[]) ret = ((object[])ret).Select((s, i) => new { s, i }).ToDictionary(x => (object)x.i, x => (object)x.s);
+                if (ret is Array) ret = ((Array)ret).Cast<object>().Select((s, i) => new { s, i }).ToDictionary(x => (object)x.i, x => (object)x.s);
                 return ret;
             }
             else if (node is IdentifierNode)

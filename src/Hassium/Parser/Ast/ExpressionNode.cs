@@ -177,6 +177,11 @@ namespace Hassium
                     var right = ParseOr(parser);
                     left = new BinOpNode(BinaryOperation.GreaterOrEqual, left, right);
                 }
+                else if (parser.AcceptToken(TokenType.Comparison, "<=>"))
+                {
+                    var right = ParseOr(parser);
+                    left = new BinOpNode(BinaryOperation.CombinedComparison, left, right);
+                }
                 else if (parser.AcceptToken(TokenType.Operation, "<<"))
                 {
                     var right = ParseOr(parser);
