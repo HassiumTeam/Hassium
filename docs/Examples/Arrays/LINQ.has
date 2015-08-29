@@ -67,7 +67,7 @@ func main()
 	# you can define a dictionary by using the syntax [key: value, key: value]
 	theDict := ["abc" : "def", 123 : "jkl", "lol" : "qwerty"];
 	theDict["test"] := "lolol";
-	theDict[] := "troll";
+	theDict[] := "troll"; # if you use the [] operator with nothing inside, it appends at the end of the array
 	println(theDict["abc"]);
 	println(theDict[120 + 3]);
 	println(theDict[]); # if you use the [] operator with nothing inside, it takes the last element
