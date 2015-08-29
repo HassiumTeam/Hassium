@@ -145,78 +145,132 @@ namespace Hassium
             }
         }
 
-        private void interpretBinaryAssign(BinOpNode node)
+        /*private void interpretBinaryAssign(BinOpNode node)
         {
             SetVariable(node.Left.ToString(), interpretBinaryOp(node, true), false, true);         
-        }
+        }*/
+
         /// <summary>
         /// Interprets the binary op.
         /// </summary>
         /// <returns>The binary op.</returns>
         /// <param name="node">Node.</param>
-        /// <param name="isAssign">If set to <c>true</c> is assign.</param>
-        private object interpretBinaryOp(BinOpNode node, bool isAssign = false)
+        private object interpretBinaryOp(BinOpNode node)
         {
-            switch (isAssign ? node.AssignOperation : node.BinOp)
+            var right = EvaluateNode(node.Right);
+            if (node.BinOp == BinaryOperation.Assignment)
             {
-                case BinaryOperation.Addition:
-                    if (EvaluateNode(node.Left) is string || EvaluateNode(node.Right) is string)
-                        return EvaluateNode(node.Left) + EvaluateNode(node.Right).ToString();
-                    return Convert.ToDouble((EvaluateNode(node.Left))) + Convert.ToDouble((EvaluateNode(node.Right)));
-                case BinaryOperation.Subtraction:
-                    return Convert.ToDouble((EvaluateNode(node.Left))) - Convert.ToDouble((EvaluateNode(node.Right)));
-                case BinaryOperation.Division:
-                    return Convert.ToDouble((EvaluateNode(node.Left))) / Convert.ToDouble((EvaluateNode(node.Right)));
-                case BinaryOperation.Multiplication:
-                    if ((EvaluateNode(node.Left) is string && EvaluateNode(node.Right) is double) ||
-                        EvaluateNode(node.Right) is string && EvaluateNode(node.Left) is double)
+                if (node.Left is ArrayGetNode)
+                {
+                    var call = (ArrayGetNode) (node.Left);
+                    List<object> theArray = null;
+                    bool append = false;
+                    var evaluated = GetVariable(call.Target.ToString());
+                    if (evaluated is string) theArray = evaluated.ToString().Cast<object>().ToList();
+                    else if (evaluated is Array) theArray = ((Array) evaluated).Cast<object>().ToList();
+                    else
                     {
-                        var p1 = EvaluateNode(node.Left);
-                        var p2 = EvaluateNode(node.Right);
-                        if (p1 is string)
-                            return string.Concat(Enumerable.Repeat(p1, Convert.ToInt32(p2)));
-                        else
-                            return string.Concat(Enumerable.Repeat(p2, Convert.ToInt32(p1)));
+                        throw new Exception("The [] operator only applies to objects of type Array or String.");
                     }
-                    return Convert.ToDouble((EvaluateNode(node.Left))) * Convert.ToDouble((EvaluateNode(node.Right)));
-                case BinaryOperation.Assignment:
+                    var arguments = new object[call.Arguments.Children.Count];
+                    for (var x = 0; x < call.Arguments.Children.Count; x++)
+                        arguments[x] = EvaluateNode(call.Arguments.Children[x]);
+
+                    var _temp = string.Join("", arguments);
+                    var arid = -1;
+                    if (string.IsNullOrWhiteSpace(_temp)) append = true;
+                    else
+                    {
+                        arid = (int) double.Parse(_temp);
+                        if (arid < 0 || arid >= theArray.Count)
+                            throw new ArgumentOutOfRangeException();
+                    }  
+
+                    var theValue = (node.IsOpAssign && !append)
+                        ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                        : right;
+
+                    if (append) theArray.Add(theValue);
+                    else theArray[arid] = theValue;
+
+                    SetVariable(call.Target.ToString(), theArray.ToArray());
+                }
+                else
+                {
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
-                    var right = EvaluateNode(node.Right);
+                    if (node.IsOpAssign)
+                        SetVariable(node.Left.ToString(),
+                            interpretBinaryOp(new BinOpNode(node.AssignOperation, node.Left, node.Right)));
                     SetVariable(node.Left.ToString(), right);
-                    return right;
+                }
+                return right;
+            }
+            var left = EvaluateNode(node.Left);
+            return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp);
+        }
+
+        /// <summary>
+        /// Interprets a binary op
+        /// </summary>
+        /// <param name="left">The left-hand parameter</param>
+        /// <param name="right">The right-hand parameter</param>
+        /// <param name="_op">The operation type</param>
+        /// <returns>The result of the operation</returns>
+        private object interpretBinaryOp(object left, object right, BinaryOperation _op = default(BinaryOperation))
+        {
+            switch (_op)
+            {
+                case BinaryOperation.Addition:
+                    if (left is string || right is string)
+                        return left + right.ToString();
+                    return Convert.ToDouble(left) + Convert.ToDouble(right);
+                case BinaryOperation.Subtraction:
+                    return Convert.ToDouble(left) - Convert.ToDouble(right);
+                case BinaryOperation.Division:
+                    return Convert.ToDouble(left) / Convert.ToDouble(right);
+                case BinaryOperation.Multiplication:
+                    if ((left is string && right is double) ||
+                        right is string && left is double)
+                    {
+                        if (left is string)
+                            return string.Concat(Enumerable.Repeat(left, Convert.ToInt32(right)));
+                        else
+                            return string.Concat(Enumerable.Repeat(right, Convert.ToInt32(left)));
+                    }
+                    return Convert.ToDouble(left) * Convert.ToDouble(right);
                 case BinaryOperation.Equals:
-                    return EvaluateNode(node.Left).GetHashCode() == EvaluateNode(node.Right).GetHashCode();
+                    return left.GetHashCode() == right.GetHashCode();
                 case BinaryOperation.LogicalAnd:
-                    return Convert.ToBoolean(EvaluateNode(node.Left)) && Convert.ToBoolean(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(left) && Convert.ToBoolean(right);
                 case BinaryOperation.LogicalOr:
-                    return Convert.ToBoolean(EvaluateNode(node.Left)) || Convert.ToBoolean(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(left) || Convert.ToBoolean(right);
                 case BinaryOperation.NotEqualTo:
-                    return EvaluateNode(node.Left).GetHashCode() != EvaluateNode(node.Right).GetHashCode();
+                    return left.GetHashCode() != right.GetHashCode();
                 case BinaryOperation.LessThan:
-                    return Convert.ToDouble(EvaluateNode(node.Left)) < Convert.ToDouble(EvaluateNode(node.Right));
+                    return Convert.ToDouble(left) < Convert.ToDouble(right);
                 case BinaryOperation.GreaterThan:
-                    return Convert.ToDouble(EvaluateNode(node.Left)) > Convert.ToDouble(EvaluateNode(node.Right));
+                    return Convert.ToDouble(left) > Convert.ToDouble(right);
                 case BinaryOperation.GreaterOrEqual:
-                    return Convert.ToDouble(EvaluateNode(node.Left)) >= Convert.ToDouble(EvaluateNode(node.Right));
+                    return Convert.ToDouble(left) >= Convert.ToDouble(right);
                 case BinaryOperation.LesserOrEqual:
-                    return Convert.ToDouble(EvaluateNode(node.Left)) <= Convert.ToDouble(EvaluateNode(node.Right));
+                    return Convert.ToDouble(left) <= Convert.ToDouble(right);
                 case BinaryOperation.Xor:
-                    return Convert.ToBoolean(EvaluateNode(node.Left)) ^ Convert.ToBoolean(EvaluateNode(node.Right));
+                    return Convert.ToBoolean(left) ^ Convert.ToBoolean(right);
                 case BinaryOperation.BitshiftLeft:
-                    return Convert.ToInt32(EvaluateNode(node.Left)) << Convert.ToInt32(EvaluateNode(node.Right));
+                    return Convert.ToInt32(left) << Convert.ToInt32(right);
                 case BinaryOperation.BitshiftRight:
-                    return Convert.ToInt32(EvaluateNode(node.Left)) >> Convert.ToInt32(EvaluateNode(node.Right));
+                    return Convert.ToInt32(left) >> Convert.ToInt32(right);
                 case BinaryOperation.Modulus:
-                    return Convert.ToDouble(EvaluateNode(node.Left)) % Convert.ToDouble(EvaluateNode(node.Right));
+                    return Convert.ToDouble(left) % Convert.ToDouble(right);
 
                 case BinaryOperation.Pow:
-                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), Convert.ToDouble(EvaluateNode(node.Right)));
+                    return Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right));
                 case BinaryOperation.Root:
-                    return Math.Pow(Convert.ToDouble(EvaluateNode(node.Left)), 1.0 / Convert.ToDouble(EvaluateNode(node.Right)));
+                    return Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right));
                     
                 case BinaryOperation.NullCoalescing:
-                    return EvaluateNode(node.Left) ?? EvaluateNode(node.Right);
+                    return left ?? right;
             }
             // Raise error
             return -1;
@@ -392,11 +446,11 @@ namespace Hassium
             }
             else if (node is BinOpNode)
             {
-                if (((BinOpNode)node).IsAssign)
+                /*if (((BinOpNode)node).IsOpAssign)
                 {
                     interpretBinaryAssign((BinOpNode)node);
                     return null;
-                }
+                }*/
                 return interpretBinaryOp((BinOpNode)node);
             }
             else if (node is UnaryOpNode)
@@ -461,6 +515,7 @@ namespace Hassium
             else if (node is MentalNode)
             {
                 var mnode = ((MentalNode)node);
+                if(!HasVariable(mnode.Name)) throw new Exception("The operand of an increment or decrement operator must be a variable, property or indexer");
                 var oldValue = GetVariable(mnode.Name);
                 switch (mnode.OpType)
                 {
@@ -478,10 +533,11 @@ namespace Hassium
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
-                Array theArray = null;
-                var evaluated = EvaluateNode(call.Target);
-                if (evaluated is string) theArray = evaluated.ToString().ToArray();
-                else if (evaluated is Array) theArray = (Array) evaluated;
+                List<object> theArray = null;
+                bool append = false;
+                var evaluated = GetVariable(call.Target.ToString());
+                if (evaluated is string) theArray = evaluated.ToString().Cast<object>().ToList();
+                else if (evaluated is Array) theArray = ((Array)evaluated).Cast<object>().ToList();
                 else
                 {
                     throw new Exception("The [] operator only applies to objects of type Array or String.");
@@ -490,12 +546,21 @@ namespace Hassium
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);
 
-                var arid = (int)double.Parse(string.Join("", arguments));
-                if (arid < 0 || arid >= theArray.Length)
-                    throw new ArgumentOutOfRangeException();
-                var retvalue = theArray.GetValue(arid);
-                if (retvalue is AstNode) return EvaluateNode((AstNode) retvalue);
-                else return retvalue;
+                var _temp = string.Join("", arguments);
+                var arid = -1;
+                if (string.IsNullOrWhiteSpace(_temp)) append = true;
+                else
+                {
+                    arid = (int)double.Parse(_temp);
+                    if (arid < 0 || arid >= theArray.Count)
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (append) return theArray.Last();
+
+                var theValue = theArray[arid];
+                if (theValue is AstNode) return EvaluateNode((AstNode) theValue);
+                else return theValue;
             }
             else if (node is ReturnNode)
             {

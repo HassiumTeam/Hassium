@@ -32,7 +32,7 @@ namespace Hassium
     {
         public BinaryOperation BinOp { get; set; }
         public BinaryOperation AssignOperation { get; set; }
-        public bool IsAssign { get; set; }
+        public bool IsOpAssign { get; set; }
         public AstNode Left
         {
             get 
@@ -52,6 +52,7 @@ namespace Hassium
         public BinOpNode(BinaryOperation type, AstNode left, AstNode right)
         {
             BinOp = type;
+            AssignOperation = type;
             Children.Add(left);
             Children.Add(right);
         }
@@ -60,7 +61,7 @@ namespace Hassium
         {
             BinOp = type;
             AssignOperation = assign;
-            IsAssign = true;
+            IsOpAssign = true;
             Children.Add(left);
             Children.Add(right);
         }

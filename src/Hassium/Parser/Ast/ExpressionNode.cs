@@ -95,6 +95,7 @@ namespace Hassium
                     var right = ParseLogicalOr(parser);
                     left = new BinOpNode(BinaryOperation.Assignment, assigntype, left, right);
                 }
+                else break;
             }
 
             return left;
@@ -116,6 +117,7 @@ namespace Hassium
                     var right = ParseLogicalAnd(parser);
                     left = new BinOpNode(BinaryOperation.NullCoalescing, left, right);
                 }
+                else break;
             }
 
             return left;
@@ -227,6 +229,7 @@ namespace Hassium
                     var elsebody = ParseEquality(parser);
                     left = new ConditionalOpNode(left, ifbody, elsebody);
                 }
+                else break;
             }
 
             return left;
@@ -238,18 +241,17 @@ namespace Hassium
 
             while (parser.CurrentToken().TokenClass == TokenType.Operation || parser.CurrentToken().TokenClass == TokenType.MentalOperation)
             {
-                var curToken = parser.CurrentToken().TokenClass == TokenType.MentalOperation ? parser.ExpectToken(TokenType.MentalOperation) : parser.ExpectToken(TokenType.Operation);
-                if (curToken.Value.ToString() == "+")
+                if (parser.AcceptToken(TokenType.Operation, "+"))
                 {
                     AstNode right = ParseMultiplicative(parser);
                     left = new BinOpNode(BinaryOperation.Addition, left, right);
                 }
-                else if (curToken.Value.ToString() == "-")
+                else if (parser.AcceptToken(TokenType.Operation, "-"))
                 {
                     AstNode right = ParseMultiplicative(parser);
                     left = new BinOpNode(BinaryOperation.Subtraction, left, right);
                 }
-                else if (curToken.Value.ToString() == "++")
+                /*else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
                 {
                     var varname = "";
                     var before = false;
@@ -278,44 +280,11 @@ namespace Hassium
                         varname = parser.PreviousToken(2).Value.ToString();
                     }
                     left = new MentalNode("--", varname, before);
-                }
+                }*/
+                else break;
 
             }
             return left;
-            /*if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-            {
-                var varname = "";
-                var before = false;
-                if (parser.AcceptToken(TokenType.Identifier))
-                {
-                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                    before = true;
-                }
-                else
-                {
-                    varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new MentalNode("++", varname, before);
-            }
-            else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-            {
-                var varname = "";
-                var before = false;
-                if (parser.AcceptToken(TokenType.Identifier))
-                {
-                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                    before = true;
-                }
-                else
-                {
-                    varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new MentalNode("--", varname, before);
-            }
-            else
-            {
-                return left;
-            }*/
         }
 
         private static AstNode ParseMultiplicative (Parser.Parser parser)
@@ -356,7 +325,46 @@ namespace Hassium
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))
                 return new UnaryOpNode(UnaryOperation.Complement, ParseUnary(parser));
             else
-                return ParseFunctionCall(parser);
+                return ParsePostfixIncDec(parser);
+        }
+
+        private static AstNode ParsePostfixIncDec(Parser.Parser parser)
+        {
+            var left = ParseFunctionCall(parser);
+            if (parser.AcceptToken(TokenType.MentalOperation, "++"))
+            {
+                var varname = "";
+                var before = false;
+                if (parser.AcceptToken(TokenType.Identifier))
+                {
+                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                    before = true;
+                }
+                else
+                {
+                    varname = parser.PreviousToken(2).Value.ToString();
+                }
+                return new MentalNode("++", varname, before);
+            }
+            else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
+            {
+                var varname = "";
+                var before = false;
+                if (parser.AcceptToken(TokenType.Identifier))
+                {
+                    varname = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                    before = true;
+                }
+                else
+                {
+                    varname = parser.PreviousToken(2).Value.ToString();
+                }
+                return new MentalNode("--", varname, before);
+            }
+            else
+            {
+                return left;
+            }
         }
 
         private static AstNode ParseFunctionCall(Parser.Parser parser)
@@ -379,6 +387,8 @@ namespace Hassium
                 return left;
             }
         }
+        
+        
 
         private static AstNode ParseTerm (Parser.Parser parser)
         {
