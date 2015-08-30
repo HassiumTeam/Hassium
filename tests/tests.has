@@ -7,7 +7,8 @@ func main()
 	println("--- BEGIN TESTS FOR HASSIUM ---");
 	
 	opTests();
-	
+	numberFormatTests();
+	functionTests();
 	closureTest();
 	
 	
@@ -66,30 +67,53 @@ func opTests()
 
 	println();
 	println("End of operator tests");
+	println();
+}
+
+func functionTests()
+{
+	func test(x) {
+		return x * 4;
+	}
 
 	println("Functions tests");
 	println();
 	assert(test(4) = 16, "should pass if Function test(4) is correct");
 	println();
 	println("End of function tests");
-
+	println();
 }
 
-func startAt (x) {
-	return lambda (y) {
-		return x + y;
-	}
+func numberFormatTests()
+{
+	println("Number format tests");
+	println();
+	assert(0xDA = 218, "should pass if hexadecimal numbers are parsed correctly");
+	assert(0o173 = 123, "should pass if octal numbers are parsed correctly");
+	assert(0b110101011 = 427, "should pass if binary numbers are parsed correctly");
+	assert(round(runtimecall("System.Math.PI"), 2) = 3.14, "should pass if decimal numbers are parsed correctly");
+	println();
+	println("End of number format tests");
+	println();
 }
+
+
 
 func closureTest() {
+	println("Closures tests");
+	println();
+	func startAt (x) {
+		return lambda (y) {
+			return x + y;
+		}
+	}
 	closure1 := startAt (1);
 	closure2 := startAt (5);
 	a := closure1(3);
 	b := closure2(3);
 	assert(a = 4, "closure1(3) should equal 4");
 	assert(b = 8, "closure2(3) should equal 8");
-}
-
-func test(x) {
-	return x * 4;
+	println();
+	println("End of closures tests");
+	println();
 }

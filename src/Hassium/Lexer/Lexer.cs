@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text;
 
 namespace Hassium
 {
@@ -31,98 +32,149 @@ namespace Hassium
         public List<Token> Tokenize()
         {
             whiteSpaceMonster();
-
+            
             while (HasChar())
             {
+                whiteSpaceMonster();
+
                 var current = PeekChar();
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
-                if (char.IsLetterOrDigit(current))
-                    Add(scanData());
-                else if (current == '@' && next1 == '"')
-                    Add(scanString(true));
-                else if (current == '"')
-                    Add(scanString());
-                else if (current == '$')
-                    scanComment();
-                else if (current == '#')
-                    singleComment();
-                else if (current == '+' && next1 == '+')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
-                else if (current == '-' && next1 == '-')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
-                else if (current == ';')
-                    Add(new Token(TokenType.EndOfLine, ReadChar()));
-                else if (current == ',')
-                    Add(new Token(TokenType.Comma, ReadChar()));
-                else if (current == '(' || current == ')')
-                    Add(new Token(TokenType.Parentheses, ReadChar()));
-                else if (current == '[' || current == ']')
-                    Add(new Token(TokenType.Bracket, ReadChar()));
-                else if (current == '{' || current == '}')
-                    Add(new Token(TokenType.Brace, ReadChar()));
-                else if (current == ':' && next1 == '=')
-                    Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
-                else if(current == ':')
-                    Add(new Token(TokenType.Identifier, ReadChar()));
-                else if(current == '=' && next1 == '>')
-                    Add(new Token(TokenType.Lambda, ReadChar() + "" + ReadChar()));
-                else if (current == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar()));
-                else if (current == '!' && next1 == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                
-                else if (current == '&' && next1 == '&')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '|' && next1 == '|')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '?' && next1 == '?')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if(current == '?')
-                    Add(new Token(TokenType.Operation, ReadChar()));
-                else if (current == '*' && next1 == '*' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if (current == '/' && next1 == '/' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if(current == '<' && next1 == '=' && next2 == '>')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '>' && next1 == '>' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if (current == '<' && next1 == '<' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if ("+-*/%".Contains(current) && !("/*=".Contains(next1)))
-                    Add(new Token(TokenType.Operation, ReadChar()));
-                else if ("&|^".Contains(current) && next1 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar()));
-
-                else if ("~!-".Contains(current))
-                    Add(new Token(TokenType.UnaryOperation, ReadChar()));
-                else if (current == '*' && next1 == '*' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '/' && next1 == '/' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '>' && next1 == '>' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '<' && next1 == '<' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-
-                else if ((current == '<' || current == '>') && next1 == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '<' || current == '>')
-                    Add(new Token(TokenType.Comparison, ReadChar()));
-
-                else if ("+-*/%".Contains(current) && next1 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
-                else if ("&|^".Contains(current) && next1 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
-
-
-                else
+                if("0123456789.".Contains(current))
                 {
-                    result.Add(new Token(TokenType.Exception,
-                        "Unexpected " + PeekChar().ToString() + " encountered"));
-                    ReadChar();
+                    Add(ScanNumber());
+                    continue;
+                }
+                if(char.IsLetter(current) || "_".Contains(current))
+                {
+                    Add(ScanIdentifier());
+                    continue;
+                }
+
+                switch (current)
+                {
+                    case '@':
+                        if (next1 == '"')
+                            Add(ScanString(true));
+                        break;
+                    case '"':
+                        Add(ScanString());
+                        break;
+                    case '$':
+                        ScanComment(false);
+                        break;
+                    case '#':
+                        ScanComment(true);
+                        break;
+                    case '+':
+                    case '-':
+                        if (next1 == current)
+                            Add(new Token(TokenType.MentalOperation, "" + ReadChar() + ReadChar()));
+                        else
+                            switch (next1)
+                            {
+                                case '=':
+                                    Add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                                    break;
+                                default:
+                                    Add(new Token(TokenType.Operation, ReadChar()));
+                                    break;
+                            }
+                        break;
+                    case '%':
+                        Add(new Token(TokenType.Operation, ReadChar()));
+                        break;
+                    case '*':
+                    case '/':
+                        if (next1 == current)
+                            Add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
+                        else
+                            switch (next1)
+                            {
+                                case '=':
+                                    Add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                                    break;
+                                default:
+                                    Add(new Token(TokenType.Operation, ReadChar()));
+                                    break;
+                            }
+                        break;
+                    case ';':
+                        Add(new Token(TokenType.EndOfLine, ReadChar()));
+                        break;
+                    case ',':
+                        Add(new Token(TokenType.Comma, ReadChar()));
+                        break;
+                    case '(':
+                    case ')':
+                        Add(new Token(TokenType.Parentheses, ReadChar()));
+                        break;
+                    case '[':
+                    case ']':
+                        Add(new Token(TokenType.Bracket, ReadChar()));
+                        break;
+                    case '{':
+                    case '}':
+                        Add(new Token(TokenType.Brace, ReadChar()));
+                        break;
+                    case ':':
+                        if (next1 == '=')
+                            Add(new Token(TokenType.Assignment, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.Identifier, ReadChar()));
+                        break;
+                    case '=':
+                        if (next1 == '>')
+                            Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.Comparison, ReadChar()));
+                        break;
+                    case '!':
+                        if (next1 == '=')
+                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.UnaryOperation, ReadChar()));
+                        break;
+                    case '~':
+                        Add(new Token(TokenType.UnaryOperation, ReadChar()));
+                        break;
+                    case '&':
+                    case '|':
+                        if (next1 == current)
+                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.Operation, ReadChar()));
+                        break;
+                    case '^':
+                        Add(new Token(TokenType.Operation, ReadChar()));
+                        break;
+                    case '?':
+                        if (next1 == '?')
+                            Add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.Operation, ReadChar()));
+                        break;
+                    case '<':
+                    case '>':
+                        if (next1 == current)
+                            Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                        else if (next1 == '=')
+                        {
+                            if (current == '<' && next2 == '>')
+                                Add(new Token(TokenType.Comparison,
+                                    "" + ReadChar() + ReadChar() + ReadChar()));
+                            else
+                                Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                        }
+                        else
+                            Add(new Token(TokenType.Comparison, ReadChar()));
+                        break;
+                    default:
+                        result.Add(new Token(TokenType.Exception,
+                            "Unexpected " + Functions.StringFunctions.AddSlashes(new object[] { PeekChar().ToString() }) + " encountered"));
+                        ReadChar();
+                        break;
                 }
 
                 whiteSpaceMonster();
@@ -133,149 +185,154 @@ namespace Hassium
         /// <summary>
         /// Scans Comment
         /// </summary>
-        private void scanComment()
+        private void ScanComment(bool oneLine)
         {
             ReadChar();
-            while(PeekChar() != '$' && HasChar())
-            {
+            while (HasChar() && PeekChar() != (oneLine ? '\n' : '$'))
                 ReadChar();
-            }
-            ReadChar();
-        }
-        /// <summary>
-        /// Single line comment.
-        /// </summary>
-        private void singleComment()
-        {
-            ReadChar();
-            while (PeekChar() != '\n' && HasChar())
-            {
-                ReadChar();
-            }
-            if(HasChar()) ReadChar(); //causes exception if at end of file
+
+            if (!oneLine && HasChar()) ReadChar();
         }
         /// <summary>
         /// Scans the string.
         /// </summary>
         /// <returns>The string.</returns>
-        /// <param name="verbatim">If set to <c>true</c> verbatim.</param>
-        private Token scanString(bool verbatim = false)
+        /// <param name="isVerbatim">If set to <c>true</c> the string is verbatim (no escape sequences).</param>
+        private Token ScanString(bool isVerbatim = false)
         {
             ReadChar();
-            if (verbatim) ReadChar();
-            var finalstr = "";
-            var escaping = false;
-            var unicode = false;
-            var curuni = "";
+            if (isVerbatim) ReadChar();
+            StringBuilder stringBuilder = new StringBuilder();
+            var isEscaping = false;
+            var isUnicode = false;
+            var currentUnicodeChar = "";
 
-            while ((escaping || PeekChar() != '\"') && HasChar())
+            while ((isEscaping || PeekChar() != '\"') && HasChar())
             {
-                var curch = ReadChar();
-                if (unicode)
+                var currentChar = ReadChar();
+                if (isUnicode)
                 {
-                    if (char.IsLetter(curch) || "abcdefABCDEF".Contains(curch + "")) curuni += curch;
+                    if (char.IsLetter(currentChar) || IsHexChar(currentChar)) currentUnicodeChar += currentChar;
                     else
                     {
-                        unicode = false;
-                        finalstr += char.ConvertFromUtf32(int.Parse(curuni, NumberStyles.HexNumber));
-                        curuni = "";
+                        isUnicode = false;
+                        stringBuilder.Append(char.ConvertFromUtf32(int.Parse(currentUnicodeChar, NumberStyles.HexNumber)));
+                        currentUnicodeChar = "";
                     }
                 }
-                if (escaping)
+                if (isEscaping)
                 {
-                    switch (curch)
+                    switch (currentChar)
                     {
                         case '\\':
-                            finalstr += '\\';
+                            stringBuilder.Append('\\');
                             break;
                         case 'n':
-                            finalstr += '\n';
+                            stringBuilder.Append('\n');
                             break;
                         case 'r':
-                            finalstr += '\r';
+                            stringBuilder.Append('\r');
                             break;
                         case 't':
-                            finalstr += '\t';
+                            stringBuilder.Append('\t');
                             break;
                         case '"':
-                            finalstr += '"';
+                            stringBuilder.Append('"');
                             break;
                         case 'x':
-                            unicode = true;
+                            isUnicode = true;
                             break;
                         default:
-                            finalstr += curch;
+                            stringBuilder.Append(currentChar);
                             break;
                     }
 
-                    escaping = false;
+                    isEscaping = false;
                 }
                 else
                 {
-                    if (curch == '\\' && !verbatim) escaping = true;
-                    else finalstr += (curch).ToString();
+                    if (currentChar == '\\' && !isVerbatim) isEscaping = true;
+                    else stringBuilder.Append(currentChar);
                 }
             }
 
             ReadChar();
 
-            return new Token(TokenType.String, finalstr);
+            return new Token(TokenType.String, stringBuilder);
+        }
+        private bool IsHexChar(char c)
+        {
+            return "abcdefABCDEF".Contains(c);
         }
         /// <summary>
-        /// Scans the data.
+        /// Scans a number
         /// </summary>
-        /// <returns>The data.</returns>
-        private Token scanData()
+        /// <returns>The number token</returns>
+        private Token ScanNumber()
         {
-            var finaldata = "";
-            double temp = 0;
-            while ((char.IsLetterOrDigit(PeekChar()) && HasChar()) || "._".Contains(PeekChar()))
+            var stringBuilder = new StringBuilder();
+            while (HasChar() && (char.IsDigit(PeekChar()) || IsHexChar(PeekChar()) || "xo.".Contains(PeekChar())))
             {
-                finaldata += ReadChar().ToString();
+                stringBuilder.Append(ReadChar().ToString());
             }
-            if (finaldata.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
+            var finalNumber = stringBuilder.ToString();
+            var baseName = "";
+            var baseSize = 0;
+            if(finalNumber.StartsWith("0x"))
             {
-                if (finaldata.Length == 2) throw new Exception("Invalid hex number: " + finaldata);
-                var temp1 = 0;
-                if (int.TryParse(finaldata.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out temp1))
+                baseName = "hex";
+                baseSize = 16;
+            }
+            if (finalNumber.StartsWith("0b"))
+            {
+                baseName = "binary";
+                baseSize = 2;
+            }
+            if (finalNumber.StartsWith("0o"))
+            {
+                baseName = "octal";
+                baseSize = 8;
+            }
+            if(baseName != "")
+            {
+                if (finalNumber.Length == 2) throw new Exception("Invalid " + baseName + " number: " + finalNumber);
+                try
                 {
-                    return new Token(TokenType.Number, temp1.ToString());
+                    return new Token(TokenType.Number, Convert.ToInt32(finalNumber.Substring(2), baseSize).ToString());
+                }
+                catch
+                {
+                    throw new Exception("Invalid " + baseName + " number: " + finalNumber);
+                }
+            }
+            else
+            {
+                double temp = 0;
+                if(double.TryParse(finalNumber, out temp))
+                {
+                    return new Token(TokenType.Number, temp);
                 }
                 else
                 {
-                    throw new Exception("Invalid hex number: " + finaldata);
+                    throw new Exception("Invalid number: " + finalNumber);
                 }
             }
-            if (finaldata.StartsWith("0o", StringComparison.InvariantCultureIgnoreCase))
+        }
+
+        /// <summary>
+        /// Scans an identifier
+        /// </summary>
+        /// <returns>The identifier</returns>
+        private Token ScanIdentifier()
+        {
+            var stringBuilder = new StringBuilder();
+            while (HasChar() && (char.IsLetterOrDigit(PeekChar()) || "_".Contains(PeekChar())))
             {
-                if (finaldata.Length == 2) throw new Exception("Invalid octal number: " + finaldata);
-                try
-                {
-                    return new Token(TokenType.Number, Convert.ToInt32(finaldata.Substring(2), 8).ToString());
-                }
-                catch
-                {
-                    throw new Exception("Invalid octal number: " + finaldata);
-                }
+                stringBuilder.Append(ReadChar());
             }
-            if (finaldata.StartsWith("0b", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (finaldata.Length == 2) throw new Exception("Invalid binary number: " + finaldata);
-                try
-                {
-                    return new Token(TokenType.Number, Convert.ToInt32(finaldata.Substring(2), 2).ToString());
-                }
-                catch
-                {
-                    throw new Exception("Invalid binary number: " + finaldata);
-                }
-            }
-            if (double.TryParse(finaldata, out temp)) return new Token(TokenType.Number, finaldata);
-            else
-            {
-                if(finaldata.Contains('.')) throw new Exception("Invalid character in Identifier: . (period)");
-                return new Token(TokenType.Identifier, finaldata);
-            }
+            var finalId = stringBuilder.ToString();
+            if (finalId.Contains('.')) throw new Exception("Invalid character in Identifier: . (period)");
+            return new Token(TokenType.Identifier, finalId);
         }
 
         private void whiteSpaceMonster()
@@ -295,9 +352,6 @@ namespace Hassium
 
         private char ReadChar()
         {
-            if (position >= code.Length)
-                throw new IndexOutOfRangeException();
-            
             return code[position++];
         }
     }
