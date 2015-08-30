@@ -1,6 +1,8 @@
 $INCLUDE hatred.has$
 
 exitcode := 0;
+failed := 0;
+passed := 0;
 
 func main()
 {
@@ -11,7 +13,12 @@ func main()
 	functionTests();
 	closureTest();
 	
-	
+	println();
+	if(failed = 0) println("Everything went good");
+	else println("Some tests failed.");
+	println();
+	println(passed + " tests passed");
+	println(failed + " tests failed");
 	println("--- END TESTS FOR HASSIUM ---");
 	
 	exit(exitcode);
@@ -21,6 +28,16 @@ func setExitCode(code)
 {
 	exitcode := code;
 }
+func testPassed()
+{
+passed++;
+}
+
+func testFailed()
+{
+failed++;
+}
+
 
 func opTests()
 {

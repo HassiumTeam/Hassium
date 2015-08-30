@@ -104,7 +104,7 @@ namespace Hassium
 
         public void SetVariable(string name, object value, bool forceglobal = false, bool onlyexist = false)
         {
-            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))))
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
                 SetLocalVariable(name, value);
             else
                 SetGlobalVariable(name, value);
