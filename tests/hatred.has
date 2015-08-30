@@ -31,20 +31,28 @@ func assert(that, msg)
 	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
 	println(theMsg);
 	
-	if(!that) setExitCode(1);
+	if(that)
+	{
+		testPassed();
+	}
+	else
+	{
+		testFailed();
+		setExitCode(1);
+	}
 }
 
 func assertfail(that, msg)
 {
-	failed := false;
+	isfailed := false;
 	try 
 	{
 		eval(that);
 	}
 	catch
 	{
-		failed := true;
+		isfailed := true;
 	}
-	theMsg := msg + " [" + (failed ? "✓" : "✗") + "]";
+	theMsg := msg + " [" + (isfailed ? "✓" : "✗") + "]";
 	println(theMsg);
 }

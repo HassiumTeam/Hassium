@@ -104,7 +104,7 @@ namespace Hassium
 
         public void SetVariable(string name, HassiumObject value, bool forceglobal = false, bool onlyexist = false)
         {
-            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))))
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
                 SetLocalVariable(name, value);
             else
                 SetGlobalVariable(name, value);
@@ -237,7 +237,7 @@ namespace Hassium
             if (left is AstNode) left = EvaluateNode((AstNode) left);
             if (left is int) left = (double) (int) left; 
             if (right is AstNode) right = EvaluateNode((AstNode)right);
-            if (right is int) left = (double)(int)right;
+            if (right is int) right = (double)(int)right;
             switch (_op)
             {
                 case BinaryOperation.Addition:
