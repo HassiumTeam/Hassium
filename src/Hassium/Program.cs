@@ -53,6 +53,7 @@ namespace Hassium
                 {
                     Console.WriteLine("There has been an error. Message: " + e.Message);
                     Console.WriteLine("Stack Trace: " + e.StackTrace);
+                    Environment.Exit(-1);
                 }
             }
         }
