@@ -362,7 +362,7 @@ namespace Hassium
 
         private static AstNode ParsePostfixIncDec(Parser.Parser parser)
         {
-            var left = ParseFunctionCall(parser);
+            var left = ParseMemberAccess(parser);
             if (parser.AcceptToken(TokenType.MentalOperation, "++"))
             {
                 var varname = "";
@@ -392,6 +392,20 @@ namespace Hassium
                     varname = parser.PreviousToken(2).Value.ToString();
                 }
                 return new MentalNode("--", varname, before);
+            }
+            else
+            {
+                return left;
+            }
+        }
+
+        private static AstNode ParseMemberAccess(Parser.Parser parser)
+        {
+            var left = ParseFunctionCall(parser);
+            if (parser.AcceptToken(TokenType.Dot, "."))
+            {
+                AstNode right = ParseMemberAccess(parser);
+                return new BinOpNode(BinaryOperation.Dot, left, right);
             }
             else
             {

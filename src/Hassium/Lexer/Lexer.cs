@@ -41,7 +41,7 @@ namespace Hassium
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
-                if("0123456789.".Contains(current))
+                if("0123456789".Contains(current))
                 {
                     Add(ScanNumber());
                     continue;
@@ -100,6 +100,9 @@ namespace Hassium
                                     Add(new Token(TokenType.Operation, ReadChar()));
                                     break;
                             }
+                        break;
+                    case '.':
+                        Add(new Token(TokenType.Dot, ReadChar()));
                         break;
                     case ';':
                         Add(new Token(TokenType.EndOfLine, ReadChar()));

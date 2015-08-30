@@ -495,7 +495,23 @@ namespace Hassium
             }
             else if (node is BinOpNode)
             {
-                return interpretBinaryOp((BinOpNode)node);
+                var bnode = (BinOpNode) node;
+                if (bnode.BinOp == BinaryOperation.Dot)
+                {
+                    var target = EvaluateNode(bnode.Left);
+                    var member = bnode.Right;
+                    if(member is FunctionCallNode)
+                    {
+                        return
+                            target.GetAttribute(((FunctionCallNode) member).Target.ToString())
+                                .Invoke(new [] {target});
+                    }
+                    else
+                    {
+                        return target.GetAttribute(member.ToString());
+                    }
+                }
+                else return interpretBinaryOp(bnode);
             }
             else if (node is UnaryOpNode)
             {

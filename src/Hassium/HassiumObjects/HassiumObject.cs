@@ -9,25 +9,26 @@ namespace Hassium
 {
     public abstract class HassiumObject : object, IFunction
     {
+        private readonly Dictionary<string, HassiumObject> _attributes;
+
         public Dictionary<string, HassiumObject> Attributes
         {
-            private set;
-            get;
+            get { return _attributes; }
         }
 
         protected HassiumObject()
         {
-            Attributes = new Dictionary<string, HassiumObject>();
+            _attributes = new Dictionary<string, HassiumObject>();
         }
 
         public void SetAttribute(string name, HassiumObject value)
         {
-            Attributes[name] = value;
+            _attributes[name] = value;
         }
 
         public HassiumObject GetAttribute(string name)
         {
-            return Attributes[name];
+            return _attributes[name];
         }
 
         public abstract override string ToString();
