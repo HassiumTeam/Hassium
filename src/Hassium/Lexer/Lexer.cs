@@ -176,7 +176,7 @@ namespace Hassium
                         break;
                     default:
                         result.Add(new Token(TokenType.Exception,
-                            "Unexpected " + Functions.StringFunctions.AddSlashes(new object[] { PeekChar().ToString() }) + " encountered at position " + position));
+                            "Unexpected " + PeekChar().ToString() + " encountered at position " + position));
                         ReadChar();
                         break;
                 }

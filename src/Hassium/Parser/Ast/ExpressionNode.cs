@@ -468,7 +468,7 @@ namespace Hassium
             }
             else
             {
-                throw new Exception("Unexpected in Parser: " + Functions.StringFunctions.AddSlashes(new object[] {parser.CurrentToken().Value.ToString()}));
+                throw new Exception("Unexpected in Parser: " + parser.CurrentToken().Value.ToString());
             }
 
         }

@@ -8,11 +8,24 @@ namespace Hassium
 
         public HassiumNumber(double value)
         {
+            this.Attributes.Add("tostring", new InternalFunction(tostring));
+            this.Attributes.Add("compare", new InternalFunction(compare));
             this.Value = value;
         }
+
         public override string ToString()
         {
             return Convert.ToString(Value);
+        }
+
+        private HassiumObject tostring(HassiumArray args)
+        {
+            return new HassiumString(((HassiumNumber)args[0]).ToString());
+        }
+
+        private HassiumObject compare(HassiumArray args)
+        {
+            return new HassiumNumber(Convert.ToInt32(((HassiumNumber)args[0]).Value.CompareTo(((HassiumNumber)args[1]).Value)));
         }
 
         #region IConvertible stuff

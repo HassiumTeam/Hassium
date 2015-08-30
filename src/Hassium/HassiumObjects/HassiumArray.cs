@@ -10,14 +10,20 @@ namespace Hassium
 
         public HassiumArray(object[] value)
         {
-            this.Value = value.Select(fv => 
+            this.Value = value.Select(fv =>
             {
-                if (fv is double || fv is int) return new HassiumNumber((double)fv);
-                if (fv is string) return new HassiumString((string)fv);
-                if (fv is Array) return new HassiumArray((Array)fv);
-                if (fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
-                if (fv is bool) return new HassiumBool((bool)fv);
-                else return (HassiumObject)(object)fv;
+                if (fv is double || fv is int)
+                    return new HassiumNumber((double)fv);
+                if (fv is string)
+                    return new HassiumString((string)fv);
+                if (fv is Array)
+                    return new HassiumArray((Array)fv);
+                if (fv is IDictionary)
+                    return new HassiumDictionary((IDictionary)fv);
+                if (fv is bool)
+                    return new HassiumBool((bool)fv);
+                else
+                    return (HassiumObject)(object)fv;
             }).ToArray();
         }
 

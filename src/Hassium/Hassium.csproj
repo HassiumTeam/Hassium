@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>code.txt</Commandlineparameters>
+    <Commandlineparameters>/home/jacob/test.has</Commandlineparameters>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -81,8 +81,6 @@
     <Compile Include="Functions\MathFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Functions\NetworkingFunctions.cs" />
-    <Compile Include="Functions\StringFunctions.cs" />
-    <Compile Include="Functions\ArrayFunctions.cs" />
     <Compile Include="Parser\Ast\ForNode.cs" />
     <Compile Include="Parser\Ast\TryNode.cs" />
     <Compile Include="Parser\Ast\FuncNode.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="HassiumObjects\HassiumArray.cs" />
     <Compile Include="HassiumObjects\HassiumDictionary.cs" />
     <Compile Include="HassiumObjects\HassiumNumber.cs" />
+    <Compile Include="HassiumObjects\HassiumClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
