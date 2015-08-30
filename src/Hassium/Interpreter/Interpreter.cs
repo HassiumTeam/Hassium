@@ -18,9 +18,9 @@ namespace Hassium
     public class Interpreter
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
-        public Dictionary<string, object> Globals = new Dictionary<string, object>();
+        public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
 
-        public Dictionary<string, object> Constants = new Dictionary<string, object>
+        public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
             {"true", true},
             {"false", false},
@@ -66,7 +66,7 @@ namespace Hassium
             LoadInternalFunctions();
         }
 
-        public object GetVariable(string name)
+        public HassiumObject GetVariable(string name)
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
@@ -85,7 +85,7 @@ namespace Hassium
                   (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)));
         }
 
-        public void SetGlobalVariable(string name, object value)
+        public void SetGlobalVariable(string name, HassiumObject value)
         {
             if (Constants.ContainsKey(name))
                 throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
@@ -93,7 +93,7 @@ namespace Hassium
             Globals[name] = value;
         }
 
-        public void SetLocalVariable(string name, object value)
+        public void SetLocalVariable(string name, HassiumObject value)
         {
             if (Constants.ContainsKey(name))
                 throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
@@ -102,7 +102,7 @@ namespace Hassium
                 CallStack.Peek().Locals[name] = value;
         }
 
-        public void SetVariable(string name, object value, bool forceglobal = false, bool onlyexist = false)
+        public void SetVariable(string name, HassiumObject value, bool forceglobal = false, bool onlyexist = false)
         {
             if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
                 SetLocalVariable(name, value);
@@ -179,7 +179,7 @@ namespace Hassium
         /// </summary
         /// <returns>The binary op.</returns>
         /// <param name="node">Node.</param>
-        private object interpretBinaryOp(BinOpNode node)
+        private HassiumObject interpretBinaryOp(BinOpNode node)
         {
             var right = EvaluateNode(node.Right);
             if (node.BinOp == BinaryOperation.Assignment)
@@ -187,16 +187,16 @@ namespace Hassium
                 if (node.Left is ArrayGetNode)
                 {
                     var call = (ArrayGetNode)(node.Left);
-                    Dictionary<object, object> theArray = null;
+                    Dictionary<HassiumObject, HassiumObject> theArray = null;
                     var evaluated = GetVariable(call.Target.ToString());
-                    if (evaluated is string)
-                        theArray = evaluated.ToString().Select((s, i) => new { s, i }).ToDictionary(x => (object)(x.i), x => (object)(x.s));
-                    else if (evaluated is Dictionary<object, object>) theArray = ((Dictionary<object, object>)evaluated);
+                    if (evaluated is HassiumString)
+                        theArray = evaluated.ToString().Select((s, i) => new { s, i }).ToDictionary(x => (HassiumObject)(x.i), x => (HassiumObject)(x.s));
+                    else if (evaluated is HassiumDictionary) theArray = ((HassiumDictionary)evaluated);
                     else
                     {
                         throw new Exception("The [] operator only applies to objects of type Array or String.");
                     }
-                    object arid = null;
+                    HassiumObject arid = null;
 
                     if (call.Arguments.Children.Count > 0)
                         arid = EvaluateNode(call.Arguments.Children[0]);
@@ -208,7 +208,7 @@ namespace Hassium
                     if (arid == null) theArray.Add(theArray.Count, theValue);
                     else theArray[arid] = theValue;
 
-                    SetVariable(call.Target.ToString(), theArray);
+                    SetVariable(call.Target.ToString(), new HassiumDictionary(theArray));
                 }
                 else
                 {
@@ -232,7 +232,7 @@ namespace Hassium
         /// <param name="right">The right-hand parameter</param>
         /// <param name="_op">The operation type</param>
         /// <returns>The result of the operation</returns>
-        private object interpretBinaryOp(object left, object right, BinaryOperation _op)
+        private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op)
         {
             if (left is AstNode) left = EvaluateNode((AstNode) left);
             if (left is int) left = (double) (int) left; 
@@ -241,84 +241,84 @@ namespace Hassium
             switch (_op)
             {
                 case BinaryOperation.Addition:
-                    if (left is string || right is string)
-                        return left + right.ToString();
-                    return Convert.ToDouble(left) + Convert.ToDouble(right);
+                    if (left is HassiumString || right is HassiumString)
+                        return new HassiumString(left + right.ToString());
+                    return new HassiumNumber(Convert.ToDouble(left) + Convert.ToDouble(right));
                 case BinaryOperation.Subtraction:
-                    return Convert.ToDouble(left) - Convert.ToDouble(right);
+                    return new HassiumNumber(Convert.ToDouble(left) - Convert.ToDouble(right));
                 case BinaryOperation.Division:
                     if(Convert.ToDouble(right) == 0.0) throw new DivideByZeroException("Cannot divide by zero");
-                    return Convert.ToDouble(left) / Convert.ToDouble(right);
+                    return new HassiumNumber(Convert.ToDouble(left) / Convert.ToDouble(right));
                 case BinaryOperation.Multiplication:
-                    if ((left is string && right is double) ||
-                        right is string && left is double)
+                    if ((left is HassiumString && right is HassiumNumber) ||
+                        right is HassiumString && left is HassiumNumber)
                     {
-                        if (left is string)
-                            return string.Concat(Enumerable.Repeat(left, Convert.ToInt32(right)));
+                        if (left is HassiumString)
+                            return new HassiumString(string.Concat(Enumerable.Repeat(left, Convert.ToInt32(right))));
                         else
-                            return string.Concat(Enumerable.Repeat(right, Convert.ToInt32(left)));
+                            return new HassiumString(string.Concat(Enumerable.Repeat(right, Convert.ToInt32(left))));
                     }
-                    return Convert.ToDouble(left) * Convert.ToDouble(right);
+                    return new HassiumNumber(Convert.ToDouble(left) * Convert.ToDouble(right));
                 case BinaryOperation.Equals:
                     //if (left is double || right is double) return ((double) left) == ((double) right);
-                    return left.ToString() == right.ToString();
+                    return new HassiumBool(left.ToString() == right.ToString());
                 case BinaryOperation.LogicalAnd:
-                    return Convert.ToBoolean(left) && Convert.ToBoolean(right);
+                    return new HassiumBool(Convert.ToBoolean(left) && Convert.ToBoolean(right));
                 case BinaryOperation.LogicalOr:
-                    return Convert.ToBoolean(left) || Convert.ToBoolean(right);
+                    return new HassiumBool(Convert.ToBoolean(left) || Convert.ToBoolean(right));
                 case BinaryOperation.NotEqualTo:
-                    return left.GetHashCode() != right.GetHashCode();
+                    return new HassiumBool(left.GetHashCode() != right.GetHashCode());
                 case BinaryOperation.LessThan:
-                    return Convert.ToDouble(left) < Convert.ToDouble(right);
+                    return new HassiumBool(Convert.ToDouble(left) < Convert.ToDouble(right));
                 case BinaryOperation.GreaterThan:
-                    return Convert.ToDouble(left) > Convert.ToDouble(right);
+                    return new HassiumBool(Convert.ToDouble(left) > Convert.ToDouble(right));
                 case BinaryOperation.GreaterOrEqual:
-                    return Convert.ToDouble(left) >= Convert.ToDouble(right);
+                    return new HassiumBool(Convert.ToDouble(left) >= Convert.ToDouble(right));
                 case BinaryOperation.LesserOrEqual:
-                    return Convert.ToDouble(left) <= Convert.ToDouble(right);
+                    return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
-                    if ((bool) interpretBinaryOp(left, right, BinaryOperation.GreaterThan)) return 1;
-                    if ((bool)interpretBinaryOp(left, right, BinaryOperation.LessThan)) return -1;
-                    return 0;
+                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan)).Value) return new HassiumNumber(1);
+                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan))) return new HassiumNumber(-1);
+                    return new HassiumNumber(0);
                 case BinaryOperation.Xor:
-                    return Convert.ToInt32(left) ^ Convert.ToInt32(right);
+                    return new HassiumNumber(Convert.ToInt32(left) ^ Convert.ToInt32(right));
                 case BinaryOperation.BitwiseAnd:
-                    return Convert.ToInt32(left) & Convert.ToInt32(right);
+                    return new HassiumNumber(Convert.ToInt32(left) & Convert.ToInt32(right));
                 case BinaryOperation.BitwiseOr:
-                    return Convert.ToInt32(left) | Convert.ToInt32(right);
+                    return new HassiumNumber(Convert.ToInt32(left) | Convert.ToInt32(right));
                 case BinaryOperation.BitshiftLeft:
-                    return Convert.ToInt32(left) << Convert.ToInt32(right);
+                    return new HassiumNumber(Convert.ToInt32(left) << Convert.ToInt32(right));
                 case BinaryOperation.BitshiftRight:
-                    return Convert.ToInt32(left) >> Convert.ToInt32(right);
+                    return new HassiumNumber(Convert.ToInt32(left) >> Convert.ToInt32(right));
                 case BinaryOperation.Modulus:
-                    return Convert.ToDouble(left) % Convert.ToDouble(right);
+                    return new HassiumNumber(Convert.ToDouble(left) % Convert.ToDouble(right));
 
                 case BinaryOperation.Pow:
-                    return Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right));
+                    return new HassiumNumber(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
                 case BinaryOperation.Root:
-                    return Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right));
+                    return new HassiumNumber(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
                     
                 case BinaryOperation.NullCoalescing:
-                    return left ?? right;
+                    return (HassiumObject)left ?? (HassiumObject)right;
             }
             // Raise error
-            return -1;
+            return new HassiumNumber(-1);
         }
         /// <summary>
         /// Interprets the unary op.
         /// </summary>
         /// <returns>The unary op.</returns>
         /// <param name="node">Node.</param>
-        private object interpretUnaryOp(UnaryOpNode node)
+        private HassiumObject interpretUnaryOp(UnaryOpNode node)
         {
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !Convert.ToBoolean((EvaluateNode(node.Value)));
+                    return !Convert.ToBoolean((object)EvaluateNode(node.Value));
                 case UnaryOperation.Negate:
-                    return -Convert.ToDouble((EvaluateNode(node.Value)));
+                    return -Convert.ToDouble((object)EvaluateNode(node.Value));
                 case UnaryOperation.Complement:
-                    return ~(int)Convert.ToDouble((EvaluateNode(node.Value)));
+                    return ~(int)Convert.ToDouble((object)EvaluateNode(node.Value));
             }
             //Raise error
             return -1;
@@ -411,12 +411,12 @@ namespace Hassium
                 var forStmt = (ForEachNode) (node);
                 var needlestmt = forStmt.Needle;
                 var haystackstmt = EvaluateNode(forStmt.Haystack);
-                var haystack = haystackstmt as Dictionary<object, object>;
-                if (haystackstmt is string)
+                var haystack = (Dictionary<HassiumObject, HassiumObject>) haystackstmt;
+                if (haystackstmt is HassiumString)
                     haystack = haystackstmt.ToString()
                         .ToArray()
                         .Select((s, i) => new {s, i})
-                        .ToDictionary(x => (object)x.i, x => (object)x.s);
+                        .ToDictionary(x => (HassiumObject)x.i, x => (HassiumObject)x.s);
                 inLoop++;
                 var keyvname = "";
                 var valvname = "";
@@ -437,8 +437,8 @@ namespace Hassium
 
                 foreach (var needle in (keyvname != "" ? haystack : (IEnumerable)(haystack.Values)))
                 {
-                    if (keyvname != "") SetVariable(keyvname, ((KeyValuePair<object, object>)needle).Key);
-                    SetVariable(valvname, keyvname != "" ? ((KeyValuePair<object, object>)needle).Value : needle);
+                    if (keyvname != "") SetVariable(keyvname, ((KeyValuePair<HassiumObject, HassiumObject>)needle).Key);
+                    SetVariable(valvname, keyvname != "" ? ((KeyValuePair<HassiumObject, HassiumObject>)needle).Value : (HassiumObject)needle);
                     ExecuteStatement(forStmt.Body);
                     if (continueLoop) continueLoop = false;
                     if(breakLoop)
@@ -483,7 +483,7 @@ namespace Hassium
         /// </summary>
         /// <returns>The node.</returns>
         /// <param name="node">Node.</param>
-        public object EvaluateNode(AstNode node)
+        public HassiumObject EvaluateNode(AstNode node)
         {
             if (node is NumberNode)
             {
@@ -528,7 +528,7 @@ namespace Hassium
             {
                 var call = (FunctionCallNode)node;
 
-                var target = EvaluateNode(call.Target) as IFunction;
+                IFunction target = EvaluateNode(call.Target) as IFunction;
                 //if (target is HassiumFunction) ((HassiumFunction) target).stackFrame = null;
 
                 if (target == null)
@@ -546,7 +546,7 @@ namespace Hassium
                 if (returnFunc)
                     returnFunc = false;
                 inFunc--;
-                if (ret is Array) ret = ((Array)ret).Cast<object>().Select((s, i) => new { s, i }).ToDictionary(x => (object)x.i, x => (object)x.s);
+                if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => (HassiumObject)x.i, x => (HassiumObject)x.s);
                 return ret;
             }
             else if (node is IdentifierNode)
@@ -570,10 +570,10 @@ namespace Hassium
                 switch (mnode.OpType)
                 {
                     case "++":
-                        SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) + 1);
+                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name)) + 1);
                         break;
                     case "--":
-                        SetVariable(mnode.Name, Convert.ToDouble(GetVariable(mnode.Name)) - 1);
+                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name)) - 1);
                         break;
                     default:
                         throw new Exception("Unknown operation " + mnode.OpType);
@@ -583,24 +583,24 @@ namespace Hassium
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)node;
-                Dictionary<object, object> theArray = null;
+                HassiumDictionary theArray = null;
                 var evaluated = GetVariable(call.Target.ToString());
-                if (evaluated is string)
-                    theArray = evaluated.ToString().Select((s, i) => new {s, i}).ToDictionary(x => (object)(x.i), x => (object)(x.s));
-                else if (evaluated is Dictionary<object, object>) theArray = ((Dictionary<object, object>) evaluated);
+                if (evaluated is HassiumString)
+                    theArray = (HassiumDictionary) evaluated.ToString().Select((s, i) => new {s, i}).ToDictionary(x => (HassiumObject)(x.i), x => (HassiumObject)(x.s));
+                else if (evaluated is HassiumDictionary) theArray = ((HassiumDictionary) evaluated);
                 else
                 {
                     throw new Exception("The [] operator only applies to objects of type Array or String.");
                 }
-                object arid = null;
+                HassiumObject arid = null;
 
                 if(call.Arguments.Children.Count > 0)
                     arid = EvaluateNode(call.Arguments.Children[0]);
 
-                object theValue = null;
-                if (arid == null) return theArray.Last().Value;
-                else theValue = theArray[(object)arid];
-                if (theValue is AstNode) return EvaluateNode((AstNode) theValue);
+                HassiumObject theValue = null;
+                if (arid == null) return theArray.Value.Last().Value;
+                else theValue = theArray.Value[arid];
+                if ((object)theValue is AstNode) return EvaluateNode((AstNode) (object)theValue);
                 else return theValue;
             }
             else if (node is ReturnNode)

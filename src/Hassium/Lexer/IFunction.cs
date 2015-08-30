@@ -5,7 +5,7 @@ namespace Hassium
 {
     public interface IFunction
     {
-        object Invoke(object[] args);
+        HassiumObject Invoke(HassiumArray args);
     }
 }
 

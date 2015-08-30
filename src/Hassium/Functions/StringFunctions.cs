@@ -6,127 +6,127 @@ namespace Hassium.Functions
 	public class StringFunctions : ILibrary
 	{
 		[IntFunc("strcat")]
-		public static object Strcat(object[] args)
+		public static HassiumObject Strcat(HassiumArray args)
 		{
-			return String.Join("", args);
+			return String.Join("", args.Cast<object>());
 		}
 
 		[IntFunc("strlen")]
-		public static object Strlen(object[] args)
+		public static HassiumObject Strlen(HassiumArray args)
 		{
 			return args[0].ToString().Length;
 		}
 
 		[IntFunc("getch")]
-		public static object Getch(object[] args)
+		public static HassiumObject Getch(HassiumArray args)
 		{
-			return args[0].ToString()[Convert.ToInt32(args[1])].ToString();
+			return args[0].ToString()[Convert.ToInt32((object)args[1])].ToString();
 		}
 
 		[IntFunc("substr", "sstr")]
-		public static object Substr(object[] args)
+		public static HassiumObject Substr(HassiumArray args)
 		{
-			return args[0].ToString().Substring(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
+			return args[0].ToString().Substring(Convert.ToInt32((object)args[1]), Convert.ToInt32((object)args[2]));
 		}
 
 		[IntFunc("begins")]
-		public static object Begins(object[] args)
+		public static HassiumObject Begins(HassiumArray args)
 		{
 			return args[0].ToString().StartsWith(args[1].ToString());
 		}
 
-        [IntFunc("ends")]
-        public static object Ends(object[] args)
-        {
-            return args[0].ToString().EndsWith(args[1].ToString());
-        }
+		[IntFunc("ends")]
+		public static HassiumObject Ends(HassiumArray args)
+		{
+			return args[0].ToString().EndsWith(args[1].ToString());
+		}
 
 		[IntFunc("toupper")]
-		public static object ToUpper(object[] args)
+		public static HassiumObject ToUpper(HassiumArray args)
 		{
-			return String.Join("", args).ToUpper();
+			return String.Join("", args.Cast<object>()).ToUpper();
 		}
 
 		[IntFunc("tolower")]
-		public static object ToLower(object[] args)
+		public static HassiumObject ToLower(HassiumArray args)
 		{
-			return String.Join("", args).ToLower();
+			return String.Join("", args.Cast<object>()).ToLower();
 		}
 
 		[IntFunc("contains")]
-		public static object Contains(object[] args)
+		public static HassiumObject Contains(HassiumArray args)
 		{
 			return args[0].ToString().Contains(args[1].ToString());
 		}
 
 		[IntFunc("sformat")]
-		public static object SFormat(object[] args)
+		public static HassiumObject SFormat(HassiumArray args)
 		{
-			return string.Format(args[0].ToString(), args.Skip(1).ToArray());
+			return string.Format(args[0].ToString(), args.Value.Skip(1).ToArray());
 		}
 
 		[IntFunc("split")]
-		public static object Split(object[] args)
+		public static HassiumObject Split(HassiumArray args)
 		{
-			return args[0].ToString().Split(Convert.ToChar(args[1]));
+			return args[0].ToString().Split(Convert.ToChar((object)args[1]));
 		}
 
 		[IntFunc("replace")]
-		public static object Replace(object[] args)
+		public static HassiumObject Replace(HassiumArray args)
 		{
 			return args[0].ToString().Replace(args[1].ToString(), args[2].ToString());
 		}
 
 		[IntFunc("index")]
-		public static object Index(object[] args)
+		public static HassiumObject Index(HassiumArray args)
 		{
 			return args[0].ToString().IndexOf(args[1].ToString());
 		}
 
 		[IntFunc("lastindex")]
-		public static object LastIndex(object[] args)
+		public static HassiumObject LastIndex(HassiumArray args)
 		{
 			return args[0].ToString().LastIndexOf(args[1].ToString());
 		}
 
-        [IntFunc("padleft")]
-        public static object PadLeft(object[] args)
-        {
-            return args[0].ToString().PadLeft(Convert.ToInt32(args[1]));
-        }
+		[IntFunc("padleft")]
+		public static HassiumObject PadLeft(HassiumArray args)
+		{
+			return args[0].ToString().PadLeft(Convert.ToInt32((object)args[1]));
+		}
 
-        [IntFunc("padright")]
-        public static object PadRight(object[] args)
-        {
-            return args[0].ToString().PadRight(Convert.ToInt32(args[1]));
-        }
+		[IntFunc("padright")]
+		public static HassiumObject PadRight(HassiumArray args)
+		{
+			return args[0].ToString().PadRight(Convert.ToInt32((object)args[1]));
+		}
 
-        [IntFunc("remove")]
-        public static object Remove(object[] args)
-        {
-            return args[0].ToString().Replace(Convert.ToChar(args[1]), Convert.ToChar(args[2]));
-        }
+		[IntFunc("remove")]
+		public static HassiumObject Remove(HassiumArray args)
+		{
+			return args[0].ToString().Replace(Convert.ToChar((object)args[1]), Convert.ToChar((object)args[2]));
+		}
 
-        [IntFunc("trim")]
-        public static object Trim(object[] args)
-        {
-            return args[0].ToString().Trim();
-        }
+		[IntFunc("trim")]
+		public static HassiumObject Trim(HassiumArray args)
+		{
+			return args[0].ToString().Trim();
+		}
 
-        [IntFunc("trimleft")]
-        public static object TrimLeft(object[] args)
-        {
-            return args[0].ToString().TrimStart();
-        }
+		[IntFunc("trimleft")]
+		public static HassiumObject TrimLeft(HassiumArray args)
+		{
+			return args[0].ToString().TrimStart();
+		}
 
-        [IntFunc("trimright")]
-        public static object TrimRight(object[] args)
-        {
-            return args[0].ToString().TrimEnd();
-        }
+		[IntFunc("trimright")]
+		public static HassiumObject TrimRight(HassiumArray args)
+		{
+			return args[0].ToString().TrimEnd();
+		}
 
 		[IntFunc("addslashes")]
-		public static object AddSlashes(object[] args)
+		public static HassiumObject AddSlashes(HassiumArray args)
 		{
 			return args[0].ToString()
 				.Replace("\n", "\\n")

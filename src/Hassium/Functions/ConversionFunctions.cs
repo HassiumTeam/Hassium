@@ -7,7 +7,7 @@ namespace Hassium.Functions
 	public class ConversionFunctions : ILibrary
 	{
 		[IntFunc("tonum")]
-		public static object ToNum(object[] args)
+		public static HassiumObject ToNum(HassiumArray args)
 		{
 			double tmp = 0;
 			if (double.TryParse(args[0].ToString(), out tmp))
@@ -17,28 +17,28 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("tostr")]
-		public static object ToStr(object[] args)
+		public static HassiumObject ToStr(HassiumArray args)
 		{
-			if(args[0] is Dictionary<object, object>)
+			if(args[0] is HassiumDictionary)
 			{
 				return "Array { " +
-					   string.Join(", ", ((Dictionary<object, object>)(args[0])).Select(x => "[" + x.Key + "] => " + x.Value)) + " }";
+					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key + "] => " + x.Value)) + " }";
 			}
-			if(args[0] is Array)
+			if(args[0] is HassiumArray)
 			{
 				return ((object[])(args[0]))
 						.Aggregate("Array { ",
-							(current, item) => current + ((item is Array ? ToStr(new[] { item }) : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
+							(current, item) => current + ((item is HassiumArray ? ToStr(new[] { item }).ToString() : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
 			}
-			return String.Join("", args);
+			return String.Join("", args.Cast<object>());
 		}
 
 		[IntFunc("tohex")]
-		public static object ToHex(object[] args)
+		public static HassiumObject ToHex(HassiumArray args)
 		{
 			try
 			{
-				return Convert.ToInt32(args[0]).ToString("{0:X}");
+				return Convert.ToInt32((object)args[0]).ToString("{0:X}");
 			}
 			catch
 			{
@@ -47,11 +47,11 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("tobyte")]
-		public static object ToByte(object[] args)
+		public static HassiumObject ToByte(HassiumArray args)
 		{
 			try
 			{
-				return Convert.ToByte(args[0]);
+				return Convert.ToByte((object)args[0]);
 			}
 			catch
 			{
@@ -60,7 +60,7 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("toarr")]
-		public static object ToArr(object[] args)
+		public static HassiumObject ToArr(HassiumArray args)
 		{
 			return args;
 		}

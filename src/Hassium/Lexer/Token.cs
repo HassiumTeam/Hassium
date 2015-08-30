@@ -20,6 +20,7 @@ namespace Hassium
         UnaryOperation,
         MentalOperation,
         Lambda,
+        Dot
     }
     public class Token
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Hassium.Functions
 	public class MiscFunctions : ILibrary
 	{
 		[IntFunc("free")]
-		public static object Free(object[] args)
+		public static HassiumObject Free(HassiumArray args)
 		{
 			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString());
 			return null;
@@ -18,24 +19,24 @@ namespace Hassium.Functions
 		
 
 		[IntFunc("type")]
-		public static object Type(object[] args)
+		public static HassiumObject Type(HassiumArray args)
 		{
 			return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".") + 1);
 		}
 
 		[IntFunc("throw")]
-		public static object Throw(object[] args)
+		public static HassiumObject Throw(HassiumArray args)
 		{
-			throw new Exception(String.Join("", args));
+			throw new Exception(String.Join("", args.Cast<object>()));
 		}
 
 		[IntFunc("runtimecall")]
-		public static object RuntimeCall(object[] args)
+		public static HassiumObject RuntimeCall(HassiumArray args)
 		{
 			string fullpath = args[0].ToString();
 			string typename = fullpath.Substring(0, fullpath.LastIndexOf('.'));
 			string membername = fullpath.Split('.').Last();
-			object[] margs = args.Skip(1).ToArray();
+			object[] margs = args.Value.Skip(1).ToArray();
 			Type t = System.Type.GetType(typename);
 			if(t == null) throw new ArgumentException("The type '" + typename + "' doesn't exist.");
 			object instance = null;
@@ -49,7 +50,13 @@ namespace Hassium.Functions
 			var test = t.GetMember(membername).First();
 			if(test.MemberType == MemberTypes.Field)
 			{
-				return t.GetField(membername).GetValue(null);
+				var fv = t.GetField(membername).GetValue(null);
+				if(fv is double || fv is int) return new HassiumNumber((double)fv);
+				if(fv is string) return new HassiumString((string)fv);
+				if(fv is Array) return new HassiumArray((Array)fv);
+				if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
+			    if (fv is bool) return new HassiumBool((bool) fv);
+			    else return (HassiumObject)(object) fv;
 			}
 			else if (test.MemberType == MemberTypes.Method || test.MemberType == MemberTypes.Constructor)
 			{
@@ -60,7 +67,7 @@ namespace Hassium.Functions
 					instance,
 					margs
 					);
-				return result;
+				return (HassiumObject)result;
 			}
 			return null;
 		}
