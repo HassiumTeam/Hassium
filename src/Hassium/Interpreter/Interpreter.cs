@@ -487,11 +487,11 @@ namespace Hassium
         {
             if (node is NumberNode)
             {
-                return ((NumberNode)node).Value;
+                return new HassiumNumber(((NumberNode)node).Value);
             }
             else if (node is StringNode)
             {
-                return ((StringNode)node).Value;
+                return new HassiumString(((StringNode)node).Value);
             }
             else if (node is BinOpNode)
             {
