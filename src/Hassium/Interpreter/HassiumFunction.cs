@@ -39,7 +39,7 @@ namespace Hassium
         /// <returns>The return value</returns>
         public object Invoke(object[] args)
         {
-            /*if(stackFrame == null)*/ stackFrame = new StackFrame(localScope);
+            if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(localScope);
 
             interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < funcNode.Parameters.Count; x++)
@@ -52,6 +52,8 @@ namespace Hassium
             interpreter.CallStack.Pop();
 
             if (ret is Array) ret = ((Array) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
+
+            stackFrame = new StackFrame(localScope);
 
             return ret;
         }

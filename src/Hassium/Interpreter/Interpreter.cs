@@ -237,7 +237,7 @@ namespace Hassium
             if (left is AstNode) left = EvaluateNode((AstNode) left);
             if (left is int) left = (double) (int) left; 
             if (right is AstNode) right = EvaluateNode((AstNode)right);
-            if (right is int) left = (double)(int)right;
+            if (right is int) right = (double)(int)right;
             switch (_op)
             {
                 case BinaryOperation.Addition:
