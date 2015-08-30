@@ -31,11 +31,11 @@ namespace Hassium
         /// </summary>
         public List<Token> Tokenize()
         {
-            whiteSpaceMonster();
+            EatWhiteSpaces();
             
             while (HasChar())
             {
-                whiteSpaceMonster();
+                EatWhiteSpaces();
 
                 var current = PeekChar();
                 var next1 = HasChar() ? PeekChar(1) : '\0';
@@ -55,10 +55,11 @@ namespace Hassium
                 switch (current)
                 {
                     case '@':
-                        if (next1 == '"')
+                        if (next1 == '"' || next1 == '\'')
                             Add(ScanString(true));
                         break;
                     case '"':
+                    case '\'':
                         Add(ScanString());
                         break;
                     case '$':
@@ -172,12 +173,12 @@ namespace Hassium
                         break;
                     default:
                         result.Add(new Token(TokenType.Exception,
-                            "Unexpected " + Functions.StringFunctions.AddSlashes(new object[] { PeekChar().ToString() }) + " encountered"));
+                            "Unexpected " + Functions.StringFunctions.AddSlashes(new object[] { PeekChar().ToString() }) + " encountered at position " + position));
                         ReadChar();
                         break;
                 }
 
-                whiteSpaceMonster();
+                EatWhiteSpaces();
             }
 
             return result;
@@ -200,14 +201,14 @@ namespace Hassium
         /// <param name="isVerbatim">If set to <c>true</c> the string is verbatim (no escape sequences).</param>
         private Token ScanString(bool isVerbatim = false)
         {
-            ReadChar();
+            var quote = ReadChar();
             if (isVerbatim) ReadChar();
             StringBuilder stringBuilder = new StringBuilder();
             var isEscaping = false;
             var isUnicode = false;
             var currentUnicodeChar = "";
 
-            while ((isEscaping || PeekChar() != '\"') && HasChar())
+            while (HasChar() && (isEscaping || PeekChar() != quote))
             {
                 var currentChar = ReadChar();
                 if (isUnicode)
@@ -256,11 +257,12 @@ namespace Hassium
                 }
             }
 
-            ReadChar();
+            if(HasChar()) ReadChar();
+            else throw new Exception("Unfinished string at position " + position);
 
             return new Token(TokenType.String, stringBuilder);
         }
-        private bool IsHexChar(char c)
+        private static bool IsHexChar(char c)
         {
             return "abcdefABCDEF".Contains(c);
         }
@@ -335,9 +337,9 @@ namespace Hassium
             return new Token(TokenType.Identifier, finalId);
         }
 
-        private void whiteSpaceMonster()
+        private void EatWhiteSpaces()
         {
-            while(char.IsWhiteSpace(PeekChar())) ReadChar();
+            while(HasChar() && char.IsWhiteSpace(PeekChar())) ReadChar();
         }
 
         private char PeekChar(int n = 0)
