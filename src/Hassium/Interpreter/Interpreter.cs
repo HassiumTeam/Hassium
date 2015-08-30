@@ -192,6 +192,10 @@ namespace Hassium
                     if (evaluated is HassiumString)
                         theArray = evaluated.ToString().Select((s, i) => new { s, i }).ToDictionary(x => ToHassiumObject(x.i), x => ToHassiumObject(x.s));
                     else if (evaluated is HassiumDictionary) theArray = ((HassiumDictionary)evaluated);
+                    else if (evaluated is HassiumArray)
+                        theArray = new HassiumDictionary(
+                            ((HassiumArray)evaluated).Value.Select((s, i) => new { s, i })
+                                .ToDictionary(x => ToHassiumObject(x.i), x => ToHassiumObject(x.s)));
                     else
                     {
                         throw new Exception("The [] operator only applies to objects of type Array or String.");
@@ -206,7 +210,14 @@ namespace Hassium
                         : right;
 
                     if (arid == null) theArray.Add(theArray.Count, theValue);
-                    else theArray[arid] = theValue;
+                    else
+                    {
+                        foreach (var cur in theArray.Where(cur => cur.Key.ToString() == arid.ToString()))
+                        {
+                            theArray[cur.Key] = theValue;
+                            break;
+                        }
+                    }
 
                     SetVariable(call.Target.ToString(), new HassiumDictionary(theArray));
                 }
