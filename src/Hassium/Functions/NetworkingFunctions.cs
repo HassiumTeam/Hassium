@@ -8,14 +8,14 @@ namespace Hassium.Functions
         private static WebClient client = new WebClient();
 
         [IntFunc("downstr", "dowstr")]
-        public static object DownStr(object[] args)
+        public static HassiumObject DownStr(HassiumArray args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             return client.DownloadString(args[0].ToString());
         }
 
         [IntFunc("downfile", "dowfile")]
-        public static object DownFile(object[] args)
+        public static HassiumObject DownFile(HassiumArray args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             client.DownloadFile(args[0].ToString(), args[1].ToString());
@@ -23,7 +23,7 @@ namespace Hassium.Functions
         }
 
         [IntFunc("upfile")]
-        public static object UpFile(object[] args)
+        public static HassiumObject UpFile(HassiumArray args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             client.Headers.Add("Content-Type", "binary/octet-stream");

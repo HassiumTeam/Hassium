@@ -7,11 +7,11 @@ namespace Hassium.Functions
 	public class ArrayFunctions : ILibrary
 	{
 		[IntFunc("array_resize", "resizearr")]
-		public static object ResizeArr(object[] args)
+		public static HassiumObject ResizeArr(HassiumArray args)
 		{
-			object[] objarr = GetArr(args[0]);
+			HassiumObject[] objarr = GetArr(args[0]);
 
-			object[] newobj = new object[objarr.Length + Convert.ToInt32(args[1]) - 1];
+			HassiumObject[] newobj = new HassiumObject[objarr.Length + Convert.ToInt32((object)args[1]) - 1];
 
 			for (int x = 0; x < objarr.Length; x++)
 				newobj[x] = objarr[x];
@@ -19,123 +19,123 @@ namespace Hassium.Functions
 			return newobj;
 		}
 		[IntFunc("getarr")]
-		public static object GetArr(object[] args)
+		public static HassiumObject GetArr(HassiumArray args)
 		{
-			object arr = GetArr(args[0]);
-			object[] objarr = (object[])arr;
+			HassiumObject arr = GetArr(args[0]);
+			HassiumObject[] objarr = (HassiumObject[])arr;
 
-			return objarr[Convert.ToInt32(args[1])];
+			return objarr[Convert.ToInt32((object)args[1])];
 		}
 		[IntFunc("setarr")]
-		public static object SetArr(object[] args)
+		public static HassiumObject SetArr(HassiumArray args)
 		{
-			object arr = GetArr(args[0]);
-			object[] objarr = (object[])arr;
+			HassiumObject arr = GetArr(args[0]);
+			HassiumObject[] objarr = (HassiumObject[])arr;
 
-			objarr[Convert.ToInt32(args[2])] = args[1];
+			objarr[Convert.ToInt32((object)args[2])] = args[1];
 
 			return objarr;
 		}
 		[IntFunc("array_length", "arrlen")]
-		public static object ArrLen(object[] args)
+		public static HassiumObject ArrLen(HassiumArray args)
 		{
-			object arr = GetArr(args[0]);
-			object[] objarr = (object[])arr;
+			HassiumObject arr = GetArr(args[0]);
+			HassiumObject[] objarr = (HassiumObject[])arr;
 
 			return Convert.ToDouble(objarr.Length);
 		}
 		[IntFunc("array_join", "concatarr")]
-		public static object ArrayJoin(object[] args)
+		public static HassiumObject ArrayJoin(HassiumArray args)
 		{
-			object[] objarr = GetArr(args[0]);
+			HassiumObject[] objarr = GetArr(args[0]);
 			string separator = " ";
-			if (args.Length > 1) separator = args[1].ToString();
+			if (args.Value.Length > 1) separator = args[1].ToString();
 
 			return objarr.Aggregate((a, b) => a + separator + b);
 		}
 		[IntFunc("newarr")]
-		public static object NewArr(object[] args)
+		public static HassiumObject NewArr(HassiumArray args)
 		{
-			return new object[Convert.ToInt32(args[0])];
+			return new HassiumObject[Convert.ToInt32((object)args[0])];
 		}
 		[IntFunc("array_fill")]
-		public static object ArrayFill(object[] args)
+		public static HassiumObject ArrayFill(HassiumArray args)
 		{
-			int num = Convert.ToInt32(args[0]);
-			object thing = args[1];
+			int num = Convert.ToInt32((object)args[0]);
+			HassiumObject thing = args[1];
 			return Enumerable.Repeat(thing, num).ToArray();
 		}
 
 		[IntFunc("reversearr", "array_reverse")]
-		public static object ArrayReverse(object[] args)
+		public static HassiumObject ArrayReverse(HassiumArray args)
 		{
-			return GetArr(args[0]).ToArray().Reverse();
+			return GetArr(args[0]).ToArray().Reverse().ToArray();
 		}
 	
 		[IntFunc("array_op")]
-		public static object ArrayOp(object[] args)
+		public static HassiumObject ArrayOp(HassiumArray args)
 		{
 			return GetArr(args[0]).Aggregate((a, b) => HassiumFunction.GetFunc2(args[1])(a, b));
 		}
 
 		#region LINQ-like functions
 		[IntFunc("array_select")]
-		public static object ArraySelect(object[] args)
+		public static HassiumObject ArraySelect(HassiumArray args)
 		{
 			return GetArr(args[0]).Select(x => HassiumFunction.GetFunc1(args[1])(x)).ToArray();
 		}
 
 		[IntFunc("array_where")]
-		public static object ArrayWhere(object[] args)
+		public static HassiumObject ArrayWhere(HassiumArray args)
 		{
-			return GetArr(args[0]).Where(x => (bool)HassiumFunction.GetFunc1(args[1])(x)).ToArray();
+			return GetArr(args[0]).Where(x => HassiumFunction.GetFunc1(args[1])(x)).ToArray();
 		}
 
 		[IntFunc("array_any")]
-		public static object ArrayAny(object[] args)
+		public static HassiumObject ArrayAny(HassiumArray args)
 		{
-			return GetArr(args[0]).Any(x => (bool)HassiumFunction.GetFunc1(args[1])(x));
+			return GetArr(args[0]).Any(x => HassiumFunction.GetFunc1(args[1])(x));
 		}
 
 		[IntFunc("array_first")]
-		public static object ArrayFirst(object[] args)
+		public static HassiumObject ArrayFirst(HassiumArray args)
 		{
 			if (args[1] is IFunction)
-				return GetArr(args[0]).First(x => (bool) HassiumFunction.GetFunc1(args[1])(x));
+				return GetArr(args[0]).First(x => HassiumFunction.GetFunc1(args[1])(x));
 			else
 				return GetArr(args[0]).First();
 		}
 
 		[IntFunc("array_last")]
-		public static object ArrayLast(object[] args)
+		public static HassiumObject ArrayLast(HassiumArray args)
 		{
 			if (args[1] is IFunction)
-				return GetArr(args[0]).Last(x => (bool)HassiumFunction.GetFunc1(args[1])(x));
+				return GetArr(args[0]).Last(x => HassiumFunction.GetFunc1(args[1])(x));
 			else
 				return GetArr(args[0]).Last();
 		}
 
 		[IntFunc("array_contains")]
-		public static object ArrayContains(object[] args)
+		public static HassiumObject ArrayContains(HassiumArray args)
 		{
 			return GetArr(args[0]).Contains(args[1]);
 		}
 
 		[IntFunc("array_zip")]
-		public static object ArrayZip(object[] args)
+		public static HassiumObject ArrayZip(HassiumArray args)
 		{
 			return GetArr(args[0]).Zip(GetArr(args[1]), HassiumFunction.GetFunc2(args[2])).ToArray();
 		}
 		#endregion
 
 		[IntFunc("range")]
-		public static object Range(object[] args)
+		public static HassiumObject Range(HassiumArray args)
 		{
-			var from = Convert.ToDouble(args[0]);
-			var to = Convert.ToDouble(args[1]);
-			if(args.Length > 2)
+			var from = Convert.ToDouble((object)args[0]);
+			var to = Convert.ToDouble((object)args[1]);
+			if(args.Value.Length > 2)
 			{
-				var step = Convert.ToDouble(args[2]);
+				var step = Convert.ToDouble((object)args[2]);
 				var list = new List<double>();
 				if(step == 0) throw new Exception("The step for range() can't be zero");
 				if (to < from && step > 0) step = -step;
@@ -144,18 +144,18 @@ namespace Hassium.Functions
 				{
 					list.Add(i);
 				}
-				return list.ToArray();
+				return list.ToArray().Cast<object>().ToArray();
 			}
 			return from == to
-				? new[] {from}.Cast<object>()
+				? new[] {from}.Cast<HassiumObject>().ToArray()
 				: (to < from 
-					? Enumerable.Range((int)to, (int)from).Reverse() 
-					: Enumerable.Range((int)from, (int)to)).ToArray().Cast<object>();
+					? Enumerable.Range((int)to, (int)from).Reverse().ToArray()
+					: Enumerable.Range((int)from, (int)to)).Cast<HassiumObject>().ToArray();
 		}
 
-		public static object[] GetArr(object arg)
+		public static HassiumObject[] GetArr(HassiumObject arg)
 		{
-			return ((Dictionary<object, object>) arg).Values.ToArray();
+		    return ((Dictionary<HassiumObject, HassiumObject>) ((HassiumDictionary) arg)).Values.ToArray();
 		}
 	}
 }

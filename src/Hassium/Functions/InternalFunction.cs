@@ -2,7 +2,7 @@ using System;
 
 namespace Hassium
 {
-    public delegate HassiumObject HassiumFunctionDelegate (HassiumObject[] arguments);
+    public delegate HassiumObject HassiumFunctionDelegate (HassiumArray arguments);
 
     public class InternalFunction : HassiumObject
     {
@@ -13,7 +13,13 @@ namespace Hassium
             this.target = target;
         }
 
-        public object Invoke(HassiumObject[] args)
+
+        public override string ToString()
+        {
+            return ((object) this).ToString();
+        }
+
+        public override HassiumObject Invoke(HassiumArray args)
         {
             return target(args);
         }

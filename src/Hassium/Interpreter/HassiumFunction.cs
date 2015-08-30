@@ -32,12 +32,17 @@ namespace Hassium
             this.stackFrame = stackFrame;
         }
 
+        public override string ToString()
+        {
+            return ((object)this).ToString();
+        }
+
         /// <summary>
         /// Invokes the function
         /// </summary>
         /// <param name="args">The list of arguments</param>
         /// <returns>The return value</returns>
-        public object Invoke(object[] args)
+        public override HassiumObject Invoke(HassiumArray args)
         {
             if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(localScope);
 
@@ -47,11 +52,11 @@ namespace Hassium
 
             interpreter.ExecuteStatement(funcNode.Body);
 
-            object ret = interpreter.CallStack.Peek().ReturnValue;
+            HassiumObject ret = interpreter.CallStack.Peek().ReturnValue;
             
             interpreter.CallStack.Pop();
 
-            if (ret is Array) ret = ((Array) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
+            if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
 
             stackFrame = new StackFrame(localScope);
 
@@ -59,53 +64,53 @@ namespace Hassium
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{Object}"/>
+        /// Converts an <see cref="IFunction"/> to a <see cref="Func{HassiumObject}"/>
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{Object}"/></returns>
-        public static Func<object> GetFuncVoid(object internalFunction)
+        /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
+        public static Func<HassiumObject> GetFuncVoid(HassiumObject internalFunction)
         {
-            return () => ((IFunction)internalFunction).Invoke(new object[] { });
+            return () => (internalFunction).Invoke(new HassiumArray());
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see typeref="Func"/> &lt;<see cref="Object"/>, <see cref="Object"/>&gt;
+        /// Converts an <see cref="IFunction"/> to a <see typeref="Func"/> &lt;<see cref="HassiumObject"/>, <see cref="HassiumObject"/>&gt;
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{Object, Object}"/></returns>
-        public static Func<object, object> GetFunc1(object internalFunction)
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}"/></returns>
+        public static Func<HassiumObject, HassiumObject> GetFunc1(HassiumObject internalFunction)
         {
-            return (arg1) => ((IFunction)internalFunction).Invoke(new[] { arg1 });
+            return (arg1) => (internalFunction).Invoke(new HassiumArray());
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="T:Func{Object[], Object}"/>
+        /// Converts an <see cref="IFunction"/> to a <see cref="T:Func{HassiumArray, HassiumObject}"/>
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{Object}"/></returns>
-        public static Func<object[], object> GetFunc1Arr(object internalFunction)
+        /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
+        public static Func<HassiumArray, HassiumObject> GetFunc1Arr(HassiumObject internalFunction)
         {
-            return ((IFunction)internalFunction).Invoke;
+            return (internalFunction).Invoke;
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{Object, Object, Object}"/>
+        /// Converts an <see cref="IFunction"/> to a <see cref="Func{HassiumObject, HassiumObject, HassiumObject}"/>
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{Object, Object, Object}"/></returns>
-        public static Func<object, object, object> GetFunc2(object internalFunction)
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject}"/></returns>
+        public static Func<HassiumObject, HassiumObject, HassiumObject> GetFunc2(HassiumObject internalFunction)
         {
-            return (arg1, arg2) => ((IFunction)internalFunction).Invoke(new[] { arg1, arg2 });
+            return (arg1, arg2) => (internalFunction).Invoke(new[] { arg1, arg2 });
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{Object, Object, Object, Object}"/>
+        /// Converts an <see cref="IFunction"/> to a <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/>
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{Object, Object, Object, Object}"/></returns>
-        public static Func<object, object, object, object> GetFunc3(object internalFunction)
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/></returns>
+        public static Func<HassiumObject, HassiumObject, HassiumObject, HassiumObject> GetFunc3(HassiumObject internalFunction)
         {
-            return (arg1, arg2, arg3) => ((IFunction)internalFunction).Invoke(new[] { arg1, arg2, arg3 });
+            return (arg1, arg2, arg3) => (internalFunction).Invoke(new[] { arg1, arg2, arg3 });
         }
     }
 }

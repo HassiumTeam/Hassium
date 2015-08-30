@@ -41,89 +41,6 @@ namespace Hassium
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
-<<<<<<< HEAD
-                if (current == '.')
-                    Add(new Token(TokenType.Dot, current));
-                else if (char.IsLetterOrDigit(current))
-                    Add(scanData());
-                else if (current == '@' && next1 == '"')
-                    Add(scanString(true));
-                else if (current == '"')
-                    Add(scanString());
-                else if (current == '$')
-                    scanComment();
-                else if (current == '#')
-                    singleComment();
-                else if (current == '+' && next1 == '+')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
-                else if (current == '-' && next1 == '-')
-                    Add(new Token(TokenType.MentalOperation, ReadChar() + "" + ReadChar()));
-                else if (current == ';')
-                    Add(new Token(TokenType.EndOfLine, ReadChar()));
-                else if (current == ',')
-                    Add(new Token(TokenType.Comma, ReadChar()));
-                else if (current == '(' || current == ')')
-                    Add(new Token(TokenType.Parentheses, ReadChar()));
-                else if (current == '[' || current == ']')
-                    Add(new Token(TokenType.Bracket, ReadChar()));
-                else if (current == '{' || current == '}')
-                    Add(new Token(TokenType.Brace, ReadChar()));
-                else if (current == ':' && next1 == '=')
-                    Add(new Token(TokenType.Assignment, ReadChar() + "" + ReadChar()));
-                else if(current == ':')
-                    Add(new Token(TokenType.Identifier, ReadChar()));
-                else if(current == '=' && next1 == '>')
-                    Add(new Token(TokenType.Lambda, ReadChar() + "" + ReadChar()));
-                else if (current == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar()));
-                else if (current == '!' && next1 == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                
-                else if (current == '&' && next1 == '&')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '|' && next1 == '|')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '?' && next1 == '?')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if(current == '?')
-                    Add(new Token(TokenType.Operation, ReadChar()));
-                else if (current == '*' && next1 == '*' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if (current == '/' && next1 == '/' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if(current == '<' && next1 == '=' && next2 == '>')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '>' && next1 == '>' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if (current == '<' && next1 == '<' && next2 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                else if ("+-*/%".Contains(current) && !("/*=".Contains(next1)))
-                    Add(new Token(TokenType.Operation, ReadChar()));
-                else if ("&|^".Contains(current) && next1 != '=')
-                    Add(new Token(TokenType.Operation, ReadChar()));
-
-                else if ("~!-".Contains(current))
-                    Add(new Token(TokenType.UnaryOperation, ReadChar()));
-                else if (current == '*' && next1 == '*' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '/' && next1 == '/' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '>' && next1 == '>' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-                else if (current == '<' && next1 == '<' && next2 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar() + "" + ReadChar()));
-
-                else if ((current == '<' || current == '>') && next1 == '=')
-                    Add(new Token(TokenType.Comparison, ReadChar() + "" + ReadChar()));
-                else if (current == '<' || current == '>')
-                    Add(new Token(TokenType.Comparison, ReadChar()));
-
-                else if ("+-*/%".Contains(current) && next1 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
-                else if ("&|^".Contains(current) && next1 == '=')
-                    Add(new Token(TokenType.OpAssign, ReadChar() + "" + ReadChar()));
-
-=======
                 if("0123456789.".Contains(current))
                 {
                     Add(ScanNumber());
@@ -134,7 +51,6 @@ namespace Hassium
                     Add(ScanIdentifier());
                     continue;
                 }
->>>>>>> master
 
                 switch (current)
                 {

@@ -8,14 +8,14 @@ namespace Hassium
     {
         public LocalScope Scope { get; private set; }
 
-        public Dictionary<string, object> Locals { get; private set; }
+        public Dictionary<string, HassiumObject> Locals { get; private set; }
 
-        public object ReturnValue { get; set; }
+        public HassiumObject ReturnValue { get; set; }
 
         public StackFrame(LocalScope scope)
         {
             Scope = scope;
-            Locals = new Dictionary<string, object>();
+            Locals = new Dictionary<string, HassiumObject>();
         }
     }
 }
