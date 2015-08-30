@@ -411,7 +411,11 @@ namespace Hassium
                 var forStmt = (ForEachNode) (node);
                 var needlestmt = forStmt.Needle;
                 var haystackstmt = EvaluateNode(forStmt.Haystack);
-                var haystack = (Dictionary<HassiumObject, HassiumObject>) haystackstmt;
+                Dictionary<HassiumObject, HassiumObject> haystack = null;
+                if(haystackstmt is HassiumDictionary) haystack = (Dictionary<HassiumObject, HassiumObject>) haystackstmt;
+                if (haystackstmt is HassiumArray)
+                    haystack = ((HassiumArray) haystackstmt).Value.Select((s, i) => new {s, i})
+                        .ToDictionary(x => (HassiumObject) x.i, x => (HassiumObject) x.s);
                 if (haystackstmt is HassiumString)
                     haystack = haystackstmt.ToString()
                         .ToArray()
