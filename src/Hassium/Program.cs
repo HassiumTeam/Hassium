@@ -51,12 +51,8 @@ namespace Hassium
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("ERROR: " + e.Message);
-                    Console.WriteLine("Press Y to show full stack trace");
-                    if (Console.ReadKey(true).Key == ConsoleKey.Y)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    Console.WriteLine("There has been an error. Message: " + e.Message);
+                    Console.WriteLine("Stack Trace: " + e.StackTrace);
                 }
             }
         }
