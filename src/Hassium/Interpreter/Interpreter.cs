@@ -502,9 +502,18 @@ namespace Hassium
                     var member = bnode.Right;
                     if(member is FunctionCallNode)
                     {
+                        var call = (FunctionCallNode) member;
+                        var arguments = new object[call.Arguments.Children.Count + 1];
+                        for (var x = 0; x < call.Arguments.Children.Count; x++)
+                        {
+                            arguments[x + 1] = EvaluateNode(call.Arguments.Children[x]);
+                            if (arguments[x + 1] is double && (((double)(arguments[x + 1])) % 1 == 0))
+                                arguments[x + 1] = (int)(double)arguments[x + 1];
+                        }
+                        arguments[0] = target;
                         return
-                            target.GetAttribute(((FunctionCallNode) member).Target.ToString())
-                                .Invoke(new [] {target});
+                            target.GetAttribute(call.Target.ToString())
+                                .Invoke(arguments);
                     }
                     else
                     {

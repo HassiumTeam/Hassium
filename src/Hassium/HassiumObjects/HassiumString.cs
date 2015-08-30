@@ -11,6 +11,7 @@ namespace Hassium
             this.Value = value;
             this.Attributes.Add("tolower", new InternalFunction(tolower));
             this.Attributes.Add("toupper", new InternalFunction(toupper));
+            this.Attributes.Add("begins", new InternalFunction(begins));
         }
 
         private HassiumObject tolower(HassiumArray args)
@@ -21,6 +22,11 @@ namespace Hassium
         private HassiumObject toupper(HassiumArray args)
         {
             return new HassiumString(((HassiumString)args[0]).Value.ToUpper());
+        }
+
+        private HassiumObject begins(HassiumArray args)
+        {
+            return new HassiumBool(((HassiumString)args[0]).Value.StartsWith(((HassiumString)args[1]).Value));
         }
 
         #region IConvertible stuff
