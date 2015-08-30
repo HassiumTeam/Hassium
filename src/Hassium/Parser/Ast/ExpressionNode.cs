@@ -67,6 +67,8 @@ namespace Hassium
                     return BinaryOperation.LogicalOr;
                 case "??":
                     return BinaryOperation.NullCoalescing;
+                case ".":
+                    return BinaryOperation.Dot;
                 default:
                     throw new ArgumentException("Invalid binary operation: " + value);
             }

@@ -79,12 +79,12 @@ namespace Hassium
             {
                 options.Debug = true;
                 options.FilePath = args[1];
-                CurrentInterpreter.SetVariable("args", shiftArray(args, 2), true);
+				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args, 2)), true);
             }
             else
             {
                 options.FilePath = args[0];
-                CurrentInterpreter.SetVariable("args", shiftArray(args), true);
+				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args)), true);
             }
 
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)

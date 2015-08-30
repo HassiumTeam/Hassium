@@ -8,7 +8,7 @@
     </configuration>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4D071F79-A66C-4C18-A702-FD50E6C4BC3B}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\SystemFunctions.cs" />
-    <Compile Include="Interpreter\HassiumObject.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
     <Compile Include="Parser\Ast\ContinueNode.cs" />
@@ -94,7 +93,16 @@
     <Compile Include="Interpreter\HassiumFunction.cs" />
     <Compile Include="Parser\Ast\ReturnNode.cs" />
     <Compile Include="Parser\Ast\MentalNode.cs" />
+    <Compile Include="HassiumObjects\HassiumObject.cs" />
+    <Compile Include="HassiumObjects\HassiumString.cs" />
+    <Compile Include="HassiumObjects\HassiumBool.cs" />
+    <Compile Include="HassiumObjects\HassiumArray.cs" />
+    <Compile Include="HassiumObjects\HassiumDictionary.cs" />
+    <Compile Include="HassiumObjects\HassiumNumber.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\" />
+  </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ namespace Hassium.Functions
         }
 
         [IntFunc("println")]
-        public static object PrintLn(object[] args)
+        public static HassiumObject PrintLn(HassiumObject[] args)
         {
             Console.WriteLine(String.Join("", args));
             return null;

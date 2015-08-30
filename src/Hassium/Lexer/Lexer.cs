@@ -38,7 +38,9 @@ namespace Hassium
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
-                if (char.IsLetterOrDigit(current))
+                if (current == '.')
+                    Add(new Token(TokenType.Dot, current));
+                else if (char.IsLetterOrDigit(current))
                     Add(scanData());
                 else if (current == '@' && next1 == '"')
                     Add(scanString(true));

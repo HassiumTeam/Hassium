@@ -26,7 +26,8 @@ namespace Hassium
         Pow,
         Root,
         NullCoalescing,
-        CombinedComparison
+        CombinedComparison,
+        Dot
     }
 
     public class BinOpNode : AstNode

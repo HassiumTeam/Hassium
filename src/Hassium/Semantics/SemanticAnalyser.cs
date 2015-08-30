@@ -44,14 +44,14 @@ namespace Hassium
 
             foreach (AstNode node in theNode.Children)
             {
-                if (node is FuncNode)
-                {
-                    FuncNode fnode = ((FuncNode) node);
-                    currentLocalScope = new LocalScope();
-                    result.ChildScopes[fnode.Name] = currentLocalScope;
-                    currentLocalScope.Symbols.AddRange(fnode.Parameters);
-                    analyseLocalCode(fnode.Body);
-                }
+				if (node is FuncNode)
+				{
+					FuncNode fnode = ((FuncNode)node);
+					currentLocalScope = new LocalScope();
+					result.ChildScopes[fnode.Name] = currentLocalScope;
+					currentLocalScope.Symbols.AddRange(fnode.Parameters);
+					analyseLocalCode(fnode.Body);
+				}
                 else if (node is LambdaFuncNode)
                 {
                     LambdaFuncNode fnode = ((LambdaFuncNode)node);

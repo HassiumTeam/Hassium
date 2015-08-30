@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hassium
 {
-    public class HassiumObject : IFunction
+    public abstract class HassiumObject : IFunction
     {
         public Dictionary<string, HassiumObject> Attributes
         {

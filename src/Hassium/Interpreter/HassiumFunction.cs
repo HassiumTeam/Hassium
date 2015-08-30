@@ -9,7 +9,7 @@ namespace Hassium
     /// <summary>
     /// A Hassium function
     /// </summary>
-    public class HassiumFunction : IFunction
+    public class HassiumFunction: HassiumObject
     {
         private Interpreter interpreter;
         private FuncNode funcNode;

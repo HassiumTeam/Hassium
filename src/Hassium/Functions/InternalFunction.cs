@@ -2,9 +2,9 @@ using System;
 
 namespace Hassium
 {
-    public delegate object HassiumFunctionDelegate (object[] arguments);
+    public delegate HassiumObject HassiumFunctionDelegate (HassiumObject[] arguments);
 
-    public class InternalFunction : IFunction
+    public class InternalFunction : HassiumObject
     {
         private HassiumFunctionDelegate target;
 
@@ -13,7 +13,7 @@ namespace Hassium
             this.target = target;
         }
 
-        public object Invoke(object[] args)
+        public object Invoke(HassiumObject[] args)
         {
             return target(args);
         }
