@@ -22,7 +22,7 @@ namespace Hassium.Functions
 			if(args[0] is HassiumDictionary)
 			{
 				return "Array { " +
-					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key + "] => " + x.Value)) + " }";
+					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
 			}
 			if(args[0] is HassiumArray)
 			{
