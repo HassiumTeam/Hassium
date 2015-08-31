@@ -1,4 +1,4 @@
-i$INCLUDE hatred.has$
+$INCLUDE hatred.has$
 
 exitcode := 0;
 failed := 0;
