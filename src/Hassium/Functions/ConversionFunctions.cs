@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
@@ -24,9 +25,9 @@ namespace Hassium.Functions
 				return "Array { " +
 					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
 			}
-            if(args[0] is HassiumObject[])
+			if(args[0] is HassiumArray)
 			{
-                return ((HassiumObject[])(args[0]))
+				return ((HassiumArray)(args[0])).Value
 						.Aggregate("Array { ",
 							(current, item) => current + ((item is HassiumArray ? ToStr(new[] { item }).ToString() : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
 			}
@@ -38,7 +39,7 @@ namespace Hassium.Functions
 		{
 			try
 			{
-				return Convert.ToInt32((object)args[0]).ToString("{0:X}");
+				return args[0].HNum().ValueInt.ToString("{0:X}");
 			}
 			catch
 			{
@@ -51,7 +52,7 @@ namespace Hassium.Functions
 		{
 			try
 			{
-				return Convert.ToByte((object)args[0]);
+				return Convert.ToByte(args[0].HNum().ValueInt);
 			}
 			catch
 			{
@@ -62,13 +63,13 @@ namespace Hassium.Functions
 		[IntFunc("toarr")]
 		public static HassiumObject ToArr(HassiumObject[] args)
 		{
-            return ((HassiumArray)args);
+			return args[0].HArray();
 		}
 
-        [IntFunc("newarray")]
-        public static HassiumObject NewArray(HassiumObject[] args)
-        {
-            return new HassiumArray(new HassiumObject[Convert.ToInt32(((HassiumNumber)args[1]).Value)]);
-        }
+		[IntFunc("newarray")]
+		public static HassiumObject NewArray(HassiumObject[] args)
+		{
+			return new HassiumArray(new HassiumObject[args[0].HNum().ValueInt]);
+		}
 	}
 }

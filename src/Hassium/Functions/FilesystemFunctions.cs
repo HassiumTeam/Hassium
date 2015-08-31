@@ -2,29 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
 	public class FilesystemFunctions : ILibrary
 	{
-		[IntFunc("puts")]
-		public static HassiumObject Puts(HassiumObject[] args)
-		{
-			File.WriteAllText(args[0].ToString(), args[1].ToString());
-			return null;
-		}   
-
-		[IntFunc("readf")]
-		public static HassiumObject Readf(HassiumObject[] args)
-		{
-			return File.ReadAllText(args[0].ToString());
-		}
-
-		[IntFunc("readfarr")]
-		public static HassiumObject Readfarr(HassiumObject[] args)
-		{
-			return File.ReadAllLines(args[0].ToString());
-		}
+		
 
 		[IntFunc("mdir")]
 		public static HassiumObject Mdir(HassiumObject[] args)

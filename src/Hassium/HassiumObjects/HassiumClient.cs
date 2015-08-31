@@ -1,8 +1,7 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 
-namespace Hassium
+namespace Hassium.HassiumObjects
 {
     public class HassiumClient: HassiumObject
     {
@@ -11,17 +10,17 @@ namespace Hassium
         public HassiumClient(WebClient value)
         {
             this.Value = value;
-            this.Attributes.Add("dowstr", new InternalFunction(dowstr));
-            this.Attributes.Add("dowfile", new InternalFunction(dowfile));
+            this.Attributes.Add("downstr", new InternalFunction(downstr));
+            this.Attributes.Add("downfile", new InternalFunction(downfile));
             this.Attributes.Add("upfile", new InternalFunction(upfile));
         }
 
-        private HassiumObject dowstr(HassiumObject[] args)
+        private HassiumObject downstr(HassiumObject[] args)
         {
             return new HassiumString(Value.DownloadString(((HassiumString)args[1]).Value));
         }
 
-        private HassiumObject dowfile(HassiumObject[] args)
+        private HassiumObject downfile(HassiumObject[] args)
         {
             Value.DownloadFile(((HassiumString)args[1]).Value, ((HassiumString)args[2]).Value);
             return null;

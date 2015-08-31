@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
@@ -75,7 +76,7 @@ namespace Hassium.Functions
         [IntFunc("setposition")]
         public static HassiumObject ScursorPosition(HassiumObject[] args)
         {
-            Console.SetCursorPosition(Convert.ToInt32((object)args[0]), Convert.ToInt32((object)args[1]));
+            Console.SetCursorPosition(args[0].HNum().ValueInt, args[1].HNum().ValueInt);
             return null;
         }
 
@@ -110,7 +111,7 @@ namespace Hassium.Functions
             if (args.Length <= 1)
                 Console.Beep();
             else
-                Console.Beep(Convert.ToInt32((object)args[0]), Convert.ToInt32((object)args[1]));
+                Console.Beep(args[0].HNum().ValueInt, args[1].HNum().ValueInt);
 
             return null;
         }
@@ -134,26 +135,6 @@ namespace Hassium.Functions
                 default:
                     throw new Exception("Color is not valid!");
             }
-        }
-
-        private static object[] narrowArray(object[] args, int startIndex)
-        {
-            object[] result = new object[args.Length];
-
-            for (int x = startIndex; x < args.Length; x++)
-                result[x] = args[x];
-
-            return result;
-        }
-
-        private static string arrayToString(object[] args, int startIndex = 0)
-        {
-            string result = "";
-
-            for (int x = startIndex; x < args.Length; x++)
-                result += args[x].ToString();
-
-            return result;
         }
     }
 }

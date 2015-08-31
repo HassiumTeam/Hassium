@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
@@ -16,11 +17,17 @@ namespace Hassium.Functions
 			return null;
 		}
 
-        [IntFunc("object")]
-        public static HassiumObject Object(HassiumObject[] args)
-        {
-            return new HassiumObject();
-        }
+		[IntFunc("object")]
+		public static HassiumObject Object(HassiumObject[] args)
+		{
+			return new HassiumObject();
+		}
+
+		[IntFunc("file")]
+		public static HassiumObject File(HassiumObject[] args)
+		{
+			return new HassiumFile(args[0].ToString());
+		}
 
 		[IntFunc("type")]
 		public static HassiumObject Type(HassiumObject[] args)
@@ -59,8 +66,8 @@ namespace Hassium.Functions
 				if(fv is string) return new HassiumString((string)fv);
 				if(fv is Array) return new HassiumArray((Array)fv);
 				if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
-			    if (fv is bool) return new HassiumBool((bool) fv);
-			    else return (HassiumObject)(object) fv;
+				if (fv is bool) return new HassiumBool((bool) fv);
+				else return (HassiumObject)(object) fv;
 			}
 			else if (test.MemberType == MemberTypes.Method || test.MemberType == MemberTypes.Constructor)
 			{

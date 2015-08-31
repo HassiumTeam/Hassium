@@ -205,7 +205,7 @@ namespace Hassium
         private Token ScanString(bool isVerbatim = false)
         {
             var quote = ReadChar();
-            if (isVerbatim) ReadChar();
+            if (isVerbatim) quote = ReadChar();
             StringBuilder stringBuilder = new StringBuilder();
             var isEscaping = false;
             var isUnicode = false;

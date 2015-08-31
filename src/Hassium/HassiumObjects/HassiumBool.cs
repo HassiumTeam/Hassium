@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hassium
+namespace Hassium.HassiumObjects
 {
     public class HassiumBool: HassiumObject, IConvertible
     {

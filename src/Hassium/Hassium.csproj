@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\SystemFunctions.cs" />
+    <Compile Include="HassiumObjects\HassiumDate.cs" />
+    <Compile Include="HassiumObjects\HassiumFile.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ClassNode.cs" />

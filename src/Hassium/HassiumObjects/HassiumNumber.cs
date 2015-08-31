@@ -1,10 +1,12 @@
 ﻿using System;
 
-namespace Hassium
+namespace Hassium.HassiumObjects
 {
     public class HassiumNumber: HassiumObject, IConvertible
     {
         public double Value { get; set; }
+
+        public int ValueInt { get { return Convert.ToInt32(Value); } set { Value = (double) value; } }
 
         public HassiumNumber(double value)
         {
@@ -20,12 +22,17 @@ namespace Hassium
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            return new HassiumString(((HassiumNumber)args[0]).ToString());
+            return new HassiumString(ToString());
         }
 
         private HassiumObject compare(HassiumObject[] args)
         {
-            return new HassiumNumber(Convert.ToInt32(((HassiumNumber)args[0]).Value.CompareTo(((HassiumNumber)args[1]).Value)));
+            return new HassiumNumber(Value.CompareTo(args[0].HNum().Value));
+        }
+
+        public static implicit operator HassiumString(HassiumNumber str)
+        {
+            return new HassiumString(str.Value.ToString());
         }
 
         #region IConvertible stuff

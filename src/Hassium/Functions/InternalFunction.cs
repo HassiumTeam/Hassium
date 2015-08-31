@@ -1,4 +1,5 @@
 using System;
+using Hassium.HassiumObjects;
 
 namespace Hassium
 {
@@ -8,10 +9,13 @@ namespace Hassium
     {
         private HassiumFunctionDelegate target;
 
-        public InternalFunction(HassiumFunctionDelegate target)
+        public InternalFunction(HassiumFunctionDelegate target, bool prop = false)
         {
             this.target = target;
+            IsProperty = prop;
         }
+
+        public bool IsProperty { get; set; }
 
 
         public override string ToString()
