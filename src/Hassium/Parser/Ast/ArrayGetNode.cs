@@ -1,4 +1,4 @@
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ArrayGetNode: AstNode
     {
@@ -27,7 +27,7 @@ namespace Hassium
 
     public class ArrayIndexerNode : AstNode
     {
-        public static ArrayIndexerNode Parse(Parser.Parser parser)
+        public static ArrayIndexerNode Parse(Hassium.Parser.Parser parser)
         {
             var ret = new ArrayIndexerNode();
             parser.ExpectToken(TokenType.Bracket, "[");

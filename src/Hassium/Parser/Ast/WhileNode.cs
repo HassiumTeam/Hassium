@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class WhileNode: AstNode
     {
@@ -41,7 +39,7 @@ namespace Hassium
             Children.Add(elseBody);
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "while");
             parser.ExpectToken(TokenType.Parentheses, "(");

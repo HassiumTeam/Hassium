@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ReturnNode: AstNode
     {
@@ -14,7 +12,7 @@ namespace Hassium
             this.Children.Add(value);
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "return");
             if (parser.AcceptToken(TokenType.EndOfLine))

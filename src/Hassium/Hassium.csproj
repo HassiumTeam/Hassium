@@ -51,6 +51,7 @@
     <Compile Include="Parser\Ast\ClassNode.cs" />
     <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
     <Compile Include="Parser\Ast\ContinueNode.cs" />
+    <Compile Include="Parser\Ast\InstanceNode.cs" />
     <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />

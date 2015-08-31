@@ -6,6 +6,10 @@ passed := 0;
 
 func main()
 {
+	myfile := new File(@"D:\test.txt");
+	println(myfile.readf());
+	
+
 	println("--- BEGIN TESTS FOR HASSIUM ---");
 	
 	opTests();

@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public enum BinaryOperation
     {

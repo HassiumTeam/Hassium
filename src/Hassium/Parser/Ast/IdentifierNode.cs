@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class IdentifierNode: AstNode
     {
@@ -16,7 +14,7 @@ namespace Hassium
             return Identifier;
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             return new IdentifierNode(parser.ExpectToken(TokenType.Identifier).Value.ToString());
         }

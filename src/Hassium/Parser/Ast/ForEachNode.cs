@@ -1,7 +1,4 @@
-using System;
-using Hassium.Parser.Ast;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ForEachNode : AstNode
     {
@@ -36,7 +33,7 @@ namespace Hassium
             Children.Add(body);
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.Parentheses, "(");

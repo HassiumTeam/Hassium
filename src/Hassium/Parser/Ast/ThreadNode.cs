@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ThreadNode: AstNode
     {
@@ -17,7 +15,7 @@ namespace Hassium
             Children.Add(node);
         }
 
-        public static ThreadNode Parse(Parser.Parser parser)
+        public static ThreadNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "thread");
             AstNode node = StatementNode.Parse(parser);
