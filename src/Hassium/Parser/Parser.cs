@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hassium.Parser.Ast;
 
 namespace Hassium.Parser
 {

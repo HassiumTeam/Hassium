@@ -41,6 +41,7 @@ namespace Hassium
                 var next1 = HasChar() ? PeekChar(1) : '\0';
                 var next2 = HasChar(1) ? PeekChar(2) : '\0';
 
+                
                 if("0123456789".Contains(current))
                 {
                     Add(ScanNumber());

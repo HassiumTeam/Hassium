@@ -1,6 +1,4 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ForNode: AstNode
     {
@@ -44,7 +42,7 @@ namespace Hassium
             Children.Add(body);
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "for");
             parser.ExpectToken(TokenType.Parentheses, "(");

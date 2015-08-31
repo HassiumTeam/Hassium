@@ -25,6 +25,10 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("delete", new InternalFunction(Delete));
         }
 
+        public HassiumFile(HassiumObject[] args) : this(args[0].ToString())
+        {
+        }
+
         public HassiumObject Create(HassiumObject[] args)
         {
             File.Create(FilePath);

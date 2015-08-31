@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using Hassium.Parser.Ast;
 
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class FuncNode: AstNode
     {
@@ -24,7 +22,7 @@ namespace Hassium
             Children.Add(body);
         }
 
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();

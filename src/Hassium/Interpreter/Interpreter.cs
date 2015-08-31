@@ -572,6 +572,26 @@ namespace Hassium
                     return attr;
                 }
             }
+            else if(node is InstanceNode)
+            {
+                var inode = (InstanceNode) node;
+                var fcall = (FunctionCallNode)inode.Target;
+                var target = fcall.Target.ToString();
+                Type ttype = null;
+                switch(target)
+                {
+                    case "File":
+                        ttype = typeof (HassiumFile);
+                        break;
+                }
+                var arguments = new HassiumObject[fcall.Arguments.Children.Count];
+                for (var x = 0; x < fcall.Arguments.Children.Count; x++)
+                {
+                    arguments[x] = EvaluateNode(fcall.Arguments.Children[x]);
+                }
+                var thething = Activator.CreateInstance(ttype, new object[] {arguments});
+                return (HassiumObject)thething;
+            }
             else if (node is BinOpNode)
             {
                 var bnode = (BinOpNode) node;

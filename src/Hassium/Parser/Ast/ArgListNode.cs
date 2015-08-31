@@ -1,10 +1,8 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class ArgListNode: AstNode
     {
-        public static ArgListNode Parse(Parser.Parser parser)
+        public static ArgListNode Parse(Hassium.Parser.Parser parser)
         {
             ArgListNode ret = new ArgListNode();
             //parser.ExpectToken(TokenType.Parentheses, "(");

@@ -76,6 +76,8 @@ namespace Hassium.HassiumObjects
             return new HassiumArray(arr);
         }
 
+
+
         private HassiumObject tostring(HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
@@ -108,7 +110,7 @@ namespace Hassium.HassiumObjects
             return objarr.Aggregate((a, b) => a + separator + b);
         }
 
-        public HassiumObject ArrayFill(HassiumObject[] args)
+        public static HassiumObject ArrayFill(HassiumObject[] args)
         {
             int num = args[0].HNum().ValueInt;
             HassiumObject thing = args[1];
@@ -170,7 +172,7 @@ namespace Hassium.HassiumObjects
 
         #endregion
 
-        public HassiumObject Range(HassiumObject[] args)
+        public static HassiumObject Range(HassiumObject[] args)
         {
             var from = args[0].HNum().Value;
             var to = args[1].HNum().Value;

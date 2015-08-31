@@ -1,10 +1,8 @@
-using System;
-
-namespace Hassium
+namespace Hassium.Parser.Ast
 {
     public class CodeBlock: AstNode
     {
-        public static AstNode Parse(Parser.Parser parser)
+        public static AstNode Parse(Hassium.Parser.Parser parser)
         {
             CodeBlock block = new CodeBlock();
             parser.ExpectToken(TokenType.Brace, "{");
