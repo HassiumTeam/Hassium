@@ -44,16 +44,16 @@ func assert(that, msg)
 
 func assertfail(that, msg)
 {
-	isfailed := false;
+	isFailed := false;
 	try 
 	{
 		eval(that);
 	}
 	catch
 	{
-		isfailed := true;
+		isFailed := true;
 	}
-	theMsg := msg + " [" + (isfailed ? "✓" : "✗") + "]";
+	theMsg := msg + " [" + (isFailed ? "✓" : "✗") + "]";
 	if(isFailed)
 	{
 		testPassed();
