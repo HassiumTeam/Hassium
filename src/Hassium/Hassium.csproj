@@ -84,7 +84,6 @@
     <Compile Include="Functions\ConversionFunctions.cs" />
     <Compile Include="Functions\MathFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
-    <Compile Include="Functions\NetworkingFunctions.cs" />
     <Compile Include="Parser\Ast\ForNode.cs" />
     <Compile Include="Parser\Ast\TryNode.cs" />
     <Compile Include="Parser\Ast\FuncNode.cs" />

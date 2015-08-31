@@ -12,10 +12,10 @@ namespace Hassium
             return new HassiumClient(new WebClient());
         }
 
-        [IntFunc("File", true)]
-        public static HassiumObject File(HassiumObject[] args)
+        [IntFunc("Object", true)]
+        public static HassiumObject Object(HassiumObject[] args)
         {
-            return new HassiumFile(args[0].ToString());
+            return new HassiumObject();
         }
     }
 }

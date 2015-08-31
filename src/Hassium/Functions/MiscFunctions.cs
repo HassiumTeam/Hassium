@@ -17,12 +17,6 @@ namespace Hassium.Functions
 			return null;
 		}
 
-		[IntFunc("object")]
-		public static HassiumObject Object(HassiumObject[] args)
-		{
-			return new HassiumObject();
-		}
-
 		[IntFunc("type")]
 		public static HassiumObject Type(HassiumObject[] args)
 		{

@@ -20,7 +20,7 @@ namespace Hassium.Functions
             return null;
         }
 
-        [IntFunc("printarr")]
+        [IntFunc("printArray")]
         public static HassiumObject PrintArr(HassiumObject[] args)
         {
             Console.WriteLine(ConversionFunctions.ToStr(args).ToString());
@@ -47,58 +47,58 @@ namespace Hassium.Functions
             return null;
         }
 
-        [IntFunc("setfcol")]
+        [IntFunc("setForeground")]
         public static HassiumObject Setfcol(HassiumObject[] args)
         {
             Console.ForegroundColor = parseColor(args[0].ToString());
             return null;
         }
 
-        [IntFunc("setbcol")]
+        [IntFunc("setBackground")]
         public static HassiumObject Setbcol(HassiumObject[] args)
         {
             Console.BackgroundColor = parseColor(args[0].ToString());
             return null;
         }
 
-        [IntFunc("getfcol")]
+        [IntFunc("getForeground")]
         public static HassiumObject Getfcol(HassiumObject[] args)
         {
             return Console.ForegroundColor.ToString();
         }
 
-        [IntFunc("getbcol")]
+        [IntFunc("getBackground")]
         public static HassiumObject Getbcol(HassiumObject[] args)
         {
             return Console.BackgroundColor.ToString();
         }
 
-        [IntFunc("setposition")]
+        [IntFunc("setPosition")]
         public static HassiumObject ScursorPosition(HassiumObject[] args)
         {
             Console.SetCursorPosition(args[0].HNum().ValueInt, args[1].HNum().ValueInt);
             return null;
         }
 
-        [IntFunc("getleft")]
+        [IntFunc("getLeft")]
         public static HassiumObject GetLeft(HassiumObject[] args)
         {
             return Console.CursorLeft;
         }
 
-        [IntFunc("gettop")]
+        [IntFunc("getTop")]
         public static HassiumObject GetTop(HassiumObject[] args)
         {
             return Console.CursorTop;
         }
 
-        [IntFunc("gettitle")]
+        [IntFunc("getTitle")]
         public static HassiumObject GetTitle(HassiumObject[] args)
         {
             return Console.Title;
         }
 
-        [IntFunc("settitle")]
+        [IntFunc("setTitle")]
         public static HassiumObject SetTitle(HassiumObject[] args)
         {
             Console.Title = args[0].ToString();
