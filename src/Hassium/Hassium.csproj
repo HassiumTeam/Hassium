@@ -42,6 +42,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\HassiumDate.cs" />
     <Compile Include="HassiumObjects\HassiumDirectory.cs" />

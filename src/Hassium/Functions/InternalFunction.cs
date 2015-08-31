@@ -34,17 +34,24 @@ namespace Hassium
     {
         public string Name { get; set; }
         public string Alias { get; set; }
+        public bool Constructor { get; set; }
 
-        public IntFunc(string name)
+        public IntFunc(string name) : this(name, "")
         {
-            Name = name;
-            Alias = "";
         }
 
         public IntFunc(string name, string alias)
         {
             Name = name;
             Alias = alias;
+            Constructor = false;
+        }
+
+        public IntFunc(string name, bool constr)
+        {
+            Name = name;
+            Alias = "";
+            Constructor = constr;
         }
     }
 }
