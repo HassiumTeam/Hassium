@@ -62,7 +62,13 @@ namespace Hassium.Functions
 		[IntFunc("toarr")]
 		public static HassiumObject ToArr(HassiumArray args)
 		{
-			return args;
+            return ((HassiumArray)args);
 		}
+
+        [IntFunc("newarray")]
+        public static HassiumObject NewArray(HassiumArray args)
+        {
+            return new HassiumArray(new HassiumObject[Convert.ToInt32(((HassiumNumber)args[1]).Value)]);
+        }
 	}
 }

@@ -12,7 +12,7 @@ namespace Hassium.Functions
 		{
 			File.WriteAllText(args[0].ToString(), args[1].ToString());
 			return null;
-		}
+		}   
 
 		[IntFunc("readf")]
 		public static HassiumObject Readf(HassiumArray args)

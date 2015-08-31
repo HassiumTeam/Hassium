@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Text;
 
 namespace Hassium
 {
@@ -10,6 +11,9 @@ namespace Hassium
 
         public HassiumArray(object[] value)
         {
+            this.Attributes.Add("length", new InternalFunction(length));
+            this.Attributes.Add("tostring", new InternalFunction(tostring));
+
             this.Value = value.Select(fv =>
             {
                 if (fv is double || fv is int)
@@ -61,6 +65,22 @@ namespace Hassium
         public static implicit operator HassiumArray(object[] arr)
         {
             return new HassiumArray(arr);
+        }
+
+        private HassiumObject length(HassiumArray args)
+        {
+            return new HassiumNumber(this.Value.Length);
+        }
+
+        private HassiumObject tostring(HassiumArray args)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (HassiumObject obj in this.Value)
+            {
+                sb.Append(obj.ToString());
+            }
+
+            return sb.ToString();
         }
     }
 }

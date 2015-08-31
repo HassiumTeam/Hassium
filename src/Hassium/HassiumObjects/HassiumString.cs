@@ -26,6 +26,7 @@ namespace Hassium
             this.Attributes.Add("trim", new InternalFunction(trim));
             this.Attributes.Add("trimleft", new InternalFunction(trimleft));
             this.Attributes.Add("trimright", new InternalFunction(trimright));
+            this.Attributes.Add("tostring", new InternalFunction(tostring));
         }
 
         private HassiumObject tolower(HassiumArray args)
@@ -111,6 +112,11 @@ namespace Hassium
         private HassiumObject trimright(HassiumArray args)
         {
             return new HassiumString(((HassiumString)args[0]).Value.TrimEnd());
+        }
+
+        private HassiumObject tostring(HassiumArray args)
+        {
+            return new HassiumString(((HassiumString)args[0]).Value.ToString());
         }
 
         #region IConvertible stuff

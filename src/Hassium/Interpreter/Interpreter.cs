@@ -22,8 +22,8 @@ namespace Hassium
 
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
-            {"true", true},
-            {"false", false},
+            {"true", new HassiumBool(true)},
+            {"false", new HassiumBool(false)},
             {"null", null},
         };
 
@@ -195,7 +195,7 @@ namespace Hassium
                     else if (evaluated is HassiumArray)
                         theArray = new HassiumDictionary(
                             ((HassiumArray)evaluated).Value.Select((s, i) => new { s, i })
-                                .ToDictionary(x => ToHassiumObject(x.i), x => ToHassiumObject(x.s)));
+                            .ToDictionary(x => ToHassiumObject(x.i), x => ToHassiumObject(x.s)));
                     else
                     {
                         throw new Exception("The [] operator only applies to objects of type Array or String.");
