@@ -3,3 +3,8 @@
 /home/scrandell/Hassium/src/Hassium/bin/Debug/Hassium.exe
 /home/scrandell/Hassium/src/Hassium/obj/Debug/Hassium.exe
 /home/scrandell/Hassium/src/Hassium/obj/Debug/Hassium.exe.mdb
+/home/jacob/Hassium/src/Hassium/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/home/jacob/Hassium/src/Hassium/bin/Debug/Hassium.exe.mdb
+/home/jacob/Hassium/src/Hassium/bin/Debug/Hassium.exe
+/home/jacob/Hassium/src/Hassium/obj/Debug/Hassium.exe
+/home/jacob/Hassium/src/Hassium/obj/Debug/Hassium.exe.mdb

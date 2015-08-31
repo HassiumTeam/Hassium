@@ -79,7 +79,6 @@
     <Compile Include="Functions\ILibrary.cs" />
     <Compile Include="Functions\ConsoleFunctions.cs" />
     <Compile Include="Functions\ConversionFunctions.cs" />
-    <Compile Include="Functions\FilesystemFunctions.cs" />
     <Compile Include="Functions\MathFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Functions\NetworkingFunctions.cs" />

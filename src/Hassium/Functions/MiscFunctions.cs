@@ -23,7 +23,7 @@ namespace Hassium.Functions
 			return new HassiumObject();
 		}
 
-		[IntFunc("file")]
+		[IntFunc("newfile")]
 		public static HassiumObject File(HassiumObject[] args)
 		{
 			return new HassiumFile(args[0].ToString());
