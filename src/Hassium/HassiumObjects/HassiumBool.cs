@@ -9,11 +9,17 @@ namespace Hassium.HassiumObjects
         public HassiumBool(Boolean value)
         {
             this.Value = value;
+            this.Attributes.Add("tostring", new InternalFunction(tostring));
         }
 
         public override string ToString()
         {
             return Convert.ToString(Value);
+        }
+
+        private HassiumObject tostring(HassiumObject[] args)
+        {
+            return this.Value.ToString();
         }
 
         #region IConvertible stuff
