@@ -30,6 +30,7 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject GetAttribute(string name)
         {
+            if(!_attributes.ContainsKey(name)) throw new ArgumentException("The attribute '" + name + "' doesn't exist for the specified object.");
             return _attributes[name];
         }
 

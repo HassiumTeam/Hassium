@@ -9,13 +9,16 @@ namespace Hassium
     {
         private HassiumFunctionDelegate target;
 
-        public InternalFunction(HassiumFunctionDelegate target, bool prop = false)
+        public InternalFunction(HassiumFunctionDelegate target, bool prop = false, bool constr = false)
         {
             this.target = target;
             IsProperty = prop;
+            IsConstructor = constr;
         }
 
         public bool IsProperty { get; set; }
+
+        public bool IsConstructor { get; set; }
 
 
         public override string ToString()

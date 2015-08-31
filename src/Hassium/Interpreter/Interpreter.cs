@@ -577,7 +577,7 @@ namespace Hassium
                 var inode = (InstanceNode) node;
                 var fcall = (FunctionCallNode)inode.Target;
                 var target = fcall.Target.ToString();
-                Type ttype = null;
+                /*Type ttype = null;
                 switch(target)
                 {
                     case "File":
@@ -590,7 +590,26 @@ namespace Hassium
                     arguments[x] = EvaluateNode(fcall.Arguments.Children[x]);
                 }
                 var thething = Activator.CreateInstance(ttype, new object[] {arguments});
-                return (HassiumObject)thething;
+                return (HassiumObject)thething;*/
+                var arguments = new HassiumObject[fcall.Arguments.Children.Count];
+                for (var x = 0; x < fcall.Arguments.Children.Count; x++)
+                {
+                    arguments[x] = EvaluateNode(fcall.Arguments.Children[x]);
+                }
+                if(HasVariable(target, true))
+                {
+                    var theVar = Globals[target];
+
+                    var iFunc = theVar as InternalFunction;
+                    if(iFunc != null)
+                    {
+                        if(iFunc.IsConstructor)
+                        {
+                            return iFunc.Invoke(arguments);
+                        }
+                    }
+                }
+                throw new Exception("No constructor found for " + target);
             }
             else if (node is BinOpNode)
             {
@@ -629,7 +648,6 @@ namespace Hassium
                 var call = (FunctionCallNode)node;
 
                 IFunction target = EvaluateNode(call.Target) as IFunction;
-                //if (target is HassiumFunction) ((HassiumFunction) target).stackFrame = null;
 
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
@@ -778,30 +796,19 @@ namespace Hassium
 
             foreach (var type in testAss.GetTypes())
             {
-                if (type.GetInterface(typeof(ILibrary).FullName) != null)
+                if (type.GetInterface(typeof (ILibrary).FullName) != null)
                 {
-                    if (type.GetMethod("GetFunctions") != null) // TODO: DEPRECATED
+                    foreach (var myfunc in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
                     {
-                        var method = type.GetMethod("GetFunctions");
-                        var rdict =
-                            (Dictionary<string, InternalFunction>)
-                                (method.Invoke(Activator.CreateInstance(type, null), null));
-                        foreach (var entry in rdict)
-                            result.Add(entry.Key, entry.Value);
-                    }
-                    else
-                    {
-                        foreach (var myfunc in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                        var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
+                        foreach (var theattr in theattr1.OfType<IntFunc>())
                         {
-                            var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
-                            foreach (var theattr in theattr1.OfType<IntFunc>())
-                            {
-                                var rfunc = new InternalFunction(
-                                    (HassiumFunctionDelegate)
-                                        Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc));
-                                result.Add(theattr.Name, rfunc);
-                                if(theattr.Alias != "") result.Add(theattr.Alias, rfunc);
-                            }
+                            var rfunc = new InternalFunction(
+                                (HassiumFunctionDelegate)
+                                    Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), false, theattr.Constructor);
+
+                            result.Add(theattr.Name, rfunc);
+                            if (theattr.Alias != "") result.Add(theattr.Alias, rfunc);
                         }
                     }
                 }

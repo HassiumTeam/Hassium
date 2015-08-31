@@ -17,12 +17,12 @@ namespace Hassium.HassiumObjects
 
         private HassiumObject downstr(HassiumObject[] args)
         {
-            return new HassiumString(Value.DownloadString(((HassiumString)args[1]).Value));
+            return new HassiumString(Value.DownloadString(((HassiumString)args[0]).Value));
         }
 
         private HassiumObject downfile(HassiumObject[] args)
         {
-            Value.DownloadFile(((HassiumString)args[1]).Value, ((HassiumString)args[2]).Value);
+            Value.DownloadFile(((HassiumString)args[0]).Value, ((HassiumString)args[1]).Value);
             return null;
         }
 
@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Value.Headers.Add("Content-Type", "binary/octet-stream");
-            return new HassiumString(Encoding.ASCII.GetString(Value.UploadFile(((HassiumString)args[1]).Value, "POST", ((HassiumString)args[2]).Value)));
+            return new HassiumString(Encoding.ASCII.GetString(Value.UploadFile(((HassiumString)args[0]).Value, "POST", ((HassiumString)args[1]).Value)));
         }
 
         public override string ToString()
