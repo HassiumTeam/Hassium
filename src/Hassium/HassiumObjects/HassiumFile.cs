@@ -12,13 +12,13 @@ namespace Hassium.HassiumObjects
         public HassiumFile(string fpath)
         {
             FilePath = fpath;
-            this.Attributes.Add("puts", new InternalFunction(PutContent));
-            this.Attributes.Add("readf", new InternalFunction(ReadContent));
-            this.Attributes.Add("readfarr", new InternalFunction(ReadLines));
+            this.Attributes.Add("writeText", new InternalFunction(PutContent));
+            this.Attributes.Add("readText", new InternalFunction(ReadContent));
+            this.Attributes.Add("readLines", new InternalFunction(ReadLines));
             this.Attributes.Add("exists", new InternalFunction(x => Exists, true));
             this.Attributes.Add("create", new InternalFunction(Create));
             this.Attributes.Add("append", new InternalFunction(Append));
-            this.Attributes.Add("appendarr", new InternalFunction(AppendLines));
+            this.Attributes.Add("appendLines", new InternalFunction(AppendLines));
             this.Attributes.Add("copy", new InternalFunction(Copy));
             this.Attributes.Add("move", new InternalFunction(Move));
             this.Attributes.Add("rename", new InternalFunction(Rename));

@@ -10,7 +10,7 @@ namespace Hassium.HassiumObjects
 
         public HassiumNumber(double value)
         {
-            this.Attributes.Add("tostring", new InternalFunction(tostring));
+            this.Attributes.Add("toString", new InternalFunction(tostring));
             this.Attributes.Add("compare", new InternalFunction(compare));
             this.Value = value;
         }

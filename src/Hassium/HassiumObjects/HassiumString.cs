@@ -9,8 +9,8 @@ namespace Hassium.HassiumObjects
         public HassiumString(string value)
         {
             Value = value;
-            Attributes.Add("tolower", new InternalFunction(tolower));
-            Attributes.Add("toupper", new InternalFunction(toupper));
+            Attributes.Add("toLower", new InternalFunction(tolower));
+            Attributes.Add("toUpper", new InternalFunction(toupper));
             Attributes.Add("begins", new InternalFunction(begins));
             Attributes.Add("ends", new InternalFunction(ends));
             Attributes.Add("getat", new InternalFunction(getat));
@@ -20,13 +20,13 @@ namespace Hassium.HassiumObjects
             Attributes.Add("split", new InternalFunction(split));
             Attributes.Add("replace", new InternalFunction(replace));
             Attributes.Add("index", new InternalFunction(index));
-            Attributes.Add("lastindex", new InternalFunction(lastindex));
-            Attributes.Add("padleft", new InternalFunction(padleft));
-            Attributes.Add("padright", new InternalFunction(padright));
+            Attributes.Add("lastIndex", new InternalFunction(lastindex));
+            Attributes.Add("padLeft", new InternalFunction(padleft));
+            Attributes.Add("padRight", new InternalFunction(padright));
             Attributes.Add("trim", new InternalFunction(trim));
-            Attributes.Add("trimleft", new InternalFunction(trimleft));
-            Attributes.Add("trimright", new InternalFunction(trimright));
-            Attributes.Add("tostring", new InternalFunction(tostring));
+            Attributes.Add("trimLeft", new InternalFunction(trimleft));
+            Attributes.Add("trimRight", new InternalFunction(trimright));
+            Attributes.Add("toString", new InternalFunction(tostring));
             Attributes.Add("length", new InternalFunction(x => Value.Length, true));
         }
           

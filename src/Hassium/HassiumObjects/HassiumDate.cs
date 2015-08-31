@@ -19,7 +19,7 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("hour", new InternalFunction(x => Value.Hour, true));
             this.Attributes.Add("minute", new InternalFunction(x => Value.Minute, true));
             this.Attributes.Add("second", new InternalFunction(x => Value.Second, true));
-            this.Attributes.Add("isleapyear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), true));
+            this.Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), true));
         }
 
         public HassiumObject GetTimestamp(HassiumObject[] args)

@@ -13,7 +13,7 @@ namespace Hassium.HassiumObjects
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value) : this(value.Select(x => (HassiumKeyValuePair)x).ToList())
         {
             this.Attributes.Add("length", new InternalFunction(x => Value.Count, true));
-            this.Attributes.Add("tostring", new InternalFunction(tostring));
+            this.Attributes.Add("toString", new InternalFunction(tostring));
 
             this.Attributes.Add("reverse", new InternalFunction(ArrayReverse));
             this.Attributes.Add("op", new InternalFunction(ArrayOp));

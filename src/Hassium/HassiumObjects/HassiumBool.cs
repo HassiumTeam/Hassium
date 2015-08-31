@@ -9,7 +9,7 @@ namespace Hassium.HassiumObjects
         public HassiumBool(Boolean value)
         {
             this.Value = value;
-            this.Attributes.Add("tostring", new InternalFunction(tostring));
+            this.Attributes.Add("toString", new InternalFunction(tostring));
         }
 
         public override string ToString()
