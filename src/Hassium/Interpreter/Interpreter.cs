@@ -188,57 +188,81 @@ namespace Hassium
                 if (node.Left is ArrayGetNode)
                 {
                     var call = (ArrayGetNode)(node.Left);
-                    Dictionary<HassiumObject, HassiumObject> theArray = null;
                     var evaluated = GetVariable(call.Target.ToString());
-                    if (evaluated is HassiumString)
-                        theArray = evaluated.ToString().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
-                    else if (evaluated is HassiumDictionary)
+                    if (evaluated is HassiumDictionary)
                     {
-                        theArray = ((HassiumDictionary) evaluated);
-                    }
-                    else if (evaluated is HassiumArray)
-                    {
-                        theArray = new HassiumDictionary(
-                            ((HassiumArray) evaluated).Value.Select((s, i) => new {s, i})
-                                .ToDictionary(x => HassiumObject.ToHassiumObject(x.i),
-                                    x => HassiumObject.ToHassiumObject(x.s)));
-                    }
-                    else
-                    {
-                        throw new Exception("The [] operator only applies to objects of type Array or String.");
-                    }
-                    HassiumObject arid = null;
+                        var theArray = ((HassiumDictionary) evaluated);
+                        HassiumObject arid = null;
 
-                    if (call.Arguments.Children.Count > 0)
-                        arid = EvaluateNode(call.Arguments.Children[0]);
+                        if (call.Arguments.Children.Count > 0)
+                            arid = EvaluateNode(call.Arguments.Children[0]);
 
-                    var theValue = (node.IsOpAssign && arid != null)
-                        ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                        : right;
+                        var theValue = (node.IsOpAssign && arid != null)
+                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            : right;
 
-                    if (arid == null)
-                        theArray.Add(theArray.Count, theValue);
-                    else
-                    {
-                        if (theArray.Any(cur => cur.Key.ToString() == arid.ToString()))
-                        {
-                            foreach (var cur in theArray.Where(cur => cur.Key.ToString() == arid.ToString()))
-                            {
-                                theArray[cur.Key] = theValue;
-                                break;
-                            }
-                        }
+                        if (arid == null)
+                            theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
                         else
                         {
+                            if (theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()))
+                            {
+                                foreach (var cur in theArray.Value.Where(cur => cur.Key.ToString() == arid.ToString()))
+                                {
+                                    theArray.Value[cur.Key].Key = theValue;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                theArray[arid] = theValue;
+                            }
+                        }
+
+                        SetVariable(call.Target.ToString(), theArray);
+                    }
+                    else if (evaluated is HassiumArray || evaluated is HassiumString)
+                    {
+                        HassiumArray theArray = null;
+                        if(evaluated is HassiumString)
+                        {
+                            theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
+                        }
+                        theArray = ((HassiumArray) evaluated);
+
+                        int arid = -1;
+                        bool append = false;
+
+                        if (call.Arguments.Children.Count > 0)
+                            arid = EvaluateNode(call.Arguments.Children[0]);
+                        else
+                            append = true;
+
+                        var theValue = node.IsOpAssign
+                            ? interpretBinaryOp(theArray[(int)arid], right, node.AssignOperation)
+                            : right;
+
+                        if(append)
+                            theArray.Add(new[] {theValue});
+                        else
+                        {
+                            if(arid >= theArray.Value.Length)
+                                throw new IndexOutOfRangeException();
+
                             theArray[arid] = theValue;
                         }
-                    }
 
-                    SetVariable(call.Target.ToString(), new HassiumDictionary(theArray));
+                        SetVariable(call.Target.ToString(), theArray);
+                    }
+                    else
+                    {
+                        throw new Exception("The [] operator only applies to objects of type Array, Dictionary or String.");
+                    }
+                    
                 }
                 else if (node.Left is GetMemberNode)
                 {
-                    var accessor = node.Left as GetMemberNode;
+                    var accessor = (GetMemberNode) node.Left;
                     var target = EvaluateNode(accessor.Left);
                     target.SetAttribute(accessor.Member, right);
                 }
@@ -246,10 +270,10 @@ namespace Hassium
                 {
                     if (!(node.Left is IdentifierNode))
                         throw new Exception("Not a valid identifier");
-                    if (node.IsOpAssign)
-                        SetVariable(node.Left.ToString(),
-                            interpretBinaryOp(new BinOpNode(node.AssignOperation, node.Left, node.Right)));
-                    else SetVariable(node.Left.ToString(), right);
+                    SetVariable(node.Left.ToString(),
+                        node.IsOpAssign
+                            ? interpretBinaryOp(new BinOpNode(node.AssignOperation, node.Left, node.Right))
+                            : right);
                 }
                 return right;
             }
@@ -609,12 +633,22 @@ namespace Hassium
             }
             else if (node is ArrayInitializerNode)
             {
-                return
-                    ((ArrayInitializerNode) node).Value.Select(
-                        pair =>
-                            new KeyValuePair<HassiumObject, HassiumObject>(pair.Key is AstNode ? EvaluateNode((AstNode)(pair.Key)) : HassiumObject.ToHassiumObject(pair.Key),
-                                pair.Value is AstNode ? EvaluateNode((AstNode) (pair.Value)) : HassiumObject.ToHassiumObject(pair.Value)))
-                        .ToDictionary(x => x.Key, x => x.Value);
+                var ainode = ((ArrayInitializerNode) node);
+                var content = ainode.Value;
+                if (ainode.IsDictionary)
+                    return
+                        content.Select(
+                            pair =>
+                                new KeyValuePair<HassiumObject, HassiumObject>(
+                                    pair.Key is AstNode
+                                        ? EvaluateNode((AstNode) (pair.Key))
+                                        : HassiumObject.ToHassiumObject(pair.Key),
+                                    pair.Value is AstNode
+                                        ? EvaluateNode((AstNode) (pair.Value))
+                                        : HassiumObject.ToHassiumObject(pair.Value)))
+                            .ToDictionary(x => x.Key, x => x.Value);
+                else
+                    return new HassiumArray(content.Values.Select(x => x is AstNode ? EvaluateNode((AstNode)x) : x));
             }
             else if (node is MentalNode)
             {
@@ -636,30 +670,56 @@ namespace Hassium
             }
             else if (node is ArrayGetNode)
             {
-                var call = (ArrayGetNode)node;
-                HassiumDictionary theArray = null;
+                var call = (ArrayGetNode)(node);
                 var evaluated = GetVariable(call.Target.ToString());
-                if (evaluated is HassiumString)
-                    theArray = (HassiumDictionary) evaluated.ToString().Select((s, i) => new {s, i}).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
-                else if (evaluated is HassiumDictionary) theArray = ((HassiumDictionary) evaluated);
-                else if (evaluated is HassiumArray)
-                    theArray = new HassiumDictionary(
-                        ((HassiumArray) evaluated).Value.Select((s, i) => new {s, i})
-                            .ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s)));
+                if (evaluated is HassiumDictionary)
+                {
+                    var theArray = ((HassiumDictionary) evaluated);
+                    HassiumObject arid = null;
+
+                    if (call.Arguments.Children.Count > 0)
+                        arid = EvaluateNode(call.Arguments.Children[0]);
+
+                    if (arid == null)
+                        return theArray.Value.Last().Value;
+                    else
+                    {
+                        return theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString())
+                            ? theArray.Value.First(cur => cur.Key.ToString() == arid.ToString()).Value
+                            : theArray[arid];
+                    }
+                }
+                else if (evaluated is HassiumArray || evaluated is HassiumString)
+                {
+                    HassiumArray theArray = null;
+                    if (evaluated is HassiumString)
+                    {
+                        theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
+                    }
+                    theArray = ((HassiumArray) evaluated);
+
+                    int arid = -1;
+                    bool append = false;
+
+                    if (call.Arguments.Children.Count > 0)
+                        arid = EvaluateNode(call.Arguments.Children[0]);
+                    else
+                        append = true;
+
+                    if (append)
+                        return theArray.Value.Last();
+                    else
+                    {
+                        if (arid >= theArray.Value.Length)
+                            throw new IndexOutOfRangeException();
+
+                        return theArray[arid];
+                    }
+                }
                 else
                 {
-                    throw new Exception("The [] operator only applies to objects of type Array or String.");
+                    throw new Exception("The [] operator only applies to objects of type Array, Dictionary or String.");
                 }
-                HassiumObject arid = null;
-
-                if(call.Arguments.Children.Count > 0)
-                    arid = EvaluateNode(call.Arguments.Children[0]);
-
-                HassiumObject theValue = null;
-                if (arid == null) return theArray.Value.Last().Value;
-                else theValue = theArray.Value.First(x => x.Key.ToString() == arid.ToString()).Value;
-                if ((object)theValue is AstNode) return EvaluateNode((AstNode) (object)theValue);
-                else return theValue;
             }
             else if (node is ReturnNode)
             {

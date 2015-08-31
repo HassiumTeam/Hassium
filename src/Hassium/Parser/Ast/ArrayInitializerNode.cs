@@ -14,6 +14,8 @@ namespace Hassium.Parser.Ast
             get { return _value; }
         }
 
+        public bool IsDictionary { get; set; }
+
         public ArrayInitializerNode(Dictionary<object, object> items)
         {
             _value = items;
@@ -38,12 +40,14 @@ namespace Hassium.Parser.Ast
         {
             var ret = new ArrayInitializerNode();
             parser.ExpectToken(TokenType.Bracket, "[");
+            ret.IsDictionary = false;
 
             while (!parser.MatchToken(TokenType.Bracket, "]"))
             {              
                 var ct1 = ExpressionNode.Parse(parser);
                 if(parser.AcceptToken(TokenType.Identifier, ":"))
                 {
+                    ret.IsDictionary = true;
                     ret.AddItem(ct1, ExpressionNode.Parse(parser));
                 }
                 else

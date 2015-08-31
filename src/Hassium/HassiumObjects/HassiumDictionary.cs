@@ -35,7 +35,15 @@ namespace Hassium.HassiumObjects
         public HassiumObject this[HassiumObject key]
         {
             get { return Value.First(x => x.Key.ToString() == key.ToString()).Value; }
-            set { Value = Value.Select(x => x.Key.ToString() == key.ToString() ? new HassiumKeyValuePair(key, value) : x).ToList(); }
+            set
+            {
+                if (Value.Any(x => x.Key.ToString() == key.ToString()))
+                    Value =
+                        Value.Select(x => x.Key.ToString() == key.ToString() ? new HassiumKeyValuePair(key, value) : x)
+                            .ToList();
+                else
+                    Value.Add(new HassiumKeyValuePair(key, value));
+            }
         }
 
         public override string ToString()
