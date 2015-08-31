@@ -18,6 +18,7 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("copy", new InternalFunction(Copy));
             this.Attributes.Add("move", new InternalFunction(Move));
             this.Attributes.Add("rename", new InternalFunction(Rename));
+            this.Attributes.Add("delete", new InternalFunction(Delete));
         }
 
         public HassiumObject Create(HassiumObject[] args)
@@ -55,6 +56,12 @@ namespace Hassium.HassiumObjects
         public HassiumObject Rename(HassiumObject[] args)
         {
             Move(new HassiumObject[] { FullPath, Path.Combine(Path.GetDirectoryName(FullPath), args[0].ToString())});
+            return null;
+        }
+
+        public HassiumObject Delete(HassiumObject[] args)
+        {
+            Directory.Delete(FullPath);
             return null;
         }
     }

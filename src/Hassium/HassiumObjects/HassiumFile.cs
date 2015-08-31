@@ -22,8 +22,7 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("copy", new InternalFunction(Copy));
             this.Attributes.Add("move", new InternalFunction(Move));
             this.Attributes.Add("rename", new InternalFunction(Rename));
-            this.Attributes.Add("dfile", new InternalFunction(Dfile));
-            this.Attributes.Add("ddir", new InternalFunction(Ddir));
+            this.Attributes.Add("delete", new InternalFunction(Delete));
         }
 
         public HassiumObject Create(HassiumObject[] args)
@@ -75,18 +74,12 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject ReadLines(HassiumObject[] args)
         {
-            return File.ReadAllLines(args[0].HFile().FilePath);
+            return File.ReadAllLines(FilePath);
         }
 
-        public HassiumObject Dfile(HassiumObject[] args)
+        public HassiumObject Delete(HassiumObject[] args)
         {
-            File.Delete(args[0].HFile().FilePath);
-            return null;
-        }
-
-        public HassiumObject Ddir(HassiumObject[] args)
-        {
-            Directory.Delete(args[0].HFile().FilePath);
+            File.Delete(FilePath);
             return null;
         }
     }
