@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hassium
 {
-    public abstract class HassiumObject : object, IFunction
+    public class HassiumObject : object, IFunction
     {
         private readonly Dictionary<string, HassiumObject> _attributes;
 
@@ -16,13 +16,17 @@ namespace Hassium
             get { return _attributes; }
         }
 
-        protected HassiumObject()
+        public HassiumObject()
         {
             _attributes = new Dictionary<string, HassiumObject>();
         }
 
         public void SetAttribute(string name, HassiumObject value)
         {
+            if (value is HassiumFunction)
+            {
+                value = new HassiumMethod((HassiumFunction)value, this);
+            }
             _attributes[name] = value;
         }
 
@@ -31,7 +35,10 @@ namespace Hassium
             return _attributes[name];
         }
 
-        public abstract override string ToString();
+        public override string ToString()
+        {
+            return "";
+        }
 
         public virtual HassiumObject Invoke(HassiumObject[] args)
         {

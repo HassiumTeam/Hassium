@@ -100,6 +100,7 @@
     <Compile Include="HassiumObjects\HassiumNumber.cs" />
     <Compile Include="HassiumObjects\HassiumClient.cs" />
     <Compile Include="Parser\Ast\GetMemberNode.cs" />
+    <Compile Include="Interpreter\HassiumMethod.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

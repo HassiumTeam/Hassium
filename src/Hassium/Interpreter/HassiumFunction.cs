@@ -11,24 +11,24 @@ namespace Hassium
     /// </summary>
     public class HassiumFunction: HassiumObject
     {
-        private Interpreter interpreter;
-        private FuncNode funcNode;
-        private LocalScope localScope;
+        public readonly Interpreter Interpreter;
+        public readonly LocalScope LocalScope;
+        public readonly FuncNode FuncNode;
         public StackFrame stackFrame;
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, LocalScope localScope)
         {
-            this.interpreter = interpreter;
-            this.funcNode = funcNode;
-            this.localScope = localScope;
+            this.Interpreter = interpreter;
+            this.FuncNode = funcNode;
+            this.LocalScope = localScope;
             this.stackFrame = null;
         }
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame)
         {
-            this.interpreter = interpreter;
-            this.funcNode = funcNode;
-            this.localScope = stackFrame == null ? null : stackFrame.Scope;
+            this.Interpreter = interpreter;
+            this.FuncNode = funcNode;
+            this.LocalScope = stackFrame == null ? null : stackFrame.Scope;
             this.stackFrame = stackFrame;
         }
 
@@ -44,21 +44,21 @@ namespace Hassium
         /// <returns>The return value</returns>
         public override HassiumObject Invoke(HassiumObject[] args)
         {
-            if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(localScope);
+            if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(LocalScope);
 
-            interpreter.CallStack.Push(stackFrame);
-            for (int x = 0; x < funcNode.Parameters.Count; x++)
-                stackFrame.Locals[funcNode.Parameters[x]] = args[x];
+            Interpreter.CallStack.Push(stackFrame);
+            for (int x = 0; x < FuncNode.Parameters.Count; x++)
+                stackFrame.Locals[FuncNode.Parameters[x]] = args[x];
 
-            interpreter.ExecuteStatement(funcNode.Body);
+            Interpreter.ExecuteStatement(FuncNode.Body);
 
-            HassiumObject ret = interpreter.CallStack.Peek().ReturnValue;
+            HassiumObject ret = Interpreter.CallStack.Peek().ReturnValue;
             
-            interpreter.CallStack.Pop();
+            Interpreter.CallStack.Pop();
 
             if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
 
-            stackFrame = new StackFrame(localScope);
+            stackFrame = new StackFrame(LocalScope);
 
             return ret;
         }

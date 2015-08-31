@@ -22,6 +22,7 @@ namespace Hassium
         Lambda,
         Dot
     }
+
     public class Token
     {
         public TokenType TokenClass { get; private set; }
