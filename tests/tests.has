@@ -1,4 +1,4 @@
-$INCLUDE hatred.has$
+i$INCLUDE hatred.has$
 
 exitcode := 0;
 failed := 0;
@@ -12,7 +12,7 @@ func main()
 	numberFormatTests();
 	functionTests();
 	closureTest();
-	
+	objectTest ();
 	println();
 	if(failed = 0) println("Everything went good");
 	else println("Some tests failed.");
@@ -134,3 +134,29 @@ func closureTest() {
 	println("End of closures tests");
 	println();
 }
+
+func Person (name, age)
+{
+	ret := object ();
+	func getName () {
+		return this.name;
+	}
+
+	func getAge () {
+		return this.age;
+	}
+	ret.getName := getName;
+	ret.getAge := getAge;
+	ret.name := name;
+	ret.age := age;
+	return ret;
+}
+
+func objectTest () {
+	person := Person ("Reagan", 16);
+	assert (person.name = "Reagan", "person.name should equal Reagan");
+	assert (person.age = 16, "person.age should equal 16");
+	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
+	assert (person.getAge () = 16, "person.getAge () should equal 16");
+}
+
