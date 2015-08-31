@@ -33,7 +33,7 @@ namespace Hassium
 
         public abstract override string ToString();
 
-        public virtual HassiumObject Invoke(HassiumArray args)
+        public virtual HassiumObject Invoke(HassiumObject[] args)
         {
             return null;
         }
@@ -72,8 +72,6 @@ namespace Hassium
         {
             return ((HassiumArray)obj).Value.Cast<object>().ToArray();
         }
-
-        
 
         public static implicit operator Dictionary<HassiumObject, HassiumObject>(HassiumObject obj)
         {

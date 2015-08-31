@@ -10,7 +10,7 @@ namespace Hassium.Functions
 	public class MiscFunctions : ILibrary
 	{
 		[IntFunc("free")]
-		public static HassiumObject Free(HassiumArray args)
+		public static HassiumObject Free(HassiumObject[] args)
 		{
 			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString());
 			return null;
@@ -19,24 +19,24 @@ namespace Hassium.Functions
 		
 
 		[IntFunc("type")]
-		public static HassiumObject Type(HassiumArray args)
+		public static HassiumObject Type(HassiumObject[] args)
 		{
 			return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".") + 1);
 		}
 
 		[IntFunc("throw")]
-		public static HassiumObject Throw(HassiumArray args)
+		public static HassiumObject Throw(HassiumObject[] args)
 		{
 			throw new Exception(String.Join("", args.Cast<object>()));
 		}
 
 		[IntFunc("runtimecall")]
-		public static HassiumObject RuntimeCall(HassiumArray args)
+		public static HassiumObject RuntimeCall(HassiumObject[] args)
 		{
 			string fullpath = args[0].ToString();
 			string typename = fullpath.Substring(0, fullpath.LastIndexOf('.'));
 			string membername = fullpath.Split('.').Last();
-			object[] margs = args.Value.Skip(1).ToArray();
+			object[] margs = args.Skip(1).ToArray();
 			Type t = System.Type.GetType(typename);
 			if(t == null) throw new ArgumentException("The type '" + typename + "' doesn't exist.");
 			object instance = null;

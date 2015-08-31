@@ -42,7 +42,7 @@ namespace Hassium
         /// </summary>
         /// <param name="args">The list of arguments</param>
         /// <returns>The return value</returns>
-        public override HassiumObject Invoke(HassiumArray args)
+        public override HassiumObject Invoke(HassiumObject[] args)
         {
             if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(localScope);
 
@@ -70,7 +70,7 @@ namespace Hassium
         /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
         public static Func<HassiumObject> GetFuncVoid(HassiumObject internalFunction)
         {
-            return () => (internalFunction).Invoke(new HassiumArray());
+            return () => (internalFunction).Invoke(new HassiumObject[0]);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Hassium
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}"/></returns>
         public static Func<HassiumObject, HassiumObject> GetFunc1(HassiumObject internalFunction)
         {
-            return (arg1) => (internalFunction).Invoke(new HassiumArray());
+            return (arg1) => (internalFunction).Invoke(new HassiumObject[0]);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Hassium
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
         /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
-        public static Func<HassiumArray, HassiumObject> GetFunc1Arr(HassiumObject internalFunction)
+        public static Func<HassiumObject[], HassiumObject> GetFunc1Arr(HassiumObject internalFunction)
         {
             return (internalFunction).Invoke;
         }

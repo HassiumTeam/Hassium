@@ -160,7 +160,7 @@ namespace Hassium
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
-                        new HassiumFunction(this, fnode, scope).Invoke(new object[0]);
+                        new HassiumFunction(this, fnode, scope).Invoke(new HassiumObject[0]);
                         return;
                     }
                 }
@@ -191,7 +191,8 @@ namespace Hassium
                     var evaluated = GetVariable(call.Target.ToString());
                     if (evaluated is HassiumString)
                         theArray = evaluated.ToString().Select((s, i) => new { s, i }).ToDictionary(x => ToHassiumObject(x.i), x => ToHassiumObject(x.s));
-                    else if (evaluated is HassiumDictionary) theArray = ((HassiumDictionary)evaluated);
+                    else if (evaluated is HassiumDictionary)
+                        theArray = ((HassiumDictionary)evaluated);
                     else if (evaluated is HassiumArray)
                         theArray = new HassiumDictionary(
                             ((HassiumArray)evaluated).Value.Select((s, i) => new { s, i })
@@ -209,7 +210,8 @@ namespace Hassium
                         ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
                         : right;
 
-                    if (arid == null) theArray.Add(theArray.Count, theValue);
+                    if (arid == null)
+                        theArray.Add(theArray.Count, theValue);
                     else
                     {
                         foreach (var cur in theArray.Where(cur => cur.Key.ToString() == arid.ToString()))
@@ -220,6 +222,12 @@ namespace Hassium
                     }
 
                     SetVariable(call.Target.ToString(), new HassiumDictionary(theArray));
+                }
+                else if (node.Left is GetMemberNode)
+                {
+                    var accessor = node.Left as GetMemberNode;
+                    var target = EvaluateNode(accessor.Left);
+                    target.SetAttribute(accessor.Member, right);
                 }
                 else
                 {
@@ -518,34 +526,16 @@ namespace Hassium
             {
                 return new HassiumString(((StringNode)node).Value);
             }
+            else if (node is GetMemberNode)
+            {
+                var accessor = (GetMemberNode)node;
+                var target = EvaluateNode(accessor.Left);
+                return target.GetAttribute(accessor.Member);
+            }
             else if (node is BinOpNode)
             {
                 var bnode = (BinOpNode) node;
-                if (bnode.BinOp == BinaryOperation.Dot)
-                {
-                    var target = EvaluateNode(bnode.Left);
-                    var member = bnode.Right;
-                    if(member is FunctionCallNode)
-                    {
-                        var call = (FunctionCallNode) member;
-                        var arguments = new object[call.Arguments.Children.Count + 1];
-                        for (var x = 0; x < call.Arguments.Children.Count; x++)
-                        {
-                            arguments[x + 1] = EvaluateNode(call.Arguments.Children[x]);
-                            if (arguments[x + 1] is double && (((double)(arguments[x + 1])) % 1 == 0))
-                                arguments[x + 1] = (int)(double)arguments[x + 1];
-                        }
-                        arguments[0] = target;
-                        return
-                            target.GetAttribute(call.Target.ToString())
-                                .Invoke(arguments);
-                    }
-                    else
-                    {
-                        return target.GetAttribute(member.ToString());
-                    }
-                }
-                else return interpretBinaryOp(bnode);
+                return interpretBinaryOp(bnode);
             }
             else if (node is UnaryOpNode)
             {
@@ -584,7 +574,7 @@ namespace Hassium
                 if (target == null)
                     throw new Exception("Attempt to run a non-valid function!");
 
-                var arguments = new object[call.Arguments.Children.Count];
+                var arguments = new HassiumObject[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                 {
                     arguments[x] = EvaluateNode(call.Arguments.Children[x]);

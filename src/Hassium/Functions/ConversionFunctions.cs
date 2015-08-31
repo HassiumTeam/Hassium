@@ -7,7 +7,7 @@ namespace Hassium.Functions
 	public class ConversionFunctions : ILibrary
 	{
 		[IntFunc("tonum")]
-		public static HassiumObject ToNum(HassiumArray args)
+		public static HassiumObject ToNum(HassiumObject[] args)
 		{
 			double tmp = 0;
 			if (double.TryParse(args[0].ToString(), out tmp))
@@ -17,16 +17,16 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("tostr")]
-		public static HassiumObject ToStr(HassiumArray args)
+		public static HassiumObject ToStr(HassiumObject[] args)
 		{
 			if(args[0] is HassiumDictionary)
 			{
 				return "Array { " +
 					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
 			}
-			if(args[0] is HassiumArray)
+            if(args[0] is HassiumObject[])
 			{
-				return ((object[])(args[0]))
+                return ((HassiumObject[])(args[0]))
 						.Aggregate("Array { ",
 							(current, item) => current + ((item is HassiumArray ? ToStr(new[] { item }).ToString() : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
 			}
@@ -34,7 +34,7 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("tohex")]
-		public static HassiumObject ToHex(HassiumArray args)
+		public static HassiumObject ToHex(HassiumObject[] args)
 		{
 			try
 			{
@@ -47,7 +47,7 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("tobyte")]
-		public static HassiumObject ToByte(HassiumArray args)
+		public static HassiumObject ToByte(HassiumObject[] args)
 		{
 			try
 			{
@@ -60,13 +60,13 @@ namespace Hassium.Functions
 		}
 
 		[IntFunc("toarr")]
-		public static HassiumObject ToArr(HassiumArray args)
+		public static HassiumObject ToArr(HassiumObject[] args)
 		{
             return ((HassiumArray)args);
 		}
 
         [IntFunc("newarray")]
-        public static HassiumObject NewArray(HassiumArray args)
+        public static HassiumObject NewArray(HassiumObject[] args)
         {
             return new HassiumArray(new HassiumObject[Convert.ToInt32(((HassiumNumber)args[1]).Value)]);
         }

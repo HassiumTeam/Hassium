@@ -362,7 +362,7 @@ namespace Hassium
 
         private static AstNode ParsePostfixIncDec(Parser.Parser parser)
         {
-            var left = ParseMemberAccess(parser);
+			var left = ParseFunctionCall(parser);
             if (parser.AcceptToken(TokenType.MentalOperation, "++"))
             {
                 var varname = "";
@@ -399,20 +399,6 @@ namespace Hassium
             }
         }
 
-        private static AstNode ParseMemberAccess(Parser.Parser parser)
-        {
-            var left = ParseFunctionCall(parser);
-            if (parser.AcceptToken(TokenType.Dot, "."))
-            {
-                AstNode right = ParseMemberAccess(parser);
-                return new BinOpNode(BinaryOperation.Dot, left, right);
-            }
-            else
-            {
-                return left;
-            }
-        }
-
         private static AstNode ParseFunctionCall(Parser.Parser parser)
         {
             return ParseFunctionCall(parser, ParseTerm(parser));
@@ -428,13 +414,16 @@ namespace Hassium
             {
                 return ParseFunctionCall(parser, new ArrayGetNode(left, ArrayIndexerNode.Parse(parser)));
             }
+			else if (parser.AcceptToken(TokenType.Dot, "."))
+			{
+                Token ident = parser.ExpectToken(TokenType.Identifier);
+                return ParseFunctionCall (parser, new GetMemberNode (left, ident.Value.ToString ()));
+			}
             else
             {
                 return left;
             }
         }
-        
-        
 
         private static AstNode ParseTerm (Parser.Parser parser)
         {

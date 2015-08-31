@@ -16,18 +16,18 @@ namespace Hassium
             this.Attributes.Add("upfile", new InternalFunction(upfile));
         }
 
-        private HassiumObject dowstr(HassiumArray args)
+        private HassiumObject dowstr(HassiumObject[] args)
         {
             return new HassiumString(Value.DownloadString(((HassiumString)args[1]).Value));
         }
 
-        private HassiumObject dowfile(HassiumArray args)
+        private HassiumObject dowfile(HassiumObject[] args)
         {
             Value.DownloadFile(((HassiumString)args[1]).Value, ((HassiumString)args[2]).Value);
             return null;
         }
 
-        private HassiumObject upfile(HassiumArray args)
+        private HassiumObject upfile(HassiumObject[] args)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Value.Headers.Add("Content-Type", "binary/octet-stream");

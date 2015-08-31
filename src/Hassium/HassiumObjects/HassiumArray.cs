@@ -67,12 +67,12 @@ namespace Hassium
             return new HassiumArray(arr);
         }
 
-        private HassiumObject length(HassiumArray args)
+        private HassiumObject length(HassiumObject[] args)
         {
             return new HassiumNumber(this.Value.Length);
         }
 
-        private HassiumObject tostring(HassiumArray args)
+        private HassiumObject tostring(HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
             foreach (HassiumObject obj in this.Value)
