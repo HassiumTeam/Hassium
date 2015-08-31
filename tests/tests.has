@@ -135,28 +135,37 @@ func closureTest() {
 	println();
 }
 
-func Person (name, age)
-{
-	ret := object ();
-	func getName () {
-		return this.name;
-	}
 
-	func getAge () {
-		return this.age;
-	}
-	ret.getName := getName;
-	ret.getAge := getAge;
-	ret.name := name;
-	ret.age := age;
-	return ret;
-}
 
 func objectTest () {
+	println("Objects tests");
+	println();
+	
+	func Person (name, age)
+	{
+		ret := object ();
+		func getName () {
+			return this.name;
+		}
+	
+		func getAge () {
+			return this.age;
+		}
+		ret.getName := getName;
+		ret.getAge := getAge;
+		ret.name := name;
+		ret.age := age;
+		return ret;
+	}
+	
 	person := Person ("Reagan", 16);
 	assert (person.name = "Reagan", "person.name should equal Reagan");
 	assert (person.age = 16, "person.age should equal 16");
 	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
 	assert (person.getAge () = 16, "person.getAge () should equal 16");
+	
+	println();
+	println("End of objects tests");
+	println();
 }
 
