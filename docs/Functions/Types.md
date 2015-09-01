@@ -144,3 +144,57 @@ Property that represents how long the string is.
 ```
 println(args[0].length);
 ```
+
+## Date Class
+
+### number Date.year
+Returns the current year in number form.
+```
+date := new Date();
+println(date.year);
+```
+
+### number Date.month
+Returns the current month in number form.
+```
+date := new Date();
+println(date.month);
+```
+
+### number Date.day
+Returns the current day in number form.
+```
+date := new Date();
+println(date.day);
+```
+
+### number Date.hour
+Returns the current hour in number form.
+```
+date := new Date();
+println(date.hour);
+```
+
+### number Date.minute
+Returns the current minute in number form.
+```
+date := new Date();
+println(date.minute);
+```
+
+### number Date.second
+Returns the current second in number form.
+```
+date := new Date();
+println(date.second);
+```
+
+### bool Date.isLeapYear
+Returns true if it is a leap year, otherwise returns false.
+```
+date := new Date();
+if (date.isLeapYear)
+	println("It is a leap year");
+else
+	println("It is not a leap year");
+```
