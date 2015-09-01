@@ -13,8 +13,8 @@ namespace Hassium.HassiumObjects
             Attributes.Add("toUpper", new InternalFunction(toupper));
             Attributes.Add("begins", new InternalFunction(begins));
             Attributes.Add("ends", new InternalFunction(ends));
-            Attributes.Add("getat", new InternalFunction(getat));
-            Attributes.Add("substr", new InternalFunction(substr));
+            Attributes.Add("getAt", new InternalFunction(getat));
+            Attributes.Add("substring", new InternalFunction(substr));
             Attributes.Add("concat", new InternalFunction(concat));
             Attributes.Add("contains", new InternalFunction(contains));
             Attributes.Add("split", new InternalFunction(split));

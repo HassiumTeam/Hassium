@@ -18,6 +18,12 @@ namespace Hassium
             return new HassiumObject();
         }
 
+        [IntFunc("Date", true)]
+        public static HassiumObject Date(HassiumObject[] args)
+        {
+            return new HassiumDate(DateTime.Now);
+        }
+
         [IntFunc("TcpClient", true)]
         public static HassiumObject TcpClient(HassiumObject[] args)
         {
