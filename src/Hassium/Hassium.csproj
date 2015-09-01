@@ -112,6 +112,8 @@
     <Compile Include="HassiumObjects\Types\HassiumNumber.cs" />
     <Compile Include="HassiumObjects\Types\HassiumString.cs" />
     <Compile Include="HassiumObjects\IO\HassiumPath.cs" />
+    <Compile Include="HassiumObjects\Reflection\HassiumAssembly.cs" />
+    <Compile Include="HassiumObjects\Reflection\HassiumModule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -127,4 +129,7 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\Reflection\" />
+  </ItemGroup>
 </Project>
