@@ -44,8 +44,6 @@
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
-    <Compile Include="HassiumObjects\HassiumDate.cs" />
-    <Compile Include="HassiumObjects\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\HassiumFile.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
@@ -96,14 +94,21 @@
     <Compile Include="Parser\Ast\ReturnNode.cs" />
     <Compile Include="Parser\Ast\MentalNode.cs" />
     <Compile Include="HassiumObjects\HassiumObject.cs" />
-    <Compile Include="HassiumObjects\HassiumString.cs" />
-    <Compile Include="HassiumObjects\HassiumBool.cs" />
-    <Compile Include="HassiumObjects\HassiumArray.cs" />
-    <Compile Include="HassiumObjects\HassiumDictionary.cs" />
-    <Compile Include="HassiumObjects\HassiumNumber.cs" />
-    <Compile Include="HassiumObjects\HassiumClient.cs" />
     <Compile Include="Parser\Ast\GetMemberNode.cs" />
     <Compile Include="Interpreter\HassiumMethod.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumClient.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumTcpClient.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumNetworkStream.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumStreamReader.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumStreamWriter.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumSocket.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumArray.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumBool.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumDate.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumDictionary.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumDirectory.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumNumber.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumString.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -118,4 +123,8 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="HassiumObjects\Networking\" />
+    <Folder Include="HassiumObjects\Types\" />
+  </ItemGroup>
 </Project>

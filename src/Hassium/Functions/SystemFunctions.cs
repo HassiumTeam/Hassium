@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
@@ -28,7 +29,7 @@ namespace Hassium.Functions
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = false;
             process.Start();
-
+                
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
@@ -54,7 +55,7 @@ namespace Hassium.Functions
             }
         }
 
-        [IntFunc("dateparse")]
+        [IntFunc("dateParse")]
         public static HassiumObject DateParse(HassiumObject[] args)
         {
             return args.Length == 2 ? new HassiumDate(DateTime.ParseExact(args[0].ToString(), args[1].ToString(), CultureInfo.InvariantCulture)) : new HassiumDate(DateTime.Parse(args[0].ToString()));
@@ -69,10 +70,17 @@ namespace Hassium.Functions
                     args[0].HNum().ValueInt, args[1].HNum().ValueInt, args[2].HNum().ValueInt));
         }
 
-        [IntFunc("currentuser")]
+        [IntFunc("currentUser")]
         public static HassiumObject CurrentUser(HassiumObject[] args)
         {
             return Environment.UserName;
+        }
+
+        [IntFunc("sleep")]
+        public static HassiumObject Sleep(HassiumObject[] args)
+        {
+            Thread.Sleep(Convert.ToInt32(args[0].ToString()));
+            return null;
         }
 
         [IntFunc("eval")]

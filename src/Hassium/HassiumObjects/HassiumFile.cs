@@ -21,7 +21,12 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("copy", new InternalFunction(Copy));
             this.Attributes.Add("move", new InternalFunction(Move));
             this.Attributes.Add("rename", new InternalFunction(Rename));
-            this.Attributes.Add("delete", new InternalFunction(Delete));
+            this.Attributes.Add("deleteFile", new InternalFunction(DeleteFile));
+            this.Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory));
+            this.Attributes.Add("getDirectory", new InternalFunction(GetDirectory));
+            this.Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
+            this.Attributes.Add("getFiles", new InternalFunction(GetFiles));
+            this.Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
         }
             
 
@@ -45,7 +50,7 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject Exists(HassiumObject[] args)
         {
-            return File.Exists(args[0].ToString());
+            return File.Exists(args[0].ToString()) || Directory.Exists(args[0].ToString());
         }
 
         public HassiumObject Rename(HassiumObject[] args)
@@ -82,10 +87,37 @@ namespace Hassium.HassiumObjects
             return File.ReadAllLines(args[0].ToString());
         }
 
-        public HassiumObject Delete(HassiumObject[] args)
+        public HassiumObject DeleteFile(HassiumObject[] args)
         {
             File.Delete(args[0].ToString());
             return null;
+        }
+
+        public HassiumObject DeleteDirectory(HassiumObject[] args)
+        {
+            Directory.Delete(args[0].ToString());
+            return null;
+        }
+
+        public HassiumObject GetDirectory(HassiumObject[] args)
+        {
+            return Directory.GetCurrentDirectory();
+        }
+
+        public HassiumObject SetDirectory(HassiumObject[] args)
+        {
+            Directory.SetCurrentDirectory(args[0].ToString());
+            return null;
+        }
+
+        public HassiumObject GetFiles(HassiumObject[] args)
+        {
+            return Directory.GetFiles(args[0].ToString());
+        }
+
+        public HassiumObject GetDirectories(HassiumObject[] args)
+        {
+            return Directory.GetDirectories(args[0].ToString());
         }
     }
 }

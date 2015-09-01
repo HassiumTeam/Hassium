@@ -10,9 +10,9 @@ namespace Hassium.HassiumObjects
         public HassiumClient(WebClient value)
         {
             this.Value = value;
-            this.Attributes.Add("downstr", new InternalFunction(downstr));
-            this.Attributes.Add("downfile", new InternalFunction(downfile));
-            this.Attributes.Add("upfile", new InternalFunction(upfile));
+            this.Attributes.Add("downloadString", new InternalFunction(downstr));
+            this.Attributes.Add("downloadFile", new InternalFunction(downfile));
+            this.Attributes.Add("uploadFile", new InternalFunction(upfile));
         }
 
         private HassiumObject downstr(HassiumObject[] args)

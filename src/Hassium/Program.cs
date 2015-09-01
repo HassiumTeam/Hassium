@@ -103,9 +103,9 @@ namespace Hassium
 					options.Code += File.ReadAllText(line.Substring(9, line.Substring(9).LastIndexOf("$"))) + options.Code;
 				else if (line.StartsWith("$IMPORT"))
 				{
-					if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
-					foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
-							CurrentInterpreter.SetVariable(entry.Key, entry.Value, true);
+                    if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
+                        foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
+                            CurrentInterpreter.SetVariable(entry.Key, entry.Value, true);
 				}
 				else if (line.StartsWith("$DEFINE"))
 				{
