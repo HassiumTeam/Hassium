@@ -24,6 +24,12 @@ namespace Hassium
             return new HassiumTcpClient(new System.Net.Sockets.TcpClient());
         }
 
+        [IntFunc("Array", true)]
+        public static HassiumObject Array(HassiumObject[] args)
+        {
+            return new HassiumArray(new HassiumObject[Convert.ToInt32(args[0].ToString())]);
+        }
+
         [IntFunc("StreamWriter", true)]
         public static HassiumObject StreamWriter(HassiumObject[] args)
         {
