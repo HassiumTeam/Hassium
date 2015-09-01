@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.IO;
+using Hassium.HassiumObjects.Types;
 using Hassium.Parser.Ast;
 
 namespace Hassium

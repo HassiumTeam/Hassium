@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Net;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.IO;
+using Hassium.HassiumObjects.Networking;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium
 {
@@ -9,7 +12,7 @@ namespace Hassium
         [IntFunc("WebClient", true)]
         public static HassiumObject WebClient(HassiumObject[] args)
         {
-            return new HassiumClient(new WebClient());
+            return new HassiumWebClient(new WebClient());
         }
 
         [IntFunc("Object", true)]

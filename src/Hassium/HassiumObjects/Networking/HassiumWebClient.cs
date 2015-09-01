@@ -1,13 +1,14 @@
 ﻿using System.Net;
 using System.Text;
+using Hassium.HassiumObjects.Types;
 
-namespace Hassium.HassiumObjects
+namespace Hassium.HassiumObjects.Networking
 {
-    public class HassiumClient: HassiumObject
+    public class HassiumWebClient: HassiumObject
     {
         public WebClient Value { get; private set; }
 
-        public HassiumClient(WebClient value)
+        public HassiumWebClient(WebClient value)
         {
             this.Value = value;
             this.Attributes.Add("downloadString", new InternalFunction(downstr));

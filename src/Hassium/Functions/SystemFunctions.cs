@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.Functions
 {

@@ -44,7 +44,10 @@
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
-    <Compile Include="HassiumObjects\HassiumFile.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ClassNode.cs" />
@@ -96,11 +99,9 @@
     <Compile Include="HassiumObjects\HassiumObject.cs" />
     <Compile Include="Parser\Ast\GetMemberNode.cs" />
     <Compile Include="Interpreter\HassiumMethod.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumClient.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumWebClient.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumTcpClient.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumNetworkStream.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumStreamReader.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumStreamWriter.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumSocket.cs" />
     <Compile Include="HassiumObjects\Types\HassiumArray.cs" />
     <Compile Include="HassiumObjects\Types\HassiumBool.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="HassiumObjects\Types\HassiumDictionary.cs" />
     <Compile Include="HassiumObjects\Types\HassiumNumber.cs" />
     <Compile Include="HassiumObjects\Types\HassiumString.cs" />
-    <Compile Include="HassiumObjects\HassiumDirectory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -123,8 +123,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="HassiumObjects\Networking\" />
-    <Folder Include="HassiumObjects\Types\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

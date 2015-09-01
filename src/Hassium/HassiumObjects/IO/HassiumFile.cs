@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace Hassium.HassiumObjects
+namespace Hassium.HassiumObjects.IO
 {
     public class HassiumFile : HassiumObject
     {

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
-namespace Hassium.HassiumObjects
+namespace Hassium.HassiumObjects.Types
 {
     public class HassiumDate : HassiumObject
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 using Hassium.Parser.Ast;
 
 namespace Hassium

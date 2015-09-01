@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
-using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumTcpClient: HassiumObject
     {

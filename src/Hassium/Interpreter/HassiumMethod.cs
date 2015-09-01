@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium
 {

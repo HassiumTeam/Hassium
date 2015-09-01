@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
-using Hassium.HassiumObjects;
+﻿using System.IO;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.IO
 {
     public class HassiumStreamWriter: HassiumObject
     {

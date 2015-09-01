@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Hassium.HassiumObjects.IO;
+using Hassium.HassiumObjects.Networking;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects
 {
@@ -151,9 +154,9 @@ namespace Hassium.HassiumObjects
             return (HassiumBool)this;
         }
 
-        public HassiumClient HClient()
+        public HassiumWebClient HClient()
         {
-            return (HassiumClient)this;
+            return (HassiumWebClient)this;
         }
 
         public HassiumDictionary HDict()

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.Functions
 {

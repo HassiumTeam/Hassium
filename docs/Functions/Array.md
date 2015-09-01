@@ -1,84 +1,55 @@
 # Array functions	
-## LINQ-like functions
-## TODO: Write proper text here
-	# Hi! I'm here to show you the array functions of Hassium.
-	# Let's start by defining an array :
-	theArray := ["abc", 123, "def", "abdef", 456, "qwerty"];
-	# As you can see, the syntax is pretty simple, it's just like this :
-	# variable_name := [element, element, element, element];
-	
-	# the array_op function, similar to LINQ Aggregate function
-	# performs an operation on each element of the array
-	# for example, here it will do x + y for each element
-	# so abc + 123 + def + abdef + 456 + qwerty
-	println(theArray.op([x, y] => x + y));
-	# should print: abc123defabdef456qwerty
-	
-	# the array_select function, similar to LINQ Select
-	# will perform an operation on each element of the array
-	# and return the resulting elements
-	# here, it returns an array of the length of the elements
-	# abc (3), 123 (3), def (3), abdef (5), 456 (3), qwerty (6)
-	printarr(theArray.select(x => tostr(x).length));
-	# should print: Array { 3 3 3 5 3 6 }
-	
-	# the array_where function, similar to LINQ Where
-	# will return all the elements that satisfies the specified condition
-	# here, all elements that contains the letter "e"
-	printarr(theArray.where(x => tostr(x).contains("e")));
-	# should print: Array { def abdef qwerty }
-	
-	# the array_any function, similar to LINQ Any
-	# similar to Contains, il will return true if there's any element
-	# in the array that satisfies the specified condition
-	# here it checks if there's any element in the array whose length is
-	# greater than 7
-	println(theArray.any(x => tostr(x).length > 7));
-	# should print: False (because there isn't any element with length > 7)
-	
-	# the array_first function, similar to LINQ First
-	# if no argument are specified, it returns the first element on an array
-	# otherwise it returns the first element to satisfy a condition
-	# here, the first element to contains the letter "d"
-	println(theArray.first(x => tostr(x).contains("d")));
-	# should print: def
-	
-	# the array_last function, opposite of array_first, similar to LINQ Last
-	# if no argument are specified, it returns the last element on an array
-	# otherwise it returns the last element to satisfy a condition
-	# here, the last element to contains the letter "f"
-	println(theArray.last(x => tostr(x).contains("f")));
-	# should print: abdef
-	
-	# the array_zip function, a bit more complicated, similar to LINQ Zip
-	# it acts upon two arrays and processes each element in two series
-	# together, so you can handle collections in parallel.
-	# here, we have two arrays of five numbers each.
-	# so the array_zip function, as with the array_op function, will
-	# call the lambda function with x for the first array and
-	# y for the second array and add the two elements
-	# so it will do 1+6, 2+7, 3+8, 4+9 and 5+10 and return another array
-	# containing the results.
-	test1 := [1, 2, 3, 4, 5];
-	test2 := [6, 7, 8, 9, 10];
-	printarr(test1.zip(test2, [x, y] => x + y));
-	# should print: Array { 7 9 11 13 15 }
-	
-	# DICTIONARIES
-	# you can define a dictionary by using the syntax [key: value, key: value]
-	theDict := ["abc" : "def", 123 : "jkl", "lol" : "qwerty"];
-	theDict["test"] := "lolol";
-	theDict[] := "troll"; # if you use the [] operator with nothing inside, it appends at the end of the array
-	println(theDict["abc"]);
-	println(theDict[120 + 3]);
-	println(theDict[]); # if you use the [] operator with nothing inside, it takes the last element
-	printarr(theDict);
-	foreach(v in theDict) # if you use one var in foreach with a dictionary, it converts the dictionary to an array of values
-	{
-		println(v);
-	}
-	
-	foreach([key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
-	{
-		println("Key: " + key + "   Value: " + value;
-	}
+
+## LINQ functions
+
+### ```object array.op(func[x, y] f)```
+Performs an operation on each element of the array and return the final result.
+```go
+totalSum := theArray.op([x, y] => x + y);
+``` 
+Here, ```totalSum``` is the sum of all the elements of ```theArray```.
+
+### ```array array.select(func[x] f)```
+Projects each element of a sequence into a new form.
+```go
+elementsLength := theArray.select(x => tostr(x).length);
+```
+In this example, ```elementsLength``` is an array containing all the lengths of the elements of ```theArray```.
+
+### ```array array.where(func[x] f)```
+Filters a sequence of values based on a predicate.
+```go
+whereResult := theArray.where(x => tostr(x).contains("e"));
+```
+Here, ```whereResult``` is an array containing all the elements of ```theArray``` that contains the letter **e**.
+
+### ```bool array.any(func[x] f)```
+Similar to the contains() function, it determines if any element of the array satisfies a contidion.
+```go
+containsGreaterThan7 := theArray.any(x => tostr(x).length > 7);
+```
+This example checks if ```theArray``` contains any element whose length is greater than 7.
+
+### ```object array.first(func[x] f)```
+Returns the first element of the array that matches the specified condition.
+```go
+firstOne := theArray.first(x => tostr(x).contains("d")));
+```
+In the code above, ```firstOne``` is the first element of ```theArray``` that contains the letter **d**.
+
+### ```object array.last(func[x] f)```
+Opposite of the ```array.first``` function, returns the last element of the array that matches the specified condition.
+```go
+lastOne := theArray.last(x => tostr(x).contains("f")));
+```
+In the code above, ```lastOne``` is the last element of ```theArray``` that contains the letter **f**.
+
+
+### ```array array.zip(array other, func[x, y] f)```
+Applies a specified function to the elements of two sequences, producing a sequence of results.
+```go
+test1 := [1, 2, 3, 4, 5];
+test2 := [6, 7, 8, 9, 10];
+result := test1.zip(test2, [x, y] => x + y);
+```
+Here, the ```zip``` function applies the function ```x + y``` to the elements of test1 and test2. ```x``` corresponds to test1 and ```y``` corresponds to test2 (it will do ```1 + 6```, ```2 + 7```, ```3 + 8```, etc). So, after running the code, ```result``` will be an array containing containing the sum of the elements of test1 and test2.

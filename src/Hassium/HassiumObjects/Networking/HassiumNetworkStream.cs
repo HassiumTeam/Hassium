@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using Hassium.HassiumObjects;
+﻿using System.Net.Sockets;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumNetworkStream: HassiumObject
     {

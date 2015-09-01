@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
-namespace Hassium   
+namespace Hassium.HassiumObjects.IO   
 {
     public class HassiumStreamReader: HassiumObject
     {

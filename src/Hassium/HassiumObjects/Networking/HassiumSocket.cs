@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Sockets;
-using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumSocket: HassiumObject
     {

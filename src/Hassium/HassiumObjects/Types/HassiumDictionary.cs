@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Hassium.HassiumObjects
+namespace Hassium.HassiumObjects.Types
 {
     public class HassiumDictionary: HassiumObject, IEnumerable
     {

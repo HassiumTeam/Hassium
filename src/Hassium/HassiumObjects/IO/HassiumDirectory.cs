@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
+using Hassium.HassiumObjects.Types;
 
-namespace Hassium.HassiumObjects
+namespace Hassium.HassiumObjects.IO
 {
     public class HassiumDirectory : HassiumObject
     {

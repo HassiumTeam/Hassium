@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium
 {
