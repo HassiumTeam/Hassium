@@ -6,7 +6,7 @@ namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumNetworkStream: HassiumStream
     {
-        public new NetworkStream Value
+        public NetworkStream Value
         {
             get { return (NetworkStream) base.Value; }
             set { base.Value = value; }
@@ -14,7 +14,9 @@ namespace Hassium.HassiumObjects.Networking
 
         public HassiumNetworkStream(NetworkStream s) : base(s)
         {
+            this.Value = s;
         }
+
     }
 }
 

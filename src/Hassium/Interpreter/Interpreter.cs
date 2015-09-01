@@ -29,6 +29,7 @@ namespace Hassium
             {"false", new HassiumBool(false)},
             {"File", new HassiumFile()},
             {"Directory", new HassiumDirectory()},
+            {"Path", new HassiumPath()},
             {"null", null},
         };
 
