@@ -35,33 +35,39 @@ namespace Hassium
             
             while (HasChar())
             {
-                EatWhiteSpaces();
+                ReadToken();
+            }
 
-                var current = PeekChar();
-                var next1 = HasChar() ? PeekChar(1) : '\0';
-                var next2 = HasChar(1) ? PeekChar(2) : '\0';
+            return result;
+        }
 
-                
-                if("0123456789".Contains(current))
-                {
-                    Add(ScanNumber());
-                    continue;
-                }
-                if(char.IsLetter(current) || "_".Contains(current))
-                {
-                    Add(ScanIdentifier());
-                    continue;
-                }
+        private void ReadToken()
+        {
+            EatWhiteSpaces();
 
+            var current = PeekChar();
+            var next1 = HasChar() ? PeekChar(1) : '\0';
+            var next2 = HasChar(1) ? PeekChar(2) : '\0';
+
+            if ("0123456789".Contains(current))
+            {
+                Add(ScanNumber());
+            }
+            else if (char.IsLetter(current) || "_".Contains(current))
+            {
+                Add(ScanIdentifier());
+            }
+            else
+            {
                 switch (current)
                 {
                     case '@':
                         if (next1 == '"' || next1 == '\'')
-                            Add(ScanString(true));
+                            ScanString(true);
                         break;
                     case '"':
                     case '\'':
-                        Add(ScanString());
+                        ScanString();
                         break;
                     case '$':
                         ScanComment(false);
@@ -181,12 +187,11 @@ namespace Hassium
                         ReadChar();
                         break;
                 }
-
-                EatWhiteSpaces();
             }
 
-            return result;
+            EatWhiteSpaces();
         }
+
         /// <summary>
         /// Scans Comment
         /// </summary>
@@ -203,7 +208,7 @@ namespace Hassium
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="isVerbatim">If set to <c>true</c> the string is verbatim (no escape sequences).</param>
-        private Token ScanString(bool isVerbatim = false)
+        private void ScanString(bool isVerbatim = false)
         {
             var quote = ReadChar();
             if (isVerbatim) quote = ReadChar();
@@ -215,6 +220,28 @@ namespace Hassium
             while (HasChar() && (isEscaping || PeekChar() != quote))
             {
                 var currentChar = ReadChar();
+                if(currentChar == '#' && !isEscaping && !isVerbatim && PeekChar() == '{')
+                {
+                    ReadChar();
+                    if (PeekChar() == '}')
+                    {
+                        ReadChar();
+                        continue;
+                    }
+                    Add(new Token(TokenType.String, stringBuilder.ToString()));
+                    stringBuilder.Clear();
+                    isEscaping = false;
+                    isUnicode = false;
+                    currentUnicodeChar = "";
+                    Add(new Token(TokenType.Operation, '+'));
+                    Add(new Token(TokenType.Parentheses, '('));
+                    while (HasChar() && PeekChar() != '}')
+                        ReadToken();
+                    ReadChar();
+                    Add(new Token(TokenType.Parentheses, ')'));
+                    Add(new Token(TokenType.Operation, '+'));
+                    continue;
+                }
                 if (isUnicode)
                 {
                     if (char.IsLetter(currentChar) || IsHexChar(currentChar)) currentUnicodeChar += currentChar;
@@ -244,6 +271,9 @@ namespace Hassium
                         case '"':
                             stringBuilder.Append('"');
                             break;
+                        case '#':
+                            stringBuilder.Append('#');
+                            break;
                         case 'x':
                             isUnicode = true;
                             break;
@@ -264,7 +294,7 @@ namespace Hassium
             if(HasChar()) ReadChar();
             else throw new Exception("Unfinished string at position " + position);
 
-            return new Token(TokenType.String, stringBuilder);
+            Add(new Token(TokenType.String, stringBuilder));
         }
         private static bool IsHexChar(char c)
         {
