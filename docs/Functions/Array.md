@@ -33,14 +33,14 @@ This example checks if ```theArray``` contains any element whose length is great
 ### ```object array.first(func[x] f)```
 Returns the first element of the array that matches the specified condition.
 ```go
-firstOne := theArray.first(x => tostr(x).contains("d")));
+firstOne := theArray.first(x => tostr(x).contains("d"));
 ```
 In the code above, ```firstOne``` is the first element of ```theArray``` that contains the letter **d**.
 
 ### ```object array.last(func[x] f)```
 Opposite of the ```array.first``` function, returns the last element of the array that matches the specified condition.
 ```go
-lastOne := theArray.last(x => tostr(x).contains("f")));
+lastOne := theArray.last(x => tostr(x).contains("f"));
 ```
 In the code above, ```lastOne``` is the last element of ```theArray``` that contains the letter **f**.
 

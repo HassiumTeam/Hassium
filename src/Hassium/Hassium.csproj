@@ -46,6 +46,8 @@
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumFileStream.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumStream.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
     <Compile Include="Lexer\IFunction.cs" />

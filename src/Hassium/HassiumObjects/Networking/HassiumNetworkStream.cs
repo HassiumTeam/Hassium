@@ -1,14 +1,19 @@
-﻿using System.Net.Sockets;
+﻿using System.IO;
+using System.Net.Sockets;
+using Hassium.HassiumObjects.IO;
 
 namespace Hassium.HassiumObjects.Networking
 {
-    public class HassiumNetworkStream: HassiumObject
+    public class HassiumNetworkStream: HassiumStream
     {
-        public NetworkStream Value { get; private set; }
-
-        public HassiumNetworkStream(NetworkStream value)
+        public new NetworkStream Value
         {
-            this.Value = value;
+            get { return (NetworkStream) base.Value; }
+            set { base.Value = value; }
+        }
+
+        public HassiumNetworkStream(NetworkStream s) : base(s)
+        {
         }
     }
 }

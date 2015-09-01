@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
@@ -42,19 +43,25 @@ namespace Hassium
         [IntFunc("StreamWriter", true)]
         public static HassiumObject StreamWriter(HassiumObject[] args)
         {
-            return new HassiumStreamWriter(new System.IO.StreamWriter(((HassiumNetworkStream)args[0]).Value));
+            return new HassiumStreamWriter(new System.IO.StreamWriter(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("StreamReader", true)]
         public static HassiumObject StreamReader(HassiumObject[] args)
         {
-            return new HassiumStreamReader(new System.IO.StreamReader(((HassiumNetworkStream)args[0]).Value));
+            return new HassiumStreamReader(new System.IO.StreamReader(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("NetworkStream", true)]
         public static HassiumObject NetworkStream(HassiumObject[] args)
         {
             return new HassiumNetworkStream(new System.Net.Sockets.NetworkStream(((HassiumSocket)args[0]).Value));
+        }
+
+        [IntFunc("FileStream", true)]
+        public static HassiumObject FileStream(HassiumObject[] args)
+        {
+            return new HassiumFileStream(new FileStream(args[0].HString().Value, FileMode.OpenOrCreate));
         }
     }
 }
