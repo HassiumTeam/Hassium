@@ -106,9 +106,9 @@
     <Compile Include="HassiumObjects\Types\HassiumBool.cs" />
     <Compile Include="HassiumObjects\Types\HassiumDate.cs" />
     <Compile Include="HassiumObjects\Types\HassiumDictionary.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\Types\HassiumNumber.cs" />
     <Compile Include="HassiumObjects\Types\HassiumString.cs" />
+    <Compile Include="HassiumObjects\HassiumDirectory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

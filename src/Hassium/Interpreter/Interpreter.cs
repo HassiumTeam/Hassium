@@ -26,6 +26,7 @@ namespace Hassium
             {"true", new HassiumBool(true)},
             {"false", new HassiumBool(false)},
             {"File", new HassiumFile()},
+            {"Directory", new HassiumDirectory()},
             {"null", null},
         };
 

@@ -6,14 +6,9 @@ namespace Hassium.HassiumObjects
 {
     public class HassiumDirectory : HassiumObject
     {
-        public string FullPath { get; set; }
-
-        public bool Exists { get { return Directory.Exists(FullPath); } }
-
-        public HassiumDirectory(string fpath)
+        public HassiumDirectory()
         {
-            FullPath = fpath;
-            this.Attributes.Add("exists", new InternalFunction(x => Exists, true));
+            this.Attributes.Add("exists", new InternalFunction(Exists));
             this.Attributes.Add("create", new InternalFunction(Create));
             this.Attributes.Add("copy", new InternalFunction(Copy));
             this.Attributes.Add("move", new InternalFunction(Move));
@@ -21,20 +16,25 @@ namespace Hassium.HassiumObjects
             this.Attributes.Add("delete", new InternalFunction(Delete));
         }
 
+        public HassiumObject Exists(HassiumObject[] args)
+        {
+            return new HassiumBool(Directory.Exists(args[0]));
+        }
+
         public HassiumObject Create(HassiumObject[] args)
         {
-            Directory.CreateDirectory(FullPath);
+            Directory.CreateDirectory(args[0]);
             return null;
         }
 
         public HassiumObject Copy(HassiumObject[] args)
         {
-            var dest = args[0].ToString();
+            var dest = args[1].ToString();
 
             if (dest[dest.Length - 1] != Path.DirectorySeparatorChar)
                 dest += Path.DirectorySeparatorChar;
             if (!Directory.Exists(dest)) Directory.CreateDirectory(dest);
-            foreach (string Element in Directory.GetFileSystemEntries(FullPath))
+            foreach (string Element in Directory.GetFileSystemEntries(args[0]))
             {
                 if (Directory.Exists(Element))
                     Copy(new HassiumObject[] {Element, Path.Combine(dest, Path.GetFileName(Element))});
@@ -47,21 +47,21 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject Move(HassiumObject[] args)
         {
-            Copy(new HassiumObject[]{FullPath, args[0].ToString()});
-            Directory.Delete(FullPath, true);
-            FullPath = args[0].ToString();
+            Copy(new HassiumObject[]{args[0], args[1].ToString()});
+            Directory.Delete(args[0], true);
+            args[0] = args[1].ToString();
             return null;
         }
 
         public HassiumObject Rename(HassiumObject[] args)
         {
-            Move(new HassiumObject[] { FullPath, Path.Combine(Path.GetDirectoryName(FullPath), args[0].ToString())});
+            Move(new HassiumObject[] { args[0], Path.Combine(Path.GetDirectoryName(args[0]), args[1].ToString())});
             return null;
         }
 
         public HassiumObject Delete(HassiumObject[] args)
         {
-            Directory.Delete(FullPath);
+            Directory.Delete(args[0]);
             return null;
         }
     }
