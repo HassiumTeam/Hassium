@@ -1,7 +1,0 @@
-$SUMMARY: Defines a program with a function that takes in two arguments and returns the multiplied result$
-
-func mult(x, y) {
-	return x * y;
-}
-
-print(mult(6, 8));

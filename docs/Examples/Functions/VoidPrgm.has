@@ -1,8 +1,0 @@
-$SUMMARY: Defines a function that returns void$
-
-func sayHello () {
-	print("Hello, World!");
-}
-
-sayHello();
-sayHello();
