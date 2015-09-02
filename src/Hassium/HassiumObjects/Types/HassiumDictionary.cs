@@ -49,11 +49,15 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return Convert.ToString(Value);
+            return "Array { " +
+                   string.Join(", ", Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
         }
-        public HassiumDictionary(Dictionary<object, object> value) : this(value.Select(x => new HassiumKeyValuePair((HassiumObject)x.Key, (HassiumObject)x.Value)).ToList())
+
+        public HassiumDictionary(Dictionary<object, object> value)
+            : this(value.Select(x => new HassiumKeyValuePair((HassiumObject) x.Key, (HassiumObject) x.Value)).ToList())
         {
         }
+
         public HassiumDictionary(IDictionary value) : this(value.Keys.Cast<object>()
                     .Zip(value.Values.Cast<object>(), (a, b) => new KeyValuePair<object, object>(a, b))
                     .Select(x => new HassiumKeyValuePair((HassiumObject)x.Key, (HassiumObject)x.Value)).ToList())

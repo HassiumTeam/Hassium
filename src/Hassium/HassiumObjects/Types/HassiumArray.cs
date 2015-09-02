@@ -21,17 +21,20 @@ namespace Hassium.HassiumObjects.Types
             this.Attributes.Add("length", new InternalFunction(x => Value.Length, true));
             this.Attributes.Add("tostring", new InternalFunction(tostring));
 
+            this.Attributes.Add("add", new InternalFunction(Add));
+            this.Attributes.Add("remove", new InternalFunction(Remove));
+
             this.Attributes.Add("resize", new InternalFunction(ResizeArr));
             this.Attributes.Add("join", new InternalFunction(ArrayJoin));
             this.Attributes.Add("reverse", new InternalFunction(ArrayReverse));
-            this.Attributes.Add("op", new InternalFunction(ArrayOp));
+            this.Attributes.Add("contains", new InternalFunction(ArrayContains));
 
+            this.Attributes.Add("op", new InternalFunction(ArrayOp));
             this.Attributes.Add("select", new InternalFunction(ArraySelect));
             this.Attributes.Add("where", new InternalFunction(ArrayWhere));
             this.Attributes.Add("any", new InternalFunction(ArrayAny));
             this.Attributes.Add("first", new InternalFunction(ArrayFirst));
             this.Attributes.Add("last", new InternalFunction(ArrayLast));
-            this.Attributes.Add("contains", new InternalFunction(ArrayContains));
             this.Attributes.Add("zip", new InternalFunction(ArrayZip));
 
             _value = value.Select(ToHassiumObject).ToList();
@@ -45,13 +48,18 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return Convert.ToString(Value);
+            return "Array { " + string.Join(", ", Value.Select(x => x.ToString())) + " }";
         }
 
         public HassiumObject Add(HassiumObject[] args)
         {
             _value.Add(args[0]);
             return null;
+        }
+
+        public HassiumObject Remove(HassiumObject[] args)
+        {
+            return _value.Remove(args[0]);
         }
 
         public HassiumArray() : this(new List<HassiumObject>())
@@ -80,13 +88,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (HassiumObject obj in this.Value)
-            {
-                sb.Append(obj.ToString());
-            }
-
-            return sb.ToString();
+            return this.ToString();
         }
 
         public HassiumObject ResizeArr(HassiumObject[] args)
@@ -107,7 +109,7 @@ namespace Hassium.HassiumObjects.Types
             string separator = "";
             if (args.Length > 1) separator = args[0].ToString();
 
-            return objarr.Aggregate((a, b) => a + separator + b);
+            return string.Join(separator, objarr.Select(x => x.ToString()));
         }
 
         public static HassiumObject ArrayFill(HassiumObject[] args)

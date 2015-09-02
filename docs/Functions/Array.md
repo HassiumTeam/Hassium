@@ -1,5 +1,52 @@
 # Array functions	
 
+## Base functions
+
+### ```number array.length```
+*(property)*
+Returns the number of elements in the array.
+```go
+println("There is ", myArray.length, " elements in the array.");
+```
+
+### ```string array.tostring()```
+Converts the array to a readable string.= with the form ```Array { item1, item2, item3 }```
+```go
+println(theArray.tostring());
+```
+
+### ```void array.add(object item)```
+Adds the specified item to the array.
+```go
+theArray.add(myItem);
+```
+
+### ```bool array.remove(object item)```
+Removes the specified item to the array. Returns true if the item has successfully been removed, otherwise false.
+```go
+theArray.remove(myItem);
+```
+
+### ```array array.resize(number length)```
+Resizes the array and returns it.
+```go
+newArray := oldArray.resize(5);
+```
+
+### ```string array.join(string separator [default: ""])```
+Concatenates the elements of the array using a specified separator (empty by default).
+```go
+println(theArray.join(","));
+```
+
+### ```bool array.contains(object item)```
+Determines if the array contains the specified item.
+```go
+if (thePeople.contains("George Clooney")) {
+	println("George Clooney's inside!");
+}
+```
+
 ## LINQ functions
 
 ### ```object array.op(func[x, y] f)```
@@ -12,21 +59,23 @@ Here, ```totalSum``` is the sum of all the elements of ```theArray```.
 ### ```array array.select(func[x] f)```
 Projects each element of a sequence into a new form.
 ```go
-elementsLength := theArray.select(x => tostr(x).length);
+cities := employees.select(x => x.city);
 ```
-In this example, ```elementsLength``` is an array containing all the lengths of the elements of ```theArray```.
+In this example, ```cities``` is an array containing the city of each employee.
 
 ### ```array array.where(func[x] f)```
 Filters a sequence of values based on a predicate.
 ```go
-whereResult := theArray.where(x => tostr(x).contains("e"));
+newYorkers := students.where(x => x.city = "New York");
 ```
-Here, ```whereResult``` is an array containing all the elements of ```theArray``` that contains the letter **e**.
+Here, ```newYorkers``` is an array containing all the students that live in New York.
 
 ### ```bool array.any(func[x] f)```
 Similar to the contains() function, it determines if any element of the array satisfies a contidion.
 ```go
-containsGreaterThan7 := theArray.any(x => tostr(x).length > 7);
+if (theArray.any(x => tostr(x).length < 7)) {
+	println("The numbers must be greater than 7.");
+}
 ```
 This example checks if ```theArray``` contains any element whose length is greater than 7.
 
@@ -48,8 +97,11 @@ In the code above, ```lastOne``` is the last element of ```theArray``` that cont
 ### ```array array.zip(array other, func[x, y] f)```
 Applies a specified function to the elements of two sequences, producing a sequence of results.
 ```go
-test1 := [1, 2, 3, 4, 5];
-test2 := [6, 7, 8, 9, 10];
+test1 := ["A", "B", "C", "D", "E"];
+test2 := [1, 2, 3, 4, 5];
 result := test1.zip(test2, [x, y] => x + y);
 ```
-Here, the ```zip``` function applies the function ```x + y``` to the elements of test1 and test2. ```x``` corresponds to test1 and ```y``` corresponds to test2 (it will do ```1 + 6```, ```2 + 7```, ```3 + 8```, etc). So, after running the code, ```result``` will be an array containing containing the sum of the elements of test1 and test2.
+Here, the ```zip``` function applies the function ```x + y``` to the elements of test1 and test2. ```x``` corresponds to test1 and ```y``` corresponds to test2 (it will do ```A + 1```, ```B + 2```, etc). So after running the code, result is 
+```go
+["A1", "B2", "C3", "D4", "E5"];
+```

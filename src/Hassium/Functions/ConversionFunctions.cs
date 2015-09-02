@@ -21,23 +21,7 @@ namespace Hassium.Functions
 		[IntFunc("tostr")]
 		public static HassiumObject ToStr(HassiumObject[] args)
 		{
-			if(args[0] is HassiumDictionary)
-			{
-				return "Array { " +
-					   string.Join(", ", args[0].HDict().Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
-			}
-			if(args[0] is HassiumArray)
-			{
-			    return "Array { " +
-			           string.Join(", ",
-			               args[0].HArray()
-			                   .Value.Select(
-			                       item =>
-			                           ((item is HassiumArray
-			                               ? ToStr(new[] {item}).ToString()
-			                               : (item.ToString().Replace("\"", "\\\"")))))) + " }";
-			}
-			return String.Join("", args.Cast<object>());
+		    return string.Join("", args.Select(x => x.ToString()));
 		}
 
 		[IntFunc("tohex")]
