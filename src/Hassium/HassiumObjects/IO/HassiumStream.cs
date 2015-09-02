@@ -1,4 +1,3 @@
-﻿
 
 using System.IO;
 
@@ -43,4 +42,3 @@ namespace Hassium.HassiumObjects.IO
         }
     }
 }
-

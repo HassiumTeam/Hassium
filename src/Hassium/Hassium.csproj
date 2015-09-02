@@ -115,6 +115,12 @@
     <Compile Include="HassiumObjects\Reflection\HassiumAssembly.cs" />
     <Compile Include="HassiumObjects\Reflection\HassiumModule.cs" />
     <Compile Include="HassiumObjects\Text\HassiumEncoding.cs" />
+    <Compile Include="HassiumObjects\Text\HassiumStringBuilder.cs" />
+    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListener.cs" />
+    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerContext.cs" />
+    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerResponse.cs" />
+    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerRequest.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumIOStream.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -124,7 +130,7 @@
       <Properties>
         <Policies>
           <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
-          <CSharpFormattingPolicy IndentSwitchBody="True" IndentBlocksInsideExpressions="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" NewLineBeforeConstructorInitializerColon="NewLine" NewLineAfterConstructorInitializerColon="SameLine" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
         </Policies>
       </Properties>
     </MonoDevelop>
@@ -133,5 +139,6 @@
   <ItemGroup>
     <Folder Include="HassiumObjects\Reflection\" />
     <Folder Include="HassiumObjects\Text\" />
+    <Folder Include="HassiumObjects\Networking\HTTP\" />
   </ItemGroup>
 </Project>

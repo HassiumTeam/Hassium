@@ -2,9 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
+using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium
@@ -63,6 +65,18 @@ namespace Hassium
         public static HassiumObject FileStream(HassiumObject[] args)
         {
             return new HassiumFileStream(new FileStream(args[0].HString().Value, FileMode.OpenOrCreate));
+        }
+
+        [IntFunc("StringBuilder", true)]
+        public static HassiumObject StringBuilder(HassiumObject[] args)
+        {
+            return new HassiumStringBuilder(new StringBuilder());
+        }
+
+        [IntFunc("HttpListener", true)]
+        public static HassiumObject HttpListener(HassiumObject[] args)
+        {
+            return new HassiumHttpListener(new System.Net.HttpListener());
         }
     }
 }
