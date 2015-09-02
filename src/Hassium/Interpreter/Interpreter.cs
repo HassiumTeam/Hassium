@@ -673,12 +673,31 @@ namespace Hassium.Interpreter
             {
                 var call = (FunctionCallNode)node;
 
-                IFunction target = target = EvaluateNode(call.Target);
+                IFunction target = null;
 
-                if ((!(call.Target is MemberAccess) && !HasVariable(call.Target.ToString())) || (target as IFunction) == null)
+
+                bool dontEval = false;
+
+                switch (call.Target.ToString())
                 {
-                    throw new ParseException("Attempt to run a non-valid function", node);
+                    case "free":
+                        dontEval = true;
+                        target = new InternalFunction(args =>
+                        {
+                            FreeVariable(args[0].ToString(), node);
+                            return null;
+                        });
+                        break;
+                    default:
+                        if ((!(call.Target is MemberAccess) && !HasVariable(call.Target.ToString())))
+                        {
+                            throw new ParseException("Attempt to run a non-valid function", node);
+                        }
+                        target = EvaluateNode(call.Target);
+                        break;
                 }
+
+                
 
                 if(target is InternalFunction && (target as InternalFunction).IsConstructor)
                     throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
@@ -686,10 +705,10 @@ namespace Hassium.Interpreter
                 var arguments = new HassiumObject[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
                 {
-                    arguments[x] = EvaluateNode(call.Arguments.Children[x]);
+                    arguments[x] = dontEval ? new HassiumString(call.Arguments.Children[x].ToString()) : EvaluateNode(call.Arguments.Children[x]);
                 }
                 inFunc++;
-                var ret = target.Invoke(arguments);
+                HassiumObject ret = target.Invoke(arguments);
                 if (returnFunc)
                     returnFunc = false;
                 inFunc--;

@@ -120,18 +120,48 @@ namespace Hassium.Functions
         {
             switch (color)
             {
-                case "red":
-                    return ConsoleColor.Red;
-                case "yellow":
-                    return ConsoleColor.Yellow;
-                case "green":
-                    return ConsoleColor.Green;
-                case "blue":
-                    return ConsoleColor.Blue;
-                case "white":
-                    return ConsoleColor.White;
                 case "black":
                     return ConsoleColor.Black;
+
+                case "blue":
+                    return ConsoleColor.Blue;
+                case "darkBlue":
+                    return ConsoleColor.DarkBlue;
+
+                case "green":
+                    return ConsoleColor.Green;
+                case "darkGreen":
+                    return ConsoleColor.DarkGreen;
+
+                case "red":
+                    return ConsoleColor.Red;
+                case "darkRed":
+                    return ConsoleColor.DarkRed;
+
+                case "magenta":
+                    return ConsoleColor.Magenta;
+                case "darkMagenta":
+                    return ConsoleColor.DarkMagenta;
+
+                case "yellow":
+                    return ConsoleColor.Yellow;
+                case "darkYellow":
+                    return ConsoleColor.DarkYellow;
+
+                case "gray":
+                    return ConsoleColor.Gray;
+                case "darkGray":
+                    return ConsoleColor.DarkGray;
+
+                case "cyan":
+                    return ConsoleColor.Cyan;
+                case "darkCyan":
+                    return ConsoleColor.DarkCyan;
+                
+                
+                case "white":
+                    return ConsoleColor.White;
+               
                 default:
                     throw new Exception("Color is not valid!");
             }

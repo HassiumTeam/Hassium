@@ -29,35 +29,40 @@ pause();
 println("Proceeding");
 ```
 
-### ```void setForeground(string color)```
-Sets the forground color to the string argument.
+### ```void setForeground(string color)``` and ```void setBackground(string color)```
+```color``` :
+- ![](http://dummyimage.com/16x16/000000/fff.png&text=+) black
+- ![](http://dummyimage.com/16x16/0000ff/fff.png&text=+) blue
+- ![](http://dummyimage.com/16x16/000080/fff.png&text=+) darkBlue
+- ![](http://dummyimage.com/16x16/00ff00/fff.png&text=+) green
+- ![](http://dummyimage.com/16x16/008000/fff.png&text=+) darkGreen
+- ![](http://dummyimage.com/16x16/ff0000/fff.png&text=+) red
+- ![](http://dummyimage.com/16x16/800000/fff.png&text=+) darkRed
+- ![](http://dummyimage.com/16x16/ff00ff/fff.png&text=+) magenta
+- ![](http://dummyimage.com/16x16/800080/fff.png&text=+) darkMagenta
+- ![](http://dummyimage.com/16x16/ffff00/fff.png&text=+) yellow
+- ![](http://dummyimage.com/16x16/808000/fff.png&text=+) darkYellow
+- ![](http://dummyimage.com/16x16/c0c0c0/fff.png&text=+) gray
+- ![](http://dummyimage.com/16x16/808080/fff.png&text=+) darkGray
+- ![](http://dummyimage.com/16x16/00ffff/fff.png&text=+) cyan
+- ![](http://dummyimage.com/16x16/008080/fff.png&text=+) darkCyan
+- ![](http://dummyimage.com/16x16/ffffff/fff.png&text=+) white
+
+Sets the foreground/background color to the string argument.
 ```
 setForeground("red");
-println("I am red!");
-setForeground("blue");
-println("I am blue!");
-```
-
-### ```void setBackground(string color)```
-Sets the background color to the string argument.
-```
-setBackground("red");
 println("I am red!");
 setBackground("blue");
 println("I am blue!");
 ```
 
-### ```string getForeground()```
-Gets the current foreground color as string.
+### ```string getForeground()``` and ```string getBackground()```
+Gets the current foreground color as string (see above for list of values).
 ```
-println("The current color is: ", getForeground());
+println("The current foreground color is: ", getForeground());
+println("The current background color is: ", getBackground());
 ```
 
-### ```string getBackground()```
-Gets the current background color as string.
-```
-println("The current color is: ", getBackground());
-```
 
 ### ```void setPosition(number left, number top)```
 Sets the cursor position to the number coordinates passed.
@@ -97,6 +102,24 @@ beep(4, 500);
 ## Math Functions
 
 ### ```string hash(string algo, string text)```
+```algo``` :
+- ```3DES``` or ```TripleDES```
+- ```AES```
+- ```DES```
+- ```DSA```
+- ```ECDH```
+- ```HMAC```
+- ```HMACMD5```
+- ```MD5```
+- ```RC2```
+- ```Rijndael```
+- ```RIPEMD160```
+- ```RSA```
+- ```SHA``` or ```SHA1```
+- ```SHA256```
+- ```SHA384```
+- ```SHA512```
+
 Hashes the text with the specified algorithm and returns the hash.
 ```
 text := "hello";
@@ -107,13 +130,15 @@ println("sha1 is: ", hash("sha1", text));
 ### ```number pow(number base, number power)```
 Raises the base to the power and returns it.
 ```
-pow(4, 2); # Produces 16
+result := pow(4, 2); # Produces 16
+result := 4 ** 2; # Produces 16 too
 ```
 
 ### ```number sqrt(number square)```
 Returns the square root of the square number given.
 ```
-sqrt(16) # Produces 4
+result := sqrt(16); # Produces 4
+result := 16 // 2; # Produces 4 too
 ```
 
 ### ```number abs(number num)```
@@ -127,7 +152,7 @@ println(abs(num));
 ### ```void free(variable var)```
 Removes the variable from the current scope.
 ```
-a := "a";
+a := "abc";
 println(a);
 free(a);
 println(a); # Raises a variable not found exception

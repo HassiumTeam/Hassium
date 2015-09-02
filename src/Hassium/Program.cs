@@ -88,13 +88,16 @@ namespace Hassium
 		private static void printErr(string str, ParseException e)
 		{
 			var idx = e.Position;
-		    bool windowsline = str.Contains("\r\n");
-			int lower = str.Substring(0, idx + 1).LastIndexOf(windowsline ? "\r\n" : "\n") + 1;
-			int upper = str.Substring(idx).IndexOf(windowsline ? "\r\n" : "\n") + idx;
+			string newline = "";
+			if (str.Contains("\r\n")) newline = "\r\n";
+			else if (str.Contains("\r")) newline = "\r";
+			else newline = "\n";
+			int lower = str.Substring(0, idx + 1).LastIndexOf(newline, StringComparison.Ordinal) + newline.Length;
+			int upper = str.Substring(idx).IndexOf(newline) + idx;
 			string res = str.Substring(lower, upper - lower);
 			string trimd = res.Trim();
 			Console.WriteLine("Error at position " + idx + ", line " +
-							  (str.Substring(0, lower).Count(x => x == '\n') + 1) + " column " + (idx - lower + 1) + ": " +
+							  (str.Substring(0, lower).Split(new []{newline}, StringSplitOptions.None).Count(x => !string.IsNullOrWhiteSpace(x)) + 1) + " column " + (idx - lower + 1) + ": " +
 							  e.Message);
 			Console.WriteLine("   " + trimd);
 			Console.WriteLine(new string(' ', 3 + (idx - lower - (res.Length - trimd.Length))) + '^');

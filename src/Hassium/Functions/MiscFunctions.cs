@@ -11,13 +11,6 @@ namespace Hassium.Functions
 {
 	public class MiscFunctions : ILibrary
 	{
-		[IntFunc("free")]
-		public static HassiumObject Free(HassiumObject[] args)
-		{
-			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString(), null);
-			return null;
-		}
-
 		[IntFunc("type")]
 		public static HassiumObject Type(HassiumObject[] args)
 		{
