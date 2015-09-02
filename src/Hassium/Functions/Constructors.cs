@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
@@ -89,6 +90,15 @@ namespace Hassium.Functions
         public static HassiumObject BinaryReader(HassiumObject[] args)
         {
             return new HassiumBinaryReader(new System.IO.BinaryReader(((HassiumStream)args[0]).Value));
+        }
+
+        [IntFunc("Random", true)]
+        public static HassiumObject Random(HassiumObject[] args)
+        {
+            if (args.Length > 0)
+                return new HassiumRandom(new System.Random(((HassiumNumber)args[0]).ValueInt));
+            else
+                return new HassiumRandom(new System.Random());
         }
     }
 }
