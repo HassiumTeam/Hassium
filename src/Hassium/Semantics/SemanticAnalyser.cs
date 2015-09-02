@@ -1,7 +1,7 @@
-using System;
+using Hassium.Parser;
 using Hassium.Parser.Ast;
 
-namespace Hassium
+namespace Hassium.Semantics
 {
 	public class SemanticAnalyser
 	{

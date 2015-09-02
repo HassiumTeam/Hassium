@@ -1,9 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Hassium.HassiumObjects;
+using Hassium.Semantics;
 
-namespace Hassium
+namespace Hassium.Interpreter
 {
     public class StackFrame
     {

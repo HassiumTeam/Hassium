@@ -4,7 +4,7 @@ namespace Hassium.Parser.Ast
     {
         public string Value { get; private set; }
 
-        public StringNode(string value)
+        public StringNode(int position, string value) : base(position)
         {
             Value = value;
         }

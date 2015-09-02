@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -17,7 +18,7 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public LambdaFuncNode(List<string> paramaters, AstNode body)
+        public LambdaFuncNode(int position, List<string> paramaters, AstNode body) : base(position)
         {
             Parameters = paramaters;
             Children.Add(body);
@@ -25,6 +26,8 @@ namespace Hassium.Parser.Ast
 
         public static AstNode Parse(Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "lambda");
             parser.ExpectToken(TokenType.Parentheses, "(");
 
@@ -41,12 +44,12 @@ namespace Hassium.Parser.Ast
 
             if (parser.AcceptToken(TokenType.EndOfLine)) parser.ExpectToken(TokenType.EndOfLine);
 
-            return new LambdaFuncNode(result, body);
+            return new LambdaFuncNode(pos, result, body);
         }
 
         public static explicit operator FuncNode (LambdaFuncNode funcNode)
         {
-            return new FuncNode("", funcNode.Parameters, funcNode.Body);
+            return new FuncNode(funcNode.Position, "", funcNode.Parameters, funcNode.Body);
         }
     }
 }

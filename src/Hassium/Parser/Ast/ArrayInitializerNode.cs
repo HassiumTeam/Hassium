@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -16,14 +17,13 @@ namespace Hassium.Parser.Ast
 
         public bool IsDictionary { get; set; }
 
-        public ArrayInitializerNode(Dictionary<object, object> items)
+        public ArrayInitializerNode(int position, Dictionary<object, object> items) : base(position)
         {
             _value = items;
         }
 
-        public ArrayInitializerNode()
+        public ArrayInitializerNode(int position) : this(position, new Dictionary<object, object>())
         {
-            _value = new Dictionary<object, object>();
         }
 
         public void AddItem(object item)
@@ -38,7 +38,7 @@ namespace Hassium.Parser.Ast
 
         public static ArrayInitializerNode Parse(Parser parser)
         {
-            var ret = new ArrayInitializerNode();
+            var ret = new ArrayInitializerNode(parser.codePos);
             parser.ExpectToken(TokenType.Bracket, "[");
             ret.IsDictionary = false;
 

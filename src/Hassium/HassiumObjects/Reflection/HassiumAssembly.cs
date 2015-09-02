@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Hassium.HassiumObjects;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Reflection
 {
     public class HassiumAssembly: HassiumObject
     {

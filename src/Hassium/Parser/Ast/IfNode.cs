@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class IfNode: AstNode
@@ -24,15 +26,11 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public IfNode(AstNode predicate, AstNode body)
+        public IfNode(int position, AstNode predicate, AstNode body) : this(position, predicate, body, new CodeBlock(position))
         {
-         
-            this.Children.Add(predicate);
-            this.Children.Add(body);
-            this.Children.Add(new CodeBlock());
         }
 
-        public IfNode(AstNode predicate, AstNode body, AstNode elseBody)
+        public IfNode(int position, AstNode predicate, AstNode body, AstNode elseBody) : base(position)
         {
             this.Children.Add(predicate);
             this.Children.Add(body);
@@ -41,6 +39,8 @@ namespace Hassium.Parser.Ast
 
         public static AstNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "if");
             parser.ExpectToken(TokenType.Parentheses, "(");
             AstNode predicate = ExpressionNode.Parse(parser);
@@ -49,10 +49,10 @@ namespace Hassium.Parser.Ast
             if (parser.AcceptToken(TokenType.Identifier, "else"))
             {
                 AstNode elseBody = StatementNode.Parse(parser);
-                return new IfNode(predicate, ifBody, elseBody);
+                return new IfNode(parser.codePos, predicate, ifBody, elseBody);
             }
 
-            return new IfNode(predicate, ifBody);
+            return new IfNode(pos, predicate, ifBody);
         }
     }
 }

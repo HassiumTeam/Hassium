@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class WhileNode: AstNode
@@ -24,15 +26,11 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public WhileNode(AstNode predicate, AstNode body)
+        public WhileNode(int position, AstNode predicate, AstNode body) : this(position, predicate, body, new CodeBlock(position))
         {
-
-            Children.Add(predicate);
-            Children.Add(body);
-            Children.Add(new CodeBlock());
         }
 
-        public WhileNode(AstNode predicate, AstNode body, AstNode elseBody)
+        public WhileNode(int position, AstNode predicate, AstNode body, AstNode elseBody) : base(position)
         {
             Children.Add(predicate);
             Children.Add(body);
@@ -41,6 +39,8 @@ namespace Hassium.Parser.Ast
 
         public static AstNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "while");
             parser.ExpectToken(TokenType.Parentheses, "(");
             AstNode predicate = ExpressionNode.Parse(parser);
@@ -49,10 +49,10 @@ namespace Hassium.Parser.Ast
             if (parser.AcceptToken(TokenType.Identifier, "else"))
             {
                 AstNode elseBody = StatementNode.Parse(parser);
-                return new WhileNode(predicate, whileBody, elseBody);
+                return new WhileNode(pos, predicate, whileBody, elseBody);
             }
 
-            return new WhileNode(predicate, whileBody);
+            return new WhileNode(pos, predicate, whileBody);
         }
     }
 }

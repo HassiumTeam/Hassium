@@ -1,9 +1,15 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
+using Hassium.Lexer;
+using Hassium.Parser;
+using Hassium.Semantics;
 
 namespace Hassium
 {
@@ -29,35 +35,69 @@ namespace Hassium
 			public static string Code = "";
 		}
 
-		public static Interpreter CurrentInterpreter = null;
+		public static Interpreter.Interpreter CurrentInterpreter = null;
 
 		public static void Main(string[] args)
 		{
-			CurrentInterpreter = new Interpreter();
+			CurrentInterpreter = new Interpreter.Interpreter();
 			preformSetUp(args);
 
-			List<Token> tokens = new Lexer(options.Code).Tokenize();
-			if (options.Debug)
-				Debug.PrintTokens(tokens);
-			Parser.Parser hassiumParser = new Parser.Parser(tokens);
-			AstNode ast = hassiumParser.Parse();
-			CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
-			CurrentInterpreter.Code = ast;
+			
 
-			if (disableTryCatch) CurrentInterpreter.Execute();
+			if (disableTryCatch)
+			{
+				List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
+				if (options.Debug)
+					Debug.Debug.PrintTokens(tokens);
+				Parser.Parser hassiumParser = new Parser.Parser(tokens);
+				AstNode ast = hassiumParser.Parse();
+				CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+				CurrentInterpreter.Code = ast;
+				CurrentInterpreter.Execute();
+			}
 			else
 			{
 				try
 				{
+					List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
+					if (options.Debug)
+						Debug.Debug.PrintTokens(tokens);
+					Parser.Parser hassiumParser = new Parser.Parser(tokens);
+					AstNode ast = hassiumParser.Parse();
+					CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+					CurrentInterpreter.Code = ast;
 					CurrentInterpreter.Execute();
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("There has been an error. Message: " + e.Message);
-					Console.WriteLine("Stack Trace: " + e.StackTrace);
+					Console.WriteLine();
+					if (e is ParseException)
+					{
+						printErr(options.Code, (ParseException) e);
+					}
+					else
+					{
+						Console.WriteLine("There has been an error. Message: " + e.Message);
+					}
+					Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
 					Environment.Exit(-1);
 				}
 			}
+		}
+
+		private static void printErr(string str, ParseException e)
+		{
+			var idx = e.Position;
+			str = str.Replace("\r\n", "\n");
+			int lower = str.Substring(0, idx + 1).LastIndexOf('\n') + 1;
+			int upper = str.Substring(idx).IndexOf('\n') + idx;
+			string res = str.Substring(lower, upper - lower);
+			string trimd = res.Trim();
+			Console.WriteLine("Error at position " + idx + ", line " +
+							  (str.Substring(0, lower).Count(x => x == '\n') + 1) + " column " + (idx - lower + 1) + ": " +
+							  e.Message);
+			Console.WriteLine("   " + trimd);
+			Console.WriteLine(new string(' ', 3 + (idx - lower - (res.Length - trimd.Length))) + '^');
 		}
 
 		private static string[] shiftArray(string[] args, int startIndex = 1)
@@ -65,7 +105,7 @@ namespace Hassium
 			string[] result = new string[args.Length];
 
 			for (int x = startIndex; x < args.Length; x++)
-				result[x - startIndex] += args[x].ToString();
+				result[x - startIndex] += args[x];
 
 			return result;
 		}
@@ -81,12 +121,12 @@ namespace Hassium
 			{
 				options.Debug = true;
 				options.FilePath = args[1];
-				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args, 2)), true);
+				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args, 2)), null, true);
 			}
 			else
 			{
 				options.FilePath = args[0];
-				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args)), true);
+				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args)), null, true);
 			}
 
 			Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
@@ -104,9 +144,9 @@ namespace Hassium
 					options.Code += File.ReadAllText(line.Substring(9, line.Substring(9).LastIndexOf("$"))) + options.Code;
 				else if (line.StartsWith("$IMPORT"))
 				{
-                    if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
-                        foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
-                            CurrentInterpreter.SetVariable(entry.Key, entry.Value, true);
+					if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
+						foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$"))))
+							CurrentInterpreter.SetVariable(entry.Key, entry.Value, null, true);
 				}
 				else if (line.StartsWith("$DEFINE"))
 				{

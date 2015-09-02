@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text;
-using Hassium.HassiumObjects;
+﻿using System.Text;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Text
 {
     public class HassiumEncoding: HassiumObject
     {

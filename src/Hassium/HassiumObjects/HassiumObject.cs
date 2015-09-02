@@ -5,6 +5,8 @@ using System.Linq;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
+using Hassium.Lexer;
 
 namespace Hassium.HassiumObjects
 {

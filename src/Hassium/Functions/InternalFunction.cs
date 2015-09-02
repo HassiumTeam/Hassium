@@ -1,7 +1,7 @@
 using System;
 using Hassium.HassiumObjects;
 
-namespace Hassium
+namespace Hassium.Functions
 {
     public delegate HassiumObject HassiumFunctionDelegate (HassiumObject[] arguments);
 

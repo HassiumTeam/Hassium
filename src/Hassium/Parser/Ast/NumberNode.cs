@@ -4,7 +4,7 @@ namespace Hassium.Parser.Ast
     {
         public double Value { private set; get; }
 
-        public NumberNode (double value)
+        public NumberNode (int position, double value) : base(position)
         {
             Value = value;
         }

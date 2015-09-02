@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class StatementNode: AstNode

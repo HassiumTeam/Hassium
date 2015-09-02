@@ -11,9 +11,12 @@ using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
+using Hassium.Lexer;
+using Hassium.Parser;
 using Hassium.Parser.Ast;
+using Hassium.Semantics;
 
-namespace Hassium
+namespace Hassium.Interpreter
 {
     /// <summary>
     /// Interpreter.
@@ -43,7 +46,7 @@ namespace Hassium
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Hassium.Interpreter"/> class.
+        /// Initializes a new instance of the <see cref="Interpreter"/> class.
         /// </summary>
         public Interpreter(bool forcemain = true)
         {
@@ -60,7 +63,7 @@ namespace Hassium
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Hassium.Interpreter"/> class.
+        /// Initializes a new instance of the <see cref="Interpreter"/> class.
         /// </summary>
         /// <param name="symbolTable">Symbol table.</param>
         /// <param name="code">Code.</param>
@@ -72,7 +75,7 @@ namespace Hassium
             LoadInternalFunctions();
         }
 
-        public HassiumObject GetVariable(string name)
+        public HassiumObject GetVariable(string name, AstNode node)
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
@@ -80,7 +83,7 @@ namespace Hassium
                 return CallStack.Peek().Locals[name];
             if (Globals.ContainsKey(name))
                 return Globals[name];
-            else throw new ArgumentException("The variable '" + name + "' doesn't exist.");
+            else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
         }
 
         public bool HasVariable(string name, bool onlyglobal = false)
@@ -91,42 +94,42 @@ namespace Hassium
                   (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)));
         }
 
-        public void SetGlobalVariable(string name, HassiumObject value)
+        public void SetGlobalVariable(string name, HassiumObject value, AstNode node)
         {
             if (Constants.ContainsKey(name))
-                throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
+                throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
 
             Globals[name] = value;
         }
 
-        public void SetLocalVariable(string name, HassiumObject value)
+        public void SetLocalVariable(string name, HassiumObject value, AstNode node)
         {
             if (Constants.ContainsKey(name))
-                throw new ArgumentException("Can't change the value of the internal constant '" + name + "'.");
+                throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
 
             if (CallStack.Count > 0)
                 CallStack.Peek().Locals[name] = value;
         }
 
-        public void SetVariable(string name, HassiumObject value, bool forceglobal = false, bool onlyexist = false)
+        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false, bool onlyexist = false)
         {
             if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
-                SetLocalVariable(name, value);
+                SetLocalVariable(name, value, node);
             else
-                SetGlobalVariable(name, value);
+                SetGlobalVariable(name, value, node);
         }
 
-        public void FreeVariable(string name, bool forceglobal = false)
+        public void FreeVariable(string name, AstNode node, bool forceglobal = false)
         {
-            if(Constants.ContainsKey(name)) throw new ArgumentException("Can't delete internal constant '" + name + "'.");
+            if(Constants.ContainsKey(name)) throw new ParseException("Can't delete internal constant '" + name + "'.", node);
             if (forceglobal)
             {
-                if(!Globals.ContainsKey(name)) throw new ArgumentException("The global variable '" + name + "' doesn't exist.");
+                if(!Globals.ContainsKey(name)) throw new ParseException("The global variable '" + name + "' doesn't exist.", node);
                 Globals.Remove(name);
             }
             else
             {
-                if(!HasVariable(name)) throw new ArgumentException("The variable '" + name + "' doesn't exist.");
+                if(!HasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
                 if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
                     CallStack.Peek().Locals.Remove(name);
                 else
@@ -146,7 +149,7 @@ namespace Hassium
                 {
                     var fnode = ((FuncNode)node);
                     var scope = SymbolTable.ChildScopes[fnode.Name];
-                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope));
+                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope), node);
                 }
             }
 
@@ -166,6 +169,7 @@ namespace Hassium
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
+                        inFunc++;
                         new HassiumFunction(this, fnode, scope).Invoke(new HassiumObject[0]);
                         return;
                     }
@@ -193,7 +197,14 @@ namespace Hassium
                 if (node.Left is ArrayGetNode)
                 {
                     var call = (ArrayGetNode)(node.Left);
-                    var evaluated = GetVariable(call.Target.ToString());
+
+                    if (!call.Target.CanBeIndexed)
+                        throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+
+                    if(!call.Target.CanBeModified)
+                        throw new ParseException("The specified target cannot be modified.", node);
+
+                    var evaluated = EvaluateNode(call.Target);
                     if (evaluated is HassiumDictionary)
                     {
                         var theArray = ((HassiumDictionary) evaluated);
@@ -224,7 +235,7 @@ namespace Hassium
                             }
                         }
 
-                        SetVariable(call.Target.ToString(), theArray);
+                        SetVariable(call.Target.ToString(), theArray, call);
                     }
                     else if (evaluated is HassiumArray || evaluated is HassiumString)
                     {
@@ -257,28 +268,28 @@ namespace Hassium
                             theArray[arid] = theValue;
                         }
 
-                        SetVariable(call.Target.ToString(), theArray);
+                        SetVariable(call.Target.ToString(), theArray, call);
                     }
                     else
                     {
-                        throw new Exception("The [] operator only applies to objects of type Array, Dictionary or String.");
+                        throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
                     }
                     
                 }
-                else if (node.Left is GetMemberNode)
+                else if (node.Left is MemberAccess)
                 {
-                    var accessor = (GetMemberNode) node.Left;
+                    var accessor = (MemberAccess) node.Left;
                     var target = EvaluateNode(accessor.Left);
                     target.SetAttribute(accessor.Member, right);
                 }
                 else
                 {
                     if (!(node.Left is IdentifierNode))
-                        throw new Exception("Not a valid identifier");
+                        throw new ParseException("Not a valid identifier", node);
                     SetVariable(node.Left.ToString(),
                         node.IsOpAssign
-                            ? interpretBinaryOp(new BinOpNode(node.AssignOperation, node.Left, node.Right))
-                            : right);
+                            ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
+                            : right, node);
                 }
                 return right;
             }
@@ -451,7 +462,7 @@ namespace Hassium
                         return true;
                     });
                 }
-                SetVariable(fnode.Name, new HassiumFunction(this, fnode, stackFrame));
+                SetVariable(fnode.Name, new HassiumFunction(this, fnode, stackFrame), fnode);
             }
             else if (node is ForNode)
             {
@@ -476,49 +487,72 @@ namespace Hassium
                 var forStmt = (ForEachNode) (node);
                 var needlestmt = forStmt.Needle;
                 var haystackstmt = EvaluateNode(forStmt.Haystack);
-                Dictionary<HassiumObject, HassiumObject> haystack = null;
-                if(haystackstmt is HassiumDictionary) haystack = (Dictionary<HassiumObject, HassiumObject>) haystackstmt;
-                if (haystackstmt is HassiumArray)
-                    haystack = ((HassiumArray) haystackstmt).Value.Select((s, i) => new {s, i})
-                        .ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
-                if (haystackstmt is HassiumString)
-                    haystack = haystackstmt.ToString()
-                        .ToArray()
-                        .Select((s, i) => new {s, i})
-                        .ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
+
                 inLoop++;
-                var keyvname = "";
-                var valvname = "";
-                if (needlestmt is ArrayInitializerNode)
+                if (haystackstmt is HassiumDictionary)
                 {
-                    keyvname = ((ArrayInitializerNode) needlestmt).Value[0].ToString();
-                    valvname = ((ArrayInitializerNode)needlestmt).Value[1].ToString();
+                    var theArray = ((HassiumDictionary)haystackstmt);
+
+                    var keyvname = "";
+                    var valvname = "";
+                    if (needlestmt is ArrayInitializerNode)
+                    {
+                        keyvname = ((ArrayInitializerNode)needlestmt).Value[0].ToString();
+                        valvname = ((ArrayInitializerNode)needlestmt).Value[1].ToString();
+                    }
+                    else
+                    {
+                        valvname = needlestmt.ToString();
+                    }
+                    if (keyvname != "") SetVariable(keyvname, null, forStmt);
+                    SetVariable(valvname, null, forStmt);
+                    foreach (var needle in (keyvname != "" ? theArray : (IEnumerable)(theArray.Value.Select(x => x.Value))))
+                    {
+                        if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
+                        SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
+                        ExecuteStatement(forStmt.Body);
+                        if (continueLoop) continueLoop = false;
+                        if (breakLoop)
+                        {
+                            breakLoop = false;
+                            break;
+                        }
+                    }
+                    if (keyvname != "") FreeVariable(keyvname, forStmt);
+                    FreeVariable(valvname, forStmt);
+                    inLoop--;
+                }
+                else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
+                {
+                    HassiumArray theArray = null;
+                    if (haystackstmt is HassiumString)
+                    {
+                        theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
+                    }
+                    theArray = ((HassiumArray)haystackstmt);
+
+                    var valvname = needlestmt.ToString();
+   
+                    SetVariable(valvname, null, forStmt);
+                    foreach (var needle in theArray.Value)
+                    {
+                        SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
+                        ExecuteStatement(forStmt.Body);
+                        if (continueLoop) continueLoop = false;
+                        if (breakLoop)
+                        {
+                            breakLoop = false;
+                            break;
+                        }
+                    }
+                    FreeVariable(valvname, forStmt);
+                    inLoop--;
                 }
                 else
                 {
-                    valvname = needlestmt.ToString();
+                    inLoop--;
+                    throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.", node);
                 }
-                if(keyvname != "") SetVariable(keyvname, null);
-                SetVariable(valvname, null);
-                if (haystack == null)
-                    throw new ArgumentException("'" + haystackstmt +
-                                                "' is not an array and therefore can not be used in foreach.");
-
-                foreach (var needle in (keyvname != "" ? haystack : (IEnumerable)(haystack.Values)))
-                {
-                    if (keyvname != "") SetVariable(keyvname, ((KeyValuePair<HassiumObject, HassiumObject>)needle).Key);
-                    SetVariable(valvname, keyvname != "" ? ((KeyValuePair<HassiumObject, HassiumObject>)needle).Value : HassiumObject.ToHassiumObject(needle));
-                    ExecuteStatement(forStmt.Body);
-                    if (continueLoop) continueLoop = false;
-                    if(breakLoop)
-                    {
-                        breakLoop = false;
-                        break;
-                    }
-                }
-                if(keyvname != "") FreeVariable(keyvname);
-                FreeVariable(valvname);
-                inLoop--;
             }
             else if (node is TryNode)
             {
@@ -563,9 +597,9 @@ namespace Hassium
             {
                 return new HassiumString(((StringNode)node).Value);
             }
-            else if (node is GetMemberNode)
+            else if (node is MemberAccess)
             {
-                var accessor = (GetMemberNode)node;
+                var accessor = (MemberAccess)node;
                 var target = EvaluateNode(accessor.Left);
                 var attr = target.GetAttribute(accessor.Member);
                 if (attr is InternalFunction && ((InternalFunction) attr).IsProperty)
@@ -582,20 +616,7 @@ namespace Hassium
                 var inode = (InstanceNode) node;
                 var fcall = (FunctionCallNode)inode.Target;
                 var target = fcall.Target.ToString();
-                /*Type ttype = null;
-                switch(target)
-                {
-                    case "File":
-                        ttype = typeof (HassiumFile);
-                        break;
-                }
-                var arguments = new HassiumObject[fcall.Arguments.Children.Count];
-                for (var x = 0; x < fcall.Arguments.Children.Count; x++)
-                {
-                    arguments[x] = EvaluateNode(fcall.Arguments.Children[x]);
-                }
-                var thething = Activator.CreateInstance(ttype, new object[] {arguments});
-                return (HassiumObject)thething;*/
+
                 var arguments = new HassiumObject[fcall.Arguments.Children.Count];
                 for (var x = 0; x < fcall.Arguments.Children.Count; x++)
                 {
@@ -614,7 +635,7 @@ namespace Hassium
                         }
                     }
                 }
-                throw new Exception("No constructor found for " + target);
+                throw new ParseException("No constructor found for " + target, node);
             }
             else if (node is BinOpNode)
             {
@@ -652,10 +673,13 @@ namespace Hassium
             {
                 var call = (FunctionCallNode)node;
 
-                IFunction target = EvaluateNode(call.Target) as IFunction;
+                IFunction target = null;
 
-                if (target == null)
-                    throw new Exception("Attempt to run a non-valid function!");
+                if (!HasVariable(call.Target.ToString()) || (target = EvaluateNode(call.Target) as IFunction) == null)
+                    throw new ParseException("Attempt to run a non-valid function", node);
+
+                if(target is InternalFunction && (target as InternalFunction).IsConstructor)
+                    throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
 
                 var arguments = new HassiumObject[call.Arguments.Children.Count];
                 for (var x = 0; x < call.Arguments.Children.Count; x++)
@@ -672,7 +696,7 @@ namespace Hassium
             }
             else if (node is IdentifierNode)
             {
-                return GetVariable(((IdentifierNode)node).Identifier);
+                return GetVariable(((IdentifierNode)node).Identifier, node);
             }
             else if (node is ArrayInitializerNode)
             {
@@ -696,25 +720,29 @@ namespace Hassium
             else if (node is MentalNode)
             {
                 var mnode = ((MentalNode)node);
-                if(!HasVariable(mnode.Name)) throw new Exception("The operand of an increment or decrement operator must be a variable, property or indexer");
-                var oldValue = GetVariable(mnode.Name);
+                if(!HasVariable(mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
+                var oldValue = GetVariable(mnode.Name, mnode);
                 switch (mnode.OpType)
                 {
                     case "++":
-                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name)) + 1);
+                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
                         break;
                     case "--":
-                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name)) - 1);
+                        SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
                         break;
                     default:
-                        throw new Exception("Unknown operation " + mnode.OpType);
+                        throw new ParseException("Unknown operation " + mnode.OpType, mnode);
                 }
-                return mnode.IsBefore ? GetVariable(mnode.Name) : oldValue;
+                return mnode.IsBefore ? GetVariable(mnode.Name, mnode) : oldValue;
             }
             else if (node is ArrayGetNode)
             {
                 var call = (ArrayGetNode)(node);
-                var evaluated = GetVariable(call.Target.ToString());
+
+                if(!call.Target.CanBeIndexed)
+                    throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+
+                var evaluated = EvaluateNode(call.Target);
                 if (evaluated is HassiumDictionary)
                 {
                     var theArray = ((HassiumDictionary) evaluated);
@@ -761,24 +789,25 @@ namespace Hassium
                 }
                 else
                 {
-                    throw new Exception("The [] operator only applies to objects of type Array, Dictionary or String.");
+                    throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
                 }
             }
             else if (node is ReturnNode)
             {
-                if (inFunc == 0) throw new Exception("'return' cannot be used outside a function");
+                if (inFunc == 0) throw new ParseException("'return' cannot be used outside a function", node);
                 var returnStmt = (ReturnNode)(node);
+                if(returnStmt.Value != null && !returnStmt.Value.ReturnsValue) throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
                 CallStack.Peek().ReturnValue = EvaluateNode(returnStmt.Value);
                 returnFunc = true;
             }
             else if (node is ContinueNode)
             {
-                if (inLoop == 0) throw new Exception("'continue' cannot be used outside a loop");
+                if (inLoop == 0) throw new ParseException("'continue' cannot be used outside a loop", node);
                 continueLoop = true;
             }
             else if (node is BreakNode)
             {
-                if (inLoop == 0) throw new Exception("'break' cannot be used outside a loop");
+                if (inLoop == 0) throw new ParseException("'break' cannot be used outside a loop", node);
                 breakLoop = true;
             }
             else

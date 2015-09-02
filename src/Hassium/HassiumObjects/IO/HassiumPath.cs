@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using Hassium.HassiumObjects;
+﻿using System.IO;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.IO
 {
     public class HassiumPath: HassiumObject
     {

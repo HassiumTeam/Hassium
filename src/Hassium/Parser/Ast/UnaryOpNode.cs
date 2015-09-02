@@ -20,7 +20,7 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public UnaryOpNode(UnaryOperation type, AstNode value)
+        public UnaryOpNode(int position, UnaryOperation type, AstNode value) : base(position)
         {
             UnOp = type;
             Children.Add(value);

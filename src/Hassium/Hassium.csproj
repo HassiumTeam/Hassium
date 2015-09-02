@@ -50,6 +50,7 @@
     <Compile Include="HassiumObjects\IO\HassiumStream.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
+    <Compile Include="Interpreter\ParseException.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ClassNode.cs" />
@@ -71,7 +72,6 @@
     <Compile Include="Parser\Ast\StringNode.cs" />
     <Compile Include="Parser\Ast\ExpressionNode.cs" />
     <Compile Include="Parser\Parser.cs" />
-    <Compile Include="Parser\Ast\ExceptionNode.cs" />
     <Compile Include="Parser\Ast\ArgListNode.cs" />
     <Compile Include="Parser\Ast\FunctionCallNode.cs" />
     <Compile Include="Parser\Ast\CodeBlock.cs" />
@@ -99,7 +99,7 @@
     <Compile Include="Parser\Ast\ReturnNode.cs" />
     <Compile Include="Parser\Ast\MentalNode.cs" />
     <Compile Include="HassiumObjects\HassiumObject.cs" />
-    <Compile Include="Parser\Ast\GetMemberNode.cs" />
+    <Compile Include="Parser\Ast\MemberAccess.cs" />
     <Compile Include="Interpreter\HassiumMethod.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumWebClient.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumTcpClient.cs" />

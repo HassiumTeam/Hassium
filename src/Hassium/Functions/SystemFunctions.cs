@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
+using Hassium.Lexer;
+using Hassium.Parser;
+using Hassium.Semantics;
 
 namespace Hassium.Functions
 {
@@ -87,10 +90,10 @@ namespace Hassium.Functions
         [IntFunc("eval")]
         public static HassiumObject Eval(HassiumObject[] args)
         {
-            List<Token> tokens = new Lexer(args[0].ToString()).Tokenize();
+            List<Token> tokens = new Lexer.Lexer(args[0].ToString()).Tokenize();
             Parser.Parser hassiumParser = new Parser.Parser(tokens);
             AstNode ast = hassiumParser.Parse();
-            Interpreter intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false);
+            Interpreter.Interpreter intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false);
             intp.Globals = HassiumInterpreter.CurrentInterpreter.Globals;
             intp.CallStack = HassiumInterpreter.CurrentInterpreter.CallStack;
             intp.Execute();

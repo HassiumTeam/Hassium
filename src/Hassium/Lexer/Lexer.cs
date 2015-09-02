@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
+using Hassium.Interpreter;
 
-namespace Hassium
+namespace Hassium.Lexer
 {
     /// <summary>
     /// Lexer.
@@ -23,7 +23,7 @@ namespace Hassium
 
         private void Add(Token token)
         {
-            result.Add(token);
+            result.Add(new Token(token.TokenClass, token.Value, position - token.Value.ToString().Length));
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Hassium
             }
 
             if(HasChar()) ReadChar();
-            else throw new Exception("Unfinished string at position " + position);
+            else throw new ParseException("Unfinished string", position);
 
             Add(new Token(TokenType.String, stringBuilder));
         }
@@ -331,14 +331,14 @@ namespace Hassium
             }
             if(baseName != "")
             {
-                if (finalNumber.Length == 2) throw new Exception("Invalid " + baseName + " number: " + finalNumber);
+                if (finalNumber.Length == 2) throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
                 try
                 {
                     return new Token(TokenType.Number, Convert.ToInt32(finalNumber.Substring(2), baseSize).ToString());
                 }
                 catch
                 {
-                    throw new Exception("Invalid " + baseName + " number: " + finalNumber);
+                    throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
                 }
             }
             else
@@ -350,7 +350,7 @@ namespace Hassium
                 }
                 else
                 {
-                    throw new Exception("Invalid number: " + finalNumber);
+                    throw new ParseException("Invalid number: " + finalNumber, position);
                 }
             }
         }
@@ -367,7 +367,7 @@ namespace Hassium
                 stringBuilder.Append(ReadChar());
             }
             var finalId = stringBuilder.ToString();
-            if (finalId.Contains('.')) throw new Exception("Invalid character in Identifier: . (period)");
+            if (finalId.Contains('.')) throw new ParseException("Invalid character in Identifier: . (period)", position);
             return new Token(TokenType.Identifier, finalId);
         }
 

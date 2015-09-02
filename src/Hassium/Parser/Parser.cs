@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hassium.Lexer;
 using Hassium.Parser.Ast;
 
 namespace Hassium.Parser
@@ -10,6 +11,7 @@ namespace Hassium.Parser
     {
         private List<Token> tokens;
         public int position;
+        public int codePos { get { return CurrentToken().Position; } }
 
         public bool EndOfStream
         {
@@ -28,7 +30,7 @@ namespace Hassium.Parser
         /// </summary>
         public AstNode Parse()
         {
-            CodeBlock block = new CodeBlock();
+            CodeBlock block = new CodeBlock(0);
             while (!EndOfStream)
             {
                 block.Children.Add(StatementNode.Parse(this));

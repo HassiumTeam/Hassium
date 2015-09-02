@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
+using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.Functions
 {
     public class Constructors : ILibrary
     {

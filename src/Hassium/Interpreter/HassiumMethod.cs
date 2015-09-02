@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.Interpreter
 {
     public class HassiumMethod : HassiumObject
     {

@@ -1,26 +1,32 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class ReturnNode: AstNode
     {
         public AstNode Value
         {
-            get { return this.Children[0]; }
+            get {
+                return Children.Count == 0 ? null : this.Children[0];
+            }
         }
 
-        public ReturnNode(AstNode value)
+        public ReturnNode(int position, AstNode value) : base(position)
         {
-            this.Children.Add(value);
+            if(value != null) this.Children.Add(value);
         }
 
         public static AstNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "return");
             if (parser.AcceptToken(TokenType.EndOfLine))
             {
                 parser.ExpectToken(TokenType.EndOfLine);
-                return new ReturnNode(null);
+                return new ReturnNode(pos, null);
             }
-            else return new ReturnNode(StatementNode.Parse(parser));
+            else return new ReturnNode(pos, StatementNode.Parse(parser));
         }
     }
 }

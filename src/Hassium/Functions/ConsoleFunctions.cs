@@ -20,7 +20,7 @@ namespace Hassium.Functions
             return null;
         }
 
-        [IntFunc("printArray")]
+        [IntFunc("printarr")]
         public static HassiumObject PrintArr(HassiumObject[] args)
         {
             Console.WriteLine(ConversionFunctions.ToStr(args).ToString());

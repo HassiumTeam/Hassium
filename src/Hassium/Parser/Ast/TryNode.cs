@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class TryNode: AstNode
@@ -27,21 +29,21 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public TryNode(AstNode body, AstNode catchBody)
+        public TryNode(int position, AstNode body, AstNode catchBody) : this(position, body, catchBody, null)
         {
-            Children.Add(body);
-            Children.Add(catchBody);
         }
 
-        public TryNode(AstNode body, AstNode catchBody, AstNode finallyBody)
+        public TryNode(int position, AstNode body, AstNode catchBody, AstNode finallyBody) : base(position)
         {
             Children.Add(body);
             Children.Add(catchBody);
-            Children.Add(finallyBody);
+            if(finallyBody != null) Children.Add(finallyBody);
         }
 
         public static AstNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "try");
             AstNode tryBody = StatementNode.Parse(parser);
             parser.ExpectToken(TokenType.Identifier, "catch");
@@ -50,10 +52,10 @@ namespace Hassium.Parser.Ast
             if (parser.AcceptToken(TokenType.Identifier, "finally"))
             {
                 AstNode finallyBody = StatementNode.Parse(parser);
-                return new TryNode(tryBody, catchBody, finallyBody);
+                return new TryNode(pos, tryBody, catchBody, finallyBody);
             }
 
-            return new TryNode(tryBody, catchBody);
+            return new TryNode(pos, tryBody, catchBody);
         }
     }
 }

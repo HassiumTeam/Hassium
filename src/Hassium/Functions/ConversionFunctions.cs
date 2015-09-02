@@ -24,13 +24,18 @@ namespace Hassium.Functions
 			if(args[0] is HassiumDictionary)
 			{
 				return "Array { " +
-					   string.Join(", ", ((HassiumDictionary)(args[0])).Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
+					   string.Join(", ", args[0].HDict().Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
 			}
 			if(args[0] is HassiumArray)
 			{
-				return ((HassiumArray)(args[0])).Value
-						.Aggregate("Array { ",
-							(current, item) => current + ((item is HassiumArray ? ToStr(new[] { item }).ToString() : (item.ToString().Replace("\"", "\\\""))) + ", ")).TrimEnd(',', ' ') + " }";
+			    return "Array { " +
+			           string.Join(", ",
+			               args[0].HArray()
+			                   .Value.Select(
+			                       item =>
+			                           ((item is HassiumArray
+			                               ? ToStr(new[] {item}).ToString()
+			                               : (item.ToString().Replace("\"", "\\\"")))))) + " }";
 			}
 			return String.Join("", args.Cast<object>());
 		}

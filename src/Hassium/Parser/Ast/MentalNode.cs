@@ -8,7 +8,7 @@ namespace Hassium.Parser.Ast
 
         public bool IsBefore { get; private set; }
 
-        public MentalNode(string type, string name, bool before)
+        public MentalNode(int position, string type, string name, bool before) : base(position)
         {
             this.OpType = type;
             this.Name = name;

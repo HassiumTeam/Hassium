@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class ArrayGetNode: AstNode
@@ -18,7 +20,7 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public ArrayGetNode(AstNode target, AstNode arguments)
+        public ArrayGetNode(int position, AstNode target, AstNode arguments) : base(position)
         {
             Children.Add(target);
             Children.Add(arguments);
@@ -27,9 +29,13 @@ namespace Hassium.Parser.Ast
 
     public class ArrayIndexerNode : AstNode
     {
+        private ArrayIndexerNode(int position) : base(position)
+        {
+        }
+
         public static ArrayIndexerNode Parse(Hassium.Parser.Parser parser)
         {
-            var ret = new ArrayIndexerNode();
+            var ret = new ArrayIndexerNode(parser.codePos);
             parser.ExpectToken(TokenType.Bracket, "[");
 
             while (!parser.MatchToken(TokenType.Bracket, "]"))

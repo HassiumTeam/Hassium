@@ -1,9 +1,7 @@
-﻿using System;
-using System.Reflection;
-using Hassium.HassiumObjects;
+﻿using System.Reflection;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Reflection
 {
     public class HassiumModule: HassiumObject
     {

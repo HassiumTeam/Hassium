@@ -1,3 +1,5 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class ThreadNode: AstNode
@@ -10,17 +12,19 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public ThreadNode(AstNode node)
+        public ThreadNode(int position, AstNode node) : base(position)
         {
             Children.Add(node);
         }
 
         public static ThreadNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "thread");
             AstNode node = StatementNode.Parse(parser);
 
-            return new ThreadNode(node);
+            return new ThreadNode(pos, node);
         }
     }
 }

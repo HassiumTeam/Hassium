@@ -1,10 +1,16 @@
+using Hassium.Lexer;
+
 namespace Hassium.Parser.Ast
 {
     public class ArgListNode: AstNode
     {
+        private ArgListNode(int position) : base(position)
+        {
+        }
+
         public static ArgListNode Parse(Hassium.Parser.Parser parser)
         {
-            ArgListNode ret = new ArgListNode();
+            ArgListNode ret = new ArgListNode(parser.codePos);
             //parser.ExpectToken(TokenType.Parentheses, "(");
 
             while (!parser.MatchToken(TokenType.Parentheses, ")"))

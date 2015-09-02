@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;

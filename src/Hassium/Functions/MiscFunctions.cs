@@ -14,7 +14,7 @@ namespace Hassium.Functions
 		[IntFunc("free")]
 		public static HassiumObject Free(HassiumObject[] args)
 		{
-			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString());
+			HassiumInterpreter.CurrentInterpreter.FreeVariable(args[0].ToString(), null);
 			return null;
 		}
 

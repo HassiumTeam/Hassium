@@ -29,15 +29,11 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public ConditionalOpNode(AstNode predicate, AstNode body)
+        public ConditionalOpNode(int position, AstNode predicate, AstNode body) : this(position, predicate, body, new CodeBlock(position))
         {
-
-            this.Children.Add(predicate);
-            this.Children.Add(body);
-            this.Children.Add(new CodeBlock());
         }
 
-        public ConditionalOpNode(AstNode predicate, AstNode body, AstNode elseBody)
+        public ConditionalOpNode(int position, AstNode predicate, AstNode body, AstNode elseBody) : base(position)
         {
             this.Children.Add(predicate);
             this.Children.Add(body);

@@ -1,6 +1,6 @@
 ﻿namespace Hassium.Parser.Ast
 {
-    public class GetMemberNode : AstNode
+    public class MemberAccess : AstNode
     {
         public AstNode Left
         {
@@ -16,7 +16,7 @@
             get;
         }
 
-        public GetMemberNode(AstNode left, string identifier)
+        public MemberAccess(int position, AstNode left, string identifier) : base(position)
         {
             this.Children.Add(left);
             this.Member = identifier;

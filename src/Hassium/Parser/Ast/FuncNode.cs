@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -15,15 +16,17 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public FuncNode(string name, List<string> paramaters, AstNode body)
+        public FuncNode(int position, string name, List<string> parameters, AstNode body)
         {
-            Parameters = paramaters;
+            Parameters = parameters;
             Name = name;
             Children.Add(body);
         }
 
         public static AstNode Parse(Hassium.Parser.Parser parser)
         {
+            int pos = parser.codePos;
+
             parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
             parser.ExpectToken(TokenType.Parentheses, "(");
@@ -39,12 +42,12 @@ namespace Hassium.Parser.Ast
             parser.ExpectToken(TokenType.Parentheses, ")");
             AstNode body = StatementNode.Parse(parser);
 
-            return new FuncNode(name, result, body);
+            return new FuncNode(pos, name, result, body);
         }
 
         public static explicit operator LambdaFuncNode(FuncNode funcNode)
         {
-            return new LambdaFuncNode(funcNode.Parameters, funcNode.Body);
+            return new LambdaFuncNode(funcNode.Position, funcNode.Parameters, funcNode.Body);
         }
     }
 }

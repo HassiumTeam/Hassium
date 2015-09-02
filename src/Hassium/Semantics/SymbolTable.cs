@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace Hassium
+namespace Hassium.Semantics
 {
     public class SymbolTable
     {

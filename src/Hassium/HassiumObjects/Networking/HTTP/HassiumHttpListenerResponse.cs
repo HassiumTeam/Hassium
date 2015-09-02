@@ -1,11 +1,10 @@
-using System;
 using System.Net;
-using Hassium.HassiumObjects;
+using Hassium.Functions;
 using Hassium.HassiumObjects.IO;
+using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
-using Hassium.HassiumObjects.Networking;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Networking.HTTP
 {
     public class HassiumHttpListenerResponse: HassiumObject
     {

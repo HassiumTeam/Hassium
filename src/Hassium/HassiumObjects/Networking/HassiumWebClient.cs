@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking
