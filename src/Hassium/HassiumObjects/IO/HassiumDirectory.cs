@@ -14,6 +14,12 @@ namespace Hassium.HassiumObjects.IO
             this.Attributes.Add("move", new InternalFunction(Move));
             this.Attributes.Add("rename", new InternalFunction(Rename));
             this.Attributes.Add("delete", new InternalFunction(Delete));
+            this.Attributes.Add("getCreationTime", new InternalFunction(GetCreationTime));
+            this.Attributes.Add("getLastAccessTime", new InternalFunction(GetLastAccessTime));
+            this.Attributes.Add("getLastWriteTime", new InternalFunction(GetLastWriteTime));
+            this.Attributes.Add("setLastAccessTime", new InternalFunction(SetLastWriteTime));
+            this.Attributes.Add("setLastWriteTime", new InternalFunction(SetLastWriteTime));
+            this.Attributes.Add("getParent", new InternalFunction(GetParent));
         }
 
         public HassiumObject Exists(HassiumObject[] args)
@@ -63,6 +69,38 @@ namespace Hassium.HassiumObjects.IO
         {
             Directory.Delete(args[0]);
             return null;
+        }
+
+        public HassiumObject GetCreationTime(HassiumObject[] args)
+        {
+            return new HassiumDate(Directory.GetCreationTime(args[0].ToString()));
+        }
+
+        public HassiumObject GetLastAccessTime(HassiumObject[] args)
+        {
+            return new HassiumDate(Directory.GetLastAccessTime(args[0].ToString()));
+        }
+
+        public HassiumObject GetLastWriteTime(HassiumObject[] args)
+        {
+            return new HassiumDate(Directory.GetLastWriteTime(args[0].ToString()));
+        }
+
+        public HassiumObject SetLastAccessTime(HassiumObject[] args)
+        {
+            Directory.SetLastAccessTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
+        }
+
+        public HassiumObject SetLastWriteTime(HassiumObject[] args)
+        {
+            Directory.SetLastWriteTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
+        }
+
+        public HassiumObject GetParent(HassiumObject[] args)
+        {
+            return new HassiumString(Directory.GetParent(args[0].ToString()).ToString());
         }
     }
 }
