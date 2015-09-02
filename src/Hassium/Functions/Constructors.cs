@@ -78,6 +78,18 @@ namespace Hassium.Functions
         {
             return new HassiumHttpListener(new System.Net.HttpListener());
         }
+
+        [IntFunc("BinaryWriter", true)]
+        public static HassiumObject BinaryWriter(HassiumObject[] args)
+        {
+            return new HassiumBinaryWriter(new BinaryWriter(((HassiumStream)args[0]).Value));
+        }
+
+        [IntFunc("BinaryReader", true)]
+        public static HassiumObject BinaryReader(HassiumObject[] args)
+        {
+            return new HassiumBinaryReader(new System.IO.BinaryReader(((HassiumStream)args[0]).Value));
+        }
     }
 }
 

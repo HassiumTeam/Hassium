@@ -120,6 +120,9 @@
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerContext.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerResponse.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerRequest.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumBinaryWriter.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumBinaryReader.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumByte.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
