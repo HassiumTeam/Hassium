@@ -5,7 +5,7 @@ using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Text
 {
     public class HassiumBinaryReader: HassiumObject
     {

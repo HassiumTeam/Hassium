@@ -123,6 +123,8 @@
     <Compile Include="HassiumObjects\IO\HassiumBinaryWriter.cs" />
     <Compile Include="HassiumObjects\IO\HassiumBinaryReader.cs" />
     <Compile Include="HassiumObjects\Types\HassiumByte.cs" />
+    <Compile Include="HassiumObjects\Text\HassiumTextReader.cs" />
+    <Compile Include="HassiumObjects\Text\HassiumTextWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

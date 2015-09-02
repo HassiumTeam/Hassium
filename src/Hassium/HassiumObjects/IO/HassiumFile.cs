@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using Hassium.Functions;
+using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Text;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -28,6 +30,8 @@ namespace Hassium.HassiumObjects.IO
             this.Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
             this.Attributes.Add("getFiles", new InternalFunction(GetFiles));
             this.Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
+            this.Attributes.Add("createText", new InternalFunction(createText));
+            this.Attributes.Add("openText", new InternalFunction(openText));
         }
             
 
@@ -119,6 +123,16 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject GetDirectories(HassiumObject[] args)
         {
             return Directory.GetDirectories(args[0].ToString());
+        }
+
+        public HassiumObject createText(HassiumObject[] args)
+        {
+            return new HassiumTextWriter(File.CreateText(args[0].ToString()));
+        }
+
+        public HassiumObject openText(HassiumObject[] args)
+        {
+            return new HassiumTextReader(File.OpenText(args[0].ToString()));
         }
     }
 }

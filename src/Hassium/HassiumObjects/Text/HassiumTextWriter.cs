@@ -2,22 +2,23 @@
 using System.IO;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumBinaryWriter: HassiumObject
+    public class HassiumTextWriter: HassiumObject
     {
-        public BinaryWriter Value { get; private set; }
+        public TextWriter Value { get; private set; }
 
-        public HassiumBinaryWriter(BinaryWriter value)
+        public HassiumTextWriter(TextWriter value)
         {
             this.Value = value;
             this.Attributes.Add("close", new InternalFunction(close));
             this.Attributes.Add("dispose", new InternalFunction(dispose));
             this.Attributes.Add("flush", new InternalFunction(flush));
             this.Attributes.Add("write", new InternalFunction(write));
+            this.Attributes.Add("writeLine", new InternalFunction(writeLine));
+            this.Attributes.Add("toString", new InternalFunction(toString));
         }
 
         private HassiumObject close(HassiumObject[] args)
@@ -42,6 +43,17 @@ namespace Hassium.HassiumObjects.Text
         {
             this.Value.Write(args[0].ToString());
             return null;
+        }
+
+        private HassiumObject writeLine(HassiumObject[] args)
+        {
+            this.Value.WriteLine(args[0].ToString());
+            return null;
+        }
+
+        private HassiumObject toString(HassiumObject[] args)
+        {
+            return new HassiumString(this.Value.ToString());
         }
     }
 }
