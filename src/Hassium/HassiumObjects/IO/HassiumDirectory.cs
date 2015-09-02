@@ -19,6 +19,7 @@ namespace Hassium.HassiumObjects.IO
             this.Attributes.Add("getLastWriteTime", new InternalFunction(GetLastWriteTime));
             this.Attributes.Add("setLastAccessTime", new InternalFunction(SetLastWriteTime));
             this.Attributes.Add("setLastWriteTime", new InternalFunction(SetLastWriteTime));
+            this.Attributes.Add("setCreationTime", new InternalFunction(SetCreationTime));
             this.Attributes.Add("getParent", new InternalFunction(GetParent));
         }
 
@@ -95,6 +96,12 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject SetLastWriteTime(HassiumObject[] args)
         {
             Directory.SetLastWriteTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
+        }
+
+        public HassiumObject SetCreationTime(HassiumObject[] args)
+        {
+            Directory.SetCreationTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
             return null;
         }
 
