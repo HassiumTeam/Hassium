@@ -3,11 +3,11 @@ using System.IO;
 
 namespace Hassium.HassiumObjects.IO
 {
-    public abstract class HassiumStream: HassiumObject
+    public class HassiumStream: HassiumObject
     {
         public Stream Value { get; protected set; }
 
-        protected HassiumStream(Stream value)
+        public HassiumStream(Stream value)
         {
             this.Value = value;
             Attributes.Add("length", new InternalFunction(x => Value.Length, true));

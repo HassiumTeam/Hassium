@@ -120,7 +120,6 @@
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerContext.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerResponse.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerRequest.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumIOStream.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -136,9 +135,5 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="HassiumObjects\Reflection\" />
-    <Folder Include="HassiumObjects\Text\" />
-    <Folder Include="HassiumObjects\Networking\HTTP\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

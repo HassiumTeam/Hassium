@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
@@ -35,7 +36,7 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         private HassiumObject inputStream(HassiumObject[] args)
         {
-            return new HassiumIOStream(this.Value.InputStream);
+            return new HassiumStream(this.Value.InputStream);
         }
 
         private HassiumObject localEndPoint(HassiumObject[] args)

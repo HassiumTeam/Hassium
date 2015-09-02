@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 using Hassium.HassiumObjects.Networking;
 
@@ -36,7 +37,7 @@ namespace Hassium
 
         private HassiumObject outputStream(HassiumObject[] args)
         {
-            return new HassiumIOStream(this.Value.OutputStream);
+            return new HassiumStream(this.Value.OutputStream);
         }
 
         private HassiumObject abort(HassiumObject[] args)
