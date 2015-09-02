@@ -675,7 +675,7 @@ namespace Hassium.Interpreter
 
                 IFunction target = target = EvaluateNode(call.Target);
 
-                if (!HasVariable(call.Target.ToString()) || (target as IFunction) == null)
+                if ((!(call.Target is MemberAccess) && !HasVariable(call.Target.ToString())) || (target as IFunction) == null)
                 {
                     throw new ParseException("Attempt to run a non-valid function", node);
                 }
