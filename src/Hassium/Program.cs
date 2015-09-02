@@ -88,9 +88,9 @@ namespace Hassium
 		private static void printErr(string str, ParseException e)
 		{
 			var idx = e.Position;
-			str = str.Replace("\r\n", "\n");
-			int lower = str.Substring(0, idx + 1).LastIndexOf('\n') + 1;
-			int upper = str.Substring(idx).IndexOf('\n') + idx;
+		    bool windowsline = str.Contains("\r\n");
+			int lower = str.Substring(0, idx + 1).LastIndexOf(windowsline ? "\r\n" : "\n") + 1;
+			int upper = str.Substring(idx).IndexOf(windowsline ? "\r\n" : "\n") + idx;
 			string res = str.Substring(lower, upper - lower);
 			string trimd = res.Trim();
 			Console.WriteLine("Error at position " + idx + ", line " +

@@ -673,10 +673,12 @@ namespace Hassium.Interpreter
             {
                 var call = (FunctionCallNode)node;
 
-                IFunction target = null;
+                IFunction target = target = EvaluateNode(call.Target);
 
-                if (!HasVariable(call.Target.ToString()) || (target = EvaluateNode(call.Target) as IFunction) == null)
+                if (!HasVariable(call.Target.ToString()) || (target as IFunction) == null)
+                {
                     throw new ParseException("Attempt to run a non-valid function", node);
+                }
 
                 if(target is InternalFunction && (target as InternalFunction).IsConstructor)
                     throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
