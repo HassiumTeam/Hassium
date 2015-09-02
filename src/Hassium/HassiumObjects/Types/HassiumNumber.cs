@@ -12,6 +12,7 @@ namespace Hassium.HassiumObjects.Types
         {
             this.Attributes.Add("toString", new InternalFunction(tostring));
             this.Attributes.Add("compare", new InternalFunction(compare));
+            this.Attributes.Add("isBetween", new InternalFunction(isBetween));
             this.Value = value;
         }
 
@@ -20,12 +21,19 @@ namespace Hassium.HassiumObjects.Types
             return Convert.ToString(Value);
         }
 
-        private HassiumObject tostring(HassiumObject[] args)
+        public HassiumObject tostring(HassiumObject[] args)
         {
             return new HassiumString(ToString());
         }
 
-        private HassiumObject compare(HassiumObject[] args)
+        public HassiumObject isBetween(HassiumObject[] args)
+        {
+            if(args.Length == 3) if(args[2].HBool().Value) return Value >= args[0].HNum().Value && Value <= args[1].HNum().Value;
+            return Value > args[0].HNum().Value && Value < args[1].HNum().Value;
+        }
+
+
+        public HassiumObject compare(HassiumObject[] args)
         {
             return new HassiumNumber(Value.CompareTo(args[0].HNum().Value));
         }
