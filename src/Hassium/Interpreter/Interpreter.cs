@@ -11,6 +11,7 @@ using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
+using Hassium.HassiumObjects.Math;
 using Hassium.Lexer;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
@@ -33,6 +34,7 @@ namespace Hassium.Interpreter
             {"File", new HassiumFile()},
             {"Directory", new HassiumDirectory()},
             {"Path", new HassiumPath()},
+            {"Math", new HassiumMath()},
             {"null", null},
         };
 

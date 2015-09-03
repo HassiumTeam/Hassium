@@ -50,6 +50,7 @@
     <Compile Include="HassiumObjects\IO\HassiumStream.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
+    <Compile Include="HassiumObjects\Math\HassiumMath.cs" />
     <Compile Include="Interpreter\ParseException.cs" />
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="Functions\ILibrary.cs" />
     <Compile Include="Functions\ConsoleFunctions.cs" />
     <Compile Include="Functions\ConversionFunctions.cs" />
-    <Compile Include="Functions\MathFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Parser\Ast\ForNode.cs" />
     <Compile Include="Parser\Ast\TryNode.cs" />
@@ -120,6 +120,13 @@
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerContext.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerResponse.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerRequest.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumBinaryWriter.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumBinaryReader.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumByte.cs" />
+    <Compile Include="HassiumObjects\Text\HassiumTextReader.cs" />
+    <Compile Include="HassiumObjects\Text\HassiumTextWriter.cs" />
+    <Compile Include="HassiumObjects\Random\HassiumRandom.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumChar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -134,6 +141,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup />
   <ItemGroup />
   <ItemGroup />
 </Project>

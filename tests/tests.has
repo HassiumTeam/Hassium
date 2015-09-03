@@ -108,7 +108,7 @@ func numberFormatTests()
 	assert(0xDA = 218, "should pass if hexadecimal numbers are parsed correctly");
 	assert(0o173 = 123, "should pass if octal numbers are parsed correctly");
 	assert(0b110101011 = 427, "should pass if binary numbers are parsed correctly");
-	assert(round(runtimecall("System.Math.PI"), 2) = 3.14, "should pass if decimal numbers are parsed correctly");
+	assert(Math.round(runtimecall("System.Math.PI"), 2) = 3.14, "should pass if decimal numbers are parsed correctly");
 	println();
 	println("End of number format tests");
 	println();

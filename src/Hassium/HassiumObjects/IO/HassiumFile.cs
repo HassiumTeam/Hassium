@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using Hassium.Functions;
+using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
+using Hassium.HassiumObjects.Text;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -28,6 +31,13 @@ namespace Hassium.HassiumObjects.IO
             this.Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
             this.Attributes.Add("getFiles", new InternalFunction(GetFiles));
             this.Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
+            this.Attributes.Add("createText", new InternalFunction(createText));
+            this.Attributes.Add("openText", new InternalFunction(openText));
+            this.Attributes.Add("getCreationTime", new InternalFunction(getCreationTime));
+            this.Attributes.Add("getLastAccessTime", new InternalFunction(getLastAccessTime));
+            this.Attributes.Add("getLastWriteTime", new InternalFunction(getLastWriteTime));
+            this.Attributes.Add("setLastAccessTime", new InternalFunction(setLastWriteTime));
+            this.Attributes.Add("setCreationTime", new InternalFunction(setCreationTime));
         }
             
 
@@ -119,6 +129,49 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject GetDirectories(HassiumObject[] args)
         {
             return Directory.GetDirectories(args[0].ToString());
+        }
+
+        public HassiumObject createText(HassiumObject[] args)
+        {
+            return new HassiumTextWriter(File.CreateText(args[0].ToString()));
+        }
+
+        public HassiumObject openText(HassiumObject[] args)
+        {
+            return new HassiumTextReader(File.OpenText(args[0].ToString()));
+        }
+
+        public HassiumObject getCreationTime(HassiumObject[] args)
+        {
+            return new HassiumDate(File.GetCreationTime(args[0].ToString()));
+        }
+
+        public HassiumObject getLastAccessTime(HassiumObject[] args)
+        {
+            return new HassiumDate(File.GetLastAccessTime(args[0].ToString()));
+        }
+
+        public HassiumObject getLastWriteTime(HassiumObject[] args)
+        {
+            return new HassiumDate(File.GetLastWriteTime(args[0].ToString()));
+        }
+
+        public HassiumObject setLastAccessTime(HassiumObject[] args)
+        {
+            File.SetLastAccessTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
+        }
+
+        public HassiumObject setLastWriteTime(HassiumObject[] args)
+        {
+            File.SetLastWriteTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
+        }
+
+        public HassiumObject setCreationTime(HassiumObject[] args)
+        {
+            File.SetCreationTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            return null;
         }
     }
 }
