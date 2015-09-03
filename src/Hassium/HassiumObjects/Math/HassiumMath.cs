@@ -132,7 +132,9 @@ namespace Hassium.HassiumObjects.Math
 
         public HassiumObject Round(HassiumObject[] args)
         {
-            if (args.Count() > 1) return new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).ValueInt));
+            if (args.Count() > 1)
+                return new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).ValueInt));
+            
             return new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value));
         }
 
