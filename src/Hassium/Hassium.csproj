@@ -126,6 +126,7 @@
     <Compile Include="HassiumObjects\Text\HassiumTextReader.cs" />
     <Compile Include="HassiumObjects\Text\HassiumTextWriter.cs" />
     <Compile Include="HassiumObjects\Random\HassiumRandom.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumChar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

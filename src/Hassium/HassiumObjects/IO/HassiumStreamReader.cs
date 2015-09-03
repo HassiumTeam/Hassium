@@ -39,12 +39,12 @@ namespace Hassium.HassiumObjects.IO
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToChar(this.Value.Peek()).ToString());
+            return new HassiumChar(((char)this.Value.Peek()));
         }
 
         private HassiumObject read(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToChar(this.Value.Read()).ToString());
+            return new HassiumChar(((char)this.Value.Read()));
         }
 
         private HassiumObject readToEnd(HassiumObject[] args)
