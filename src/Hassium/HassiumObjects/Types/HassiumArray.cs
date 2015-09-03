@@ -19,7 +19,7 @@ namespace Hassium.HassiumObjects.Types
         public HassiumArray(IEnumerable<object> value)
         {
             this.Attributes.Add("length", new InternalFunction(x => Value.Length, true));
-            this.Attributes.Add("tostring", new InternalFunction(tostring));
+            this.Attributes.Add("toString", new InternalFunction(toString));
 
             this.Attributes.Add("add", new InternalFunction(Add));
             this.Attributes.Add("remove", new InternalFunction(Remove));
@@ -86,7 +86,7 @@ namespace Hassium.HassiumObjects.Types
 
 
 
-        private HassiumObject tostring(HassiumObject[] args)
+        private HassiumObject toString(HassiumObject[] args)
         {
             return this.ToString();
         }

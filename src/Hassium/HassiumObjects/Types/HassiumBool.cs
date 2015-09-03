@@ -20,7 +20,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            return this.Value.ToString();
+            return this.ToString();
         }
 
         #region IConvertible stuff

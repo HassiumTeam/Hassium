@@ -1,29 +1,22 @@
-# Variable Type Classes
-It is important to note that these are instance variables, meaning
-that you would have to have a type already to use these methods.
-For example:
-```
-myString "Hello, World!";
-println(myString.toUpper());
-```
+# String functions
 
-## String Class
+## Base functions
 
-### string String.toLower()
+#### ```string String.toLower()```
 Returns a lowercase version of the string.
 ```
 myStr := "HELLO";
 println(myStr.toLower());
 ```
 
-### string String.toUpper()
+#### ```string String.toUpper()```
 Returns an uppercase version of the string.
 ```
 myStr := "hello";
 println(myStr.toUpper());
 ```
 
-### bool String.begins(string prefix)
+#### ```bool String.begins(string prefix)```
 Returns true if the string starts with the speicified prefix, otherwise returns false.
 ```
 if (args[0].begins("abc"))
@@ -32,7 +25,7 @@ else
 	println("args[0] doesn't start with abc");
 ```
 
-### bool String.ends(string sufix)
+#### ```bool String.ends(string suffix)```
 Returns true if the string ends with the speicified sufix, otherwise returns false.
 ```
 if (args[0].ends("xyz"))
@@ -41,21 +34,21 @@ else
 	println("args[0] doesn't start with xyz");
 ```
 
-### string String.getAt(number index)
+#### ```string String.getAt(number index)```
 Get's the character at the specified index and returns it.
 ```
 myStr := "Hello, World!";
 println(myStr.getAt(2));
 ```
 
-### string String.substring(number startIndex, number length)
+#### ```string String.substring(number startIndex, number length)```
 Returns a substring starting at the startIndex for the specified length.
 ```
 myStr := "Hello, world!";
 println(myStr.substring(2, 3));
 ```
 
-### string String.concat(string newString)
+#### ```string String.concat(string newString)```
 Returns a new string that has been concatanated with the specified new string.
 ```
 myStr := "Hello, ";
@@ -63,7 +56,7 @@ myStr := myStr.concat("World!");
 println(myStr);
 ```
 
-### bool String.contains(string characters)
+#### ```bool String.contains(string characters)```
 Returns true if the string contains the specified characters, otherwise returns false.
 ```
 if (args[0].contains("a"))
@@ -72,7 +65,7 @@ else
 	println("The string does not contain a");
 ```
 
-### array String.split(string character)
+#### ```array String.split(string character)```
 Returns a new array splitting the string on the specified character.
 ```
 myStr := "The quick brown fox jumps over the lazy dog";
@@ -81,28 +74,28 @@ foreach (word in words)
 	println(word);
 ```
 
-### string String.replace(string oldPart, string newPart)
+#### ```string String.replace(string oldPart, string newPart)```
 Returns a new string with the old part replaced with the new part.
 ```
 myStr := "ello world!";
 myStr := myStr.replace("ello", "hello");
 ```
 
-### number String.index(string character)
+#### ```number String.index(string character)```
 Returns the index number of the string at the character.
 ```
 myStr := "Hello World";
 println(myStr.index("e"));
 ```
 
-### number String.lastIndex(string character)
+#### ```number String.lastIndex(string character)```
 Returns the last index number of the string at the character.
 ```
 myStr := "Hello World";
 println(myStr.lastIndex("l"));
 ```
 
-### string String.padLeft(number length)
+#### ```string String.padLeft(number length)```
 Returns a new string left-padded to the length specified.
 ```
 myStr := "Hello World";
@@ -110,7 +103,7 @@ myStr := myStr.padLeft(20);
 println(myStr.length);
 ```
 
-### string String.padRight(number length)
+#### ```string String.padRight(number length)```
 Returns a new string right-padded to the length specified.
 ```
 myStr := "Hello World";
@@ -118,83 +111,29 @@ myStr := myStr.padRight(20);
 println(myStr.length);
 ```
 
-### string String.trim()
+#### ```string String.trim()```
 Returns a new string with all of the whitespace characters removed.
 ```
 myStr := "  \n \n h   \nello  world!";
 myStr := myStr.trim();
 ```
 
-### string String.trimLeft()
+#### ```string String.trimLeft()```
 Returns a new string with all of the left-hand whitespace characters removed.
 ```
 myStr := "\n\n\nHello World";
 myStr := myStr.trimLeft();
 ```
 
-### string String.trimRight()
+#### ```string String.trimRight()```
 Returns a new string with all of the right-hand whitespace characters removed.
 ```
 myStr := "Hello World\n\n\n";
 myStr := myStr.trimRight();
 ```
 
-### number String.length
+#### ```number String.length```
 Property that represents how long the string is.
 ```
 println(args[0].length);
-```
-
-## Date Class
-
-### number Date.year
-Returns the current year in number form.
-```
-date := new Date();
-println(date.year);
-```
-
-### number Date.month
-Returns the current month in number form.
-```
-date := new Date();
-println(date.month);
-```
-
-### number Date.day
-Returns the current day in number form.
-```
-date := new Date();
-println(date.day);
-```
-
-### number Date.hour
-Returns the current hour in number form.
-```
-date := new Date();
-println(date.hour);
-```
-
-### number Date.minute
-Returns the current minute in number form.
-```
-date := new Date();
-println(date.minute);
-```
-
-### number Date.second
-Returns the current second in number form.
-```
-date := new Date();
-println(date.second);
-```
-
-### bool Date.isLeapYear
-Returns true if it is a leap year, otherwise returns false.
-```
-date := new Date();
-if (date.isLeapYear)
-	println("It is a leap year");
-else
-	println("It is not a leap year");
 ```

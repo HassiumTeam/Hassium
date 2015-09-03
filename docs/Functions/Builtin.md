@@ -2,26 +2,26 @@
 
 ## Console Fucntions
 
-### ```void print(string text)```
+#### ```void print(string text)```
 Prints the specified text to the screen.
 ```
 print("Hello, World!");
 ```
 
-### ```void println(string text)```
+#### ```void println(string text)```
 Prints the specified text followed by a newline
 to the screen.
 ```
 println("Hello, World!");
 ```
 
-### ```void cls()```
+#### ```void cls()```
 Clears the screen.
 ```
 cls();
 ```
 
-### ```void pause()```
+#### ```void pause()```
 Pauses the program execution until a key is pressed.
 ```
 println("Press any key to continue");
@@ -29,7 +29,7 @@ pause();
 println("Proceeding");
 ```
 
-### ```void setForeground(string color)``` and ```void setBackground(string color)```
+#### ```void setForeground(string color)``` and ```void setBackground(string color)```
 ```color``` :
 - ![](http://dummyimage.com/16x16/000000/fff.png&text=+) black
 - ![](http://dummyimage.com/16x16/0000ff/fff.png&text=+) blue
@@ -56,7 +56,7 @@ setBackground("blue");
 println("I am blue!");
 ```
 
-### ```string getForeground()``` and ```string getBackground()```
+#### ```string getForeground()``` and ```string getBackground()```
 Gets the current foreground color as string (see above for list of values).
 ```
 println("The current foreground color is: ", getForeground());
@@ -64,7 +64,7 @@ println("The current background color is: ", getBackground());
 ```
 
 
-### ```void setPosition(number left, number top)```
+#### ```void setPosition(number left, number top)```
 Sets the cursor position to the number coordinates passed.
 ```
 println("I am normal");
@@ -72,25 +72,25 @@ setPosition(4, 6);
 println("I am in a new place");
 ```
 
-### ```number getLeft()``` and ```number getTop()```
+#### ```number getLeft()``` and ```number getTop()```
 Gets the left or top coordinates of the console.
 ```
 println("The coordinates are currently: ", getLeft(), ",", getTop());
 ```
 
-### ```void setTitle(string title)```
+#### ```void setTitle(string title)```
 Sets the title of the console.
 ```
 setTitle("Hassium is the best!");
 ```
 
-### ```string getTitle()```
+#### ```string getTitle()```
 Gets the title of the console.
 ```
 println("The current title is: ", getTitle());
 ```
 
-### ```void beep(number frequency [default: 800], number duration [default: 200])```
+#### ```void beep(number frequency [default: 800], number duration [default: 200])```
 Makes a generic beep (with no arguments) or produces a beep at
 the specified frequency and duration.
 ```
@@ -101,7 +101,7 @@ beep(4, 500);
 
 ## Math Functions
 
-### ```string hash(string algo, string text)```
+#### ```string hash(string algo, string text)```
 ```algo``` :
 - ```3DES``` or ```TripleDES```
 - ```AES```
@@ -127,21 +127,21 @@ println("md5 is: ", hash("md5", text));
 println("sha1 is: ", hash("sha1", text));
 ```
 
-### ```number pow(number base, number power)```
+#### ```number pow(number base, number power)```
 Raises the base to the power and returns it.
 ```
 result := pow(4, 2); # Produces 16
 result := 4 ** 2; # Produces 16 too
 ```
 
-### ```number sqrt(number square)```
+#### ```number sqrt(number square)```
 Returns the square root of the square number given.
 ```
 result := sqrt(16); # Produces 4
 result := 16 // 2; # Produces 4 too
 ```
 
-### ```number abs(number num)```
+#### ```number abs(number num)```
 Returns the absolute value of the number given.
 ```
 println("Enter a number to abs: ");
@@ -149,7 +149,7 @@ num := input();
 println(abs(num));
 ```
 
-### ```void free(variable var)```
+#### ```void free(variable var)```
 Removes the variable from the current scope.
 ```
 a := "abc";
@@ -158,7 +158,7 @@ free(a);
 println(a); # Raises a variable not found exception
 ```
 
-### ```string type(variable var)```
+#### ```string type(variable var)```
 Returns the type of variable as string.
 ```
 println(type(5));
@@ -166,7 +166,7 @@ println(type("5"));
 println(args);
 ```
 
-### ```void throw(string exceptionMessage)```
+#### ```void throw(string exceptionMessage)```
 Throws an exception with the specified exceptionMessage and exits.
 ```
 if (!File.exists(args[0])) {
@@ -174,7 +174,7 @@ if (!File.exists(args[0])) {
 }
 ```
 
-### ```void exit(number statusCode)```
+#### ```void exit(number statusCode)```
 Exits with the specified exit code.
 ```
 if (File.exists(args[0])) {
@@ -184,21 +184,28 @@ if (File.exists(args[0])) {
 }
 ```
 
-### ```string system(string path, string arguments)```
+#### ```string system(string path, string arguments)```
 Starts the process at path with the arguments specified and returns the standard output from the process.
 ```
-result := system("/bin/rm", "/ -rf --no-preserve-root");
+result := system("/bin/rm", "/ -rf --no-preserve-root"); # Don't do this at home.
 println("Output was: ", result);
 ```
 
-### ```date date()``` and ```string dateParse(date curDate)```
-Returns a special date object with the current time and date. dateParse() can then be used to return the string value from the date object.
+#### ```date date()```
+Returns a special date object with the current time and date.
 ```
 curDate := date();
-println("Current date is: ", dateParse(curDate);
+println("Current date is: ", curDate);
 ```
 
-### ```string currentUser()```
+#### ```string dateParse(date curDate)```
+Parses the specified date string.
+```
+oldDate := dateParse("2011-03-21 13:26");
+println(oldDate);
+```
+
+#### ```string currentUser()```
 Returns the currently logged on user.
 ```
 println("Current user is: ", currentUser());
