@@ -1,3 +1,5 @@
+using Hassium.Interpreter;
+
 namespace Hassium.Parser.Ast
 {
     public enum UnaryOperation
@@ -24,6 +26,11 @@ namespace Hassium.Parser.Ast
         {
             UnOp = type;
             Children.Add(value);
+        }
+
+        public override object Visit(IVisitor visitor)
+        {
+            return visitor.Accept(this);
         }
     }
 }

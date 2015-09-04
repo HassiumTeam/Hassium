@@ -1,3 +1,5 @@
+using Hassium.Interpreter;
+
 namespace Hassium.Parser.Ast
 {
     public enum BinaryOperation
@@ -64,6 +66,11 @@ namespace Hassium.Parser.Ast
             IsOpAssign = true;
             Children.Add(left);
             Children.Add(right);
+        }
+
+        public override object Visit(IVisitor visitor)
+        {
+            return visitor.Accept(this);
         }
     }
 }

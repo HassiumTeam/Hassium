@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -16,9 +17,9 @@ namespace Hassium.Parser.Ast
             return Identifier;
         }
 
-        public static AstNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            return new IdentifierNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+            return visitor.Accept(this);
         }
     }
 }

@@ -1,3 +1,5 @@
+using Hassium.Interpreter;
+
 namespace Hassium.Parser.Ast
 {
     public class FunctionCallNode: AstNode
@@ -21,6 +23,11 @@ namespace Hassium.Parser.Ast
         {
             Children.Add(target);
             Children.Add(arguments);
+        }
+
+        public override object Visit(IVisitor visitor)
+        {
+            return visitor.Accept(this);
         }
     }
 }

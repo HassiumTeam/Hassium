@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -17,14 +18,9 @@ namespace Hassium.Parser.Ast
             Children.Add(node);
         }
 
-        public static ThreadNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            int pos = parser.codePos;
-
-            parser.ExpectToken(TokenType.Identifier, "thread");
-            AstNode node = StatementNode.Parse(parser);
-
-            return new ThreadNode(pos, node);
+            return visitor.Accept(this);
         }
     }
 }

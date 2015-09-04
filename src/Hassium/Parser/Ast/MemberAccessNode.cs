@@ -1,6 +1,8 @@
-﻿namespace Hassium.Parser.Ast
+﻿using Hassium.Interpreter;
+
+namespace Hassium.Parser.Ast
 {
-    public class MemberAccess : AstNode
+    public class MemberAccessNode : AstNode
     {
         public AstNode Left
         {
@@ -16,10 +18,15 @@
             get;
         }
 
-        public MemberAccess(int position, AstNode left, string identifier) : base(position)
+        public MemberAccessNode(int position, AstNode left, string identifier) : base(position)
         {
             Children.Add(left);
             Member = identifier;
+        }
+
+        public override object Visit(IVisitor visitor)
+        {
+            return visitor.Accept(this);
         }
     }
 }

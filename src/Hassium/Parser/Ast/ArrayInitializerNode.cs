@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -33,32 +34,9 @@ namespace Hassium.Parser.Ast
             _value.Add(key, item);
         }
 
-        public static ArrayInitializerNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            var ret = new ArrayInitializerNode(parser.codePos);
-            parser.ExpectToken(TokenType.Bracket, "[");
-            ret.IsDictionary = false;
-
-            while (!parser.MatchToken(TokenType.Bracket, "]"))
-            {              
-                var ct1 = ExpressionNode.Parse(parser);
-                if(parser.AcceptToken(TokenType.Identifier, ":"))
-                {
-                    ret.IsDictionary = true;
-                    ret.AddItem(ct1, ExpressionNode.Parse(parser));
-                }
-                else
-                {
-                    ret.AddItem(ct1);
-                }
-                if (!parser.AcceptToken(TokenType.Comma))
-                {
-                    break;
-                }
-            }
-            parser.ExpectToken(TokenType.Bracket, "]");
-
-            return ret;
+            return visitor.Accept(this);
         }
     }
 }

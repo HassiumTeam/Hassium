@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -39,22 +40,9 @@ namespace Hassium.Parser.Ast
             if(finallyBody != null) Children.Add(finallyBody);
         }
 
-        public static AstNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            int pos = parser.codePos;
-
-            parser.ExpectToken(TokenType.Identifier, "try");
-            AstNode tryBody = StatementNode.Parse(parser);
-            parser.ExpectToken(TokenType.Identifier, "catch");
-            AstNode catchBody = StatementNode.Parse(parser);
-
-            if (parser.AcceptToken(TokenType.Identifier, "finally"))
-            {
-                AstNode finallyBody = StatementNode.Parse(parser);
-                return new TryNode(pos, tryBody, catchBody, finallyBody);
-            }
-
-            return new TryNode(pos, tryBody, catchBody);
+            return visitor.Accept(this);
         }
     }
 }
