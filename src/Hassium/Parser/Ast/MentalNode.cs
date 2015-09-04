@@ -10,9 +10,9 @@ namespace Hassium.Parser.Ast
 
         public MentalNode(int position, string type, string name, bool before) : base(position)
         {
-            this.OpType = type;
-            this.Name = name;
-            this.IsBefore = before;
+            OpType = type;
+            Name = name;
+            IsBefore = before;
         }
     }
 }

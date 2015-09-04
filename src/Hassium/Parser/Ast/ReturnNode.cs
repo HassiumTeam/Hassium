@@ -7,16 +7,16 @@ namespace Hassium.Parser.Ast
         public AstNode Value
         {
             get {
-                return Children.Count == 0 ? null : this.Children[0];
+                return Children.Count == 0 ? null : Children[0];
             }
         }
 
         public ReturnNode(int position, AstNode value) : base(position)
         {
-            if(value != null) this.Children.Add(value);
+            if(value != null) Children.Add(value);
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

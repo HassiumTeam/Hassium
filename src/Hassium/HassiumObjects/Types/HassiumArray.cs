@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -18,24 +17,24 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumArray(IEnumerable<object> value)
         {
-            this.Attributes.Add("length", new InternalFunction(x => Value.Length, true));
-            this.Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
+            Attributes.Add("toString", new InternalFunction(toString));
 
-            this.Attributes.Add("add", new InternalFunction(Add));
-            this.Attributes.Add("remove", new InternalFunction(Remove));
+            Attributes.Add("add", new InternalFunction(Add));
+            Attributes.Add("remove", new InternalFunction(Remove));
 
-            this.Attributes.Add("resize", new InternalFunction(ResizeArr));
-            this.Attributes.Add("join", new InternalFunction(ArrayJoin));
-            this.Attributes.Add("reverse", new InternalFunction(ArrayReverse));
-            this.Attributes.Add("contains", new InternalFunction(ArrayContains));
+            Attributes.Add("resize", new InternalFunction(ResizeArr));
+            Attributes.Add("join", new InternalFunction(ArrayJoin));
+            Attributes.Add("reverse", new InternalFunction(ArrayReverse));
+            Attributes.Add("contains", new InternalFunction(ArrayContains));
 
-            this.Attributes.Add("op", new InternalFunction(ArrayOp));
-            this.Attributes.Add("select", new InternalFunction(ArraySelect));
-            this.Attributes.Add("where", new InternalFunction(ArrayWhere));
-            this.Attributes.Add("any", new InternalFunction(ArrayAny));
-            this.Attributes.Add("first", new InternalFunction(ArrayFirst));
-            this.Attributes.Add("last", new InternalFunction(ArrayLast));
-            this.Attributes.Add("zip", new InternalFunction(ArrayZip));
+            Attributes.Add("op", new InternalFunction(ArrayOp));
+            Attributes.Add("select", new InternalFunction(ArraySelect));
+            Attributes.Add("where", new InternalFunction(ArrayWhere));
+            Attributes.Add("any", new InternalFunction(ArrayAny));
+            Attributes.Add("first", new InternalFunction(ArrayFirst));
+            Attributes.Add("last", new InternalFunction(ArrayLast));
+            Attributes.Add("zip", new InternalFunction(ArrayZip));
 
             _value = value.Select(ToHassiumObject).ToList();
         }
@@ -88,12 +87,12 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject toString(HassiumObject[] args)
         {
-            return this.ToString();
+            return ToString();
         }
 
         public HassiumObject ResizeArr(HassiumObject[] args)
         {
-            HassiumObject[] objarr = this.Value;
+            HassiumObject[] objarr = Value;
 
             HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HNum().ValueInt - 1];
 
@@ -105,7 +104,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayJoin(HassiumObject[] args)
         {
-            HassiumObject[] objarr = this.Value;
+            HassiumObject[] objarr = Value;
             string separator = "";
             if (args.Length > 1) separator = args[0].ToString();
 
@@ -121,55 +120,49 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayReverse(HassiumObject[] args)
         {
-            return this.Value.ToArray().Reverse().ToArray();
+            return Value.ToArray().Reverse().ToArray();
         }
 
         public HassiumObject ArrayOp(HassiumObject[] args)
         {
-            return this.Value.Aggregate((a, b) => args[0].Invoke(a, b));
+            return Value.Aggregate((a, b) => args[0].Invoke(a, b));
         }
 
         #region LINQ-like functions
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
-            return this.Value.Select(x => args[0].Invoke(x)).ToArray();
+            return Value.Select(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)
         {
-            return this.Value.Where(x => args[0].Invoke(x)).ToArray();
+            return Value.Where(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayAny(HassiumObject[] args)
         {
-            return this.Value.Any(x => args[0].Invoke(x));
+            return Value.Any(x => args[0].Invoke(x));
         }
 
         public HassiumObject ArrayFirst(HassiumObject[] args)
         {
-            if (args.Length == 1)
-                return this.Value.First(x => args[0].Invoke(x));
-            else
-                return this.Value.First();
+            return args.Length == 1 ? Value.First(x => args[0].Invoke(x)) : Value.First();
         }
 
         public HassiumObject ArrayLast(HassiumObject[] args)
         {
-            if (args.Length == 1)
-                return this.Value.Last(x => args[0].Invoke(x));
-            else
-                return this.Value.Last();
+            return args.Length == 1 ? Value.Last(x => args[0].Invoke(x)) : Value.Last();
         }
 
         public HassiumObject ArrayContains(HassiumObject[] args)
         {
-            return this.Value.Contains(args[0]);
+            return Value.Contains(args[0]);
         }
 
         public HassiumObject ArrayZip(HassiumObject[] args)
         {
-            return this.Value.Zip(args[0].HArray().Value, (x, y) => args[1].Invoke(x, y)).ToArray();
+            return Value.Zip(args[0].HArray().Value, (x, y) => args[1].Invoke(x, y)).ToArray();
         }
 
         #endregion
@@ -189,13 +182,13 @@ namespace Hassium.HassiumObjects.Types
                 {
                     list.Add(i);
                 }
-                return list.ToArray().Cast<HassiumNumber>().ToArray();
+                return list.ToArray().Select(x => new HassiumNumber(x)).ToArray();
             }
             return from == to
-                ? new[] {from}.Cast<HassiumNumber>().ToArray()
+                ? new[] {from}.Select(x => new HassiumNumber(x)).ToArray()
                 : (to < from
                     ? Enumerable.Range((int) to, (int) from).Reverse().ToArray()
-                    : Enumerable.Range((int) from, (int) to)).Cast<HassiumNumber>().ToArray();
+                    : Enumerable.Range((int) from, (int) to)).Select(x => new HassiumNumber(x)).ToArray();
         }
     }
 }

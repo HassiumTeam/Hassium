@@ -10,7 +10,7 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumStream(Stream value)
         {
-            this.Value = value;
+            Value = value;
             Attributes.Add("length", new InternalFunction(x => Value.Length, true));
             Attributes.Add("position", new InternalFunction(x => Value.Position, true));
             Attributes.Add("flush", new InternalFunction(Flush));

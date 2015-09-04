@@ -8,7 +8,7 @@ namespace Hassium.Parser.Ast
         {
         }
 
-        public static ArgListNode Parse(Hassium.Parser.Parser parser)
+        public static ArgListNode Parse(Parser parser)
         {
             ArgListNode ret = new ArgListNode(parser.codePos);
             //parser.ExpectToken(TokenType.Parentheses, "(");

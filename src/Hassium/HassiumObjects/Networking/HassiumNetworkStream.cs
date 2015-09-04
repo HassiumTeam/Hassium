@@ -6,15 +6,14 @@ namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumNetworkStream: HassiumStream
     {
-        public NetworkStream Value
+        public new NetworkStream Value
         {
             get { return (NetworkStream) base.Value; }
             set { base.Value = value; }
         }
 
-        public HassiumNetworkStream(NetworkStream s) : base(s)
+        public HassiumNetworkStream(Stream s) : base(s)
         {
-            this.Value = s;
         }
 
     }

@@ -17,7 +17,7 @@ namespace Hassium.Parser.Ast
             Children.Add(node);
         }
 
-        public static ThreadNode Parse(Hassium.Parser.Parser parser)
+        public static ThreadNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

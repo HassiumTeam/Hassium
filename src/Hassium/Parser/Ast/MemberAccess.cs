@@ -6,7 +6,7 @@
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
@@ -18,8 +18,8 @@
 
         public MemberAccess(int position, AstNode left, string identifier) : base(position)
         {
-            this.Children.Add(left);
-            this.Member = identifier;
+            Children.Add(left);
+            Member = identifier;
         }
     }
 }

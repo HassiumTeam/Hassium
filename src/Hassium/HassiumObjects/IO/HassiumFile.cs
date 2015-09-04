@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
 using Hassium.HassiumObjects.Text;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -15,29 +14,29 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumFile()
         {
-            this.Attributes.Add("writeText", new InternalFunction(PutContent));
-            this.Attributes.Add("readText", new InternalFunction(ReadContent));
-            this.Attributes.Add("readLines", new InternalFunction(ReadLines));
-            this.Attributes.Add("exists", new InternalFunction(Exists));
-            this.Attributes.Add("create", new InternalFunction(Create));
-            this.Attributes.Add("append", new InternalFunction(Append));
-            this.Attributes.Add("appendLines", new InternalFunction(AppendLines));
-            this.Attributes.Add("copy", new InternalFunction(Copy));
-            this.Attributes.Add("move", new InternalFunction(Move));
-            this.Attributes.Add("rename", new InternalFunction(Rename));
-            this.Attributes.Add("deleteFile", new InternalFunction(DeleteFile));
-            this.Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory));
-            this.Attributes.Add("getDirectory", new InternalFunction(GetDirectory));
-            this.Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
-            this.Attributes.Add("getFiles", new InternalFunction(GetFiles));
-            this.Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
-            this.Attributes.Add("createText", new InternalFunction(createText));
-            this.Attributes.Add("openText", new InternalFunction(openText));
-            this.Attributes.Add("getCreationTime", new InternalFunction(getCreationTime));
-            this.Attributes.Add("getLastAccessTime", new InternalFunction(getLastAccessTime));
-            this.Attributes.Add("getLastWriteTime", new InternalFunction(getLastWriteTime));
-            this.Attributes.Add("setLastAccessTime", new InternalFunction(setLastWriteTime));
-            this.Attributes.Add("setCreationTime", new InternalFunction(setCreationTime));
+            Attributes.Add("writeText", new InternalFunction(PutContent));
+            Attributes.Add("readText", new InternalFunction(ReadContent));
+            Attributes.Add("readLines", new InternalFunction(ReadLines));
+            Attributes.Add("exists", new InternalFunction(Exists));
+            Attributes.Add("create", new InternalFunction(Create));
+            Attributes.Add("append", new InternalFunction(Append));
+            Attributes.Add("appendLines", new InternalFunction(AppendLines));
+            Attributes.Add("copy", new InternalFunction(Copy));
+            Attributes.Add("move", new InternalFunction(Move));
+            Attributes.Add("rename", new InternalFunction(Rename));
+            Attributes.Add("deleteFile", new InternalFunction(DeleteFile));
+            Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory));
+            Attributes.Add("getDirectory", new InternalFunction(GetDirectory));
+            Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
+            Attributes.Add("getFiles", new InternalFunction(GetFiles));
+            Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
+            Attributes.Add("createText", new InternalFunction(createText));
+            Attributes.Add("openText", new InternalFunction(openText));
+            Attributes.Add("getCreationTime", new InternalFunction(getCreationTime));
+            Attributes.Add("getLastAccessTime", new InternalFunction(getLastAccessTime));
+            Attributes.Add("getLastWriteTime", new InternalFunction(getLastWriteTime));
+            Attributes.Add("setLastAccessTime", new InternalFunction(setLastWriteTime));
+            Attributes.Add("setCreationTime", new InternalFunction(setCreationTime));
         }
             
 
@@ -66,7 +65,8 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumObject Rename(HassiumObject[] args)
         {
-            File.Move(args[0].ToString(), Path.Combine(Path.GetDirectoryName(args[0].ToString()), args[1].ToString()));
+            var dname = Path.GetDirectoryName(args[0].ToString());
+            if(dname != null) File.Move(args[0].ToString(), Path.Combine(dname, args[1].ToString()));
             return null;
         }
 

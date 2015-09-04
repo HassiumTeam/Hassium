@@ -9,41 +9,41 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumStreamWriter(StreamWriter value)
         {
-            this.Value = value;
-            this.Attributes.Add("write", new InternalFunction(write));
-            this.Attributes.Add("flush", new InternalFunction(flush));
-            this.Attributes.Add("close", new InternalFunction(close));
-            this.Attributes.Add("dispose", new InternalFunction(dispose));
-            this.Attributes.Add("writeLine", new InternalFunction(writeLine));
+            Value = value;
+            Attributes.Add("write", new InternalFunction(write));
+            Attributes.Add("flush", new InternalFunction(flush));
+            Attributes.Add("close", new InternalFunction(close));
+            Attributes.Add("dispose", new InternalFunction(dispose));
+            Attributes.Add("writeLine", new InternalFunction(writeLine));
         }
 
         private HassiumObject write(HassiumObject[] args)
         {
-            this.Value.Write(args[0].ToString());
+            Value.Write(args[0].ToString());
             return null;
         }
 
         private HassiumObject flush(HassiumObject[] args)
         {
-            this.Value.Flush();
+            Value.Flush();
             return null;
         }
 
         private HassiumObject close(HassiumObject[] args)
         {
-            this.Value.Close();
+            Value.Close();
             return null;
         }
 
         private HassiumObject dispose(HassiumObject[] args)
         {
-            this.Value.Dispose();
+            Value.Dispose();
             return null;
         }
 
         private HassiumObject writeLine(HassiumObject[] args)
         {
-            this.Value.WriteLine(args[0].ToString());
+            Value.WriteLine(args[0].ToString());
             return null;
         }
     }

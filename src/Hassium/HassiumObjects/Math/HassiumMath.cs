@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Math
@@ -13,29 +11,29 @@ namespace Hassium.HassiumObjects.Math
     {
         public HassiumMath()
         {
-            this.Attributes.Add("hash", new InternalFunction(Hash));
-            this.Attributes.Add("pow", new InternalFunction(Pow));
-            this.Attributes.Add("sqrt", new InternalFunction(Sqrt));
-            this.Attributes.Add("abs", new InternalFunction(Abs));
-            this.Attributes.Add("acos", new InternalFunction(Acos));
-            this.Attributes.Add("asin", new InternalFunction(Asin));
-            this.Attributes.Add("atan", new InternalFunction(Atan));
-            this.Attributes.Add("atan2", new InternalFunction(Atan2));
-            this.Attributes.Add("ceil", new InternalFunction(Ceil));
-            this.Attributes.Add("cos", new InternalFunction(Cos));
-            this.Attributes.Add("cosh", new InternalFunction(Cosh));
-            this.Attributes.Add("exp", new InternalFunction(Exp));
-            this.Attributes.Add("floor", new InternalFunction(Floor));
-            this.Attributes.Add("ln", new InternalFunction(Ln));
-            this.Attributes.Add("log", new InternalFunction(Log));
-            this.Attributes.Add("log10", new InternalFunction(Log10));
-            this.Attributes.Add("max", new InternalFunction(Max));
-            this.Attributes.Add("min", new InternalFunction(Min));
-            this.Attributes.Add("round", new InternalFunction(Round));
-            this.Attributes.Add("sin", new InternalFunction(Sin));
-            this.Attributes.Add("sinh", new InternalFunction(Sinh));
-            this.Attributes.Add("tan", new InternalFunction(Tan));
-            this.Attributes.Add("tanh", new InternalFunction(Tanh));
+            Attributes.Add("hash", new InternalFunction(Hash));
+            Attributes.Add("pow", new InternalFunction(Pow));
+            Attributes.Add("sqrt", new InternalFunction(Sqrt));
+            Attributes.Add("abs", new InternalFunction(Abs));
+            Attributes.Add("acos", new InternalFunction(Acos));
+            Attributes.Add("asin", new InternalFunction(Asin));
+            Attributes.Add("atan", new InternalFunction(Atan));
+            Attributes.Add("atan2", new InternalFunction(Atan2));
+            Attributes.Add("ceil", new InternalFunction(Ceil));
+            Attributes.Add("cos", new InternalFunction(Cos));
+            Attributes.Add("cosh", new InternalFunction(Cosh));
+            Attributes.Add("exp", new InternalFunction(Exp));
+            Attributes.Add("floor", new InternalFunction(Floor));
+            Attributes.Add("ln", new InternalFunction(Ln));
+            Attributes.Add("log", new InternalFunction(Log));
+            Attributes.Add("log10", new InternalFunction(Log10));
+            Attributes.Add("max", new InternalFunction(Max));
+            Attributes.Add("min", new InternalFunction(Min));
+            Attributes.Add("round", new InternalFunction(Round));
+            Attributes.Add("sin", new InternalFunction(Sin));
+            Attributes.Add("sinh", new InternalFunction(Sinh));
+            Attributes.Add("tan", new InternalFunction(Tan));
+            Attributes.Add("tanh", new InternalFunction(Tanh));
         }
 
         public HassiumObject Hash(HassiumObject[] args)
@@ -132,10 +130,7 @@ namespace Hassium.HassiumObjects.Math
 
         public HassiumObject Round(HassiumObject[] args)
         {
-            if (args.Count() > 1)
-                return new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).ValueInt));
-            
-            return new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value));
+            return args.Count() > 1 ? new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).ValueInt)) : new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value));
         }
 
         public HassiumObject Sin(HassiumObject[] args)

@@ -26,7 +26,7 @@ namespace Hassium.Functions
             return ((object) this).ToString();
         }
 
-        public override HassiumObject Invoke(HassiumObject[] args)
+        public override HassiumObject Invoke(params HassiumObject[] args)
         {
             return target(args);
         }

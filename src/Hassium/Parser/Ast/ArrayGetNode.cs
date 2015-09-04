@@ -33,7 +33,7 @@ namespace Hassium.Parser.Ast
         {
         }
 
-        public static ArrayIndexerNode Parse(Hassium.Parser.Parser parser)
+        public static ArrayIndexerNode Parse(Parser parser)
         {
             var ret = new ArrayIndexerNode(parser.codePos);
             parser.ExpectToken(TokenType.Bracket, "[");

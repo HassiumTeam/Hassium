@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Hassium.HassiumObjects;
@@ -14,7 +12,7 @@ namespace Hassium.Functions
 		[IntFunc("type")]
 		public static HassiumObject Type(HassiumObject[] args)
 		{
-			return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".") + 1);
+			return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".", StringComparison.Ordinal) + 1);
 		}
 
 		[IntFunc("throw")]
@@ -41,26 +39,26 @@ namespace Hassium.Functions
 			{
 			}
 			var test = t.GetMember(membername).First();
-			if(test.MemberType == MemberTypes.Field)
+			switch (test.MemberType)
 			{
-				var fv = t.GetField(membername).GetValue(null);
-				if(fv is double || fv is int) return new HassiumNumber((double)fv);
-				if(fv is string) return new HassiumString((string)fv);
-				if(fv is Array) return new HassiumArray((Array)fv);
-				if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
-				if (fv is bool) return new HassiumBool((bool) fv);
-				else return (HassiumObject)(object) fv;
-			}
-			else if (test.MemberType == MemberTypes.Method || test.MemberType == MemberTypes.Constructor)
-			{
-				object result = t.InvokeMember(
-					membername,
-					BindingFlags.InvokeMethod,
-					null,
-					instance,
-					margs
-					);
-				return (HassiumObject)result;
+			    case MemberTypes.Field:
+			        var fv = t.GetField(membername).GetValue(null);
+			        if(fv is double || fv is int) return new HassiumNumber((double)fv);
+			        if(fv is string) return new HassiumString((string)fv);
+			        if(fv is Array) return new HassiumArray((Array)fv);
+			        if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
+			        if (fv is bool) return new HassiumBool((bool) fv);
+			        else return (HassiumObject)(object) fv;
+			    case MemberTypes.Method:
+			    case MemberTypes.Constructor:
+			        var result = t.InvokeMember(
+			            membername,
+			            BindingFlags.InvokeMethod,
+			            null,
+			            instance,
+			            margs
+			            );
+			        return (HassiumObject)result;
 			}
 			return null;
 		}

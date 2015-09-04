@@ -17,7 +17,7 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public FunctionCallNode(int position, AstNode target, ArgListNode arguments) : base(position)
+        public FunctionCallNode(int position, AstNode target, AstNode arguments) : base(position)
         {
             Children.Add(target);
             Children.Add(arguments);

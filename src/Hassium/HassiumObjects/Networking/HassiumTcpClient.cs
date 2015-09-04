@@ -11,17 +11,17 @@ namespace Hassium.HassiumObjects.Networking
 
         public HassiumTcpClient(TcpClient value)
         {
-            this.Value = value;
-            this.Attributes.Add("available", new InternalFunction(available));
-            this.Attributes.Add("connect", new InternalFunction(connect));
-            this.Attributes.Add("connected", new InternalFunction(connected));
-            this.Attributes.Add("getStream", new InternalFunction(getStream));
-            this.Attributes.Add("close", new InternalFunction(close));
+            Value = value;
+            Attributes.Add("available", new InternalFunction(available));
+            Attributes.Add("connect", new InternalFunction(connect));
+            Attributes.Add("connected", new InternalFunction(connected));
+            Attributes.Add("getStream", new InternalFunction(getStream));
+            Attributes.Add("close", new InternalFunction(close));
         }
 
         private HassiumObject available(HassiumObject[] args)
         {
-            return new HassiumNumber(this.Value.Available);
+            return new HassiumNumber(Value.Available);
         }
 
         private HassiumObject connect(HassiumObject[] args)
@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject connected(HassiumObject[] args)
         {
-            return new HassiumBool(this.Value.Connected);
+            return new HassiumBool(Value.Connected);
         }
 
         private HassiumObject getStream(HassiumObject[] args)
@@ -42,7 +42,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject close(HassiumObject[] args)
         {
-            this.Value.Close();
+            Value.Close();
             return null;
         }
     }

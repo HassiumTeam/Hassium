@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
-using Hassium.Lexer;
-using Hassium.Parser;
 using Hassium.Semantics;
 
 namespace Hassium.Functions
@@ -26,15 +22,20 @@ namespace Hassium.Functions
         [IntFunc("system")]
         public static HassiumObject System(HassiumObject[] args)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = args[0].ToString();
-            process.StartInfo.Arguments = String.Join("", args.Skip(1));
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = false;
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = args[0].ToString(),
+                    Arguments = string.Join("", args.Skip(1)),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = false
+                }
+            };
             process.Start();
                 
-            string output = process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
             return output;
@@ -90,12 +91,14 @@ namespace Hassium.Functions
         [IntFunc("eval")]
         public static HassiumObject Eval(HassiumObject[] args)
         {
-            List<Token> tokens = new Lexer.Lexer(args[0].ToString()).Tokenize();
-            Parser.Parser hassiumParser = new Parser.Parser(tokens);
-            AstNode ast = hassiumParser.Parse();
-            Interpreter.Interpreter intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false);
-            intp.Globals = HassiumInterpreter.CurrentInterpreter.Globals;
-            intp.CallStack = HassiumInterpreter.CurrentInterpreter.CallStack;
+            var tokens = new Lexer.Lexer(args[0].ToString()).Tokenize();
+            var hassiumParser = new Parser.Parser(tokens);
+            var ast = hassiumParser.Parse();
+            var intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
+            {
+                Globals = HassiumInterpreter.CurrentInterpreter.Globals,
+                CallStack = HassiumInterpreter.CurrentInterpreter.CallStack
+            };
             intp.Execute();
             return null;
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
@@ -13,63 +11,63 @@ namespace Hassium.HassiumObjects.Text
 
         public HassiumBinaryReader(BinaryReader value)
         {
-            this.Value = value;
-            this.Attributes.Add("close", new InternalFunction(close));
-            this.Attributes.Add("dispose", new InternalFunction(dispose));
-            this.Attributes.Add("peekChar", new InternalFunction(peekChar));
-            this.Attributes.Add("read", new InternalFunction(read));
-            this.Attributes.Add("readBoolean", new InternalFunction(readBoolean));
-            this.Attributes.Add("readByte", new InternalFunction(readByte));
-            this.Attributes.Add("readString", new InternalFunction(readString));
-            this.Attributes.Add("readChars", new InternalFunction(readChars));
-            this.Attributes.Add("toString", new InternalFunction(toString));
+            Value = value;
+            Attributes.Add("close", new InternalFunction(close));
+            Attributes.Add("dispose", new InternalFunction(dispose));
+            Attributes.Add("peekChar", new InternalFunction(peekChar));
+            Attributes.Add("read", new InternalFunction(read));
+            Attributes.Add("readBoolean", new InternalFunction(readBoolean));
+            Attributes.Add("readByte", new InternalFunction(readByte));
+            Attributes.Add("readString", new InternalFunction(readString));
+            Attributes.Add("readChars", new InternalFunction(readChars));
+            Attributes.Add("toString", new InternalFunction(toString));
         }
 
         public HassiumObject close(HassiumObject[] args)
         {
-            this.Value.Close();
+            Value.Close();
             return null;
         }
 
         public HassiumObject dispose(HassiumObject[] args)
         {
-            this.Value.Dispose();
+            Value.Dispose();
             return null;
         }
 
         public HassiumObject peekChar(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(this.Value.PeekChar()));
+            return new HassiumString(Convert.ToString(Value.PeekChar()));
         }
 
         public HassiumObject read(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(this.Value.Read()));
+            return new HassiumString(Convert.ToString(Value.Read()));
         }
 
         public HassiumObject readBoolean(HassiumObject[] args)
         {
-            return new HassiumBool(this.Value.ReadBoolean());
+            return new HassiumBool(Value.ReadBoolean());
         }
 
         public HassiumObject readByte(HassiumObject[] args)
         {
-            return new HassiumByte(this.Value.ReadByte());
+            return new HassiumByte(Value.ReadByte());
         }
 
         public HassiumObject readChars(HassiumObject[] args)
         {
-            return new HassiumString(this.Value.ReadChars(((HassiumNumber)args[0])).ToString());
+            return new HassiumString(Value.ReadChars(((HassiumNumber)args[0])).ToString());
         }
 
         public HassiumObject readString(HassiumObject[] args)
         {
-            return new HassiumString(this.Value.ReadString());
+            return new HassiumString(Value.ReadString());
         }
 
         public HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(this.Value.ToString());
+            return new HassiumString(Value.ToString());
         }
     }
 }

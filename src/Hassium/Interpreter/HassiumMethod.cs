@@ -11,11 +11,11 @@ namespace Hassium.Interpreter
 
         public HassiumMethod(HassiumFunction function, HassiumObject self)
         {
-            this.SelfReference = self;
+            SelfReference = self;
             this.function = function;
         }
 
-        public override HassiumObject Invoke(HassiumObject[] args)
+        public override HassiumObject Invoke(params HassiumObject[] args)
         {
             StackFrame stackFrame = function.stackFrame;
             if (stackFrame == null || (stackFrame.Locals.Count == 0))

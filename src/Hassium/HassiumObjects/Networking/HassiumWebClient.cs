@@ -11,10 +11,10 @@ namespace Hassium.HassiumObjects.Networking
 
         public HassiumWebClient(WebClient value)
         {
-            this.Value = value;
-            this.Attributes.Add("downloadString", new InternalFunction(downstr));
-            this.Attributes.Add("downloadFile", new InternalFunction(downfile));
-            this.Attributes.Add("uploadFile", new InternalFunction(upfile));
+            Value = value;
+            Attributes.Add("downloadString", new InternalFunction(downstr));
+            Attributes.Add("downloadFile", new InternalFunction(downfile));
+            Attributes.Add("uploadFile", new InternalFunction(upfile));
         }
 
         private HassiumObject downstr(HassiumObject[] args)

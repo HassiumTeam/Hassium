@@ -37,7 +37,7 @@ namespace Hassium.Parser.Ast
             Children.Add(elseBody);
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

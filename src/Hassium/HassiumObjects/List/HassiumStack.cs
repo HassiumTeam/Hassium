@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.List
@@ -12,38 +10,38 @@ namespace Hassium.HassiumObjects.List
 
         public HassiumStack(Stack value)
         {
-            this.Value = value;
-            this.Attributes.Add("clear", new InternalFunction(clear));
-            this.Attributes.Add("contains", new InternalFunction(contains));
-            this.Attributes.Add("peek", new InternalFunction(peek));
-            this.Attributes.Add("pop", new InternalFunction(pop));
-            this.Attributes.Add("push", new InternalFunction(push));
+            Value = value;
+            Attributes.Add("clear", new InternalFunction(clear));
+            Attributes.Add("contains", new InternalFunction(contains));
+            Attributes.Add("peek", new InternalFunction(peek));
+            Attributes.Add("pop", new InternalFunction(pop));
+            Attributes.Add("push", new InternalFunction(push));
         }
 
         private HassiumObject clear(HassiumObject[] args)
         {
-            this.Value.Clear();
+            Value.Clear();
             return null;
         }
 
         private HassiumObject contains(HassiumObject[] args)
         {
-            return new HassiumBool(this.Value.Contains(args[0]));
+            return new HassiumBool(Value.Contains(args[0]));
         }
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return ((HassiumObject)this.Value.Peek());
+            return ((HassiumObject)Value.Peek());
         }
 
         private HassiumObject pop(HassiumObject[] args)
         {
-            return ((HassiumObject)this.Value.Pop());
+            return ((HassiumObject)Value.Pop());
         }
 
         private HassiumObject push(HassiumObject[] args)
         {
-            this.Value.Push(args[0]);
+            Value.Push(args[0]);
             return null;
         }
     }

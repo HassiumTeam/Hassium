@@ -1,8 +1,5 @@
-using System;
 using System.Net;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {
@@ -12,19 +9,19 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         public HassiumHttpListenerContext(HttpListenerContext value)
         {
-            this.Value = value;
-            this.Attributes.Add("request", new InternalFunction(request));
-            this.Attributes.Add("response", new InternalFunction(response));
+            Value = value;
+            Attributes.Add("request", new InternalFunction(request));
+            Attributes.Add("response", new InternalFunction(response));
         }
 
         private HassiumObject request(HassiumObject[] args)
         {
-            return new HassiumHttpListenerRequest(this.Value.Request);
+            return new HassiumHttpListenerRequest(Value.Request);
         }
 
         private HassiumObject response(HassiumObject[] args)
         {
-            return new HassiumHttpListenerResponse(this.Value.Response);
+            return new HassiumHttpListenerResponse(Value.Response);
         }
     }
 }

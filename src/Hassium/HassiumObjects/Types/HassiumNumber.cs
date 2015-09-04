@@ -11,12 +11,12 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumNumber(double value)
         {
-            this.Attributes.Add("toString", new InternalFunction(tostring));
-            this.Attributes.Add("compare", new InternalFunction(compare));
-            this.Attributes.Add("isBetween", new InternalFunction(isBetween));
-            this.Attributes.Add("isLetterOrDigit", new InternalFunction(isLetterOrDigit));
-            this.Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
-            this.Value = value;
+            Attributes.Add("toString", new InternalFunction(tostring));
+            Attributes.Add("compare", new InternalFunction(compare));
+            Attributes.Add("isBetween", new InternalFunction(isBetween));
+            Attributes.Add("isLetterOrDigit", new InternalFunction(isLetterOrDigit));
+            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
+            Value = value;
         }
 
         public override string ToString()

@@ -24,8 +24,7 @@ namespace Hassium.Parser.Ast
         {
             get
             {
-                if (Children.Count < 3) return null;
-                return Children[2];
+                return Children.Count < 3 ? null : Children[2];
             }
         }
 
@@ -40,7 +39,7 @@ namespace Hassium.Parser.Ast
             if(finallyBody != null) Children.Add(finallyBody);
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

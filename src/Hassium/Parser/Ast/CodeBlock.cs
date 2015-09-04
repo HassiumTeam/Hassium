@@ -8,7 +8,7 @@ namespace Hassium.Parser.Ast
         {
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             CodeBlock block = new CodeBlock(parser.codePos);
             parser.ExpectToken(TokenType.Brace, "{");

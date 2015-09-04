@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -11,45 +10,45 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumStreamReader(StreamReader value)
         {
-            this.Value = value;
-            this.Attributes.Add("readLine", new InternalFunction(readLine));
-            this.Attributes.Add("dispose", new InternalFunction(dispose));
-            this.Attributes.Add("close", new InternalFunction(close));
-            this.Attributes.Add("peek", new InternalFunction(peek));
-            this.Attributes.Add("read", new InternalFunction(read));
-            this.Attributes.Add("readToEnd", new InternalFunction(readToEnd));
+            Value = value;
+            Attributes.Add("readLine", new InternalFunction(readLine));
+            Attributes.Add("dispose", new InternalFunction(dispose));
+            Attributes.Add("close", new InternalFunction(close));
+            Attributes.Add("peek", new InternalFunction(peek));
+            Attributes.Add("read", new InternalFunction(read));
+            Attributes.Add("readToEnd", new InternalFunction(readToEnd));
         }
 
         private HassiumObject readLine(HassiumObject[] args)
         {
-            return this.Value.ReadLine();
+            return Value.ReadLine();
         }
 
         private HassiumObject close(HassiumObject[] args)
         {
-            this.Value.Close();
+            Value.Close();
             return null;
         }
 
         private HassiumObject dispose(HassiumObject[] args)
         {
-            this.Value.Dispose();
+            Value.Dispose();
             return null;
         }
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return new HassiumChar(((char)this.Value.Peek()));
+            return new HassiumChar(((char)Value.Peek()));
         }
 
         private HassiumObject read(HassiumObject[] args)
         {
-            return new HassiumChar(((char)this.Value.Read()));
+            return new HassiumChar(((char)Value.Read()));
         }
 
         private HassiumObject readToEnd(HassiumObject[] args)
         {
-            return new HassiumString(this.Value.ReadToEnd());
+            return new HassiumString(Value.ReadToEnd());
         }
     }
 }

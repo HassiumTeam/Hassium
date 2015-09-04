@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Hassium.Parser.Ast
+﻿namespace Hassium.Parser.Ast
 {
     public class ConditionalOpNode : AstNode
     {
@@ -11,21 +6,21 @@ namespace Hassium.Parser.Ast
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
         public AstNode Body
         {
             get
             {
-                return this.Children[1];
+                return Children[1];
             }
         }
         public AstNode ElseBody
         {
             get
             {
-                return this.Children[2];
+                return Children[2];
             }
         }
 
@@ -35,9 +30,9 @@ namespace Hassium.Parser.Ast
 
         public ConditionalOpNode(int position, AstNode predicate, AstNode body, AstNode elseBody) : base(position)
         {
-            this.Children.Add(predicate);
-            this.Children.Add(body);
-            this.Children.Add(elseBody);
+            Children.Add(predicate);
+            Children.Add(body);
+            Children.Add(elseBody);
         }
     }
 }

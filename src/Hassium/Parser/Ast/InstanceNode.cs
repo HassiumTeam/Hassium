@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Hassium.Lexer;
+﻿using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -10,12 +6,12 @@ namespace Hassium.Parser.Ast
     {
         public AstNode Target
         {
-            get { return this.Children[0]; }
+            get { return Children[0]; }
         }
 
         public InstanceNode(int position, AstNode value) : base(position)
         {
-            this.Children.Add(value);
+            Children.Add(value);
         }
 
         public static AstNode Parse(Parser parser)

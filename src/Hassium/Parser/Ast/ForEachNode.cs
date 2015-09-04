@@ -35,15 +35,14 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.Parentheses, "(");
             AstNode needle = null;
-            if (parser.CurrentToken().Value.ToString() == "[") needle = ArrayInitializerNode.Parse(parser);
-            else needle = IdentifierNode.Parse(parser);
+            needle = parser.CurrentToken().Value.ToString() == "[" ? ArrayInitializerNode.Parse(parser) : IdentifierNode.Parse(parser);
             parser.ExpectToken(TokenType.Identifier, "in");
             AstNode haystack = StatementNode.Parse(parser);
             parser.ExpectToken(TokenType.Parentheses, ")");

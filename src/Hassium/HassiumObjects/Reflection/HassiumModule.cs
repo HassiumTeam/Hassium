@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Reflection
@@ -9,27 +10,11 @@ namespace Hassium.HassiumObjects.Reflection
 
         public HassiumModule(Module module)
         {
-            this.Value = module;
-        }
-
-        private HassiumObject assembly(HassiumObject[] args)
-        {
-            return new HassiumAssembly(this.Value.Assembly);
-        }
-
-        private HassiumObject name(HassiumObject[] args)
-        {
-            return new HassiumString(this.Value.Name);
-        }
-
-        private HassiumObject scopeName(HassiumObject[] args)
-        {
-            return new HassiumString(this.Value.ScopeName);
-        }
-
-        private HassiumObject fullyQualifiedName(HassiumObject[] args)
-        {
-            return new HassiumString(this.Value.FullyQualifiedName);
+            Value = module;
+            Attributes.Add("assembly", new InternalFunction(x => new HassiumAssembly(Value.Assembly), true));
+            Attributes.Add("name", new InternalFunction(x => new HassiumString(Value.Name), true));
+            Attributes.Add("scopeName", new InternalFunction(x => new HassiumString(Value.ScopeName), true));
+            Attributes.Add("fullyQualifiedName", new InternalFunction(x => new HassiumString(Value.FullyQualifiedName), true));
         }
     }
 }

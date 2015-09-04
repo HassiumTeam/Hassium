@@ -130,41 +130,36 @@ namespace Hassium.Lexer
                         Add(new Token(TokenType.Brace, ReadChar()));
                         break;
                     case ':':
-                        if (next1 == '=')
-                            Add(new Token(TokenType.Assignment, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.Identifier, ReadChar()));
+                        Add(next1 == '='
+                            ? new Token(TokenType.Assignment, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Identifier, ReadChar()));
                         break;
                     case '=':
-                        if (next1 == '>')
-                            Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.Comparison, ReadChar()));
+                        Add(next1 == '>'
+                            ? new Token(TokenType.Lambda, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Comparison, ReadChar()));
                         break;
                     case '!':
-                        if (next1 == '=')
-                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.UnaryOperation, ReadChar()));
+                        Add(next1 == '='
+                            ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.UnaryOperation, ReadChar()));
                         break;
                     case '~':
                         Add(new Token(TokenType.UnaryOperation, ReadChar()));
                         break;
                     case '&':
                     case '|':
-                        if (next1 == current)
-                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.Operation, ReadChar()));
+                        Add(next1 == current
+                            ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '^':
                         Add(new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '?':
-                        if (next1 == '?')
-                            Add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.Operation, ReadChar()));
+                        Add(next1 == '?'
+                            ? new Token(TokenType.Operation, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '<':
                     case '>':
@@ -183,7 +178,7 @@ namespace Hassium.Lexer
                         break;
                     default:
                         result.Add(new Token(TokenType.Exception,
-                            "Unexpected " + PeekChar().ToString() + " encountered at position " + position));
+                            "Unexpected " + PeekChar() + " encountered at position " + position));
                         ReadChar();
                         break;
                 }

@@ -20,17 +20,17 @@ namespace Hassium.Interpreter
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, LocalScope localScope)
         {
-            this.Interpreter = interpreter;
-            this.FuncNode = funcNode;
-            this.LocalScope = localScope;
-            this.stackFrame = null;
+            Interpreter = interpreter;
+            FuncNode = funcNode;
+            LocalScope = localScope;
+            stackFrame = null;
         }
 
         public HassiumFunction(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame)
         {
-            this.Interpreter = interpreter;
-            this.FuncNode = funcNode;
-            this.LocalScope = stackFrame == null ? null : stackFrame.Scope;
+            Interpreter = interpreter;
+            FuncNode = funcNode;
+            LocalScope = stackFrame == null ? null : stackFrame.Scope;
             this.stackFrame = stackFrame;
         }
 
@@ -44,7 +44,7 @@ namespace Hassium.Interpreter
         /// </summary>
         /// <param name="args">The list of arguments</param>
         /// <returns>The return value</returns>
-        public override HassiumObject Invoke(HassiumObject[] args)
+        public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(LocalScope);
 
@@ -72,7 +72,7 @@ namespace Hassium.Interpreter
         /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
         public static Func<HassiumObject> GetFuncVoid(HassiumObject internalFunction)
         {
-            return () => (internalFunction).Invoke(new HassiumObject[0]);
+            return () => (internalFunction).Invoke();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Hassium.Interpreter
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}"/></returns>
         public static Func<HassiumObject, HassiumObject> GetFunc1(HassiumObject internalFunction)
         {
-            return (arg1) => (internalFunction).Invoke(new HassiumObject[0]);
+            return arg1 => (internalFunction).Invoke();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Hassium.Interpreter
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject}"/></returns>
         public static Func<HassiumObject, HassiumObject, HassiumObject> GetFunc2(HassiumObject internalFunction)
         {
-            return (arg1, arg2) => (internalFunction).Invoke(new[] { arg1, arg2 });
+            return (arg1, arg2) => (internalFunction).Invoke(arg1, arg2);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Hassium.Interpreter
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/></returns>
         public static Func<HassiumObject, HassiumObject, HassiumObject, HassiumObject> GetFunc3(HassiumObject internalFunction)
         {
-            return (arg1, arg2, arg3) => (internalFunction).Invoke(new[] { arg1, arg2, arg3 });
+            return (arg1, arg2, arg3) => (internalFunction).Invoke(arg1, arg2, arg3);
         }
     }
 }

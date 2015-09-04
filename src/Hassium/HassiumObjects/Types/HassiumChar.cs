@@ -1,5 +1,4 @@
 ﻿using System;
-using Hassium.HassiumObjects;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -10,13 +9,13 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumChar(char value)
         {
-            this.Value = value;
-            this.Attributes.Add("toString", new InternalFunction(toString));
+            Value = value;
+            Attributes.Add("toString", new InternalFunction(toString));
         }
 
         private HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(this.Value));
+            return new HassiumString(Convert.ToString(Value));
         }
     }
 }

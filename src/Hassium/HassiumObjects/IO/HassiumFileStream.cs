@@ -11,7 +11,7 @@ namespace Hassium.HassiumObjects.IO
             set { base.Value = value; }
         }
 
-        public HassiumFileStream(FileStream value) : base(value)
+        public HassiumFileStream(Stream value) : base(value)
         {
             Attributes.Add("readChar", new InternalFunction(ReadChar));
         }

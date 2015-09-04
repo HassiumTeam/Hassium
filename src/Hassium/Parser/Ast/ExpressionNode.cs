@@ -76,13 +76,13 @@ namespace Hassium.Parser.Ast
 		}
 
 
-		public static AstNode Parse(Hassium.Parser.Parser parser)
+		public static AstNode Parse(Parser parser)
 		{
 			return ParseAssignment(parser);
 		}
 
 
-		private static AstNode ParseAssignment (Hassium.Parser.Parser parser)
+		private static AstNode ParseAssignment (Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -108,7 +108,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseLogicalOr(Hassium.Parser.Parser parser)
+		private static AstNode ParseLogicalOr(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -132,7 +132,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseLogicalAnd(Hassium.Parser.Parser parser)
+		private static AstNode ParseLogicalAnd(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -149,7 +149,7 @@ namespace Hassium.Parser.Ast
 
 		
 
-		private static AstNode ParseEquality(Hassium.Parser.Parser parser)
+		private static AstNode ParseEquality(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -216,7 +216,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseOr(Hassium.Parser.Parser parser)
+		private static AstNode ParseOr(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -231,7 +231,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseXor(Hassium.Parser.Parser parser)
+		private static AstNode ParseXor(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -246,7 +246,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseAnd(Hassium.Parser.Parser parser)
+		private static AstNode ParseAnd(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -263,7 +263,7 @@ namespace Hassium.Parser.Ast
 
 		
 
-		private static AstNode ParseAdditive (Hassium.Parser.Parser parser)
+		private static AstNode ParseAdditive (Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -287,7 +287,7 @@ namespace Hassium.Parser.Ast
 			return left;
 		}
 
-		private static AstNode ParseMultiplicative (Hassium.Parser.Parser parser)
+		private static AstNode ParseMultiplicative (Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -333,7 +333,7 @@ namespace Hassium.Parser.Ast
 			}
 		}
 
-		private static AstNode ParseUnary(Hassium.Parser.Parser parser)
+		private static AstNode ParseUnary(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -351,7 +351,7 @@ namespace Hassium.Parser.Ast
 				return ParsePostfixIncDec(parser);
 		}
 
-		private static AstNode ParsePostfixIncDec(Hassium.Parser.Parser parser)
+		private static AstNode ParsePostfixIncDec(Parser parser)
 		{
 			int pos = parser.codePos;
 
@@ -392,35 +392,40 @@ namespace Hassium.Parser.Ast
 			}
 		}
 
-		private static AstNode ParseFunctionCall(Hassium.Parser.Parser parser)
+		private static AstNode ParseFunctionCall(Parser parser)
 		{
 			return ParseFunctionCall(parser, ParseTerm(parser));
 		}
 
-		private static AstNode ParseFunctionCall(Hassium.Parser.Parser parser, AstNode left)
-		{
-			int pos = parser.codePos;
+	    private static AstNode ParseFunctionCall(Parser parser, AstNode left)
+	    {
+	        while (true)
+	        {
+	            int pos = parser.codePos;
 
-			if (parser.AcceptToken(TokenType.Parentheses, "("))
-			{
-				return ParseFunctionCall(parser, new FunctionCallNode(parser.PreviousToken(2).Position, left, ArgListNode.Parse(parser)));
-			}
-			else if (parser.AcceptToken(TokenType.Bracket, "["))
-			{
-				return ParseFunctionCall(parser, new ArrayGetNode(pos, left, ArrayIndexerNode.Parse(parser)));
-			}
-			else if (parser.AcceptToken(TokenType.Dot, "."))
-			{
-				Token ident = parser.ExpectToken(TokenType.Identifier);
-				return ParseFunctionCall (parser, new MemberAccess (pos, left, ident.Value.ToString ()));
-			}
-			else
-			{
-				return left;
-			}
-		}
+	            if (parser.AcceptToken(TokenType.Parentheses, "("))
+	            {
+	                var parser1 = parser;
+	                left = new FunctionCallNode(parser1.PreviousToken(2).Position, left, ArgListNode.Parse(parser1));
+	            }
+	            else if (parser.AcceptToken(TokenType.Bracket, "["))
+	            {
+	                var parser1 = parser;
+	                left = new ArrayGetNode(pos, left, ArrayIndexerNode.Parse(parser1));
+	            }
+	            else if (parser.AcceptToken(TokenType.Dot, "."))
+	            {
+	                Token ident = parser.ExpectToken(TokenType.Identifier);
+	                left = new MemberAccess(pos, left, ident.Value.ToString());
+	            }
+	            else
+	            {
+	                return left;
+	            }
+	        }
+	    }
 
-		private static AstNode ParseTerm (Hassium.Parser.Parser parser)
+	    private static AstNode ParseTerm (Parser parser)
 		{
 			int pos = parser.codePos;
 			if (parser.AcceptToken(TokenType.Number))

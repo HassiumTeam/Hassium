@@ -16,14 +16,14 @@ namespace Hassium.Parser.Ast
             }
         }
 
-        public FuncNode(int position, string name, List<string> parameters, AstNode body)
+        public FuncNode(int position, string name, List<string> parameters, AstNode body) : base(position)
         {
             Parameters = parameters;
             Name = name;
             Children.Add(body);
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

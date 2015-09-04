@@ -10,56 +10,56 @@ namespace Hassium.HassiumObjects.Text
 
         public HassiumStringBuilder(StringBuilder value)
         {
-            this.Value = value;
-            this.Attributes.Add("append", new InternalFunction(append));
-            this.Attributes.Add("appendLine", new InternalFunction(appendLine));
-            this.Attributes.Add("clear", new InternalFunction(clear));
-            this.Attributes.Add("insert", new InternalFunction(insert));
-            this.Attributes.Add("remove", new InternalFunction(remove));
-            this.Attributes.Add("replace", new InternalFunction(replace));
-            this.Attributes.Add("toString", new InternalFunction(toString));
-            this.Attributes.Add("length", new InternalFunction(x => Value.Length, true));
+            Value = value;
+            Attributes.Add("append", new InternalFunction(append));
+            Attributes.Add("appendLine", new InternalFunction(appendLine));
+            Attributes.Add("clear", new InternalFunction(clear));
+            Attributes.Add("insert", new InternalFunction(insert));
+            Attributes.Add("remove", new InternalFunction(remove));
+            Attributes.Add("replace", new InternalFunction(replace));
+            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
         }
 
         private HassiumObject append(HassiumObject[] args)
         {
-            this.Value.Append(args[0].ToString());
+            Value.Append(args[0].ToString());
             return null;
         }
 
         private HassiumObject appendLine(HassiumObject[] args)
         {
-            this.Value.AppendLine(args[0].ToString());
+            Value.AppendLine(args[0].ToString());
             return null;
         }
 
         private HassiumObject clear(HassiumObject[] args)
         {
-            this.Value.Clear();
+            Value.Clear();
             return null;
         }
 
         private HassiumObject insert(HassiumObject[] args)
         {
-            this.Value.Insert(((HassiumNumber)args[0]).ValueInt, args[1].ToString());
+            Value.Insert(((HassiumNumber)args[0]).ValueInt, args[1].ToString());
             return null;
         }
 
         private HassiumObject remove(HassiumObject[] args)
         {
-            this.Value.Remove(((HassiumNumber)args[0]).ValueInt, ((HassiumNumber)args[1]).ValueInt);
+            Value.Remove(((HassiumNumber)args[0]).ValueInt, ((HassiumNumber)args[1]).ValueInt);
             return null;
         }
 
         private HassiumObject replace(HassiumObject[] args)
         {
-            this.Value.Replace(args[0].ToString(), args[1].ToString());
+            Value.Replace(args[0].ToString(), args[1].ToString());
             return null;
         }
 
         private HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(this.Value.ToString());
+            return new HassiumString(Value.ToString());
         }
     }
 }

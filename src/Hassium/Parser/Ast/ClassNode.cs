@@ -10,17 +10,17 @@ namespace Hassium.Parser.Ast
         {
             get
             {
-                return this.Children[0];
+                return Children[0];
             }
         }
 
         public ClassNode(int position, string name, AstNode body) : base(position)
         {
-            this.Children.Add(body);
-            this.Name = name;
+            Children.Add(body);
+            Name = name;
         }
 
-        public static AstNode Parse(Hassium.Parser.Parser parser)
+        public static AstNode Parse(Parser parser)
         {
             int pos = parser.codePos;
 

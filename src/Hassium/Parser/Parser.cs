@@ -40,8 +40,7 @@ namespace Hassium.Parser
 
         public Token CurrentToken()
         {
-            if(position >= tokens.Count) return new Token(TokenType.Identifier, "");
-            return tokens[position];
+            return position >= tokens.Count ? new Token(TokenType.Identifier, "") : tokens[position];
         }
 
         public Token PreviousToken(int delay = 1)

@@ -1,7 +1,4 @@
-﻿using System;
-using Hassium.HassiumObjects;
-
-namespace Hassium.HassiumObjects.Types
+﻿namespace Hassium.HassiumObjects.Types
 {
     public class HassiumByte: HassiumObject
     {
@@ -9,7 +6,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumByte(byte value)
         {
-            this.Value = value;
+            Value = value;
         }
     }
 }

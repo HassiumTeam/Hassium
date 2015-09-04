@@ -9,14 +9,14 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumDate(DateTime value)
         {
-            this.Value = value;
-            this.Attributes.Add("year", new InternalFunction(x => Value.Year, true));
-            this.Attributes.Add("month", new InternalFunction(x => Value.Month, true));
-            this.Attributes.Add("day", new InternalFunction(x => Value.Day, true));
-            this.Attributes.Add("hour", new InternalFunction(x => Value.Hour, true));
-            this.Attributes.Add("minute", new InternalFunction(x => Value.Minute, true));
-            this.Attributes.Add("second", new InternalFunction(x => Value.Second, true));
-            this.Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), true));
+            Value = value;
+            Attributes.Add("year", new InternalFunction(x => Value.Year, true));
+            Attributes.Add("month", new InternalFunction(x => Value.Month, true));
+            Attributes.Add("day", new InternalFunction(x => Value.Day, true));
+            Attributes.Add("hour", new InternalFunction(x => Value.Hour, true));
+            Attributes.Add("minute", new InternalFunction(x => Value.Minute, true));
+            Attributes.Add("second", new InternalFunction(x => Value.Second, true));
+            Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), true));
         }
 
         public HassiumObject GetTimestamp(HassiumObject[] args)

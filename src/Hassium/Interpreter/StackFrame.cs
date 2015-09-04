@@ -6,7 +6,12 @@ namespace Hassium.Interpreter
 {
     public class StackFrame
     {
-        public HassiumObject Self { get; private set; }
+        public HassiumObject Self {
+            get
+            {
+                return Locals.ContainsKey("this") ? Locals["this"] : null;
+            }
+        }
 
         public LocalScope Scope { get; private set; }
 

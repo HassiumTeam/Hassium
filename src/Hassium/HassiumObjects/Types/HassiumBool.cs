@@ -9,8 +9,8 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumBool(Boolean value)
         {
-            this.Value = value;
-            this.Attributes.Add("toString", new InternalFunction(tostring));
+            Value = value;
+            Attributes.Add("toString", new InternalFunction(tostring));
         }
 
         public override string ToString()
@@ -20,7 +20,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            return this.ToString();
+            return ToString();
         }
 
         #region IConvertible stuff

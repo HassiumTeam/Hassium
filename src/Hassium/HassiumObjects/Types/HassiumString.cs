@@ -84,7 +84,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject lastindex(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.LastIndexOf(((HassiumString)args[0]).Value));
+            return new HassiumNumber(Value.LastIndexOf(((HassiumString)args[0]).Value, StringComparison.Ordinal));
         }
 
         private HassiumObject padleft(HassiumObject[] args)
@@ -119,17 +119,12 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            return new HassiumString(Value.ToString());
+            return new HassiumString(Value);
         }
 
         private HassiumObject isWhiteSpace(HassiumObject[] args)
         {
-            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(this.Value)));
-        }
-
-        private HassiumObject isLetterOrDigit(HassiumObject[] args)
-        {
-            return new HassiumBool(char.IsLetterOrDigit(Convert.ToChar(args[0].ToString())));
+            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(Value)));
         }
 
         public static implicit operator HassiumNumber(HassiumString str)

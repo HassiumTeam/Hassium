@@ -13,27 +13,27 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value) : this(value.Select(x => (HassiumKeyValuePair)x).ToList())
         {
-            this.Attributes.Add("length", new InternalFunction(x => Value.Count, true));
-            this.Attributes.Add("toString", new InternalFunction(tostring));
+            Attributes.Add("length", new InternalFunction(x => Value.Count, true));
+            Attributes.Add("toString", new InternalFunction(tostring));
 
-            this.Attributes.Add("resize", new InternalFunction(ResizeArr));
-            this.Attributes.Add("reverse", new InternalFunction(ArrayReverse));
-            this.Attributes.Add("contains", new InternalFunction(ArrayContains));
-            this.Attributes.Add("containsKey", new InternalFunction(ContainsKey));
-            this.Attributes.Add("containsValue", new InternalFunction(ContainsValue));
+            Attributes.Add("resize", new InternalFunction(ResizeArr));
+            Attributes.Add("reverse", new InternalFunction(ArrayReverse));
+            Attributes.Add("contains", new InternalFunction(ArrayContains));
+            Attributes.Add("containsKey", new InternalFunction(ContainsKey));
+            Attributes.Add("containsValue", new InternalFunction(ContainsValue));
 
-            this.Attributes.Add("op", new InternalFunction(ArrayOp));
-            this.Attributes.Add("select", new InternalFunction(ArraySelect));
-            this.Attributes.Add("where", new InternalFunction(ArrayWhere));
-            this.Attributes.Add("any", new InternalFunction(ArrayAny));
-            this.Attributes.Add("first", new InternalFunction(ArrayFirst));
-            this.Attributes.Add("last", new InternalFunction(ArrayLast));
-            this.Attributes.Add("zip", new InternalFunction(ArrayZip));
+            Attributes.Add("op", new InternalFunction(ArrayOp));
+            Attributes.Add("select", new InternalFunction(ArraySelect));
+            Attributes.Add("where", new InternalFunction(ArrayWhere));
+            Attributes.Add("any", new InternalFunction(ArrayAny));
+            Attributes.Add("first", new InternalFunction(ArrayFirst));
+            Attributes.Add("last", new InternalFunction(ArrayLast));
+            Attributes.Add("zip", new InternalFunction(ArrayZip));
         }
 
         public HassiumDictionary(List<HassiumKeyValuePair> ls)
         {
-            this.Value = ls;
+            Value = ls;
         }
 
         public HassiumObject ContainsKey(HassiumObject[] args)
@@ -62,7 +62,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ResizeArr(HassiumObject[] args)
         {
-            HassiumObject[] objarr = this.Value.ToArray();
+            HassiumObject[] objarr = Value.ToArray();
 
             HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HNum().ValueInt - 1];
 
@@ -101,7 +101,7 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject tostring(HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (HassiumKeyValuePair obj in this.Value)
+            foreach (HassiumKeyValuePair obj in Value)
             {
                 sb.Append(obj.ToString());
             }
@@ -111,56 +111,50 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayReverse(HassiumObject[] args)
         {
-            this.Value.Reverse();
+            Value.Reverse();
             return this;
         }
 
         public HassiumObject ArrayOp(HassiumObject[] args)
         {
-            return this.Value.Aggregate((a, b) => (HassiumKeyValuePair)args[0].Invoke(a, b));
+            return Value.Aggregate((a, b) => (HassiumKeyValuePair)args[0].Invoke(a, b));
         }
 
         #region LINQ-like functions
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
-            return this.Value.Select(x => args[0].Invoke(x)).ToArray();
+            return Value.Select(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)
         {
-            return this.Value.Where(x => args[0].Invoke(x)).ToArray();
+            return Value.Where(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayAny(HassiumObject[] args)
         {
-            return this.Value.Any(x => args[0].Invoke(x));
+            return Value.Any(x => args[0].Invoke(x));
         }
 
         public HassiumObject ArrayFirst(HassiumObject[] args)
         {
-            if (args.Length == 1)
-                return this.Value.First(x => args[0].Invoke(x));
-            else
-                return this.Value.First();
+            return args.Length == 1 ? Value.First(x => args[0].Invoke(x)) : Value.First();
         }
 
         public HassiumObject ArrayLast(HassiumObject[] args)
         {
-            if (args.Length == 1)
-                return this.Value.Last(x => args[0].Invoke(x));
-            else
-                return this.Value.Last();
+            return args.Length == 1 ? Value.Last(x => args[0].Invoke(x)) : Value.Last();
         }
 
         public HassiumObject ArrayContains(HassiumObject[] args)
         {
-            return this.Value.Contains(args[0]);
+            return Value.Contains(args[0]);
         }
 
         public HassiumObject ArrayZip(HassiumObject[] args)
         {
-            return this.Value.Zip(args[0].HArray().Value, (x, y) => args[1].Invoke(x, y)).ToArray();
+            return Value.Zip(args[0].HArray().Value, (x, y) => args[1].Invoke(x, y)).ToArray();
         }
 
         #endregion
@@ -176,8 +170,8 @@ namespace Hassium.HassiumObjects.Types
             Key = k;
             Value = v;
 
-            this.Attributes.Add("key", new InternalFunction(x => Key, true));
-            this.Attributes.Add("value", new InternalFunction(x => Value, true));
+            Attributes.Add("key", new InternalFunction(x => Key, true));
+            Attributes.Add("value", new InternalFunction(x => Value, true));
         }
 
         public static implicit operator KeyValuePair<HassiumObject, HassiumObject>(HassiumKeyValuePair kvp)
@@ -258,7 +252,7 @@ namespace Hassium.HassiumObjects.Types
 
         string IConvertible.ToString(IFormatProvider provider)
         {
-            return this.ToString();
+            return ToString();
         }
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)

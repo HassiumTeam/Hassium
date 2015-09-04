@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.List;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
+using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
 
@@ -36,7 +39,7 @@ namespace Hassium.Functions
         [IntFunc("TcpClient", true)]
         public static HassiumObject TcpClient(HassiumObject[] args)
         {
-            return new HassiumTcpClient(new System.Net.Sockets.TcpClient());
+            return new HassiumTcpClient(new TcpClient());
         }
 
         [IntFunc("Array", true)]
@@ -48,19 +51,19 @@ namespace Hassium.Functions
         [IntFunc("StreamWriter", true)]
         public static HassiumObject StreamWriter(HassiumObject[] args)
         {
-            return new HassiumStreamWriter(new System.IO.StreamWriter(((HassiumStream)args[0]).Value));
+            return new HassiumStreamWriter(new StreamWriter(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("StreamReader", true)]
         public static HassiumObject StreamReader(HassiumObject[] args)
         {
-            return new HassiumStreamReader(new System.IO.StreamReader(((HassiumStream)args[0]).Value));
+            return new HassiumStreamReader(new StreamReader(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("NetworkStream", true)]
         public static HassiumObject NetworkStream(HassiumObject[] args)
         {
-            return new HassiumNetworkStream(new System.Net.Sockets.NetworkStream(((HassiumSocket)args[0]).Value));
+            return new HassiumNetworkStream(new NetworkStream(((HassiumSocket)args[0]).Value));
         }
 
         [IntFunc("FileStream", true)]
@@ -78,7 +81,7 @@ namespace Hassium.Functions
         [IntFunc("HttpListener", true)]
         public static HassiumObject HttpListener(HassiumObject[] args)
         {
-            return new HassiumHttpListener(new System.Net.HttpListener());
+            return new HassiumHttpListener(new HttpListener());
         }
 
         [IntFunc("BinaryWriter", true)]
@@ -90,28 +93,25 @@ namespace Hassium.Functions
         [IntFunc("BinaryReader", true)]
         public static HassiumObject BinaryReader(HassiumObject[] args)
         {
-            return new HassiumBinaryReader(new System.IO.BinaryReader(((HassiumStream)args[0]).Value));
+            return new HassiumBinaryReader(new BinaryReader(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("Random", true)]
         public static HassiumObject Random(HassiumObject[] args)
         {
-            if (args.Length > 0)
-                return new HassiumRandom(new System.Random(((HassiumNumber)args[0]).ValueInt));
-            else
-                return new HassiumRandom(new System.Random());
+            return args.Length > 0 ? new HassiumRandom(new Random(((HassiumNumber)args[0]).ValueInt)) : new HassiumRandom(new Random());
         }
 
         [IntFunc("List", true)]
         public static HassiumObject List(HassiumObject[] args)
         {
-            return new HassiumList(new System.Collections.Generic.List<HassiumObject>());
+            return new HassiumList(new List<HassiumObject>());
         }
 
         [IntFunc("Stack", true)]
         public static HassiumObject Stack(HassiumObject[] args)
         {
-            return new HassiumStack(new System.Collections.Stack(((HassiumNumber)args[0]).ValueInt));
+            return new HassiumStack(new Stack(((HassiumNumber)args[0]).ValueInt));
         }
     }
 }

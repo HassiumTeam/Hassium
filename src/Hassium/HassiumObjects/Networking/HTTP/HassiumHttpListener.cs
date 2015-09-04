@@ -1,8 +1,5 @@
-using System;
 using System.Net;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {
@@ -12,47 +9,48 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         public HassiumHttpListener(HttpListener value)
         {
-            this.Value = value;
-            this.Attributes.Add("start", new InternalFunction(start));
-            this.Attributes.Add("prefixAdd", new InternalFunction(prefixAdd));
-            this.Attributes.Add("stop", new InternalFunction(stop));
-            this.Attributes.Add("abort", new InternalFunction(abort));
-            this.Attributes.Add("getContext", new InternalFunction(getContext));
+            Value = value;
+            Attributes.Add("start", new InternalFunction(start));
+            Attributes.Add("prefixAdd", new InternalFunction(prefixAdd));
+            Attributes.Add("stop", new InternalFunction(stop));
+            Attributes.Add("abort", new InternalFunction(abort));
+            Attributes.Add("getContext", new InternalFunction(getContext));
+            Attributes.Add("close", new InternalFunction(close));
         }
 
         private HassiumObject start(HassiumObject[] args)
         {
-            this.Value.Start();
+            Value.Start();
             return null;
         }
 
         private HassiumObject prefixAdd(HassiumObject[] args)
         {
-            this.Value.Prefixes.Add(args[0].ToString());
+            Value.Prefixes.Add(args[0].ToString());
             return null;
         }
 
         private HassiumObject stop(HassiumObject[] args)
         {
-            this.Value.Stop();
+            Value.Stop();
             return null;
         }
 
         private HassiumObject abort(HassiumObject[] args)
         {
-            this.Value.Abort();
+            Value.Abort();
             return null;
         }
 
         private HassiumObject close(HassiumObject[] args)
         {
-            this.Value.Abort();
+            Value.Abort();
             return null;
         }
 
         private HassiumObject getContext(HassiumObject[] args)
         {
-            return new HassiumHttpListenerContext(this.Value.GetContext());
+            return new HassiumHttpListenerContext(Value.GetContext());
         }
     }
 }
