@@ -14,6 +14,8 @@ namespace Hassium.HassiumObjects.Types
             this.Attributes.Add("toString", new InternalFunction(tostring));
             this.Attributes.Add("compare", new InternalFunction(compare));
             this.Attributes.Add("isBetween", new InternalFunction(isBetween));
+            this.Attributes.Add("isLetterOrDigit", new InternalFunction(isLetterOrDigit));
+            this.Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
             this.Value = value;
         }
 
@@ -37,6 +39,16 @@ namespace Hassium.HassiumObjects.Types
         public HassiumObject compare(HassiumObject[] args)
         {
             return new HassiumNumber(Value.CompareTo(args[0].HNum().Value));
+        }
+
+        public HassiumObject isWhiteSpace(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(((HassiumNumber)args[0]).ValueInt)));
+        }
+
+        public HassiumObject isLetterOrDigit(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsLetterOrDigit(Convert.ToChar(((HassiumNumber)args[0]).ValueInt)));
         }
 
         public static implicit operator HassiumString(HassiumNumber str)
