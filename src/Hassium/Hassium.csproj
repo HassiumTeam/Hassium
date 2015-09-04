@@ -128,6 +128,7 @@
     <Compile Include="HassiumObjects\Random\HassiumRandom.cs" />
     <Compile Include="HassiumObjects\Types\HassiumChar.cs" />
     <Compile Include="HassiumObjects\List\HassiumList.cs" />
+    <Compile Include="HassiumObjects\List\HassiumStack.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

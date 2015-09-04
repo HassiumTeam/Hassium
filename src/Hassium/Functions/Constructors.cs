@@ -107,6 +107,12 @@ namespace Hassium.Functions
         {
             return new HassiumList(new System.Collections.Generic.List<HassiumObject>());
         }
+
+        [IntFunc("Stack", true)]
+        public static HassiumObject Stack(HassiumObject[] args)
+        {
+            return new HassiumStack(new System.Collections.Stack(((HassiumNumber)args[0]).ValueInt));
+        }
     }
 }
 
