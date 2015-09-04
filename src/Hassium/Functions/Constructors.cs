@@ -5,6 +5,7 @@ using System.Text;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.IO;
+using Hassium.HassiumObjects.List;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Text;
@@ -99,6 +100,12 @@ namespace Hassium.Functions
                 return new HassiumRandom(new System.Random(((HassiumNumber)args[0]).ValueInt));
             else
                 return new HassiumRandom(new System.Random());
+        }
+
+        [IntFunc("List", true)]
+        public static HassiumObject List(HassiumObject[] args)
+        {
+            return new HassiumList(new System.Collections.Generic.List<HassiumObject>());
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("split", new InternalFunction(split));
             Attributes.Add("replace", new InternalFunction(replace));
             Attributes.Add("index", new InternalFunction(index));
+            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
             Attributes.Add("lastIndex", new InternalFunction(lastindex));
             Attributes.Add("padLeft", new InternalFunction(padleft));
             Attributes.Add("padRight", new InternalFunction(padright));
@@ -121,10 +122,21 @@ namespace Hassium.HassiumObjects.Types
             return new HassiumString(Value.ToString());
         }
 
+        private HassiumObject isWhiteSpace(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(this.Value)));
+        }
+
+        private HassiumObject isLetterOrDigit(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsLetterOrDigit(Convert.ToChar(args[0].ToString())));
+        }
+
         public static implicit operator HassiumNumber(HassiumString str)
         {
             return new HassiumNumber(Convert.ToDouble(str.Value));
         }
+            
 
         #region IConvertible stuff
         public TypeCode GetTypeCode()
