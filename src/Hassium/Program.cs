@@ -35,11 +35,10 @@ namespace Hassium
 			public static string Code = "";
 		}
 
-		public static Interpreter.Interpreter CurrentInterpreter = null;
+        public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
 
 		public static void Main(string[] args)
 		{
-			CurrentInterpreter = new Interpreter.Interpreter();
 			preformSetUp(args);
 
 			
@@ -115,17 +114,24 @@ namespace Hassium
 
 		private static void preformSetUp(string[] args)
 		{
-			if (args.Length <= 0 || args[0].StartsWith("-h") || args[0].StartsWith("--help"))
-			{
-				Console.WriteLine("USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\nArguments:\n-h  --help\tShows this help\n-d  --debug\tDisplays tokens from lexer\n");
-				Environment.Exit(0);
-			}
-			else if (args[0].StartsWith("-d") || args[0].StartsWith("--debug"))
-			{
-				options.Debug = true;
-				options.FilePath = args[1];
-				CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args, 2)), null, true);
-			}
+            if (args.Length <= 0)
+                enterInteractive();
+            
+            if (args[0].StartsWith("-h") || args[0].StartsWith("--help"))
+            {
+                Console.WriteLine("USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\nArguments:\n-h  --help\tShows this help\n-d  --debug\tDisplays tokens from lexer\n-r  --repl\tEnters interactive interpreter\n");
+                Environment.Exit(0);
+            }
+            else if (args[0].StartsWith("-d") || args[0].StartsWith("--debug"))
+            {
+                options.Debug = true;
+                options.FilePath = args[1];
+                CurrentInterpreter.SetVariable("args", new HassiumArray(shiftArray(args, 2)), null, true);
+            }
+            else if (args[0].StartsWith("-r") || args[0].StartsWith("--repl"))
+            {
+                enterInteractive();
+            }
 			else
 			{
 				options.FilePath = args[0];
@@ -218,6 +224,25 @@ ______ ________  ________  _   _ _____   _____ _   _ _____ _____   _____ ______ 
 				}
 			}
 		}
+
+        private static void enterInteractive()
+        {
+            CurrentInterpreter = new Hassium.Interpreter.Interpreter(false);
+            while (true)
+            {
+                Console.Write(">");
+                string input = Console.ReadLine();
+                List<Token> tokens = new Lexer.Lexer(input).Tokenize();
+                if (options.Debug)
+                    Debug.Debug.PrintTokens(tokens);
+                Parser.Parser hassiumParser = new Parser.Parser(tokens);
+                AstNode ast = hassiumParser.Parse();
+                CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+                CurrentInterpreter.Code = ast;
+                CurrentInterpreter.Execute();
+
+            }
+        }
 	}
 }
 
