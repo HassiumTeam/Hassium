@@ -45,9 +45,9 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
-        public override void Visit(IVisitor visitor)
+        public override object Visit(IVisitor visitor)
         {
-            visitor.Accept(this);
+            return visitor.Accept(this);
         }
     }
 }

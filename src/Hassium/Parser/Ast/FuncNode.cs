@@ -29,9 +29,9 @@ namespace Hassium.Parser.Ast
             return new LambdaFuncNode(funcNode.Position, funcNode.Parameters, funcNode.Body);
         }
 
-        public override void Visit(IVisitor visitor)
+        public override object Visit(IVisitor visitor)
         {
-            visitor.Accept(this);
+            return visitor.Accept(this);
         }
     }
 }

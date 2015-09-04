@@ -22,7 +22,7 @@ namespace Hassium.Interpreter
     /// <summary>
     /// Interpreter.
     /// </summary>
-    public class Interpreter
+    public class Interpreter : IVisitor
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
@@ -178,7 +178,8 @@ namespace Hassium.Interpreter
                     }
                 }
                 else
-                    ExecuteStatement(node);
+                    node.Visit(this);
+                    //ExecuteStatement(node);
             }
         }
 
@@ -189,7 +190,7 @@ namespace Hassium.Interpreter
         /// <param name="node">Node.</param>
         private HassiumObject interpretBinaryOp(BinOpNode node)
         {
-            var right = EvaluateNode(node.Right);
+            var right = (HassiumObject) node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
             {
                 if (node.Left is ArrayGetNode)
@@ -202,18 +203,18 @@ namespace Hassium.Interpreter
                     if(!call.Target.CanBeModified)
                         throw new ParseException("The specified target cannot be modified.", node);
 
-                    var evaluated = EvaluateNode(call.Target);
+                    var evaluated = call.Target.Visit(this);
                     if (evaluated is HassiumDictionary)
                     {
                         var theArray = ((HassiumDictionary) evaluated);
                         HassiumObject arid = null;
 
                         if (call.Arguments.Children.Count > 0)
-                            arid = EvaluateNode(call.Arguments.Children[0]);
+                            arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
 
                         var theValue = (node.IsOpAssign && arid != null)
                             ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                            : right;
+                            : (HassiumObject)right;
 
                         if (arid == null)
                             theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
@@ -248,13 +249,13 @@ namespace Hassium.Interpreter
                         bool append = false;
 
                         if (call.Arguments.Children.Count > 0)
-                            arid = EvaluateNode(call.Arguments.Children[0]);
+                            arid = (int) call.Arguments.Children[0].Visit(this);
                         else
                             append = true;
 
                         var theValue = node.IsOpAssign
                             ? interpretBinaryOp(theArray[(int)arid], right, node.AssignOperation)
-                            : right;
+                            : (HassiumObject) right;
 
                         if(append)
                             theArray.Add(new[] {theValue});
@@ -277,7 +278,7 @@ namespace Hassium.Interpreter
                 else if (node.Left is MemberAccessNode)
                 {
                     var accessor = (MemberAccessNode) node.Left;
-                    var target = EvaluateNode(accessor.Left);
+                    var target = (HassiumObject) accessor.Left.Visit(this);
                     target.SetAttribute(accessor.Member, right);
                 }
                 else
@@ -291,7 +292,7 @@ namespace Hassium.Interpreter
                 }
                 return right;
             }
-            var left = EvaluateNode(node.Left);
+            var left = node.Left.Visit(this);
             return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp);
         }
 
@@ -304,9 +305,9 @@ namespace Hassium.Interpreter
         /// <returns>The result of the operation</returns>
         private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op)
         {
-            if (left is AstNode) left = EvaluateNode((AstNode) left);
+            if (left is AstNode) left = ((AstNode) left).Visit(this);
             if (left is int) left = (double) (int) left; 
-            if (right is AstNode) right = EvaluateNode((AstNode)right);
+            if (right is AstNode) right = ((AstNode)right).Visit(this);
             if (right is int) right = (double)(int)right;
             switch (_op)
             {
@@ -386,11 +387,11 @@ namespace Hassium.Interpreter
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !Convert.ToBoolean((object)EvaluateNode(node.Value));
+                    return !Convert.ToBoolean((object)node.Value.Visit(this));
                 case UnaryOperation.Negate:
-                    return -Convert.ToDouble((object)EvaluateNode(node.Value));
+                    return -Convert.ToDouble((object)node.Value.Visit(this));
                 case UnaryOperation.Complement:
-                    return ~(int)Convert.ToDouble((object)EvaluateNode(node.Value));
+                    return ~(int)Convert.ToDouble((object)node.Value.Visit(this));
             }
             //Raise error
             return -1;
@@ -407,7 +408,7 @@ namespace Hassium.Interpreter
         /// Executes the statement.
         /// </summary>
         /// <param name="node">Node.</param>
-        public void ExecuteStatement(AstNode node)
+        /*public void ExecuteStatement2(AstNode node)
         {
             while (true)
             {
@@ -586,14 +587,14 @@ namespace Hassium.Interpreter
                 }
                 break;
             }
-        }
+        }*/
 
         /// <summary>
         /// Evaluates the node.
         /// </summary>
         /// <returns>The node.</returns>
         /// <param name="node">Node.</param>
-        public HassiumObject EvaluateNode(AstNode node)
+        /*public HassiumObject EvaluateNode2(AstNode node)
         {
             while (true)
             {
@@ -848,7 +849,7 @@ namespace Hassium.Interpreter
 
                 return 0;
             }
-        }
+        }*/
 
         /// <summary>
         /// Gets the functions.
@@ -881,6 +882,483 @@ namespace Hassium.Interpreter
                 }
             }
             return result;
+        }
+
+        public object Accept(Expression expr)
+        {
+            VisitSubnodes(expr);
+            return null;
+        }
+
+        public object Accept(ArgListNode node)
+        {
+            var arguments = new HassiumObject[node.Children.Count];
+            for (var x = 0; x < node.Children.Count; x++)
+            {
+                arguments[x] = (HassiumObject)node.Children[x].Visit(this);
+            }
+            return arguments;
+        }
+
+        public object Accept(ArrayGetNode node)
+        {
+            var call = (ArrayGetNode)(node);
+
+            if (!call.Target.CanBeIndexed)
+                throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+
+            var evaluated = (HassiumObject)call.Target.Visit(this);
+            if (evaluated is HassiumDictionary)
+            {
+                var theArray = ((HassiumDictionary)evaluated);
+                HassiumObject arid = null;
+
+                if (call.Arguments.Children.Count > 0)
+                    arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
+
+                if (arid == null)
+                    return theArray.Value.Last().Value;
+                else
+                {
+                    return theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()) ? theArray.Value.First(cur => cur.Key.ToString() == arid.ToString()).Value : theArray[arid];
+                }
+            }
+            else if (evaluated is HassiumArray || evaluated is HassiumString)
+            {
+                HassiumArray theArray = null;
+                if (evaluated is HassiumString)
+                {
+                    theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
+                }
+                theArray = ((HassiumArray)evaluated);
+
+                int arid = -1;
+                bool append = false;
+
+                if (call.Arguments.Children.Count > 0)
+                    arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
+                else
+                    append = true;
+
+                if (append)
+                    return theArray.Value.Last();
+                else
+                {
+                    if (arid >= theArray.Value.Length)
+                        throw new IndexOutOfRangeException();
+
+                    return theArray[arid];
+                }
+            }
+            else
+            {
+                throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+            }
+        }
+
+        public object Accept(ArrayIndexerNode node)
+        {
+            return null;
+        }
+
+        public object Accept(ArrayInitializerNode node)
+        {
+            var ainode = ((ArrayInitializerNode)node);
+            var content = ainode.Value;
+            if (ainode.IsDictionary)
+                return new HassiumDictionary(content.Select(
+                    pair =>
+                        new KeyValuePair<HassiumObject, HassiumObject>(
+                            pair.Key is AstNode
+                                ? (HassiumObject)((AstNode)(pair.Key)).Visit(this)
+                                : HassiumObject.ToHassiumObject(pair.Key),
+                            pair.Value is AstNode
+                                ? (HassiumObject)((AstNode)(pair.Value)).Visit(this)
+                                : HassiumObject.ToHassiumObject(pair.Value)))
+                    .ToDictionary(x => x.Key, x => x.Value));
+            else
+                return new HassiumArray(content.Values.Select(x => x is AstNode ? (HassiumObject)((AstNode)x).Visit(this) : x));
+        }
+
+        public object Accept(BinOpNode node)
+        {
+            var bnode = (BinOpNode)node;
+            return interpretBinaryOp(bnode);
+        }
+
+        public object Accept(BreakNode node)
+        {
+            if (inLoop == 0) throw new ParseException("'break' cannot be used outside a loop", node);
+            breakLoop = true;
+            return null;
+        }
+
+        public object Accept(ClassNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Accept(CodeBlock node)
+        {
+            VisitSubnodes(node);
+            return null;
+        }
+
+        public object Accept(ConditionalOpNode node)
+        {
+            var ifStmt = (ConditionalOpNode)(node);
+            if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
+            {
+                ifStmt.Body.Visit(this);
+            }
+            else
+            {
+                ifStmt.ElseBody.Visit(this);
+            }
+            return null;
+        }
+
+        public object Accept(ContinueNode node)
+        {
+            if (inLoop == 0) throw new ParseException("'continue' cannot be used outside a loop", node);
+            continueLoop = true;
+            return null;
+        }
+
+        public object Accept(ForEachNode node)
+        {
+            var forStmt = (ForEachNode)(node);
+            var needlestmt = forStmt.Needle;
+            var haystackstmt = forStmt.Haystack.Visit(this);
+
+            inLoop++;
+            if (haystackstmt is HassiumDictionary)
+            {
+                var theArray = ((HassiumDictionary)haystackstmt);
+
+                var keyvname = "";
+                var valvname = "";
+                if (needlestmt is ArrayInitializerNode)
+                {
+                    keyvname = ((ArrayInitializerNode)needlestmt).Value[0].ToString();
+                    valvname = ((ArrayInitializerNode)needlestmt).Value[1].ToString();
+                }
+                else
+                {
+                    valvname = needlestmt.ToString();
+                }
+                if (keyvname != "") SetVariable(keyvname, null, forStmt);
+                SetVariable(valvname, null, forStmt);
+                foreach (var needle in (keyvname != "" ? theArray : (IEnumerable)(theArray.Value.Select(x => x.Value))))
+                {
+                    if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
+                    SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
+                    forStmt.Body.Visit(this);
+                    if (continueLoop) continueLoop = false;
+                    if (breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
+                }
+                if (keyvname != "") FreeVariable(keyvname, forStmt);
+                FreeVariable(valvname, forStmt);
+                inLoop--;
+            }
+            else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
+            {
+                HassiumArray theArray = null;
+                if (haystackstmt is HassiumString)
+                {
+                    theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
+                }
+                theArray = ((HassiumArray)haystackstmt);
+
+                var valvname = needlestmt.ToString();
+
+                SetVariable(valvname, null, forStmt);
+                foreach (var needle in theArray.Value)
+                {
+                    SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
+                    forStmt.Body.Visit(this);
+                    if (continueLoop) continueLoop = false;
+                    if (breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
+                }
+                FreeVariable(valvname, forStmt);
+                inLoop--;
+            }
+            else
+            {
+                inLoop--;
+                throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.", node);
+            }
+            return null;
+        }
+
+        public object Accept(ForNode node)
+        {
+            var forStmt = (ForNode)(node);
+            inLoop++;
+            forStmt.Left.Visit(this);
+            while ((HassiumBool) (forStmt.Predicate.Visit(this)))
+            {
+                forStmt.Body.Visit(this);
+                if (continueLoop) continueLoop = false;
+                if (breakLoop)
+                {
+                    breakLoop = false;
+                    break;
+                }
+                forStmt.Right.Visit(this);
+            }
+            inLoop--;
+            return null;
+        }
+
+        public object Accept(FuncNode node)
+        {
+            var fnode = ((FuncNode)node);
+            var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
+            if (CallStack.Count > 0)
+            {
+                stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
+                CallStack.Peek().Locals.All(x =>
+                {
+                    stackFrame.Locals.Add(x.Key, x.Value);
+                    return true;
+                });
+            }
+            var hfunc = new HassiumFunction(this, fnode, stackFrame);
+            SetVariable(fnode.Name, hfunc, fnode);
+            return hfunc;
+        }
+
+        public object Accept(FunctionCallNode node)
+        {
+            var call = (FunctionCallNode)node;
+
+            IFunction target = null;
+
+
+            bool dontEval = false;
+
+            switch (call.Target.ToString())
+            {
+                case "free":
+                    dontEval = true;
+                    target = new InternalFunction(args =>
+                    {
+                        FreeVariable(args[0].ToString(), node);
+                        return null;
+                    });
+                    break;
+                default:
+                    if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))
+                    {
+                        throw new ParseException("Attempt to run a non-valid function", node);
+                    }
+                    target = (HassiumObject) call.Target.Visit(this);
+                    break;
+            }
+
+
+            if (target is InternalFunction && (target as InternalFunction).IsConstructor)
+                throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
+
+            var arguments = new HassiumObject[call.Arguments.Children.Count];
+            for (var x = 0; x < call.Arguments.Children.Count; x++)
+            {
+                arguments[x] = dontEval ? new HassiumString(call.Arguments.Children[x].ToString()) : (HassiumObject)call.Arguments.Children[x].Visit(this);
+            }
+            inFunc++;
+            HassiumObject ret = target.Invoke(arguments);
+            if (returnFunc)
+                returnFunc = false;
+            inFunc--;
+            if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
+            return ret;
+        }
+
+        public object Accept(IdentifierNode node)
+        {
+            return GetVariable(node.Identifier, node);
+        }
+
+        public object Accept(IfNode node)
+        {
+            var ifStmt = (IfNode)(node);
+            if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
+            {
+                ifStmt.Body.Visit(this);
+            }
+            else
+            {
+                ifStmt.ElseBody.Visit(this);
+            }
+            return null;
+        }
+
+        public object Accept(InstanceNode node)
+        {
+            var inode = (InstanceNode)node;
+            var fcall = (FunctionCallNode)inode.Target;
+            var target = fcall.Target.ToString();
+
+            var arguments = (HassiumObject[]) fcall.Arguments.Visit(this);
+            if (HasVariable(target, true))
+            {
+                var theVar = Globals[target];
+
+                var iFunc = theVar as InternalFunction;
+                if (iFunc != null)
+                {
+                    if (iFunc.IsConstructor)
+                    {
+                        return iFunc.Invoke(arguments);
+                    }
+                }
+            }
+            throw new ParseException("No constructor found for " + target, node);
+        }
+
+        public object Accept(LambdaFuncNode node)
+        {
+            var funcNode = (LambdaFuncNode)(node);
+            var stackFrame = new StackFrame(SymbolTable.ChildScopes["lambda_" + funcNode.GetHashCode()]);
+            if (CallStack.Count > 0)
+            {
+                stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
+                CallStack.Peek().Locals.All(x =>
+                {
+                    stackFrame.Locals.Add(x.Key, x.Value);
+                    return true;
+                });
+            }
+            return new HassiumFunction(this, (FuncNode)funcNode, stackFrame);
+        }
+
+        public object Accept(MemberAccessNode node)
+        {
+            var accessor = (MemberAccessNode)node;
+            var target = (HassiumObject)accessor.Left.Visit(this);
+            var attr = target.GetAttribute(accessor.Member);
+            if (attr is InternalFunction && ((InternalFunction)attr).IsProperty)
+            {
+                return ((InternalFunction)attr).Invoke();
+            }
+            else
+            {
+                return attr;
+            }
+        }
+
+        public object Accept(MentalNode node)
+        {
+            var mnode = ((MentalNode)node);
+            if (!HasVariable(mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
+            var oldValue = GetVariable(mnode.Name, mnode);
+            switch (mnode.OpType)
+            {
+                case "++":
+                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
+                    break;
+                case "--":
+                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
+                    break;
+                default:
+                    throw new ParseException("Unknown operation " + mnode.OpType, mnode);
+            }
+            return mnode.IsBefore ? GetVariable(mnode.Name, mnode) : oldValue;
+        }
+
+        public object Accept(NumberNode node)
+        {
+            return new HassiumNumber(node.Value);
+        }
+
+        public object Accept(ReturnNode node)
+        {
+            if (inFunc == 0) throw new ParseException("'return' cannot be used outside a function", node);
+            var returnStmt = (ReturnNode)(node);
+            if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue) throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
+            var ret = returnStmt.Value.Visit(this);
+            returnFunc = true;
+            CallStack.Peek().ReturnValue = (HassiumObject)ret;
+            return ret;
+        }
+
+        public object Accept(StatementNode node)
+        {
+            return node.Visit(this);
+        }
+
+        public object Accept(StringNode node)
+        {
+            return new HassiumString(node.Value);
+        }
+
+        public object Accept(ThreadNode node)
+        {
+            var threadStmt = (ThreadNode)(node);
+            Task.Factory.StartNew(() => threadStmt.Node.Visit(this));
+            return null;
+        }
+
+        public object Accept(TryNode node)
+        {
+            var tryStmt = (TryNode)(node);
+            try
+            {
+                tryStmt.Body.Visit(this);
+            }
+            catch
+            {
+                tryStmt.CatchBody.Visit(this);
+            }
+            finally
+            {
+                tryStmt.FinallyBody.Visit(this);
+            }
+            return null;
+        }
+
+        public object Accept(UnaryOpNode node)
+        {
+            return interpretUnaryOp((UnaryOpNode)node);
+        }
+
+        public object Accept(WhileNode node)
+        {
+            var whileStmt = (WhileNode)(node);
+            inLoop++;
+            if ((HassiumBool)whileStmt.Predicate.Visit(this))
+                while ((HassiumBool)whileStmt.Predicate.Visit(this))
+                {
+                    whileStmt.Body.Visit(this);
+                    if (continueLoop) continueLoop = false;
+                    if (breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
+                }
+            else
+                whileStmt.ElseBody.Visit(this);
+            inLoop--;
+            return null;
+        }
+
+        private void VisitSubnodes(AstNode node)
+        {
+            foreach(var nd in node.Children)
+            {
+                nd.Visit(this);
+                if (continueLoop || breakLoop || returnFunc) break;
+            }
         }
     }
 }

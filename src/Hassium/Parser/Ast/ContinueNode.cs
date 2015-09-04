@@ -5,21 +5,13 @@ namespace Hassium.Parser.Ast
 {
     public class ContinueNode : AstNode
     {
-        private ContinueNode(int codePos) : base(codePos)
+        public ContinueNode(int codePos) : base(codePos)
         {
         }
 
-        public static AstNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            int pos = parser.codePos;
-            parser.ExpectToken(TokenType.Identifier, "continue");
-            parser.ExpectToken(TokenType.EndOfLine);
-            return new ContinueNode(pos);
-        }
-
-        public override void Visit(IVisitor visitor)
-        {
-            visitor.Accept(this);
+            return visitor.Accept(this);
         }
     }
 }

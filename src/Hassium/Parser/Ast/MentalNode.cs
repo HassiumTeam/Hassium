@@ -17,9 +17,9 @@ namespace Hassium.Parser.Ast
             IsBefore = before;
         }
 
-        public override void Visit(IVisitor visitor)
+        public override object Visit(IVisitor visitor)
         {
-            visitor.Accept(this);
+            return visitor.Accept(this);
         }
     }
 }

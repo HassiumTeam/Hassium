@@ -17,14 +17,9 @@ namespace Hassium.Parser.Ast
             return Identifier;
         }
 
-        public static AstNode Parse(Parser parser)
+        public override object Visit(IVisitor visitor)
         {
-            return new IdentifierNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
-        }
-
-        public override void Visit(IVisitor visitor)
-        {
-            visitor.Accept(this);
+            return visitor.Accept(this);
         }
     }
 }

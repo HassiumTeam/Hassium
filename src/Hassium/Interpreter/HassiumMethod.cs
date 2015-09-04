@@ -27,7 +27,7 @@ namespace Hassium.Interpreter
             for (int x = 0; x < function.FuncNode.Parameters.Count; x++)
                 stackFrame.Locals[function.FuncNode.Parameters[x]] = args[x];
 
-            function.Interpreter.ExecuteStatement(function.FuncNode.Body);
+            function.FuncNode.Body.Visit(function.Interpreter);
 
             HassiumObject ret = function.Interpreter.CallStack.Peek().ReturnValue;
 

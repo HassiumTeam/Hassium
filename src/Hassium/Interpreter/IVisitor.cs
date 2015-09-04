@@ -8,34 +8,34 @@ namespace Hassium.Interpreter
 {
     public interface IVisitor
     {
-        void Accept(Expression expr);
-        void Accept(ArgListNode node);
-        void Accept(ArrayGetNode node);
-        void Accept(ArrayIndexerNode node);
-        void Accept(ArrayInitializerNode node);
-        void Accept(BinOpNode node);
-        void Accept(BreakNode node);
-        void Accept(ClassNode node);
-        void Accept(CodeBlock node);
-        void Accept(ConditionalOpNode node);
-        void Accept(ContinueNode node);
-        void Accept(ForEachNode node);
-        void Accept(ForNode node);
-        void Accept(FuncNode node);
-        void Accept(FunctionCallNode node);
-        void Accept(IdentifierNode node);
-        void Accept(IfNode node);
-        void Accept(InstanceNode node);
-        void Accept(LambdaFuncNode node);
-        void Accept(MemberAccessNode node);
-        void Accept(MentalNode node);
-        void Accept(NumberNode node);
-        void Accept(ReturnNode node);
-        void Accept(StatementNode node);
-        void Accept(StringNode node);
-        void Accept(ThreadNode node);
-        void Accept(TryNode node);
-        void Accept(UnaryOpNode node);
-        void Accept(WhileNode node);
+        object Accept(Expression expr);
+        object Accept(ArgListNode node);
+        object Accept(ArrayGetNode node);
+        object Accept(ArrayIndexerNode node);
+        object Accept(ArrayInitializerNode node);
+        object Accept(BinOpNode node);
+        object Accept(BreakNode node);
+        object Accept(ClassNode node);
+        object Accept(CodeBlock node);
+        object Accept(ConditionalOpNode node);
+        object Accept(ContinueNode node);
+        object Accept(ForEachNode node);
+        object Accept(ForNode node);
+        object Accept(FuncNode node);
+        object Accept(FunctionCallNode node);
+        object Accept(IdentifierNode node);
+        object Accept(IfNode node);
+        object Accept(InstanceNode node);
+        object Accept(LambdaFuncNode node);
+        object Accept(MemberAccessNode node);
+        object Accept(MentalNode node);
+        object Accept(NumberNode node);
+        object Accept(ReturnNode node);
+        object Accept(StatementNode node);
+        object Accept(StringNode node);
+        object Accept(ThreadNode node);
+        object Accept(TryNode node);
+        object Accept(UnaryOpNode node);
+        object Accept(WhileNode node);
     }
 }

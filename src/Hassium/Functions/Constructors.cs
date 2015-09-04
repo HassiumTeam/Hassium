@@ -51,12 +51,16 @@ namespace Hassium.Functions
         [IntFunc("StreamWriter", true)]
         public static HassiumObject StreamWriter(HassiumObject[] args)
         {
+            if (args[0] is HassiumString)
+                return new HassiumStreamReader(new StreamReader(args[0].HString().Value));
             return new HassiumStreamWriter(new StreamWriter(((HassiumStream)args[0]).Value));
         }
 
         [IntFunc("StreamReader", true)]
         public static HassiumObject StreamReader(HassiumObject[] args)
         {
+            if (args[0] is HassiumString)
+                return new HassiumStreamReader(new StreamReader(args[0].HString().Value));
             return new HassiumStreamReader(new StreamReader(((HassiumStream)args[0]).Value));
         }
 
