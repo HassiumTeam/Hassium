@@ -16,6 +16,7 @@ namespace Hassium.HassiumObjects.List
             this.Attributes.Add("add", new InternalFunction(add));
             this.Attributes.Add("count", new InternalFunction(count));
             this.Attributes.Add("get", new InternalFunction(get));
+            this.Attributes.Add("set", new InternalFunction(set));
         }
 
         private HassiumObject add(HassiumObject[] args)
@@ -33,6 +34,11 @@ namespace Hassium.HassiumObjects.List
         private HassiumObject get(HassiumObject[] args)
         {
             return this.Value[((HassiumNumber)args[0]).ValueInt];
+        }
+
+        private HassiumObject set(HassiumObject[] args)
+        {
+            return this.Value[((HassiumNumber)args[0]).ValueInt] = args [1];
         }
     }
 }
