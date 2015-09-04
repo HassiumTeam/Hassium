@@ -402,143 +402,86 @@ namespace Hassium.Interpreter
             return -1;
         }
 
-        private int inLoop = 0;
-        private bool continueLoop = false;
-        private bool breakLoop = false;
+        private int inLoop;
+        private bool continueLoop;
+        private bool breakLoop;
 
-        private int inFunc = 0;
-        private bool returnFunc = false;
+        private int inFunc;
+        private bool returnFunc;
+
         /// <summary>
         /// Executes the statement.
         /// </summary>
         /// <param name="node">Node.</param>
         public void ExecuteStatement(AstNode node)
         {
-            if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
-                return;
-            if (node is CodeBlock)
+            while (true)
             {
-                foreach (var anode in node.Children)
+                if (CallStack.Count > 0 && CallStack.Peek().ReturnValue != null)
+                    return;
+                if (node is CodeBlock)
                 {
-                    ExecuteStatement(anode);
-                    if (continueLoop || breakLoop || returnFunc) return;
-                }
-            }
-            else if (node is IfNode)
-            {
-                var ifStmt = (IfNode) (node);
-                if ((bool) (EvaluateNode(ifStmt.Predicate)))
-                    ExecuteStatement(ifStmt.Body);
-                else
-                    ExecuteStatement(ifStmt.ElseBody);
-            }
-            else if (node is WhileNode)
-            {
-                var whileStmt = (WhileNode) (node);
-                inLoop++;
-                if ((bool) (EvaluateNode(whileStmt.Predicate)))
-                    while ((bool) EvaluateNode(whileStmt.Predicate))
+                    foreach (var anode in node.Children)
                     {
-                        ExecuteStatement(whileStmt.Body);
-                        if (continueLoop) continueLoop = false;
-                        if(breakLoop)
-                        {
-                            breakLoop = false;
-                            break;
-                        }
+                        ExecuteStatement(anode);
+                        if (continueLoop || breakLoop || returnFunc) return;
                     }
-                else
-                    ExecuteStatement(whileStmt.ElseBody);
-                inLoop--;
-            }
-            else if (node is FuncNode && !firstExecute)
-            {
-                var fnode = ((FuncNode)node);
-                var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
-                if (CallStack.Count > 0)
-                {
-                    stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
-                    CallStack.Peek().Locals.All(x =>
-                    {
-                        stackFrame.Locals.Add(x.Key, x.Value);
-                        return true;
-                    });
                 }
-                SetVariable(fnode.Name, new HassiumFunction(this, fnode, stackFrame), fnode);
-            }
-            else if (node is ForNode)
-            {
-                var forStmt = (ForNode) (node);
-                inLoop++;
-                ExecuteStatement(forStmt.Left);
-                while ((bool) EvaluateNode(forStmt.Predicate))
+                else if (node is IfNode)
                 {
-                    ExecuteStatement(forStmt.Body);
-                    if (continueLoop) continueLoop = false;
-                    if(breakLoop)
+                    var ifStmt = (IfNode) (node);
+                    if ((bool) (EvaluateNode(ifStmt.Predicate)))
                     {
-                        breakLoop = false;
-                        break;
-                    }
-                    ExecuteStatement(forStmt.Right);
-                }
-                inLoop--;
-            }
-            else if (node is ForEachNode)
-            {
-                var forStmt = (ForEachNode) (node);
-                var needlestmt = forStmt.Needle;
-                var haystackstmt = EvaluateNode(forStmt.Haystack);
-
-                inLoop++;
-                if (haystackstmt is HassiumDictionary)
-                {
-                    var theArray = ((HassiumDictionary)haystackstmt);
-
-                    var keyvname = "";
-                    var valvname = "";
-                    if (needlestmt is ArrayInitializerNode)
-                    {
-                        keyvname = ((ArrayInitializerNode)needlestmt).Value[0].ToString();
-                        valvname = ((ArrayInitializerNode)needlestmt).Value[1].ToString();
+                        node = ifStmt.Body;
+                        continue;
                     }
                     else
                     {
-                        valvname = needlestmt.ToString();
+                        node = ifStmt.ElseBody;
+                        continue;
                     }
-                    if (keyvname != "") SetVariable(keyvname, null, forStmt);
-                    SetVariable(valvname, null, forStmt);
-                    foreach (var needle in (keyvname != "" ? theArray : (IEnumerable)(theArray.Value.Select(x => x.Value))))
-                    {
-                        if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
-                        SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
-                        ExecuteStatement(forStmt.Body);
-                        if (continueLoop) continueLoop = false;
-                        if (breakLoop)
+                }
+                else if (node is WhileNode)
+                {
+                    var whileStmt = (WhileNode) (node);
+                    inLoop++;
+                    if ((bool) (EvaluateNode(whileStmt.Predicate)))
+                        while ((bool) EvaluateNode(whileStmt.Predicate))
                         {
-                            breakLoop = false;
-                            break;
+                            ExecuteStatement(whileStmt.Body);
+                            if (continueLoop) continueLoop = false;
+                            if (breakLoop)
+                            {
+                                breakLoop = false;
+                                break;
+                            }
                         }
-                    }
-                    if (keyvname != "") FreeVariable(keyvname, forStmt);
-                    FreeVariable(valvname, forStmt);
+                    else
+                        ExecuteStatement(whileStmt.ElseBody);
                     inLoop--;
                 }
-                else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
+                else if (node is FuncNode && !firstExecute)
                 {
-                    HassiumArray theArray = null;
-                    if (haystackstmt is HassiumString)
+                    var fnode = ((FuncNode) node);
+                    var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
+                    if (CallStack.Count > 0)
                     {
-                        theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
+                        stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
+                        CallStack.Peek().Locals.All(x =>
+                        {
+                            stackFrame.Locals.Add(x.Key, x.Value);
+                            return true;
+                        });
                     }
-                    theArray = ((HassiumArray)haystackstmt);
-
-                    var valvname = needlestmt.ToString();
-   
-                    SetVariable(valvname, null, forStmt);
-                    foreach (var needle in theArray.Value)
+                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, stackFrame), fnode);
+                }
+                else if (node is ForNode)
+                {
+                    var forStmt = (ForNode) (node);
+                    inLoop++;
+                    ExecuteStatement(forStmt.Left);
+                    while ((bool) EvaluateNode(forStmt.Predicate))
                     {
-                        SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
                         ExecuteStatement(forStmt.Body);
                         if (continueLoop) continueLoop = false;
                         if (breakLoop)
@@ -546,44 +489,112 @@ namespace Hassium.Interpreter
                             breakLoop = false;
                             break;
                         }
+                        ExecuteStatement(forStmt.Right);
                     }
-                    FreeVariable(valvname, forStmt);
                     inLoop--;
+                }
+                else if (node is ForEachNode)
+                {
+                    var forStmt = (ForEachNode) (node);
+                    var needlestmt = forStmt.Needle;
+                    var haystackstmt = EvaluateNode(forStmt.Haystack);
+
+                    inLoop++;
+                    if (haystackstmt is HassiumDictionary)
+                    {
+                        var theArray = ((HassiumDictionary) haystackstmt);
+
+                        var keyvname = "";
+                        var valvname = "";
+                        if (needlestmt is ArrayInitializerNode)
+                        {
+                            keyvname = ((ArrayInitializerNode) needlestmt).Value[0].ToString();
+                            valvname = ((ArrayInitializerNode) needlestmt).Value[1].ToString();
+                        }
+                        else
+                        {
+                            valvname = needlestmt.ToString();
+                        }
+                        if (keyvname != "") SetVariable(keyvname, null, forStmt);
+                        SetVariable(valvname, null, forStmt);
+                        foreach (var needle in (keyvname != "" ? theArray : (IEnumerable) (theArray.Value.Select(x => x.Value))))
+                        {
+                            if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair) needle).Key, forStmt);
+                            SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair) needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
+                            ExecuteStatement(forStmt.Body);
+                            if (continueLoop) continueLoop = false;
+                            if (breakLoop)
+                            {
+                                breakLoop = false;
+                                break;
+                            }
+                        }
+                        if (keyvname != "") FreeVariable(keyvname, forStmt);
+                        FreeVariable(valvname, forStmt);
+                        inLoop--;
+                    }
+                    else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
+                    {
+                        HassiumArray theArray = null;
+                        if (haystackstmt is HassiumString)
+                        {
+                            theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
+                        }
+                        theArray = ((HassiumArray) haystackstmt);
+
+                        var valvname = needlestmt.ToString();
+
+                        SetVariable(valvname, null, forStmt);
+                        foreach (var needle in theArray.Value)
+                        {
+                            SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
+                            ExecuteStatement(forStmt.Body);
+                            if (continueLoop) continueLoop = false;
+                            if (breakLoop)
+                            {
+                                breakLoop = false;
+                                break;
+                            }
+                        }
+                        FreeVariable(valvname, forStmt);
+                        inLoop--;
+                    }
+                    else
+                    {
+                        inLoop--;
+                        throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.", node);
+                    }
+                }
+                else if (node is TryNode)
+                {
+                    var tryStmt = (TryNode) (node);
+                    try
+                    {
+                        ExecuteStatement(tryStmt.Body);
+                    }
+                    catch
+                    {
+                        ExecuteStatement(tryStmt.CatchBody);
+                    }
+                    finally
+                    {
+                        ExecuteStatement(tryStmt.FinallyBody);
+                    }
+                }
+                else if (node is ThreadNode)
+                {
+                    var threadStmt = (ThreadNode) (node);
+                    Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
                 }
                 else
                 {
-                    inLoop--;
-                    throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.", node);
+                    EvaluateNode(node);
+                    if (continueLoop || breakLoop || returnFunc) return;
                 }
-            }
-            else if (node is TryNode)
-            {
-                var tryStmt = (TryNode) (node);
-                try
-                {
-                    ExecuteStatement(tryStmt.Body);
-                }
-                catch
-                {
-                    ExecuteStatement(tryStmt.CatchBody);
-                }
-                finally
-                {
-                    ExecuteStatement(tryStmt.FinallyBody);
-                }
-            }
-            else if (node is ThreadNode)
-            {
-                var threadStmt = (ThreadNode) (node);
-                Task.Factory.StartNew(() => ExecuteStatement(threadStmt.Node));
-            }
-            else
-            {
-                EvaluateNode(node);
-                if (continueLoop || breakLoop || returnFunc) return;
+                break;
             }
         }
-        
+
         /// <summary>
         /// Evaluates the node.
         /// </summary>
