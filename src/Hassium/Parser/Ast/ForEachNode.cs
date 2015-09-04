@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -35,20 +36,9 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
-        public static AstNode Parse(Parser parser)
+        public override void Visit(IVisitor visitor)
         {
-            int pos = parser.codePos;
-
-            parser.ExpectToken(TokenType.Identifier, "foreach");
-            parser.ExpectToken(TokenType.Parentheses, "(");
-            AstNode needle = null;
-            needle = parser.CurrentToken().Value.ToString() == "[" ? ArrayInitializerNode.Parse(parser) : IdentifierNode.Parse(parser);
-            parser.ExpectToken(TokenType.Identifier, "in");
-            AstNode haystack = StatementNode.Parse(parser);
-            parser.ExpectToken(TokenType.Parentheses, ")");
-            AstNode forBody = StatementNode.Parse(parser);
-
-            return new ForEachNode(pos, needle, haystack, forBody);
+            visitor.Accept(this);
         }
     }
 }

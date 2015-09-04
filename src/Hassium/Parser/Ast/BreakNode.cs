@@ -1,4 +1,5 @@
-﻿using Hassium.Lexer;
+﻿using Hassium.Interpreter;
+using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -14,6 +15,11 @@ namespace Hassium.Parser.Ast
             parser.ExpectToken(TokenType.Identifier, "break");
             parser.ExpectToken(TokenType.EndOfLine);
             return new BreakNode(pos);
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

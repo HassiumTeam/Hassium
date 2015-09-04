@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -23,31 +24,14 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
-        public static AstNode Parse(Parser parser)
-        {
-            int pos = parser.codePos;
-
-            parser.ExpectToken(TokenType.Identifier, "func");
-            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            parser.ExpectToken(TokenType.Parentheses, "(");
-
-            List<string> result = new List<string>();
-            while (parser.MatchToken(TokenType.Identifier))
-            {
-                result.Add(parser.ExpectToken(TokenType.Identifier).Value.ToString());
-                if (!parser.AcceptToken(TokenType.Comma))
-                    break;
-            }
-
-            parser.ExpectToken(TokenType.Parentheses, ")");
-            AstNode body = StatementNode.Parse(parser);
-
-            return new FuncNode(pos, name, result, body);
-        }
-
         public static explicit operator LambdaFuncNode(FuncNode funcNode)
         {
             return new LambdaFuncNode(funcNode.Position, funcNode.Parameters, funcNode.Body);
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

@@ -51,12 +51,15 @@
     <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
     <Compile Include="HassiumObjects\Math\HassiumMath.cs" />
+    <Compile Include="Interpreter\IVisitor.cs" />
     <Compile Include="Interpreter\ParseException.cs" />
     <Compile Include="Lexer\IFunction.cs" />
+    <Compile Include="Parser\Ast\ArrayIndexerNode.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
     <Compile Include="Parser\Ast\ClassNode.cs" />
     <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
     <Compile Include="Parser\Ast\ContinueNode.cs" />
+    <Compile Include="Parser\Ast\Expression.cs" />
     <Compile Include="Parser\Ast\InstanceNode.cs" />
     <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
     <Compile Include="Program.cs" />
@@ -71,7 +74,6 @@
     <Compile Include="Parser\Ast\NumberNode.cs" />
     <Compile Include="Parser\Ast\BinaryOpNode.cs" />
     <Compile Include="Parser\Ast\StringNode.cs" />
-    <Compile Include="Parser\Ast\ExpressionNode.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\Ast\ArgListNode.cs" />
     <Compile Include="Parser\Ast\FunctionCallNode.cs" />
@@ -99,7 +101,7 @@
     <Compile Include="Parser\Ast\ReturnNode.cs" />
     <Compile Include="Parser\Ast\MentalNode.cs" />
     <Compile Include="HassiumObjects\HassiumObject.cs" />
-    <Compile Include="Parser\Ast\MemberAccess.cs" />
+    <Compile Include="Parser\Ast\MemberAccessNode.cs" />
     <Compile Include="Interpreter\HassiumMethod.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumWebClient.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumTcpClient.cs" />
@@ -146,7 +148,5 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="HassiumObjects\List\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

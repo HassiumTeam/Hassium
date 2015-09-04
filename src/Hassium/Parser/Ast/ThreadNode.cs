@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -22,9 +23,14 @@ namespace Hassium.Parser.Ast
             int pos = parser.codePos;
 
             parser.ExpectToken(TokenType.Identifier, "thread");
-            AstNode node = StatementNode.Parse(parser);
+            AstNode node = Parser.ParseStatement(parser);
 
             return new ThreadNode(pos, node);
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

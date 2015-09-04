@@ -274,9 +274,9 @@ namespace Hassium.Interpreter
                     }
                     
                 }
-                else if (node.Left is MemberAccess)
+                else if (node.Left is MemberAccessNode)
                 {
-                    var accessor = (MemberAccess) node.Left;
+                    var accessor = (MemberAccessNode) node.Left;
                     var target = EvaluateNode(accessor.Left);
                     target.SetAttribute(accessor.Member, right);
                 }
@@ -605,9 +605,9 @@ namespace Hassium.Interpreter
                 {
                     return new HassiumString(((StringNode) node).Value);
                 }
-                else if (node is MemberAccess)
+                else if (node is MemberAccessNode)
                 {
-                    var accessor = (MemberAccess) node;
+                    var accessor = (MemberAccessNode) node;
                     var target = EvaluateNode(accessor.Left);
                     var attr = target.GetAttribute(accessor.Member);
                     if (attr is InternalFunction && ((InternalFunction) attr).IsProperty)
@@ -703,7 +703,7 @@ namespace Hassium.Interpreter
                             });
                             break;
                         default:
-                            if ((!(call.Target is MemberAccess) && !HasVariable(call.Target.ToString())))
+                            if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))
                             {
                                 throw new ParseException("Attempt to run a non-valid function", node);
                             }

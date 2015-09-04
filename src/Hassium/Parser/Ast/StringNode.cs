@@ -1,3 +1,5 @@
+using Hassium.Interpreter;
+
 namespace Hassium.Parser.Ast
 {
     public class StringNode: AstNode
@@ -7,6 +9,11 @@ namespace Hassium.Parser.Ast
         public StringNode(int position, string value) : base(position)
         {
             Value = value;
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

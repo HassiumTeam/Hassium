@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Hassium.Interpreter;
 using Hassium.Parser.Ast;
 
 namespace Hassium.Parser
@@ -17,7 +19,7 @@ namespace Hassium.Parser
         {
             get
             {
-                return this is IdentifierNode || this is MemberAccess || this is FunctionCallNode || this is StringNode ||
+                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode || this is StringNode ||
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode;
             }
         }
@@ -26,15 +28,26 @@ namespace Hassium.Parser
         {
             get
             {
-                return this is IdentifierNode || this is MemberAccess || this is FunctionCallNode || this is StringNode ||
+                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode || this is StringNode ||
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode || this is BinOpNode ||
                        this is ConditionalOpNode || this is LambdaFuncNode || this is NumberNode || this is UnaryOpNode;
             }
         }
 
+        public abstract void Visit(IVisitor visitor);
+
+        public void VisitChild(IVisitor visitor)
+        {
+            Children.All(x =>
+            {
+                x.Visit(visitor);
+                return true;
+            });
+        }
+
         public bool CanBeModified
         {
-            get { return this is IdentifierNode || this is MemberAccess; }
+            get { return this is IdentifierNode || this is MemberAccessNode; }
         }
 
         protected AstNode () : this(-1)

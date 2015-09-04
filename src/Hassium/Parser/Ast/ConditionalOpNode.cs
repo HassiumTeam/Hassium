@@ -1,4 +1,6 @@
-﻿namespace Hassium.Parser.Ast
+﻿using Hassium.Interpreter;
+
+namespace Hassium.Parser.Ast
 {
     public class ConditionalOpNode : AstNode
     {
@@ -33,6 +35,11 @@
             Children.Add(predicate);
             Children.Add(body);
             Children.Add(elseBody);
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

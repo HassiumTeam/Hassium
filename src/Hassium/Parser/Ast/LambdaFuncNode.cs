@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -37,7 +38,7 @@ namespace Hassium.Parser.Ast
             }
 
             parser.ExpectToken(TokenType.Parentheses, ")");
-            AstNode body = StatementNode.Parse(parser);
+            AstNode body = Parser.ParseStatement(parser);
 
             if (parser.AcceptToken(TokenType.EndOfLine)) parser.ExpectToken(TokenType.EndOfLine);
 
@@ -47,6 +48,11 @@ namespace Hassium.Parser.Ast
         public static explicit operator FuncNode (LambdaFuncNode funcNode)
         {
             return new FuncNode(funcNode.Position, "", funcNode.Parameters, funcNode.Body);
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

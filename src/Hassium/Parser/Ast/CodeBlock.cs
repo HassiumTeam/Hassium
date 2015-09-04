@@ -1,3 +1,4 @@
+using Hassium.Interpreter;
 using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
@@ -8,18 +9,9 @@ namespace Hassium.Parser.Ast
         {
         }
 
-        public static AstNode Parse(Parser parser)
+        public override void Visit(IVisitor visitor)
         {
-            CodeBlock block = new CodeBlock(parser.codePos);
-            parser.ExpectToken(TokenType.Brace, "{");
-
-            while (!parser.EndOfStream && !parser.MatchToken(TokenType.Brace, "}"))
-            {
-                block.Children.Add(StatementNode.Parse(parser));
-            }
-
-            parser.ExpectToken(TokenType.Brace, "}");
-            return block;
+            visitor.Accept(this);
         }
     }
 }

@@ -1,3 +1,5 @@
+using Hassium.Interpreter;
+
 namespace Hassium.Parser.Ast
 {
     public class MentalNode: AstNode
@@ -13,6 +15,11 @@ namespace Hassium.Parser.Ast
             OpType = type;
             Name = name;
             IsBefore = before;
+        }
+
+        public override void Visit(IVisitor visitor)
+        {
+            visitor.Accept(this);
         }
     }
 }

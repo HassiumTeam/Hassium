@@ -1,4 +1,5 @@
-﻿using Hassium.Lexer;
+﻿using Hassium.Interpreter;
+using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
@@ -20,15 +21,9 @@ namespace Hassium.Parser.Ast
             Name = name;
         }
 
-        public static AstNode Parse(Parser parser)
+        public override void Visit(IVisitor visitor)
         {
-            int pos = parser.codePos;
-
-            parser.ExpectToken(TokenType.Identifier, "class");
-            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            AstNode body = StatementNode.Parse(parser);
-
-            return new ClassNode(pos, name, body);
+            visitor.Accept(this);
         }
     }
 }

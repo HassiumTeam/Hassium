@@ -3,9 +3,9 @@ using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {
-    public class ArgListNode: AstNode
+    public class ArrayIndexerNode : AstNode
     {
-        public ArgListNode(int position) : base(position)
+        public ArrayIndexerNode(int position) : base(position)
         {
         }
 
@@ -15,4 +15,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-
