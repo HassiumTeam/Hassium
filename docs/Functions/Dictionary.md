@@ -52,7 +52,7 @@ if (thePeople.containsKey("George Clooney")) {
 #### ```bool Dictionary.containsValue(object item)```
 Determines if the dictionary contains the an item with the specified key.
 ```go
-if (!thePeople.containsValue("Cake")) {
+if (!theDict.containsValue("Cake")) {
 	println("The cake is a lie.");
 }
 ```
