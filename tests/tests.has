@@ -146,11 +146,11 @@ func objectTest () {
 	{
 		ret := new Object();
 		func getName () {
-			return this.name;
+			return name;
 		}
 	
 		func getAge () {
-			return this.age;
+			return age;
 		}
 		ret.getName := getName;
 		ret.getAge := getAge;
