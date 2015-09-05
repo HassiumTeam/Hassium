@@ -219,7 +219,7 @@ namespace Hassium.Interpreter
 
                         var theValue = (node.IsOpAssign && arid != null)
                             ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                            : (HassiumObject)right;
+                            : right;
 
                         if (arid == null)
                             theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
@@ -259,8 +259,8 @@ namespace Hassium.Interpreter
                             append = true;
 
                         var theValue = node.IsOpAssign
-                            ? interpretBinaryOp(theArray[(int)arid], right, node.AssignOperation)
-                            : (HassiumObject) right;
+                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            : right;
 
                         if(append)
                             theArray.Add(new[] {theValue});
@@ -392,11 +392,11 @@ namespace Hassium.Interpreter
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !Convert.ToBoolean((object)node.Value.Visit(this));
+                    return !Convert.ToBoolean(node.Value.Visit(this));
                 case UnaryOperation.Negate:
-                    return -Convert.ToDouble((object)node.Value.Visit(this));
+                    return -Convert.ToDouble(node.Value.Visit(this));
                 case UnaryOperation.Complement:
-                    return ~(int)Convert.ToDouble((object)node.Value.Visit(this));
+                    return ~(int)Convert.ToDouble(node.Value.Visit(this));
             }
             //Raise error
             return -1;
@@ -462,7 +462,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ArrayGetNode node)
         {
-            var call = (ArrayGetNode)(node);
+            var call = node;
 
             if (!call.Target.CanBeIndexed)
                 throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
@@ -523,7 +523,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ArrayInitializerNode node)
         {
-            var ainode = ((ArrayInitializerNode)node);
+            var ainode = node;
             var content = ainode.Value;
             if (ainode.IsDictionary)
                 return new HassiumDictionary(content.Select(
@@ -542,7 +542,7 @@ namespace Hassium.Interpreter
 
         public object Accept(BinOpNode node)
         {
-            var bnode = (BinOpNode)node;
+            var bnode = node;
             return interpretBinaryOp(bnode);
         }
 
@@ -572,7 +572,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ConditionalOpNode node)
         {
-            var ifStmt = (ConditionalOpNode)(node);
+            var ifStmt = node;
             if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
             {
                 return ifStmt.Body.Visit(this);
@@ -592,7 +592,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ForEachNode node)
         {
-            var forStmt = (ForEachNode)(node);
+            var forStmt = node;
             var needlestmt = forStmt.Needle;
             var haystackstmt = forStmt.Haystack.Visit(this);
 
@@ -666,7 +666,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ForNode node)
         {
-            var forStmt = (ForNode)(node);
+            var forStmt = node;
             inLoop++;
             forStmt.Left.Visit(this);
             while ((HassiumBool) (forStmt.Predicate.Visit(this)))
@@ -686,7 +686,7 @@ namespace Hassium.Interpreter
 
         public object Accept(FuncNode node)
         {
-            var fnode = ((FuncNode)node);
+            var fnode = node;
             var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
             if (CallStack.Count > 0)
             {
@@ -704,7 +704,7 @@ namespace Hassium.Interpreter
 
         public object Accept(FunctionCallNode node)
         {
-            var call = (FunctionCallNode)node;
+            var call = node;
 
             IFunction target = null;
 
@@ -743,7 +743,7 @@ namespace Hassium.Interpreter
                     {
 
                         var man = (MemberAccessNode) call.Target;
-                        if(man.Left.Visit(this) is HassiumClass)
+                        if(!((HassiumObject)man.Left.Visit(this)).IsInstance)
                         {
                             throw new ParseException("Non-static method can only be used with instance of class", call);
                         }
@@ -772,7 +772,7 @@ namespace Hassium.Interpreter
 
         public object Accept(IfNode node)
         {
-            var ifStmt = (IfNode)(node);
+            var ifStmt = node;
             if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
             {
                 ifStmt.Body.Visit(this);
@@ -786,21 +786,23 @@ namespace Hassium.Interpreter
 
         public object Accept(InstanceNode node)
         {
-            var inode = (InstanceNode)node;
+            var inode = node;
             var fcall = (FunctionCallNode)inode.Target;
             var target = fcall.Target.ToString();
 
             var arguments = (HassiumObject[]) fcall.Arguments.Visit(this);
             if (HasVariable(target, true))
             {
-                var theVar = Globals[target];
+                var theVar = GetVariable(target, node);
 
                 if (theVar is InternalFunction)
                 {
                     var iFunc = (InternalFunction) theVar;
                     if (iFunc.IsConstructor)
                     {
-                        return iFunc.Invoke(arguments);
+                        var ret = iFunc.Invoke(arguments);
+                        ret.IsInstance = true;
+                        return ret;
                     }
                 }
                 else if(theVar is HassiumClass)
@@ -810,6 +812,7 @@ namespace Hassium.Interpreter
                     {
                         var ctor = iCl.GetAttribute("new", fcall.Position);
                         ctor.Invoke(arguments);
+                        iCl.IsInstance = true;
                         return iCl;
                     }
                 }
@@ -819,7 +822,7 @@ namespace Hassium.Interpreter
 
         public object Accept(LambdaFuncNode node)
         {
-            var funcNode = (LambdaFuncNode)(node);
+            var funcNode = node;
             var stackFrame = new StackFrame(SymbolTable.ChildScopes["lambda_" + funcNode.GetHashCode()]);
             if (CallStack.Count > 0)
             {
@@ -835,7 +838,7 @@ namespace Hassium.Interpreter
 
         public object Accept(MemberAccessNode node)
         {
-            var accessor = (MemberAccessNode)node;
+            var accessor = node;
             var target = (HassiumObject)accessor.Left.Visit(this);
             var attr = target.GetAttribute(accessor.Member, node.Position + 1);
             if (attr is InternalFunction && ((InternalFunction)attr).IsProperty)
@@ -850,7 +853,7 @@ namespace Hassium.Interpreter
 
         public object Accept(MentalNode node)
         {
-            var mnode = ((MentalNode)node);
+            var mnode = node;
             if (!HasVariable(mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
             var oldValue = GetVariable(mnode.Name, mnode);
             switch (mnode.OpType)
@@ -875,7 +878,7 @@ namespace Hassium.Interpreter
         public object Accept(ReturnNode node)
         {
             if (inFunc == 0) throw new ParseException("'return' cannot be used outside a function", node);
-            var returnStmt = (ReturnNode)(node);
+            var returnStmt = node;
             if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue) throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
             var ret = returnStmt.Value.Visit(this);
             returnFunc = true;
@@ -913,14 +916,14 @@ namespace Hassium.Interpreter
 
         public object Accept(ThreadNode node)
         {
-            var threadStmt = (ThreadNode)(node);
+            var threadStmt = node;
             Task.Factory.StartNew(() => threadStmt.Node.Visit(this));
             return null;
         }
 
         public object Accept(TryNode node)
         {
-            var tryStmt = (TryNode)(node);
+            var tryStmt = node;
             try
             {
                 tryStmt.Body.Visit(this);
@@ -939,12 +942,12 @@ namespace Hassium.Interpreter
 
         public object Accept(UnaryOpNode node)
         {
-            return interpretUnaryOp((UnaryOpNode)node);
+            return interpretUnaryOp(node);
         }
 
         public object Accept(WhileNode node)
         {
-            var whileStmt = (WhileNode)(node);
+            var whileStmt = node;
             inLoop++;
             if ((HassiumBool) whileStmt.Predicate.Visit(this))
                 while ((HassiumBool) whileStmt.Predicate.Visit(this))

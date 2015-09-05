@@ -14,6 +14,8 @@ namespace Hassium.HassiumObjects
     {
         private readonly Dictionary<string, HassiumObject> _attributes;
 
+        public bool IsInstance { get; set; }
+
         public Dictionary<string, HassiumObject> Attributes
         {
             get { return _attributes; }

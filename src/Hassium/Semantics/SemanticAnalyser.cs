@@ -35,8 +35,8 @@ namespace Hassium.Semantics
 						if (!result.Symbols.Contains(bnode.Left.ToString()))
 						{
 							result.Symbols.Add(bnode.Left.ToString());
-							checkout(node);
 						}
+						checkout(node);
 					}
 				}
 				else

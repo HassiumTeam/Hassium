@@ -13,6 +13,7 @@ func main()
 	functionTests();
 	closureTest();
 	objectTest ();
+	instanceTest();
 	println();
 	if(failed = 0) println("Everything went good");
 	else println("Some tests failed.");
@@ -139,21 +140,15 @@ func closureTest() {
 
 
 func objectTest () {
-	println("Objects tests");
+	println("Prototyping tests");
 	println();
 	
 	func Person (name, age)
 	{
 		ret := new Object();
-		func getName () {
-			return this.name;
-		}
-	
-		func getAge () {
-			return this.age;
-		}
-		ret.getName := getName;
-		ret.getAge := getAge;
+		ret.getName := this => this.name;
+		ret.getAge := this => this.age;
+		ret.toString := this => "Hello my name is " + this.name + " and I'm " + age + " years old.";
 		ret.name := name;
 		ret.age := age;
 		return ret;
@@ -164,9 +159,51 @@ func objectTest () {
 	assert (person.age = 16, "person.age should equal 16");
 	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
 	assert (person.getAge () = 16, "person.getAge () should equal 16");
+	assert(person.toString() = "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
 	
 	println();
-	println("End of objects tests");
+	println("End of prototyping tests");
+	println();
+}
+	
+	class PersonClass
+	{
+		func new(name, age)
+		{
+			this.name := name;
+			this.age := age;
+		}
+		
+		func getName(this)
+		{
+			return this.name;
+		}
+		
+		func getAge(this)
+		{
+			return this.age;
+		}
+		
+		func toString(this)
+		{
+			return "Hello my name is " + this.name + " and I'm " + this.age + " years old.";
+		}
+	}
+	
+func instanceTest () {
+	println("Class instance tests");
+	println();
+
+	
+	person := new PersonClass ("Reagan", 16);
+	assert (person.name = "Reagan", "person.name should equal Reagan");
+	assert (person.age = 16, "person.age should equal 16");
+	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
+	assert (person.getAge () = 16, "person.getAge () should equal 16");
+	assert(person.toString() = "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+	
+	println();
+	println("End of class instance tests");
 	println();
 }
 
