@@ -177,6 +177,12 @@ namespace Hassium.Interpreter
                         return;
                     }
                 }
+                else if (node is ClassNode)
+                {
+                    Console.Write("aaa");
+                    var cnode = ((ClassNode)node);
+                    Globals.Add(cnode.Name, new HassiumClass(cnode, this, CallStack.Peek().Scope));
+                }
                 else
                     node.Visit(this);
                     //ExecuteStatement(node);

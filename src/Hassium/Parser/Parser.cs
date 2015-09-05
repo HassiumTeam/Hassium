@@ -95,16 +95,20 @@ namespace Hassium.Parser
 
 		public static AstNode ParseStatement(Parser parser)
 		{
-			if (parser.MatchToken(TokenType.Identifier, "if"))
-				return ParseIf(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "while"))
-				return ParseWhile(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "for"))
-				return ParseFor(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "foreach"))
-				return ParseForEach(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "try"))
-				return ParseTryCatch(parser);
+            if (parser.MatchToken(TokenType.Identifier, "if"))
+                return ParseIf(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "while"))
+                return ParseWhile(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "for"))
+                return ParseFor(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "foreach"))
+                return ParseForEach(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "try"))
+                return ParseTryCatch(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "class"))
+            {
+                return ParseClass(parser);
+            }
 			else if (parser.MatchToken(TokenType.Identifier, "func"))
 				return ParseFunc(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "lambda"))
