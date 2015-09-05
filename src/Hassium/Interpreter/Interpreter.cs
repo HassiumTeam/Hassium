@@ -157,7 +157,8 @@ namespace Hassium.Interpreter
                 else if (node is ClassNode)
                 {
                     var cnode = ((ClassNode)node);
-                    Globals.Add(cnode.Name, new HassiumClass(cnode, this));
+                    if (!Globals.ContainsKey(cnode.Name))
+                        Globals.Add(cnode.Name, new HassiumClass(cnode, this));
                 }
             }
 

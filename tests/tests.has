@@ -97,6 +97,7 @@ func functionTests()
 	println();
 	assert(test(4) = 16, "should pass if Function test(4) is correct");
 	println();
+	assert(TestClass.testFunc(4, 5) = 9, "should pass if Function TestClass.testFunc(4, 5) is correct");
 	println("End of function tests");
 	println();
 }
@@ -169,3 +170,8 @@ func objectTest () {
 	println();
 }
 
+class TestClass {
+	func testFunc(num1, num2) {
+		return num1 + num2;
+	}
+}
