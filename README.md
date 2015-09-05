@@ -4,6 +4,8 @@
 
 ##New: Hassium Website
 Visit our website at: http://misiriansoft.com/Hassium/wordpress/
+### Visit Our Wiki! [https://github.com/HassiumTeam/Hassium/wiki](HassiumWiki)
+
 
 Hassium is a programming language written in C# for the heck of it.
 The syntax is a lot like C mixed with Python and it is very easy to
