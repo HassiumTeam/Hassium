@@ -12,14 +12,14 @@ namespace Hassium
 {
     public class HassiumClass: HassiumObject
     {
-        public HassiumClass(ClassNode value, Interpreter.Interpreter interpreter, LocalScope scope)
+        public HassiumClass(AstNode value, Interpreter.Interpreter interpreter)
         {
             foreach (AstNode node in value.Children)
             {
                 if (node is FuncNode)
                 {
                     var fnode = ((FuncNode)node);
-                    this.Attributes.Add(fnode.Name, new HassiumFunction(interpreter, fnode, scope));
+                    SetAttribute(fnode.Name, new HassiumFunction(interpreter, fnode, interpreter.SymbolTable.ChildScopes[((ClassNode)value).Name + "." + fnode.Name]));
                 }
             }
         }

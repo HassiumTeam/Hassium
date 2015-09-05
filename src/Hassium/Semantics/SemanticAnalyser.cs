@@ -1,3 +1,4 @@
+using System;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
 
@@ -44,14 +45,30 @@ namespace Hassium.Semantics
 
 			foreach (AstNode node in theNode.Children)
 			{
-				if (node is FuncNode)
-				{
-					FuncNode fnode = ((FuncNode)node);
-					currentLocalScope = new LocalScope();
-					result.ChildScopes[fnode.Name] = currentLocalScope;
-					currentLocalScope.Symbols.AddRange(fnode.Parameters);
-					analyseLocalCode(fnode.Body);
-				}
+                if (node is FuncNode)
+                {
+                    FuncNode fnode = ((FuncNode)node);
+                    currentLocalScope = new LocalScope();
+                    result.ChildScopes[fnode.Name] = currentLocalScope;
+                    currentLocalScope.Symbols.AddRange(fnode.Parameters);
+                    analyseLocalCode(fnode.Body);
+                }
+                else if (node is ClassNode)
+                {
+                    var cnode = ((ClassNode)node);
+            
+                    foreach (AstNode pnode in cnode.Children)
+                    {
+                        if (pnode is FuncNode)
+                        {
+                            var fnode = ((FuncNode)pnode);
+                            currentLocalScope = new LocalScope();
+                            result.ChildScopes[cnode.Name + "." + fnode.Name] = currentLocalScope;
+                            currentLocalScope.Symbols.AddRange(fnode.Parameters);
+                            analyseLocalCode(fnode.Body);
+                        }
+                    }
+                }
 				else if (node is LambdaFuncNode)
 				{
 					LambdaFuncNode fnode = ((LambdaFuncNode)node);

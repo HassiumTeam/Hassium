@@ -154,6 +154,11 @@ namespace Hassium.Interpreter
                     var scope = SymbolTable.ChildScopes[fnode.Name];
                     SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope), node);
                 }
+                else if (node is ClassNode)
+                {
+                    var cnode = ((ClassNode)node);
+                    Globals.Add(cnode.Name, new HassiumClass(cnode, this));
+                }
             }
 
             if (!Globals.ContainsKey("main") && forceMain)
@@ -176,12 +181,6 @@ namespace Hassium.Interpreter
                         new HassiumFunction(this, fnode, scope).Invoke();
                         return;
                     }
-                }
-                else if (node is ClassNode)
-                {
-                    Console.Write("aaa");
-                    var cnode = ((ClassNode)node);
-                    Globals.Add(cnode.Name, new HassiumClass(cnode, this, CallStack.Peek().Scope));
                 }
                 else
                     node.Visit(this);
@@ -562,7 +561,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ClassNode node)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public object Accept(CodeBlock node)

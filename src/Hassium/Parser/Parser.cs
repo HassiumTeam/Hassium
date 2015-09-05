@@ -139,7 +139,9 @@ namespace Hassium.Parser
 
 			parser.ExpectToken(TokenType.Identifier, "class");
 			string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            parser.ExpectToken(TokenType.Brace);
 			AstNode body = ParseStatement(parser);
+            parser.ExpectToken(TokenType.Brace);
 
 			return new ClassNode(pos, name, body);
 		}
