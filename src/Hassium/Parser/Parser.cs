@@ -95,20 +95,20 @@ namespace Hassium.Parser
 
 		public static AstNode ParseStatement(Parser parser)
 		{
-            if (parser.MatchToken(TokenType.Identifier, "if"))
-                return ParseIf(parser);
-            else if (parser.MatchToken(TokenType.Identifier, "while"))
-                return ParseWhile(parser);
-            else if (parser.MatchToken(TokenType.Identifier, "for"))
-                return ParseFor(parser);
-            else if (parser.MatchToken(TokenType.Identifier, "foreach"))
-                return ParseForEach(parser);
-            else if (parser.MatchToken(TokenType.Identifier, "try"))
-                return ParseTryCatch(parser);
-            else if (parser.MatchToken(TokenType.Identifier, "class"))
-            {
-                return ParseClass(parser);
-            }
+			if (parser.MatchToken(TokenType.Identifier, "if"))
+				return ParseIf(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "while"))
+				return ParseWhile(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "for"))
+				return ParseFor(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "foreach"))
+				return ParseForEach(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "try"))
+				return ParseTryCatch(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "class"))
+			{
+				return ParseClass(parser);
+			}
 			else if (parser.MatchToken(TokenType.Identifier, "func"))
 				return ParseFunc(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "lambda"))
@@ -139,9 +139,9 @@ namespace Hassium.Parser
 
 			parser.ExpectToken(TokenType.Identifier, "class");
 			string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            parser.ExpectToken(TokenType.Brace);
-			AstNode body = ParseStatement(parser);
-            parser.ExpectToken(TokenType.Brace);
+			parser.ExpectToken(TokenType.Brace);
+			AstNode body = ParseCodeBlock(parser);
+			parser.ExpectToken(TokenType.Brace);
 
 			return new ClassNode(pos, name, body);
 		}

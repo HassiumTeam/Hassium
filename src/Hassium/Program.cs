@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
@@ -105,8 +106,10 @@ namespace Hassium
 			int upper = str.Substring(idx).IndexOf(newline) + idx;
 			string res = str.Substring(lower, upper - lower);
 			string trimd = res.Trim();
-			Console.WriteLine("Error at position " + idx + ", line " +
-							  (str.Substring(0, lower).Split(new []{newline}, StringSplitOptions.None).Count(x => !string.IsNullOrWhiteSpace(x)) + 1) + " column " + (idx - lower + 1) + ": " +
+			int line = Regex.Matches(str.Substring(0, lower), newline).Count + 1;
+			int column = (idx - lower + 1);
+			Console.WriteLine("Error at position " + idx + ", line " + line
+							  + " column " + column + ": " +
 							  e.Message);
 			Console.WriteLine("   " + trimd);
 			Console.WriteLine(new string(' ', 3 + (idx - lower - (res.Length - trimd.Length))) + '^');
@@ -140,10 +143,10 @@ namespace Hassium
 				}
 				else
 				{
-				    if (File.Exists(args[i]))
-				        options.FilePath = args[i];
-				    else
-				        throw new ArgumentException("The file " + args[i] + " does not exist.");
+					if (File.Exists(args[i]))
+						options.FilePath = args[i];
+					else
+						throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
@@ -242,7 +245,7 @@ ______ ________  ________  _   _ _____   _____ _   _ _____ _____   _____ ______ 
 			{
 				Console.Write("> ");
 				string input = Console.ReadLine();
-			    if (string.IsNullOrWhiteSpace(input)) return;
+				if (string.IsNullOrWhiteSpace(input)) return;
 				Stopwatch st = null;
 				if (options.ShowTime)
 				{

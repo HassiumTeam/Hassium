@@ -33,9 +33,9 @@ namespace Hassium.HassiumObjects
             _attributes[name] = value;
         }
 
-        public HassiumObject GetAttribute(string name)
+        public HassiumObject GetAttribute(string name, int pos)
         {
-            if(!_attributes.ContainsKey(name)) throw new ArgumentException("The attribute '" + name + "' doesn't exist for the specified object.");
+            if(!_attributes.ContainsKey(name)) throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
             return _attributes[name];
         }
 

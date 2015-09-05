@@ -9,6 +9,12 @@ namespace Hassium.Interpreter
         public HassiumObject SelfReference { private set; get;}
         private HassiumFunction function;
 
+        public string Name { get { return function.FuncNode.Name; } }
+
+        public bool IsStatic { get { return !function.FuncNode.Parameters.Contains("this"); } }
+
+        public bool IsConstructor { get { return Name == "new"; } }
+
         public HassiumMethod(HassiumFunction function, HassiumObject self)
         {
             SelfReference = self;
@@ -19,13 +25,14 @@ namespace Hassium.Interpreter
         {
             StackFrame stackFrame = function.stackFrame;
             if (stackFrame == null || (stackFrame.Locals.Count == 0))
-                stackFrame = new StackFrame(function.LocalScope, SelfReference);
-            else
+                stackFrame = new StackFrame(function.LocalScope, (IsStatic && !IsConstructor) ? null : SelfReference);
+            else if (!IsStatic || IsConstructor)
                 stackFrame.Locals["this"] = SelfReference;
             
             function.Interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < function.FuncNode.Parameters.Count; x++)
-                stackFrame.Locals[function.FuncNode.Parameters[x]] = args[x];
+                if (function.FuncNode.Parameters[x] != "this")
+                    stackFrame.Locals[function.FuncNode.Parameters[x]] = args[x];
 
             function.FuncNode.Body.Visit(function.Interpreter);
 

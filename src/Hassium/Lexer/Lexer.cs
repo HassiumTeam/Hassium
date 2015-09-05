@@ -19,6 +19,7 @@ namespace Hassium.Lexer
         public Lexer(string code)
         {
             this.code = code;
+            //this.code = this.code.Replace("\t", "    ");
         }
 
         private void Add(Token token)

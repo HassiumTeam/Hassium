@@ -1,5 +1,5 @@
 /* Credit to contributer Zdimension, who added the lines in interpretBinaryOp for the
-implementation of string concat amoung other additions and foreach loop*/
+implementation of string concat amoung other additions and foreach loop, and work on classes and hassium objects and lots of other stuff*/
 
 using System;
 using System.Collections;
@@ -185,7 +185,6 @@ namespace Hassium.Interpreter
                 }
                 else
                     node.Visit(this);
-                    //ExecuteStatement(node);
             }
         }
 
@@ -268,7 +267,7 @@ namespace Hassium.Interpreter
                         else
                         {
                             if(arid >= theArray.Value.Length)
-                                throw new IndexOutOfRangeException();
+                                throw new ParseException("The index is out of the bounds of the array", call);
 
                             theArray[arid] = theValue;
                         }
@@ -299,7 +298,7 @@ namespace Hassium.Interpreter
                 return right;
             }
             var left = node.Left.Visit(this);
-            return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp);
+            return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
         }
 
         /// <summary>
@@ -309,7 +308,7 @@ namespace Hassium.Interpreter
         /// <param name="right">The right-hand parameter</param>
         /// <param name="_op">The operation type</param>
         /// <returns>The result of the operation</returns>
-        private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op)
+        private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
             if (left is AstNode) left = ((AstNode) left).Visit(this);
             if (left is int) left = (double) (int) left; 
@@ -328,7 +327,7 @@ namespace Hassium.Interpreter
                 case BinaryOperation.Subtraction:
                     return new HassiumNumber(Convert.ToDouble(left) - Convert.ToDouble(right));
                 case BinaryOperation.Division:
-                    if(Convert.ToDouble(right) == 0.0) throw new DivideByZeroException("Cannot divide by zero");
+                    if(Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
                     return new HassiumNumber(Convert.ToDouble(left) / Convert.ToDouble(right));
                 case BinaryOperation.Multiplication:
                     if ((left is HassiumString && right is HassiumNumber) ||
@@ -506,7 +505,7 @@ namespace Hassium.Interpreter
                 else
                 {
                     if (arid >= theArray.Value.Length)
-                        throw new IndexOutOfRangeException();
+                        throw new ParseException("The index is out of the bounds of the array", call);
 
                     return theArray[arid];
                 }
@@ -735,6 +734,23 @@ namespace Hassium.Interpreter
             if (target is InternalFunction && (target as InternalFunction).IsConstructor)
                 throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
 
+            if(target is HassiumMethod)
+            {
+                var th = target as HassiumMethod;
+                if (!th.IsStatic)
+                {
+                    if(call.Target is MemberAccessNode)
+                    {
+
+                        var man = (MemberAccessNode) call.Target;
+                        if(man.Left.Visit(this) is HassiumClass)
+                        {
+                            throw new ParseException("Non-static method can only be used with instance of class", call);
+                        }
+                    }
+                }
+            }
+
             var arguments = new HassiumObject[call.Arguments.Children.Count];
             for (var x = 0; x < call.Arguments.Children.Count; x++)
             {
@@ -779,12 +795,22 @@ namespace Hassium.Interpreter
             {
                 var theVar = Globals[target];
 
-                var iFunc = theVar as InternalFunction;
-                if (iFunc != null)
+                if (theVar is InternalFunction)
                 {
+                    var iFunc = (InternalFunction) theVar;
                     if (iFunc.IsConstructor)
                     {
                         return iFunc.Invoke(arguments);
+                    }
+                }
+                else if(theVar is HassiumClass)
+                {
+                    var iCl = (HassiumClass) theVar;
+                    if(iCl.Attributes.ContainsKey("new"))
+                    {
+                        var ctor = iCl.GetAttribute("new", fcall.Position);
+                        ctor.Invoke(arguments);
+                        return iCl;
                     }
                 }
             }
@@ -811,7 +837,7 @@ namespace Hassium.Interpreter
         {
             var accessor = (MemberAccessNode)node;
             var target = (HassiumObject)accessor.Left.Visit(this);
-            var attr = target.GetAttribute(accessor.Member);
+            var attr = target.GetAttribute(accessor.Member, node.Position + 1);
             if (attr is InternalFunction && ((InternalFunction)attr).IsProperty)
             {
                 return ((InternalFunction)attr).Invoke();

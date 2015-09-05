@@ -14,7 +14,7 @@ namespace Hassium
     {
         public HassiumClass(AstNode value, Interpreter.Interpreter interpreter)
         {
-            foreach (AstNode node in value.Children)
+            foreach (AstNode node in value.Children[0].Children)
             {
                 if (node is FuncNode)
                 {
