@@ -1,0 +1,6 @@
+func main() {
+	println(type("this is a string"));
+	println(type(420));
+	println(type(true));
+	println(type(args));
+}
