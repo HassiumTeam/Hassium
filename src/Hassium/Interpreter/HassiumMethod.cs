@@ -30,6 +30,8 @@ namespace Hassium.Interpreter
                 stackFrame.Locals["this"] = SelfReference;
             
             function.Interpreter.CallStack.Push(stackFrame);
+            var parms = function.FuncNode.Parameters;
+            if (parms.Contains("this")) parms.Remove("this");
             for (int x = 0; x < function.FuncNode.Parameters.Count; x++)
                 if (function.FuncNode.Parameters[x] != "this")
                     stackFrame.Locals[function.FuncNode.Parameters[x]] = args[x];
