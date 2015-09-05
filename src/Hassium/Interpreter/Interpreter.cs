@@ -404,6 +404,8 @@ namespace Hassium.Interpreter
         private int inFunc;
         private bool returnFunc;
 
+
+
         /// <summary>
         /// Gets the functions.
         /// </summary>
@@ -543,6 +545,12 @@ namespace Hassium.Interpreter
         {
             if (inLoop == 0) throw new ParseException("'break' cannot be used outside a loop", node);
             breakLoop = true;
+            return null;
+        }
+
+        public object Accept(CaseNode node)
+        {
+            node.Body.Visit(this);
             return null;
         }
 
@@ -851,6 +859,24 @@ namespace Hassium.Interpreter
         public object Accept(StringNode node)
         {
             return new HassiumString(node.Value);
+        }
+
+        public object Accept(SwitchNode node)
+        {
+            var pred = node.Predicate.Visit(this);
+            if (node.Body.Any(x => x.Values.Any(y => y.Visit(this).ToString() == pred.ToString())))
+            {
+                var cnode = node.Body.First(x => x.Values.Any(y => y.Visit(this).ToString() == pred.ToString()));
+                cnode.Visit(this);
+            }
+            else
+            {
+                if (node.DefaultBody != null)
+                {
+                    node.DefaultBody.Visit(this);
+                }
+            }
+            return null;
         }
 
         public object Accept(ThreadNode node)

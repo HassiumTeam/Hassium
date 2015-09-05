@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Hassium.Parser.Ast;
+﻿using Hassium.Parser.Ast;
 
 namespace Hassium.Interpreter
 {
@@ -15,6 +11,7 @@ namespace Hassium.Interpreter
         object Accept(ArrayInitializerNode node);
         object Accept(BinOpNode node);
         object Accept(BreakNode node);
+        object Accept(CaseNode node);
         object Accept(ClassNode node);
         object Accept(CodeBlock node);
         object Accept(ConditionalOpNode node);
@@ -33,6 +30,7 @@ namespace Hassium.Interpreter
         object Accept(ReturnNode node);
         object Accept(StatementNode node);
         object Accept(StringNode node);
+        object Accept(SwitchNode node);
         object Accept(ThreadNode node);
         object Accept(TryNode node);
         object Accept(UnaryOpNode node);

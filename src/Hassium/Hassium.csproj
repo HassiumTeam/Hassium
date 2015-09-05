@@ -62,6 +62,7 @@
     <Compile Include="Parser\Ast\Expression.cs" />
     <Compile Include="Parser\Ast\InstanceNode.cs" />
     <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
+    <Compile Include="Parser\Ast\SwitchNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Parser\Ast\ArrayGetNode.cs" />
     <Compile Include="Parser\Ast\ArrayInitializerNode.cs" />
