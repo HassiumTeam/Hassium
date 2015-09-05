@@ -1,5 +1,4 @@
 using Hassium.Interpreter;
-using Hassium.Lexer;
 
 namespace Hassium.Parser.Ast
 {

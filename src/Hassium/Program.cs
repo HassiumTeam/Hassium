@@ -26,7 +26,7 @@ namespace Hassium
 			}
 		}
 
-		private static bool disableTryCatch = true; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
+		private static bool disableTryCatch = false; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
 
 		private static class options
 		{

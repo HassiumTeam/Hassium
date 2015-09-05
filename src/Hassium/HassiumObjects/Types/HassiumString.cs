@@ -1,10 +1,21 @@
 ﻿using System;
+using System.Security.Cryptography;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
     public class HassiumString: HassiumObject, IConvertible
     {
+        protected bool Equals(HassiumString other)
+        {
+            return string.Equals(Value, other.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Value != null ? Value.GetHashCode() : 0);
+        }
+
         public string Value { get; private set; }
 
         public HassiumString(string value)
@@ -131,7 +142,12 @@ namespace Hassium.HassiumObjects.Types
         {
             return new HassiumNumber(Convert.ToDouble(str.Value));
         }
-            
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            return obj.ToString() == Value.ToString();
+        }
 
         #region IConvertible stuff
         public TypeCode GetTypeCode()

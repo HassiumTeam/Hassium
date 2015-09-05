@@ -115,6 +115,8 @@ namespace Hassium.Parser
 				return ParseLambda(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "thread"))
 				return ParseThread(parser);
+			else if (parser.MatchToken(TokenType.Identifier, "switch"))
+				return ParseSwitch(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "return"))
 				return ParseReturn(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "continue"))
@@ -225,11 +227,51 @@ namespace Hassium.Parser
 			AstNode ifBody = ParseStatement(parser);
 			if (parser.AcceptToken(TokenType.Identifier, "else"))
 			{
+				int epos = parser.codePos;
 				AstNode elseBody = ParseStatement(parser);
-				return new IfNode(parser.codePos, predicate, ifBody, elseBody);
+				return new IfNode(epos, predicate, ifBody, elseBody);
 			}
 
 			return new IfNode(pos, predicate, ifBody);
+		}
+
+		public static AstNode ParseSwitch(Parser parser)
+		{
+			int pos = parser.codePos;
+
+			parser.ExpectToken(TokenType.Identifier, "switch");
+			parser.ExpectToken(TokenType.Parentheses, "(");
+			AstNode predicate = ParseExpression(parser);
+			parser.ExpectToken(TokenType.Parentheses, ")");
+			parser.ExpectToken(TokenType.Brace, "{");
+			var cases = new List<CaseNode>();
+			CaseNode defn = null;
+			while(parser.MatchToken(TokenType.Identifier,"case"))
+			{
+				int cpos = parser.codePos;
+				parser.ExpectToken(TokenType.Identifier, "case");
+				var pred = new List<AstNode> {ParseExpression(parser)};
+				parser.ExpectToken(TokenType.Identifier, ":");
+				while(parser.MatchToken(TokenType.Identifier, "case"))
+				{
+					parser.ExpectToken(TokenType.Identifier, "case");
+					var pred2 = ParseExpression(parser);
+					parser.ExpectToken(TokenType.Identifier, ":");
+					pred.Add(pred2);
+				}
+				var cbody = ParseStatement(parser);
+				cases.Add(new CaseNode(cpos, pred, cbody));
+			}
+			if(parser.MatchToken(TokenType.Identifier, "default"))
+			{
+				int dpos = parser.codePos;
+				parser.ExpectToken(TokenType.Identifier, "default");
+				parser.ExpectToken(TokenType.Identifier, ":");
+				var dbody = ParseStatement(parser);
+				defn = new CaseNode(dpos, null, dbody);
+			}
+			parser.ExpectToken(TokenType.Brace, "}");
+			return new SwitchNode(pos, predicate, cases, defn);
 		}
 
 		public static AstNode ParseFor(Parser parser)
