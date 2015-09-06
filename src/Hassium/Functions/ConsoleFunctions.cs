@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.Functions
 {
@@ -23,7 +24,9 @@ namespace Hassium.Functions
         [IntFunc("printarr")]
         public static HassiumObject PrintArr(HassiumObject[] args)
         {
-            Console.WriteLine(ConversionFunctions.ToStr(args).ToString());
+            string result = "";
+            foreach (HassiumObject obj in args)
+                result += ((HassiumString)obj).ToString();
             return null;
         }
 
