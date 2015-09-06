@@ -143,10 +143,13 @@ namespace Hassium
 				}
 				else
 				{
-					if (File.Exists(args[i]))
-						options.FilePath = args[i];
-					else
-						throw new ArgumentException("The file " + args[i] + " does not exist.");
+				    if (File.Exists(args[i]))
+				    {
+				        options.FilePath = args[i];
+				        break;
+				    }
+				    else
+				        throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
