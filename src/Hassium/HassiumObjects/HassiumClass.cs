@@ -1,5 +1,6 @@
 ﻿using System;
 using Hassium;
+using System.Collections.Generic;
 using Hassium.Semantics;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
@@ -12,8 +13,20 @@ namespace Hassium
 {
     public class HassiumClass: HassiumObject
     {
-        public HassiumClass(AstNode value, Interpreter.Interpreter interpreter)
+        public HassiumClass(ClassNode value, Interpreter.Interpreter interpreter)
         {
+            if (value.Extends != "")
+            {
+                foreach (KeyValuePair<string, HassiumObject> entry in interpreter.Globals)
+                {
+                    if (entry.Key.StartsWith(value.Extends))
+                    {
+                        foreach (KeyValuePair<string, HassiumObject> attrib in ((HassiumClass)entry.Value).Attributes)
+                            SetAttribute(attrib.Key, attrib.Value);
+                    }
+                }
+            }
+
             foreach (AstNode node in value.Children[0].Children)
             {
                 if (node is FuncNode)

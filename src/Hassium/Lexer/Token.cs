@@ -18,7 +18,8 @@ namespace Hassium.Lexer
         UnaryOperation,
         MentalOperation,
         Lambda,
-        Dot
+        Dot,
+        Extend
     }
 
     public class Token

@@ -27,7 +27,8 @@ namespace Hassium.Parser.Ast
         Root,
         NullCoalescing,
         CombinedComparison,
-        Dot
+        Dot,
+        Extend
     }
 
     public class BinOpNode : AstNode
