@@ -1,5 +1,6 @@
 ﻿using System;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Types
 {
@@ -69,7 +70,10 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject substr(HassiumObject[] args)
         {
-            return Value.Substring(args[0].HInt().Value, args[0].HInt().Value);
+            if (args.Length >= 2)
+                return new HassiumString(Value.Substring(((HassiumInt)args[0]).Value, ((HassiumInt)args[1]).Value));
+            else
+                return new HassiumString(Value.Substring(((HassiumInt)args[0]).Value));
         }
 
         private HassiumObject concat(HassiumObject[] args)
