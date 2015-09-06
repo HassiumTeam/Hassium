@@ -13,6 +13,7 @@ func main()
 	functionTests();
 	closureTest();
 	objectTest ();
+	recursionTest(5);
 	instanceTest();
 	println();
 	if(failed = 0) println("Everything went good");
@@ -137,7 +138,16 @@ func closureTest() {
 	println();
 }
 
-
+func recursionTest (c) {
+	if (c = 5) {
+		assert(c = 5, "c be 5");
+		recursionTest (c + 1);
+		assert(c = 5, "c should remain 5");
+		recursionTest (c + 1);
+		assert(c = 5, "c should still remain 5");
+    	}
+	return 0;
+}
 
 func objectTest () {
 	println("Prototyping tests");
