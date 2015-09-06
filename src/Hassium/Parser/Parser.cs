@@ -391,9 +391,9 @@ namespace Hassium.Parser
 				case "^":
 				case "^=":
 					return BinaryOperation.Xor;
-				case ":=":
-					return BinaryOperation.Assignment;
 				case "=":
+					return BinaryOperation.Assignment;
+				case "==":
 					return BinaryOperation.Equals;
 				case "!=":
 					return BinaryOperation.NotEqualTo;
@@ -504,7 +504,7 @@ namespace Hassium.Parser
 			while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
 				   parser.CurrentToken().TokenClass == TokenType.Operation)
 			{
-                if (parser.AcceptToken(TokenType.Comparison, "="))
+                if (parser.AcceptToken(TokenType.Comparison, "=="))
                 {
                     var right = ParseEquality(parser);
                     left = new BinOpNode(pos, BinaryOperation.Equals, left, right);

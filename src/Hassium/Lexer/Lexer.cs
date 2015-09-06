@@ -131,14 +131,15 @@ namespace Hassium.Lexer
                         Add(new Token(TokenType.Brace, ReadChar()));
                         break;
                     case ':':
-                        Add(next1 == '='
-                            ? new Token(TokenType.Assignment, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Identifier, ReadChar()));
+                        Add(new Token(TokenType.Identifier, ReadChar()));
                         break;
                     case '=':
-                        Add(next1 == '>'
-                            ? new Token(TokenType.Lambda, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Comparison, ReadChar()));
+                        if (next1 == '>')
+                            Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
+                        else if (next1 == '=')
+                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                        else
+                            Add(new Token(TokenType.Assignment, "" + ReadChar()));
                         break;
                     case '!':
                         Add(next1 == '='
