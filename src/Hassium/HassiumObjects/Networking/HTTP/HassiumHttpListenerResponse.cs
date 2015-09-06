@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         private HassiumObject contentLength(HassiumObject[] args)
         {
-            Value.ContentLength64 = ((HassiumNumber)args[0]).ValueInt;
+            Value.ContentLength64 = args[0].HInt().Value;
             return null;
         }
 

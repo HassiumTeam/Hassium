@@ -326,22 +326,30 @@ namespace Hassium.Interpreter
                         return (HassiumDate) left + (HassiumDate) right;
                     if (left is HassiumKeyValuePair || right is HassiumKeyValuePair)
                         return new HassiumString(left + right.ToString());
-                    return new HassiumNumber(Convert.ToDouble(left) + Convert.ToDouble(right));
+                    if(left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt(Convert.ToInt32(left) + Convert.ToInt32(right));
+                    return new HassiumDouble(Convert.ToDouble(left) + Convert.ToDouble(right));
                 case BinaryOperation.Subtraction:
-                    return new HassiumNumber(Convert.ToDouble(left) - Convert.ToDouble(right));
+                    if (left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt(Convert.ToInt32(left) - Convert.ToInt32(right));
+                    return new HassiumDouble(Convert.ToDouble(left) - Convert.ToDouble(right));
                 case BinaryOperation.Division:
                     if(Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
-                    return new HassiumNumber(Convert.ToDouble(left) / Convert.ToDouble(right));
+                    if (left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt(Convert.ToInt32(left) / Convert.ToInt32(right));
+                    return new HassiumDouble(Convert.ToDouble(left) / Convert.ToDouble(right));
                 case BinaryOperation.Multiplication:
-                    if ((left is HassiumString && right is HassiumNumber) ||
-                        right is HassiumString && left is HassiumNumber)
+                    if ((left is HassiumString && right is HassiumInt) ||
+                        right is HassiumString && left is HassiumInt)
                     {
                         if (left is HassiumString)
                             return new HassiumString(string.Concat(Enumerable.Repeat(left, Convert.ToInt32(right))));
                         else
                             return new HassiumString(string.Concat(Enumerable.Repeat(right, Convert.ToInt32(left))));
                     }
-                    return new HassiumNumber(Convert.ToDouble(left) * Convert.ToDouble(right));
+                    if (left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt(Convert.ToInt32(left) * Convert.ToInt32(right));
+                    return new HassiumDouble(Convert.ToDouble(left) * Convert.ToDouble(right));
                 case BinaryOperation.Equals:
                     return new HassiumBool(left.ToString() == right.ToString());
                 case BinaryOperation.LogicalAnd:
@@ -359,31 +367,35 @@ namespace Hassium.Interpreter
                 case BinaryOperation.LesserOrEqual:
                     return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
-                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan))) return new HassiumNumber(1);
-                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan)) ? new HassiumNumber(-1) : new HassiumNumber(0);
+                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan))) return new HassiumInt(1);
+                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan)) ? new HassiumInt(-1) : new HassiumInt(0);
                 case BinaryOperation.Xor:
-                    return new HassiumNumber(Convert.ToInt32(left) ^ Convert.ToInt32(right));
+                    return new HassiumInt(Convert.ToInt32(left) ^ Convert.ToInt32(right));
                 case BinaryOperation.BitwiseAnd:
-                    return new HassiumNumber(Convert.ToInt32(left) & Convert.ToInt32(right));
+                    return new HassiumInt(Convert.ToInt32(left) & Convert.ToInt32(right));
                 case BinaryOperation.BitwiseOr:
-                    return new HassiumNumber(Convert.ToInt32(left) | Convert.ToInt32(right));
+                    return new HassiumInt(Convert.ToInt32(left) | Convert.ToInt32(right));
                 case BinaryOperation.BitshiftLeft:
-                    return new HassiumNumber(Convert.ToInt32(left) << Convert.ToInt32(right));
+                    return new HassiumInt(Convert.ToInt32(left) << Convert.ToInt32(right));
                 case BinaryOperation.BitshiftRight:
-                    return new HassiumNumber(Convert.ToInt32(left) >> Convert.ToInt32(right));
+                    return new HassiumInt(Convert.ToInt32(left) >> Convert.ToInt32(right));
                 case BinaryOperation.Modulus:
-                    return new HassiumNumber(Convert.ToDouble(left) % Convert.ToDouble(right));
+                    return new HassiumInt(Convert.ToInt32(left) % Convert.ToInt32(right));
 
                 case BinaryOperation.Pow:
-                    return new HassiumNumber(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
+                    if (left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt((int)Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
+                    return new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
                 case BinaryOperation.Root:
-                    return new HassiumNumber(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
+                    /*if (left is HassiumInt && right is HassiumInt)
+                        return new HassiumInt((int)Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));*/
+                    return new HassiumDouble(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
                     
                 case BinaryOperation.NullCoalescing:
                     return HassiumObject.ToHassiumObject(left) ?? HassiumObject.ToHassiumObject(right);
             }
             // Raise error
-            return new HassiumNumber(-1);
+            return new HassiumInt(-1);
         }
         /// <summary>
         /// Interprets the unary op.
@@ -392,14 +404,16 @@ namespace Hassium.Interpreter
         /// <param name="node">Node.</param>
         private HassiumObject interpretUnaryOp(UnaryOpNode node)
         {
+            var value = node.Value.Visit(this);
             switch (node.UnOp)
             {
                 case UnaryOperation.Not:
-                    return !Convert.ToBoolean(node.Value.Visit(this));
+                    return !Convert.ToBoolean(value);
                 case UnaryOperation.Negate:
-                    return -Convert.ToDouble(node.Value.Visit(this));
+                    if (value is int) return -(int) value;
+                    return -Convert.ToDouble(value);
                 case UnaryOperation.Complement:
-                    return ~(int)Convert.ToDouble(node.Value.Visit(this));
+                    return ~(int)Convert.ToDouble(value);
             }
             //Raise error
             return -1;
@@ -875,7 +889,7 @@ namespace Hassium.Interpreter
 
         public object Accept(NumberNode node)
         {
-            return new HassiumNumber(node.Value);
+            return node.Value == Math.Truncate(node.Value) ? new HassiumInt(Convert.ToInt32(node.Value)) : new HassiumDouble(node.Value);
         }
 
         public object Accept(ReturnNode node)

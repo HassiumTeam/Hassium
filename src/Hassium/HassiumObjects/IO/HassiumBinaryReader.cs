@@ -57,7 +57,7 @@ namespace Hassium.HassiumObjects.Text
 
         public HassiumObject readChars(HassiumObject[] args)
         {
-            return new HassiumString(Value.ReadChars(((HassiumNumber)args[0])).ToString());
+            return new HassiumString(Value.ReadChars(((HassiumInt)args[0])).ToString());
         }
 
         public HassiumObject readString(HassiumObject[] args)

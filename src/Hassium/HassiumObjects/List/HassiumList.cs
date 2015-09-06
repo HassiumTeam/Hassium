@@ -26,17 +26,17 @@ namespace Hassium.HassiumObjects.List
 
         private HassiumObject count(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.Count);
+            return Value.Count;
         }
 
         private HassiumObject get(HassiumObject[] args)
         {
-            return Value[((HassiumNumber)args[0]).ValueInt];
+            return Value[args[0].HInt().Value];
         }
 
         private HassiumObject set(HassiumObject[] args)
         {
-            return Value[((HassiumNumber)args[0]).ValueInt] = args [1];
+            return Value[args[0].HInt().Value] = args [1];
         }
     }
 }

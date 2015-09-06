@@ -18,7 +18,9 @@ namespace Hassium.HassiumObjects.Conversion
         {
             if (args[0] is HassiumString)
             {
-                return new HassiumNumber(Convert.ToDouble(((HassiumString)args[0]).Value));
+                var ret = Convert.ToDouble(((HassiumString)args[0]).Value);
+                if(ret == System.Math.Truncate(ret)) return new HassiumInt((int)ret);
+                else return new HassiumDouble(ret);
             }
             else
             {
@@ -35,8 +37,10 @@ namespace Hassium.HassiumObjects.Conversion
         {
             if (args[0] is HassiumString)
                 return new HassiumBool(Convert.ToBoolean(((HassiumString)args[0]).Value));
-            else if (args[0] is HassiumNumber)
-                return new HassiumBool(Convert.ToBoolean(((HassiumNumber)args[0]).ValueInt));
+            else if (args[0] is HassiumDouble)
+                return new HassiumBool(Convert.ToBoolean(((HassiumDouble)args[0]).ValueInt));
+            else if (args[0] is HassiumInt)
+                return new HassiumBool(Convert.ToBoolean(((HassiumInt)args[0]).Value));
             else
                 throw new Exception("Unknown format for Convert.toBool");
         }

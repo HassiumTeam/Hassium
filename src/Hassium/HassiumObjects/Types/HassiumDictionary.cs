@@ -64,7 +64,7 @@ namespace Hassium.HassiumObjects.Types
         {
             HassiumObject[] objarr = Value.ToArray();
 
-            HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HNum().ValueInt - 1];
+            HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HDouble().ValueInt - 1];
 
             for (int x = 0; x < objarr.Length; x++)
                 newobj[x] = objarr[x];

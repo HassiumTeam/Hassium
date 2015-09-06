@@ -25,12 +25,12 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         private HassiumObject contentLength(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.ContentLength64);
+            return Value.ContentLength64;
         }
 
         private HassiumObject httpMethod(HassiumObject[] args)
         {
-            return new HassiumString(Value.HttpMethod);
+            return Value.HttpMethod;
         }
 
         private HassiumObject inputStream(HassiumObject[] args)
@@ -40,32 +40,32 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 
         private HassiumObject localEndPoint(HassiumObject[] args)
         {
-            return new HassiumString(Value.LocalEndPoint.ToString());
+            return Value.LocalEndPoint.ToString();
         }
 
         private HassiumObject queryString(HassiumObject[] args)
         {
-            return new HassiumString(Value.QueryString.ToString());
+            return Value.QueryString.ToString();
         }
 
         private HassiumObject rawUrl(HassiumObject[] args)
         {
-            return new HassiumString(Value.RawUrl);
+            return Value.RawUrl;
         }
 
         private HassiumObject remoteEndPoint(HassiumObject[] args)
         {
-            return new HassiumString(Value.RemoteEndPoint.ToString());
+            return Value.RemoteEndPoint.ToString();
         }
 
         private HassiumObject url(HassiumObject[] args)
         {
-            return new HassiumString(Value.Url.ToString());
+            return Value.Url.ToString();
         }
 
         private HassiumObject userAgent(HassiumObject[] args)
         {
-            return new HassiumString(Value.UserAgent);
+            return Value.UserAgent;
         }
     }
 }

@@ -41,13 +41,13 @@ namespace Hassium.HassiumObjects.Text
 
         private HassiumObject insert(HassiumObject[] args)
         {
-            Value.Insert(((HassiumNumber)args[0]).ValueInt, args[1].ToString());
+            Value.Insert(args[0].HInt().Value, args[1].ToString());
             return null;
         }
 
         private HassiumObject remove(HassiumObject[] args)
         {
-            Value.Remove(((HassiumNumber)args[0]).ValueInt, ((HassiumNumber)args[1]).ValueInt);
+            Value.Remove(args[0].HInt().Value, args[1].HInt().Value);
             return null;
         }
 
@@ -59,7 +59,7 @@ namespace Hassium.HassiumObjects.Text
 
         private HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(Value.ToString());
+            return Value.ToString();
         }
     }
 }

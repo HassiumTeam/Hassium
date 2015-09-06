@@ -94,7 +94,7 @@ namespace Hassium.HassiumObjects.Types
         {
             HassiumObject[] objarr = Value;
 
-            HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HNum().ValueInt - 1];
+            HassiumObject[] newobj = new HassiumObject[objarr.Length + args[0].HDouble().ValueInt - 1];
 
             for (int x = 0; x < objarr.Length; x++)
                 newobj[x] = objarr[x];
@@ -113,7 +113,7 @@ namespace Hassium.HassiumObjects.Types
 
         public static HassiumObject ArrayFill(HassiumObject[] args)
         {
-            int num = args[0].HNum().ValueInt;
+            int num = args[0].HDouble().ValueInt;
             HassiumObject thing = args[1];
             return Enumerable.Repeat(thing, num).ToArray();
         }
@@ -169,11 +169,11 @@ namespace Hassium.HassiumObjects.Types
 
         public static HassiumObject Range(HassiumObject[] args)
         {
-            var from = args[0].HNum().Value;
-            var to = args[1].HNum().Value;
+            var from = args[0].HDouble().Value;
+            var to = args[1].HDouble().Value;
             if (args.Length > 2)
             {
-                var step = args[2].HNum().Value;
+                var step = args[2].HDouble().Value;
                 var list = new List<double>();
                 if (step == 0) throw new Exception("The step for range() can't be zero");
                 if (to < from && step > 0) step = -step;
@@ -182,13 +182,13 @@ namespace Hassium.HassiumObjects.Types
                 {
                     list.Add(i);
                 }
-                return list.ToArray().Select(x => new HassiumNumber(x)).ToArray();
+                return list.ToArray().Select(x => new HassiumDouble(x)).ToArray();
             }
             return from == to
-                ? new[] {from}.Select(x => new HassiumNumber(x)).ToArray()
+                ? new[] {from}.Select(x => new HassiumDouble(x)).ToArray()
                 : (to < from
                     ? Enumerable.Range((int) to, (int) from).Reverse().ToArray()
-                    : Enumerable.Range((int) from, (int) to)).Select(x => new HassiumNumber(x)).ToArray();
+                    : Enumerable.Range((int) from, (int) to)).Select(x => new HassiumDouble(x)).ToArray();
         }
     }
 }

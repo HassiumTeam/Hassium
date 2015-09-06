@@ -44,102 +44,102 @@ namespace Hassium.HassiumObjects.Types
           
         private HassiumObject tolower(HassiumObject[] args)
         {
-            return new HassiumString(Value.ToLower());
+            return Value.ToLower();
         }
 
         private HassiumObject toupper(HassiumObject[] args)
         {
-            return new HassiumString(Value.ToUpper());
+            return Value.ToUpper();
         }
 
         private HassiumObject begins(HassiumObject[] args)
         {
-            return new HassiumBool(Value.StartsWith(((HassiumString)args[0]).Value));
+            return Value.StartsWith(args[0].ToString());
         }
 
         private HassiumObject ends(HassiumObject[] args)
         {
-            return new HassiumBool(Value.EndsWith(((HassiumString)args[0]).Value));
+            return Value.EndsWith(args[0].ToString());
         }
 
         private HassiumObject getat(HassiumObject[] args)
         {
-            return new HassiumString(Value[Convert.ToInt32(((HassiumNumber)args[0]).Value)].ToString());
+            return Value[args[0].HInt().Value].ToString();
         }
 
         private HassiumObject substr(HassiumObject[] args)
         {
-            return new HassiumString(Value.Substring(Convert.ToInt32(((HassiumNumber)args[0]).Value), Convert.ToInt32(((HassiumNumber)args[1]).Value)));
+            return Value.Substring(args[0].HInt().Value, args[0].HInt().Value);
         }
 
         private HassiumObject concat(HassiumObject[] args)
         {
-            return new HassiumString(Value + ((HassiumString)args[0]).Value);
+            return Value + args[0];
         }
 
         private HassiumObject contains(HassiumObject[] args)
         {
-            return new HassiumBool(Value.Contains(((HassiumString)args[0]).Value));
+            return Value.Contains(args[0].ToString());
         }
 
         private HassiumObject split(HassiumObject[] args)
         {
-            return new HassiumArray(Value.Split(Convert.ToChar(((HassiumString)args[0]).Value)));
+            return new HassiumArray(Value.Split(Convert.ToChar(args[0].ToString())));
         }
 
         private HassiumObject index(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.IndexOf(((HassiumString)args[0]).Value));
+            return Value.IndexOf(args[0].ToString());
         }
 
         private HassiumObject lastindex(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.LastIndexOf(((HassiumString)args[0]).Value, StringComparison.Ordinal));
+            return Value.LastIndexOf(args[0].ToString(), StringComparison.Ordinal);
         }
 
         private HassiumObject padleft(HassiumObject[] args)
         {
-            return new HassiumString(Value.PadLeft(Convert.ToInt32(((HassiumNumber)args[0]).Value)));
+            return Value.PadLeft(args[0].HInt().Value);
         }
 
         private HassiumObject padright(HassiumObject[] args)
         {
-            return new HassiumString(Value.PadRight(Convert.ToInt32(((HassiumNumber)args[0]).Value)));
+            return Value.PadRight(args[0].HInt().Value);
         }
 
         private HassiumObject replace(HassiumObject[] args)
         {
-            return new HassiumString(Value.Replace(((HassiumString)args[0]).Value, ((HassiumString)args[1]).Value));
+            return Value.Replace(args[0].ToString(), args[1].ToString());
         }
 
         private HassiumObject trim(HassiumObject[] args)
         {
-            return new HassiumString(Value.Trim());
+            return Value.Trim();
         }
 
         private HassiumObject trimleft(HassiumObject[] args)
         {
-            return new HassiumString(Value.TrimStart());
+            return Value.TrimStart();
         }
 
         private HassiumObject trimright(HassiumObject[] args)
         {
-            return new HassiumString(Value.TrimEnd());
+            return Value.TrimEnd();
         }
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            return new HassiumString(Value);
+            return Value;
         }
 
         private HassiumObject isWhiteSpace(HassiumObject[] args)
         {
-            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(Value)));
+            return char.IsWhiteSpace(Convert.ToChar(Value));
         }
 
-        public static implicit operator HassiumNumber(HassiumString str)
+        public static implicit operator HassiumDouble(HassiumString str)
         {
-            return new HassiumNumber(Convert.ToDouble(str.Value));
+            return new HassiumDouble(Convert.ToDouble(str.Value));
         }
 
         public override bool Equals(object obj)

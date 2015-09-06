@@ -20,17 +20,17 @@ namespace Hassium.HassiumObjects.Random
             switch (args.Length)
             {
                 case 0:
-                    return new HassiumNumber(Value.Next());
+                    return Value.Next();
                 case 1:
-                    return new HassiumNumber(Value.Next(((HassiumNumber)args[0]).ValueInt));
+                    return Value.Next(args[0].HInt().Value);
                 default:
-                    return new HassiumNumber(Value.Next(((HassiumNumber)args[0]).ValueInt, ((HassiumNumber)args[1]).ValueInt));
+                    return Value.Next(args[0].HInt().Value, args[1].HInt().Value);
             }
         }
 
         private HassiumObject nextDouble(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.NextDouble());
+            return Value.NextDouble();
         }
 
         private HassiumObject toString(HassiumObject[] args)

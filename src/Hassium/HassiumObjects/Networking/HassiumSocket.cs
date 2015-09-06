@@ -29,7 +29,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject connect(HassiumObject[] args)
         {
-            Value.Connect(args[0].ToString(), Convert.ToInt32(args[1].ToString()));
+            Value.Connect(args[0].ToString(), args[1].HInt().Value);
             return null;
         }
 
@@ -41,17 +41,17 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject available(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.Available);
+            return Value.Available;
         }
 
         private HassiumObject connected(HassiumObject[] args)
         {
-            return new HassiumBool(Value.Connected);
+            return Value.Connected;
         }
 
         private HassiumObject protocolType(HassiumObject[] args)
         {
-            return new HassiumString(Value.ProtocolType.ToString());
+            return Value.ProtocolType.ToString();
         }
 
         private HassiumObject close(HassiumObject[] args)
@@ -62,7 +62,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject disconnect(HassiumObject[] args)
         {
-            Value.Disconnect(((HassiumBool)args[0]).Value);
+            Value.Disconnect(args[0].HBool().Value);
             return null;
         }
 
@@ -74,7 +74,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject listen(HassiumObject[] args)
         {
-            Value.Listen(((HassiumNumber)args[0]).ValueInt);
+            Value.Listen(args[0].HInt().Value);
             return null;
         }
 

@@ -21,7 +21,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject GetTimestamp(HassiumObject[] args)
         {
-            return new HassiumNumber((Value - new DateTime(1970, 1, 1)).TotalSeconds);
+            return new HassiumInt((int)(Value - new DateTime(1970, 1, 1)).TotalSeconds);
         }
 
         public override string ToString()

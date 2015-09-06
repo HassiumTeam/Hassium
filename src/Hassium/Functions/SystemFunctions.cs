@@ -49,12 +49,12 @@ namespace Hassium.Functions
                 case 1:
                     return DateTime.Now.ToString(args[0].ToString());
                 case 3:
-                    return new HassiumDate(new DateTime(args[0].HNum().ValueInt, args[1].HNum().ValueInt,
-                        args[2].HNum().ValueInt));
+                    return new HassiumDate(new DateTime(args[0].HDouble().ValueInt, args[1].HDouble().ValueInt,
+                        args[2].HDouble().ValueInt));
                 case 6:
-                    return new HassiumDate(new DateTime(args[0].HNum().ValueInt, args[1].HNum().ValueInt,
-                        args[2].HNum().ValueInt, args[3].HNum().ValueInt, args[4].HNum().ValueInt,
-                        args[5].HNum().ValueInt));
+                    return new HassiumDate(new DateTime(args[0].HDouble().ValueInt, args[1].HDouble().ValueInt,
+                        args[2].HDouble().ValueInt, args[3].HDouble().ValueInt, args[4].HDouble().ValueInt,
+                        args[5].HDouble().ValueInt));
                 default:
                     return new HassiumDate(DateTime.Now);
             }
@@ -72,7 +72,7 @@ namespace Hassium.Functions
             return args.Length == 0
                 ? new HassiumDate(DateTime.Now)
                 : new HassiumDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
-                    args[0].HNum().ValueInt, args[1].HNum().ValueInt, args[2].HNum().ValueInt));
+                    args[0].HDouble().ValueInt, args[1].HDouble().ValueInt, args[2].HDouble().ValueInt));
         }
 
         [IntFunc("currentUser")]

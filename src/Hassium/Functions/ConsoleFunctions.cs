@@ -77,7 +77,7 @@ namespace Hassium.Functions
         [IntFunc("setPosition")]
         public static HassiumObject ScursorPosition(HassiumObject[] args)
         {
-            Console.SetCursorPosition(args[0].HNum().ValueInt, args[1].HNum().ValueInt);
+            Console.SetCursorPosition(args[0].HDouble().ValueInt, args[1].HDouble().ValueInt);
             return null;
         }
 
@@ -112,7 +112,7 @@ namespace Hassium.Functions
             if (args.Length <= 1)
                 Console.Beep();
             else
-                Console.Beep(args[0].HNum().ValueInt, args[1].HNum().ValueInt);
+                Console.Beep(args[0].HDouble().ValueInt, args[1].HDouble().ValueInt);
 
             return null;
         }

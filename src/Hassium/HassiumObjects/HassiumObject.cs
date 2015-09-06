@@ -53,22 +53,22 @@ namespace Hassium.HassiumObjects
 
         public static implicit operator int(HassiumObject obj)
         {
-            return (int)((HassiumNumber) obj).Value;
+            return ((HassiumInt) obj).Value;
         }
 
         public static implicit operator HassiumObject(int i)
         {
-            return new HassiumNumber(i);
+            return new HassiumInt(i);
         }
 
         public static implicit operator double (HassiumObject obj)
         {
-            return ((HassiumNumber)obj).Value;
+            return ((HassiumDouble)obj).Value;
         }
 
         public static implicit operator HassiumObject(double d)
         {
-            return new HassiumNumber(d);
+            return new HassiumDouble(d);
         }
 
         public static implicit operator string (HassiumObject obj)
@@ -128,8 +128,8 @@ namespace Hassium.HassiumObjects
 
         public static HassiumObject ToHassiumObject(object fv)
         {
-            if (fv is double) return new HassiumNumber((double)fv);
-            if (fv is int) return new HassiumNumber((int)fv);
+            if (fv is double) return new HassiumDouble((double)fv);
+            if (fv is int) return new HassiumDouble((int)fv);
             if (fv is string) return new HassiumString((string)fv);
             if (fv is Array) return new HassiumArray((Array)fv);
             if (fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
@@ -173,9 +173,14 @@ namespace Hassium.HassiumObjects
             return (HassiumFile)this;
         }
 
-        public HassiumNumber HNum()
+        public HassiumDouble HDouble()
         {
-            return (HassiumNumber)this;
+            return (HassiumDouble)this;
+        }
+
+        public HassiumInt HInt()
+        {
+            return (HassiumInt)this;
         }
 
         public HassiumString HString()

@@ -43,7 +43,8 @@ namespace Hassium.Functions
 			{
 			    case MemberTypes.Field:
 			        var fv = t.GetField(membername).GetValue(null);
-			        if(fv is double || fv is int) return new HassiumNumber((double)fv);
+			        if(fv is double) return new HassiumDouble((double)fv);
+                    if(fv is int) return new HassiumInt((int)fv);
 			        if(fv is string) return new HassiumString((string)fv);
 			        if(fv is Array) return new HassiumArray((Array)fv);
 			        if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);

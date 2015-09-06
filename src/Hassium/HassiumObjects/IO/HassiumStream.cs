@@ -38,7 +38,7 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumObject Write(HassiumObject[] args)
         {
-            Value.WriteByte((byte)args[0].HNum().ValueInt);
+            Value.WriteByte((byte)args[0].HDouble().ValueInt);
             return null;
         }
     }

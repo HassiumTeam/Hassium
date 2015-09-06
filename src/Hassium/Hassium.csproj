@@ -51,6 +51,7 @@
     <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
     <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
     <Compile Include="HassiumObjects\Math\HassiumMath.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumInt.cs" />
     <Compile Include="Interpreter\IVisitor.cs" />
     <Compile Include="Interpreter\ParseException.cs" />
     <Compile Include="Lexer\IFunction.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="HassiumObjects\Types\HassiumBool.cs" />
     <Compile Include="HassiumObjects\Types\HassiumDate.cs" />
     <Compile Include="HassiumObjects\Types\HassiumDictionary.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumNumber.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumDouble.cs" />
     <Compile Include="HassiumObjects\Types\HassiumString.cs" />
     <Compile Include="HassiumObjects\IO\HassiumPath.cs" />
     <Compile Include="HassiumObjects\Reflection\HassiumAssembly.cs" />
@@ -152,7 +153,5 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="HassiumObjects\Conversion\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

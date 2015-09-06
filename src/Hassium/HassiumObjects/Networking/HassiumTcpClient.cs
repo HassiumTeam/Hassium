@@ -21,18 +21,18 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject available(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.Available);
+            return Value.Available;
         }
 
         private HassiumObject connect(HassiumObject[] args)
         {
-            Value.Connect(args[0].ToString(), Convert.ToInt32(((HassiumNumber)args[1]).Value));
+            Value.Connect(args[0].ToString(), args[1].HInt().Value);
             return null;
         }
 
         private HassiumObject connected(HassiumObject[] args)
         {
-            return new HassiumBool(Value.Connected);
+            return Value.Connected;
         }
 
         private HassiumObject getStream(HassiumObject[] args)

@@ -45,7 +45,7 @@ namespace Hassium.Functions
         [IntFunc("Array", true)]
         public static HassiumObject Array(HassiumObject[] args)
         {
-            return new HassiumArray(new HassiumObject[Convert.ToInt32(args[0].ToString())]);
+            return new HassiumArray(new HassiumObject[args[0].HInt().Value]);
         }
 
         [IntFunc("StreamWriter", true)]
@@ -103,7 +103,7 @@ namespace Hassium.Functions
         [IntFunc("Random", true)]
         public static HassiumObject Random(HassiumObject[] args)
         {
-            return args.Length > 0 ? new HassiumRandom(new Random(((HassiumNumber)args[0]).ValueInt)) : new HassiumRandom(new Random());
+            return args.Length > 0 ? new HassiumRandom(new Random(args[0].HInt().Value)) : new HassiumRandom(new Random());
         }
 
         [IntFunc("List", true)]
@@ -115,7 +115,7 @@ namespace Hassium.Functions
         [IntFunc("Stack", true)]
         public static HassiumObject Stack(HassiumObject[] args)
         {
-            return new HassiumStack(new Stack(((HassiumNumber)args[0]).ValueInt));
+            return new HassiumStack(new Stack(args[0].HInt().Value));
         }
     }
 }

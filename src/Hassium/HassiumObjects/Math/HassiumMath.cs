@@ -45,112 +45,112 @@ namespace Hassium.HassiumObjects.Math
 
         public HassiumObject Pow(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Pow(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).Value));
+            return new HassiumDouble(System.Math.Pow(args[0].HDouble().Value, args[1].HDouble().Value));
         }
 
         public HassiumObject Sqrt(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Sqrt(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Sqrt(args[0].HDouble().Value));
         }
 
         public HassiumObject Abs(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Abs(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Abs(args[0].HDouble().Value));
         }
 
         public HassiumObject Acos(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Acos(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Acos(args[0].HDouble().Value));
         }
 
         public HassiumObject Asin(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Asin(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Asin(args[0].HDouble().Value));
         }
 
         public HassiumObject Atan(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Acos(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Acos(args[0].HDouble().Value));
         }
 
         public HassiumObject Atan2(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Atan2(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).Value));
+            return new HassiumDouble(System.Math.Atan2(args[0].HDouble().Value, args[1].HDouble().Value));
         }
 
         public HassiumObject Ceil(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Ceiling(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Ceiling(args[0].HDouble().Value));
         }
 
         public HassiumObject Cos(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Cos(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Cos(args[0].HDouble().Value));
         }
 
         public HassiumObject Cosh(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Cosh(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Cosh(args[0].HDouble().Value));
         }
 
         public HassiumObject Exp(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Exp(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Exp(args[0].HDouble().Value));
         }
 
         public HassiumObject Floor(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Floor(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Floor(args[0].HDouble().Value));
         }
 
         public HassiumObject Ln(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Log(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Log(args[0].HDouble().Value));
         }
 
         public HassiumObject Log(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Log(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).Value));
+            return new HassiumDouble(System.Math.Log(args[0].HDouble().Value, args[1].HDouble().Value));
         }
 
         public HassiumObject Log10(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Log10(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Log10(args[0].HDouble().Value));
         }
 
         public HassiumObject Max(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Max(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).Value));
+            return new HassiumDouble(System.Math.Max(args[0].HDouble().Value, args[1].HDouble().Value));
         }
 
         public HassiumObject Min(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Min(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).Value));
+            return new HassiumDouble(System.Math.Min(args[0].HDouble().Value, ((HassiumDouble)args[1].HDouble().Value)));
         }
 
         public HassiumObject Round(HassiumObject[] args)
         {
-            return args.Count() > 1 ? new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value, ((HassiumNumber)args[1]).ValueInt)) : new HassiumNumber(System.Math.Round(((HassiumNumber)args[0]).Value));
+            return args.Count() > 1 ? new HassiumDouble(System.Math.Round(args[0].HDouble().Value, args[1].HInt().Value)) : new HassiumDouble(System.Math.Round(args[0].HDouble().Value));
         }
 
         public HassiumObject Sin(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Sin(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Sin(args[0].HDouble().Value));
         }
 
         public HassiumObject Sinh(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Sinh(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Sinh(args[0].HDouble().Value));
         }
 
         public HassiumObject Tan(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Tan(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Tan(args[0].HDouble().Value));
         }
 
         public HassiumObject Tanh(HassiumObject[] args)
         {
-            return new HassiumNumber(System.Math.Tanh(((HassiumNumber)args[0]).Value));
+            return new HassiumDouble(System.Math.Tanh(args[0].HDouble().Value));
         }
     }
 }

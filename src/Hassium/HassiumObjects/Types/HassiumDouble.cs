@@ -3,19 +3,17 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumNumber: HassiumObject, IConvertible
+    public class HassiumDouble: HassiumObject, IConvertible
     {
         public double Value { get; set; }
 
         public int ValueInt { get { return Convert.ToInt32(Value); } set { Value = (double) value; } }
 
-        public HassiumNumber(double value)
+        public HassiumDouble(double value)
         {
             Attributes.Add("toString", new InternalFunction(tostring));
             Attributes.Add("compare", new InternalFunction(compare));
             Attributes.Add("isBetween", new InternalFunction(isBetween));
-            Attributes.Add("isLetterOrDigit", new InternalFunction(isLetterOrDigit));
-            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
             Value = value;
         }
 
@@ -31,27 +29,17 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject isBetween(HassiumObject[] args)
         {
-            if(args.Length == 3) if(args[2].HBool().Value) return Value >= args[0].HNum().Value && Value <= args[1].HNum().Value;
-            return Value > args[0].HNum().Value && Value < args[1].HNum().Value;
+            if(args.Length == 3) if(args[2].HBool().Value) return Value >= args[0].HDouble().Value && Value <= args[1].HDouble().Value;
+            return Value > args[0].HDouble().Value && Value < args[1].HDouble().Value;
         }
 
 
         public HassiumObject compare(HassiumObject[] args)
         {
-            return new HassiumNumber(Value.CompareTo(args[0].HNum().Value));
+            return new HassiumDouble(Value.CompareTo(args[0].HDouble().Value));
         }
 
-        public HassiumObject isWhiteSpace(HassiumObject[] args)
-        {
-            return new HassiumBool(char.IsWhiteSpace(Convert.ToChar(((HassiumNumber)args[0]).ValueInt)));
-        }
-
-        public HassiumObject isLetterOrDigit(HassiumObject[] args)
-        {
-            return new HassiumBool(char.IsLetterOrDigit(Convert.ToChar(((HassiumNumber)args[0]).ValueInt)));
-        }
-
-        public static implicit operator HassiumString(HassiumNumber str)
+        public static implicit operator HassiumString(HassiumDouble str)
         {
             return new HassiumString(str.Value.ToString());
         }
