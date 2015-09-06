@@ -14,7 +14,7 @@ namespace Hassium.HassiumObjects.Conversion
             Attributes.Add("toBool", new InternalFunction(toBool));
         }
 
-        private HassiumObject toNumber(HassiumObject[] args)
+        public static HassiumObject toNumber(HassiumObject[] args)
         {
             if (args[0] is HassiumString)
             {

@@ -309,6 +309,7 @@ namespace Hassium.Interpreter
         /// <param name="left">The left-hand parameter</param>
         /// <param name="right">The right-hand parameter</param>
         /// <param name="_op">The operation type</param>
+        /// <param name="pos">position</param>
         /// <returns>The result of the operation</returns>
         private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
@@ -927,7 +928,7 @@ namespace Hassium.Interpreter
         {
             Console.WriteLine(node.Path);
             foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(node.Path))
-                this.Globals.Add(entry.Key, entry.Value);
+                Globals.Add(entry.Key, entry.Value);
 
             return null;
         }

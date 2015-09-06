@@ -8,7 +8,7 @@ namespace Hassium.Parser.Ast
 
         public ImportNode(int position, string path) : base(position)
         {
-            this.Path = path;
+            Path = path;
         }
 
         public override object Visit(IVisitor visitor)

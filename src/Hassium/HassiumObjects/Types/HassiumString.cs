@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -146,7 +145,7 @@ namespace Hassium.HassiumObjects.Types
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            return obj.ToString() == Value.ToString();
+            return obj.ToString() == Value;
         }
 
         #region IConvertible stuff

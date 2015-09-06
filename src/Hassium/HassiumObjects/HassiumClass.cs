@@ -1,13 +1,8 @@
-﻿using System;
-using Hassium;
-using System.Collections.Generic;
-using Hassium.Semantics;
-using Hassium.Parser;
-using Hassium.Parser.Ast;
-using Hassium.Interpreter;
-using Hassium.Functions;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
+using Hassium.Parser.Ast;
 
 namespace Hassium
 {
@@ -17,23 +12,20 @@ namespace Hassium
         {
             if (value.Extends != "")
             {
-                foreach (KeyValuePair<string, HassiumObject> entry in interpreter.Globals)
+                foreach (
+                    KeyValuePair<string, HassiumObject> attrib in
+                        interpreter.Globals.Where(entry => entry.Key.StartsWith(value.Extends))
+                            .SelectMany(entry => ((HassiumClass) entry.Value).Attributes))
                 {
-                    if (entry.Key.StartsWith(value.Extends))
-                    {
-                        foreach (KeyValuePair<string, HassiumObject> attrib in ((HassiumClass)entry.Value).Attributes)
-                            SetAttribute(attrib.Key, attrib.Value);
-                    }
+                    SetAttribute(attrib.Key, attrib.Value);
                 }
             }
 
-            foreach (AstNode node in value.Children[0].Children)
+            foreach (var fnode in value.Children[0].Children.OfType<FuncNode>().Select(node => node))
             {
-                if (node is FuncNode)
-                {
-                    var fnode = ((FuncNode)node);
-                    SetAttribute(fnode.Name, new HassiumFunction(interpreter, fnode, interpreter.SymbolTable.ChildScopes[((ClassNode)value).Name + "." + fnode.Name]));
-                }
+                SetAttribute(fnode.Name,
+                    new HassiumFunction(interpreter, fnode,
+                        interpreter.SymbolTable.ChildScopes[((ClassNode) value).Name + "." + fnode.Name]));
             }
         }
     }

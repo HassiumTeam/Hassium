@@ -46,7 +46,7 @@ namespace Hassium.Interpreter
         /// <returns>The return value</returns>
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
-            if(stackFrame == null || (stackFrame.Locals.Count == 0)) stackFrame = new StackFrame(LocalScope);
+            if(stackFrame == null || (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x)))) stackFrame = new StackFrame(LocalScope);
 
             Interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < FuncNode.Parameters.Count; x++)
