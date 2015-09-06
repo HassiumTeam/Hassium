@@ -889,7 +889,11 @@ namespace Hassium.Interpreter
 
         public object Accept(NumberNode node)
         {
-            return node.Value == Math.Truncate(node.Value) ? new HassiumInt(Convert.ToInt32(node.Value)) : new HassiumDouble(node.Value);
+            if (node.Value == Math.Truncate(node.Value))
+            {
+                return new HassiumInt(Convert.ToInt32(node.Value));
+            }
+            return new HassiumDouble(node.Value);
         }
 
         public object Accept(ReturnNode node)
