@@ -413,6 +413,8 @@ namespace Hassium.Parser
 					return BinaryOperation.NullCoalescing;
 				case ".":
 					return BinaryOperation.Dot;
+                case "is":
+                    return BinaryOperation.Is;
 				default:
 					throw new ArgumentException("Invalid binary operation: " + value);
 			}
@@ -432,17 +434,22 @@ namespace Hassium.Parser
 			while (parser.CurrentToken().TokenClass == TokenType.Assignment ||
 				   parser.CurrentToken().TokenClass == TokenType.OpAssign)
 			{
-				if (parser.AcceptToken(TokenType.Assignment))
-				{
-					AstNode right = ParseLogicalOr(parser);
-					left = new BinOpNode(pos, BinaryOperation.Assignment, left, right);
-				}
-				else if (parser.AcceptToken(TokenType.OpAssign))
-				{
-					var assigntype = GetBinaryOp(parser.PreviousToken().Value.ToString());
-					var right = ParseLogicalOr(parser);
-					left = new BinOpNode(pos, BinaryOperation.Assignment, assigntype, left, right);
-				}
+                if (parser.AcceptToken(TokenType.Assignment))
+                {
+                    AstNode right = ParseLogicalOr(parser);
+                    left = new BinOpNode(pos, BinaryOperation.Assignment, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.OpAssign))
+                {
+                    var assigntype = GetBinaryOp(parser.PreviousToken().Value.ToString());
+                    var right = ParseLogicalOr(parser);
+                    left = new BinOpNode(pos, BinaryOperation.Assignment, assigntype, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.Identifier, "is"))
+                {
+                    AstNode right = ParseLogicalOr(parser);
+                    left = new BinOpNode(pos, BinaryOperation.Is, left, right);
+                }
 				else break;
 			}
 
