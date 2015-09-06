@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
+    <Compile Include="HassiumObjects\HassiumModule.cs" />
     <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFileStream.cs" />

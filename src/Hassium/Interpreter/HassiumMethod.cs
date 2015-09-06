@@ -28,8 +28,8 @@ namespace Hassium.Interpreter
                 stackFrame = new StackFrame(function.LocalScope, (IsStatic && !IsConstructor) ? null : SelfReference);
             else if (!IsStatic || IsConstructor)
                 stackFrame.Locals["this"] = SelfReference;
-            
-            
+
+            function.Interpreter.inFunc++;
             var parms = function.FuncNode.Parameters;
             if (parms.Contains("this")) parms.Remove("this");
             for (int x = 0; x < parms.Count; x++)
@@ -44,7 +44,7 @@ namespace Hassium.Interpreter
             function.Interpreter.CallStack.Pop();
 
             if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
-
+            function.Interpreter.inFunc--;
             return ret;
         }
 

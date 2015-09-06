@@ -59,6 +59,7 @@ func main()
     objectTest ();
     recursionTest(5);
     instanceTest();
+	importTests();
     println();
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
@@ -274,4 +275,32 @@ class TestClass {
     func testFunc(num1, num2) {
         return num1 + num2;
     }
+}
+
+
+func importTests()
+{
+	println("Module import tests");
+    println();
+	println("Importing testImport.has as myModule");
+	import "testImport.has" as myModule;
+	println("\\/ this should print Hello from testImport.has!");
+	myModule.printTest();
+	assert(myModule.importVar == 5, "myModule.importVar should equal 5");
+	println();
+	println("Trying to instanciate myModule.importClass");
+	myClass = new myModule.importClass("test");
+	assert(myClass.getName() == "test", "myClass.getName() should equal test");
+	println();
+	println("Importing testImport.has in global scope");
+	import "testImport.has";
+	println("\\/ this should print Hello from testImport.has!");
+	printTest();
+	assert(importVar == 5, "importVar should equal 5");
+	
+	
+	
+	println();
+    println("End of module import tests");
+    println();
 }

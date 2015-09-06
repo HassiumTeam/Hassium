@@ -113,6 +113,7 @@ namespace Hassium.Lexer
                         Add(new Token(TokenType.Dot, ReadChar()));
                         break;
                     case ';':
+                    case '\n':
                         Add(new Token(TokenType.EndOfLine, ReadChar()));
                         break;
                     case ',':

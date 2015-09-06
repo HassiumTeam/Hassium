@@ -48,6 +48,7 @@ namespace Hassium.Interpreter
         {
             if(stackFrame == null || (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x)))) stackFrame = new StackFrame(LocalScope);
 
+            Interpreter.inFunc++;
             Interpreter.CallStack.Push(stackFrame);
             for (int x = 0; x < FuncNode.Parameters.Count; x++)
                 stackFrame.Locals[FuncNode.Parameters[x]] = args[x];
@@ -60,6 +61,8 @@ namespace Hassium.Interpreter
             Interpreter.CallStack.Pop();
 
             if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
+
+            Interpreter.inFunc--;
 
             stackFrame = new StackFrame(LocalScope);
 

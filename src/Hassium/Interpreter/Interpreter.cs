@@ -181,7 +181,6 @@ namespace Hassium.Interpreter
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
-                        inFunc++;
                         new HassiumFunction(this, fnode, scope).Invoke();
                         return;
                     }
@@ -424,7 +423,7 @@ namespace Hassium.Interpreter
         private bool continueLoop;
         private bool breakLoop;
 
-        private int inFunc;
+        public int inFunc;
         private bool returnFunc;
 
 
@@ -774,11 +773,9 @@ namespace Hassium.Interpreter
             {
                 arguments[x] = dontEval ? new HassiumString(call.Arguments.Children[x].ToString()) : (HassiumObject)call.Arguments.Children[x].Visit(this);
             }
-            inFunc++;
             HassiumObject ret = target.Invoke(arguments);
             if (returnFunc)
                 returnFunc = false;
-            inFunc--;
             if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
             return ret;
         }
@@ -805,37 +802,39 @@ namespace Hassium.Interpreter
         public object Accept(InstanceNode node)
         {
             var inode = node;
-            var fcall = (FunctionCallNode)inode.Target;
-            var target = fcall.Target.ToString();
-
+            var fcall = (FunctionCallNode) inode.Target;
             var arguments = (HassiumObject[]) fcall.Arguments.Visit(this);
-            if (HasVariable(target, true))
-            {
-                var theVar = GetVariable(target, node);
 
-                if (theVar is InternalFunction)
+            HassiumObject theVar = null;
+            if (fcall.Target is MemberAccessNode)
+            {
+                theVar = (HassiumObject)fcall.Target.Visit(this);
+            }
+            else theVar = GetVariable(fcall.Target.ToString(), node);
+
+            if (theVar is InternalFunction)
+            {
+                var iFunc = (InternalFunction) theVar;
+                if (iFunc.IsConstructor)
                 {
-                    var iFunc = (InternalFunction) theVar;
-                    if (iFunc.IsConstructor)
-                    {
-                        var ret = iFunc.Invoke(arguments);
-                        ret.IsInstance = true;
-                        return ret;
-                    }
-                }
-                else if(theVar is HassiumClass)
-                {
-                    var iCl = (HassiumClass) theVar;
-                    if(iCl.Attributes.ContainsKey("new"))
-                    {
-                        var ctor = iCl.GetAttribute("new", fcall.Position);
-                        ctor.Invoke(arguments);
-                        iCl.IsInstance = true;
-                        return iCl;
-                    }
+                    var ret = iFunc.Invoke(arguments);
+                    ret.IsInstance = true;
+                    return ret;
                 }
             }
-            throw new ParseException("No constructor found for " + target, node);
+            else if (theVar is HassiumClass)
+            {
+                var iCl = (HassiumClass) theVar;
+                if (iCl.Attributes.ContainsKey("new"))
+                {
+                    var ctor = iCl.GetAttribute("new", fcall.Position);
+                    ctor.Invoke(arguments);
+                    iCl.IsInstance = true;
+                    return iCl;
+                }
+            }
+
+            throw new ParseException("No constructor found for " + fcall.Target.ToString(), node);
         }
 
         public object Accept(LambdaFuncNode node)
@@ -953,11 +952,23 @@ namespace Hassium.Interpreter
             inter.Code = ast;
             inter.Execute();
 
-            foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+            if (node.Global)
             {
-                if (Globals.ContainsKey(entry.Key))
-                    Globals.Remove(entry.Key);
-                Globals.Add(entry.Key, entry.Value);
+                foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                {
+                    if (Globals.ContainsKey(entry.Key))
+                        Globals.Remove(entry.Key);
+                    Globals.Add(entry.Key, entry.Value);
+                }
+            }
+            else
+            {
+                var modu = new HassiumModule(node.Name);
+                foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                {
+                    modu.SetAttribute(entry.Key, entry.Value);
+                }
+                SetVariable(node.Name, modu, node);
             }
             return null;
         }
