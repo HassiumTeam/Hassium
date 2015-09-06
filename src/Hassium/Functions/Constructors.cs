@@ -6,8 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Collections;
 using Hassium.HassiumObjects.IO;
-using Hassium.HassiumObjects.List;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Random;
@@ -106,16 +106,10 @@ namespace Hassium.Functions
             return args.Length > 0 ? new HassiumRandom(new Random(args[0].HInt().Value)) : new HassiumRandom(new Random());
         }
 
-        [IntFunc("List", true)]
-        public static HassiumObject List(HassiumObject[] args)
-        {
-            return new HassiumList(new List<HassiumObject>());
-        }
-
         [IntFunc("Stack", true)]
         public static HassiumObject Stack(HassiumObject[] args)
         {
-            return new HassiumStack(new Stack(args[0].HInt().Value));
+            return new HassiumStack(new Stack<HassiumObject>(args[0].HInt().Value));
         }
     }
 }

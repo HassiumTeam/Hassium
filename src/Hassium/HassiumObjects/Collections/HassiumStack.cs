@@ -1,14 +1,15 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium.HassiumObjects.List
+namespace Hassium.HassiumObjects.Collections
 {
     public class HassiumStack: HassiumObject
     {
-        public Stack Value { get; private set; }
+        public Stack<HassiumObject> Value { get; private set; }
 
-        public HassiumStack(Stack value)
+        public HassiumStack(Stack<HassiumObject> value)
         {
             Value = value;
             Attributes.Add("clear", new InternalFunction(clear));
@@ -26,17 +27,17 @@ namespace Hassium.HassiumObjects.List
 
         private HassiumObject contains(HassiumObject[] args)
         {
-            return new HassiumBool(Value.Contains(args[0]));
+            return Value.Contains(args[0]);
         }
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return ((HassiumObject)Value.Peek());
+            return Value.Peek();
         }
 
         private HassiumObject pop(HassiumObject[] args)
         {
-            return ((HassiumObject)Value.Pop());
+            return Value.Pop();
         }
 
         private HassiumObject push(HassiumObject[] args)
