@@ -12,10 +12,20 @@ class Dog {
 	}
 }
 
+class BigDog : Dog {
+	func new() {
+	}
+
+	func growl(this) {
+		println("GRRRR");
+	}
+}
+
 func main() {
 	fiddo := new Dog("Fiddo");
-	bigDog := new Dog("Doberman");
 	fiddo.showName();
 	fiddo.bark();
+	bigDog := new BigDog();
 	bigDog.bark();
+	bigDog.growl();
 }
