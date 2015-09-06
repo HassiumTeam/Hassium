@@ -138,15 +138,25 @@ func closureTest() {
 	println();
 }
 
-func recursionTest (c) {
+func recursion (c) {
 	if (c = 5) {
 		assert(c = 5, "c be 5");
-		recursionTest (c + 1);
+		recursion (c + 1);
 		assert(c = 5, "c should remain 5");
-		recursionTest (c + 1);
+		recursion (c + 1);
 		assert(c = 5, "c should still remain 5");
     	}
 	return 0;
+}
+
+func recursionTest()
+{
+	println("Recursion tests");
+	println();
+	recursion(5);
+	println();
+	println("End of recursion tests");
+	println();
 }
 
 func objectTest () {

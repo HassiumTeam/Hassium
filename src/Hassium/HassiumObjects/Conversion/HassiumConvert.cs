@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium
+namespace Hassium.HassiumObjects.Conversion
 {
     public class HassiumConvert: HassiumObject
     {
@@ -26,12 +26,12 @@ namespace Hassium
             }
         }
 
-        private HassiumObject toString(HassiumObject[] args)
+        public static HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(args[0].ToString());
+            return string.Join("", args.Select(x => x.ToString()));
         }
 
-        private HassiumObject toBool(HassiumObject[] args)
+        public static HassiumObject toBool(HassiumObject[] args)
         {
             if (args[0] is HassiumString)
                 return new HassiumBool(Convert.ToBoolean(((HassiumString)args[0]).Value));

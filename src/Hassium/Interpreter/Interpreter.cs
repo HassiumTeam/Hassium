@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Conversion;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Types;

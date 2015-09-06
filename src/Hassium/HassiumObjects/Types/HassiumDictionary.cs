@@ -74,7 +74,7 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return "Array { " +
+            return "Dictionary { " +
                    string.Join(", ", Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
         }
 
