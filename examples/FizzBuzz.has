@@ -1,6 +1,6 @@
 func main() {
-	for (x := 0; x < 101; x++) {
-		if (x % 3 = 0 && x % 5 = 0)
+	for (x = 0; x < 101; x++) {
+		if (x % 3 = 0 && x % 5 == 0)
 			println("FizzBuzz");
 		else if (x % 3 = 0)
 			println("Fizz");

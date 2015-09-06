@@ -1,6 +1,6 @@
 class Dog {
 	func new(name) {
-		this.Name := name;
+		this.Name = name;
 	}
 
 	func showName(this) {
@@ -22,10 +22,10 @@ class BigDog : Dog {
 }
 
 func main() {
-	fiddo := new Dog("Fiddo");
+	fiddo = new Dog("Fiddo");
 	fiddo.showName();
 	fiddo.bark();
-	bigDog := new BigDog();
+	bigDog = new BigDog();
 	bigDog.bark();
 	bigDog.growl();
 }

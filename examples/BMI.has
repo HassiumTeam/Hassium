@@ -4,9 +4,9 @@ func calculateBMI(height, weight) {
 
 func main() {
 	print("How tall are you? ");
-	height := Convert.toNumber(input());
+	height = Convert.toNumber(input());
 	print("How much do you weigh? ");
-	weight := Convert.toNumber(input());
+	weight = Convert.toNumber(input());
 
 	println(calculateBMI(height, weight));
 }
