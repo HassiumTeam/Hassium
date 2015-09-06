@@ -1,26 +1,30 @@
 ﻿# Welcome to HATRED.
 # Hassium Testing Runtime Environment Distribution
 
+exitcode = 0;
+failed = 0;
+passed = 0;
+
 func assert(that, msg)
 {
-	theMsg := msg + " [" + (that ? "✓" : "✗") + "]";
+	theMsg = msg + " [" + (that ? "✓" : "✗") + "]";
 	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
 	println(theMsg);
 	
 	if(that)
 	{
-		testPassed();
+		passed++;
 	}
 	else
 	{
-		testFailed();
-		setExitCode(1);
+		failed++;
+		exitcode = 1;
 	}
 }
 
 func assertfail(that, msg)
 {
-	isfailed := false;
+	isfailed = false;
 	try 
 	{
 		eval(that);
@@ -29,15 +33,15 @@ func assertfail(that, msg)
 	{
 		isfailed := true;
 	}
-	theMsg := msg + " [" + (isfailed ? "✓" : "✗") + "]";
+	theMsg = msg + " [" + (isfailed ? "✓" : "✗") + "]";
 	if(isfailed)
 	{
-		testPassed();
+		passed++;
 	}
 	else
 	{
-		testFailed();
-		setExitCode(1);
+		failed++;
+		exitcode = 1;
 	}
 	println(theMsg);
 }

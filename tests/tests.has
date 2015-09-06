@@ -1,248 +1,277 @@
-$INCLUDE hatred.has$
+# Welcome to HATRED.
+# Hassium Testing Runtime Environment Distribution
 
-exitcode := 0;
-failed := 0;
-passed := 0;
+exitcode = 0;
+failed = 0;
+passed = 0;
+
+func assert(that, msg)
+{
+	theMsg = msg + " [" + (that ? "✓" : "✗") + "]";
+	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
+	println(theMsg);
+	
+	if(that)
+	{
+		passed++;
+	}
+	else
+	{
+		failed++;
+		exitcode = 1;
+	}
+}
+
+func assertfail(that, msg)
+{
+	isfailed = false;
+	try 
+	{
+		eval(that);
+	}
+	catch
+	{
+		isfailed = true;
+	}
+	theMsg = msg + " [" + (isfailed ? "✓" : "✗") + "]";
+	if(isfailed)
+	{
+		passed++;
+	}
+	else
+	{
+		failed++;
+		exitcode = 1;
+	}
+	println(theMsg);
+}
+
+
 
 func main()
 {
-	println("--- BEGIN TESTS FOR HASSIUM ---");
-	
-	opTests();
-	numberFormatTests();
-	functionTests();
-	closureTest();
-	objectTest ();
-	recursionTest(5);
-	instanceTest();
-	println();
-	if(failed = 0) println("Everything went good");
-	else println("Some tests failed.");
-	println();
-	println(passed + " tests passed");
-	println(failed + " tests failed");
-	println("--- END TESTS FOR HASSIUM ---");
-	
-	exit(exitcode);
+    println("--- BEGIN TESTS FOR HASSIUM ---");
+    
+    opTests();
+    numberFormatTests();
+    functionTests();
+    closureTest();
+    objectTest ();
+    recursionTest(5);
+    instanceTest();
+    println();
+    if(failed == 0) println("Everything went good");
+    else println("Some tests failed.");
+    println();
+    println(passed + " tests passed");
+    println(failed + " tests failed");
+    println("--- END TESTS FOR HASSIUM ---");
+    
+    exit(exitcode);
 }
-
-func setExitCode(code)
-{
-	exitcode := code;
-}
-func testPassed()
-{
-passed++;
-}
-
-func testFailed()
-{
-failed++;
-}
-
 
 func opTests()
 {
-	println("Operators tests");
-	println();
+    println("Operators tests");
+    println();
 
-	# basic operators
-	assert(13 + 8 = 21, "should pass if addition result is correct");
-	assert(29 - 56 = -27, "should pass if substraction result is correct");
-	assert(36 / 3 = 12, "should pass if division result is correct");
-	assertfail("38 / 0 = 1", "should fail (division by zero)");
-	assert(41 * 3 = 123, "should pass if multiplication result is correct");
-	assert(117 % 17 = 15, "should pass if modulo result is correct");
+    # basic operators
+    assert(13 + 8 == 21, "should pass if addition result is correct");
+    assert(29 - 56 == -27, "should pass if substraction result is correct");
+    assert(36 / 3 == 12, "should pass if division result is correct");
+    assertfail("38 / 0 == 1", "should fail (division by zero)");
+    assert(41 * 3 == 123, "should pass if multiplication result is correct");
+    assert(117 % 17 == 15, "should pass if modulo result is correct");
 
-	# comparison
-	assert(5 = 5, "object should be equals to itself");
-	assert(14 < 21, "object should be less than value");
-	assert(38 > -8, "object should be greater than value");
-	assert(1 != 2, "object should not be equal to value");
-	assert(38 <= 41 - 3, "object should be less or equal than value");
-	assert (21 >= 14 + 7, "object should be greater or equal than value");
+    # comparison
+    assert(5 == 5, "object should be equals to itself");
+    assert(14 < 21, "object should be less than value");
+    assert(38 > -8, "object should be greater than value");
+    assert(1 != 2, "object should not be equal to value");
+    assert(38 <= 41 - 3, "object should be less or equal than value");
+    assert (21 >= 14 + 7, "object should be greater or equal than value");
 
-	# logical
-	assert(2 + 2 = 4 && 3 + 3 = 6, "should pass if both values are true");
-	assert(8 * 3 = 1515 || 3 * 9 = 27, "should pass if any of the values is true");
+    # logical
+    assert(2 + 2 == 4 && 3 + 3 == 6, "should pass if both values are true");
+    assert(8 * 3 == 1515 || 3 * 9 == 27, "should pass if any of the values is true");
 
-	# bitwise
-	assert(5 ^ 3 = 6, "should pass if XOR result is correct");
-	assert(23 << 2 = 92, "should pass if Bitshift Left result is correct");
-	assert(-105 >> 1 = -53, "should pass if Bitshift right result is correct");
-	assert(6 & 13 = 4, "should pass if AND result is correct");
-	assert(5 | 3 = 7, "should pass if OR result is correct");
+    # bitwise
+    assert(5 ^ 3 == 6, "should pass if XOR result is correct");
+    assert(23 << 2 == 92, "should pass if Bitshift Left result is correct");
+    assert(-105 >> 1 == -53, "should pass if Bitshift right result is correct");
+    assert(6 & 13 == 4, "should pass if AND result is correct");
+    assert(5 | 3 == 7, "should pass if OR result is correct");
 
-	# other
-	assert(12 ** 3 = 1728, "should pass if ** (power) result is correct");
-	assert(512 // 3 = 8, "should pass if // (root) result is correct");
+    # other
+    assert(12 ** 3 == 1728, "should pass if ** (power) result is correct");
+    assert(512 // 3 == 8, "should pass if // (root) result is correct");
 
-	ab := null;
-	cd := 5;
-	assert((ab ?? cd) = 5, "should pass if ?? (null-coalescing) result is correct");
+    ab = null;
+    cd = 5;
+    assert((ab ?? cd) == 5, "should pass if ?? (null-coalescing) result is correct");
 
-	assert(1 <=> 2 = -1, "should pass if <=> result is correct");
+    assert(1 <=> 2 == -1, "should pass if <=> result is correct");
 
 
-	println();
-	println("End of operator tests");
-	println();
+    println();
+    println("End of operator tests");
+    println();
 }
 
 func functionTests()
 {
-	func test(x) {
-		return x * 4;
-	}
+    func test(x) {
+        return x * 4;
+    }
 
-	println("Functions tests");
-	println();
-	assert(test(4) = 16, "should pass if Function test(4) is correct");
-	println();
-	assert(TestClass.testFunc(4, 5) = 9, "should pass if Function TestClass.testFunc(4, 5) is correct");
-	println("End of function tests");
-	println();
+    println("Functions tests");
+    println();
+    assert(test(4) == 16, "should pass if Function test(4) is correct");
+    println();
+    assert(TestClass.testFunc(4, 5) == 9, "should pass if Function TestClass.testFunc(4, 5) is correct");
+    println("End of function tests");
+    println();
 }
 
 func numberFormatTests()
 {
-	println("Number format tests");
-	println();
-	assert(0xDA = 218, "should pass if hexadecimal numbers are parsed correctly");
-	assert(0o173 = 123, "should pass if octal numbers are parsed correctly");
-	assert(0b110101011 = 427, "should pass if binary numbers are parsed correctly");
-	assert(Math.round(runtimecall("System.Math.PI"), 2) = 3.14, "should pass if decimal numbers are parsed correctly");
-	println();
-	println("End of number format tests");
-	println();
+    println("Number format tests");
+    println();
+    assert(0xDA == 218, "should pass if hexadecimal numbers are parsed correctly");
+    assert(0o173 == 123, "should pass if octal numbers are parsed correctly");
+    assert(0b110101011 == 427, "should pass if binary numbers are parsed correctly");
+    assert(Math.round(runtimecall("System.Math.PI"), 2) == 3.14, "should pass if decimal numbers are parsed correctly");
+    println();
+    println("End of number format tests");
+    println();
 }
 
 
 
 func closureTest() {
-	println("Closures tests");
-	println();
-	func startAt (x) {
-		return lambda (y) {
-			return x + y;
-		}
-	}
-	closure1 := startAt (1);
-	closure2 := startAt (5);
-	a := closure1(3);
-	b := closure2(3);
-	assert(a = 4, "closure1(3) should equal 4");
-	assert(b = 8, "closure2(3) should equal 8");
-	println();
-	println("End of closures tests");
-	println();
+    println("Closures tests");
+    println();
+    func startAt (x) {
+        return lambda (y) {
+            return x + y;
+        }
+    }
+    closure1 = startAt (1);
+    closure2 = startAt (5);
+    a = closure1(3);
+    b = closure2(3);
+    assert(a == 4, "closure1(3) should equal 4");
+    assert(b == 8, "closure2(3) should equal 8");
+    println();
+    println("End of closures tests");
+    println();
 }
 
-	func recursion (c) {
-		if (c = 5) {
-			assert(c = 5, "c be 5");
-			recursion (c + 1);
-			assert(c = 5, "c should remain 5");
-			recursion (c + 1);
-			assert(c = 5, "c should still remain 5");
-			}
-		return 0;
-	}
-	
-	func fib (n) {
-		if (n = 0) {
-			return 0;
-		} else if (n = 1) {
-			return 1;
-		}
-		return fib (n - 1) + fib (n - 2);
-	}
+    func recursion (c) {
+        if (c == 5) {
+            assert(c == 5, "c be 5");
+            recursion (c + 1);
+            assert(c == 5, "c should remain 5");
+            recursion (c + 1);
+            assert(c == 5, "c should still remain 5");
+            }
+        return 0;
+    }
+    
+    func fib (n) {
+        if (n == 0) {
+            return 0;
+        } else if (n == 1) {
+            return 1;
+        }
+        return fib (n - 1) + fib (n - 2);
+    }
 
 func recursionTest()
 {
 
-	
+    
 
 
-	println("Recursion tests");
-	println();
-	recursion(5);
-	assert(fib(6) = 8, "fib(6) should equals 8");
-	println();
-	println("End of recursion tests");
-	println();
+    println("Recursion tests");
+    println();
+    recursion(5);
+    assert(fib(6) == 8, "fib(6) should equals 8");
+    println();
+    println("End of recursion tests");
+    println();
 }
 
 func objectTest () {
-	println("Prototyping tests");
-	println();
-	
-	func Person (name, age)
-	{
-		ret := new Object();
-		ret.getName := this => this.name;
-		ret.getAge := this => this.age;
-		ret.toString := this => "Hello my name is " + this.name + " and I'm " + age + " years old.";
-		ret.name := name;
-		ret.age := age;
-		return ret;
-	}
-	
-	person := Person ("Reagan", 16);
-	assert (person.name = "Reagan", "person.name should equal Reagan");
-	assert (person.age = 16, "person.age should equal 16");
-	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
-	assert (person.getAge () = 16, "person.getAge () should equal 16");
-	assert(person.toString() = "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
-	
-	println();
-	println("End of prototyping tests");
-	println();
+    println("Prototyping tests");
+    println();
+    
+    func Person (name, age)
+    {
+        ret = new Object();
+        ret.getName = this => this.name;
+        ret.getAge = this => this.age;
+        ret.toString = this => "Hello my name is " + this.name + " and I'm " + age + " years old.";
+        ret.name = name;
+        ret.age = age;
+        return ret;
+    }
+    
+    person = Person ("Reagan", 16);
+    assert (person.name == "Reagan", "person.name should equal Reagan");
+    assert (person.age == 16, "person.age should equal 16");
+    assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
+    assert (person.getAge () == 16, "person.getAge () should equal 16");
+    assert(person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+    
+    println();
+    println("End of prototyping tests");
+    println();
 }
-	
-	class PersonClass
-	{
-		func new(name, age)
-		{
-			this.name := name;
-			this.age := age;
-		}
-		
-		func getName(this)
-		{
-			return this.name;
-		}
-		
-		func getAge(this)
-		{
-			return this.age;
-		}
-		
-		func toString(this)
-		{
-			return "Hello my name is " + this.name + " and I'm " + this.age + " years old.";
-		}
-	}
-	
+    
+    class PersonClass
+    {
+        func new(name, age)
+        {
+            this.name = name;
+            this.age = age;
+        }
+        
+        func getName(this)
+        {
+            return this.name;
+        }
+        
+        func getAge(this)
+        {
+            return this.age;
+        }
+        
+        func toString(this)
+        {
+            return "Hello my name is " + this.name + " and I'm " + this.age + " years old.";
+        }
+    }
+    
 func instanceTest () {
-	println("Class instance tests");
-	println();
+    println("Class instance tests");
+    println();
 
-	
-	person := new PersonClass ("Reagan", 16);
-	assert (person.name = "Reagan", "person.name should equal Reagan");
-	assert (person.age = 16, "person.age should equal 16");
-	assert (person.getName () = "Reagan", "person.getName () should equal Reagan");
-	assert (person.getAge () = 16, "person.getAge () should equal 16");
-	assert(person.toString() = "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
-	
-	println();
-	println("End of class instance tests");
-	println();
+    
+    person = new PersonClass ("Reagan", 16);
+    assert (person.name == "Reagan", "person.name should equal Reagan");
+    assert (person.age == 16, "person.age should equal 16");
+    assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
+    assert (person.getAge () == 16, "person.getAge () should equal 16");
+    assert(person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+    
+    println();
+    println("End of class instance tests");
+    println();
 }
 
 class TestClass {
-	func testFunc(num1, num2) {
-		return num1 + num2;
-	}
+    func testFunc(num1, num2) {
+        return num1 + num2;
+    }
 }
