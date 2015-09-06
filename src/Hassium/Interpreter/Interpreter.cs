@@ -4,6 +4,7 @@ implementation of string concat amoung other additions and foreach loop, and wor
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -944,10 +945,20 @@ namespace Hassium.Interpreter
 
         public object Accept(ImportNode node)
         {
-            Console.WriteLine(node.Path);
-            foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(node.Path))
-                Globals.Add(entry.Key, entry.Value);
+            Interpreter inter = new Interpreter(false);
 
+            Parser.Parser hassiumParser = new Parser.Parser(new Lexer.Lexer(File.ReadAllText(node.Path)).Tokenize());
+            AstNode ast = hassiumParser.Parse();
+            inter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+            inter.Code = ast;
+            inter.Execute();
+
+            foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+            {
+                if (Globals.ContainsKey(entry.Key))
+                    Globals.Remove(entry.Key);
+                Globals.Add(entry.Key, entry.Value);
+            }
             return null;
         }
 
