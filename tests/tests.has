@@ -1,5 +1,6 @@
 # Welcome to HATRED.
 # Hassium Testing Runtime Environment Distribution
+use Math;
 
 exitcode = 0;
 failed = 0;
