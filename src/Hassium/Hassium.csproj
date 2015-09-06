@@ -88,7 +88,6 @@
     <Compile Include="Parser\Ast\UnaryOpNode.cs" />
     <Compile Include="Functions\ILibrary.cs" />
     <Compile Include="Functions\ConsoleFunctions.cs" />
-    <Compile Include="Functions\ConversionFunctions.cs" />
     <Compile Include="Functions\MiscFunctions.cs" />
     <Compile Include="Parser\Ast\ForNode.cs" />
     <Compile Include="Parser\Ast\TryNode.cs" />
@@ -133,6 +132,8 @@
     <Compile Include="HassiumObjects\List\HassiumList.cs" />
     <Compile Include="HassiumObjects\List\HassiumStack.cs" />
     <Compile Include="HassiumObjects\HassiumClass.cs" />
+    <Compile Include="HassiumObjects\Conversion\HassiumConvert.cs" />
+    <Compile Include="Parser\Ast\ImportNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -151,4 +152,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\Conversion\" />
+  </ItemGroup>
 </Project>

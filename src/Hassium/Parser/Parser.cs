@@ -95,34 +95,36 @@ namespace Hassium.Parser
 
 		public static AstNode ParseStatement(Parser parser)
 		{
-			if (parser.MatchToken(TokenType.Identifier, "if"))
-				return ParseIf(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "while"))
-				return ParseWhile(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "for"))
-				return ParseFor(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "foreach"))
-				return ParseForEach(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "try"))
-				return ParseTryCatch(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "class"))
-			{
-				return ParseClass(parser);
-			}
-			else if (parser.MatchToken(TokenType.Identifier, "func"))
-				return ParseFunc(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "lambda"))
-				return ParseLambda(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "thread"))
-				return ParseThread(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "switch"))
-				return ParseSwitch(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "return"))
-				return ParseReturn(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "continue"))
-				return ParseContinue(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "break"))
-				return ParseBreak(parser);
+            if (parser.MatchToken(TokenType.Identifier, "if"))
+                return ParseIf(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "while"))
+                return ParseWhile(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "for"))
+                return ParseFor(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "foreach"))
+                return ParseForEach(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "try"))
+                return ParseTryCatch(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "class"))
+            {
+                return ParseClass(parser);
+            }
+            else if (parser.MatchToken(TokenType.Identifier, "func"))
+                return ParseFunc(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "lambda"))
+                return ParseLambda(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "thread"))
+                return ParseThread(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "switch"))
+                return ParseSwitch(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "return"))
+                return ParseReturn(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "continue"))
+                return ParseContinue(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "break"))
+                return ParseBreak(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "import"))
+                return ParseImport(parser);
 			else if (parser.MatchToken(TokenType.Brace, "{"))
 				return ParseCodeBlock(parser);
 			else
@@ -185,6 +187,14 @@ namespace Hassium.Parser
 
 			return ret;
 		}
+
+        public static AstNode ParseImport(Parser parser)
+        {
+            parser.ExpectToken(TokenType.Identifier, "import");
+            ImportNode ret = new ImportNode(parser.codePos, parser.ExpectToken(TokenType.String).Value.ToString());
+            
+            return ret;
+        }
 
 		public static AstNode ParseCodeBlock(Parser parser)
 		{

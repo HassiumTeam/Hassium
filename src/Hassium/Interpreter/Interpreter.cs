@@ -35,6 +35,7 @@ namespace Hassium.Interpreter
             {"Directory", new HassiumDirectory()},
             {"Path", new HassiumPath()},
             {"Math", new HassiumMath()},
+            {"Convert", new HassiumConvert()},
             {"null", null},
         };
 
@@ -433,8 +434,8 @@ namespace Hassium.Interpreter
                         {
                             var rfunc = new InternalFunction(
                                 (HassiumFunctionDelegate)
-                                    Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), false, theattr.Constructor);
-
+                                Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), false, theattr.Constructor);
+                            Console.WriteLine(theattr.Name);
                             result.Add(theattr.Name, rfunc);
                             if (theattr.Alias != "") result.Add(theattr.Alias, rfunc);
                         }
@@ -918,6 +919,15 @@ namespace Hassium.Interpreter
         {
             var threadStmt = node;
             Task.Factory.StartNew(() => threadStmt.Node.Visit(this));
+            return null;
+        }
+
+        public object Accept(ImportNode node)
+        {
+            Console.WriteLine(node.Path);
+            foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(node.Path))
+                this.Globals.Add(entry.Key, entry.Value);
+
             return null;
         }
 
