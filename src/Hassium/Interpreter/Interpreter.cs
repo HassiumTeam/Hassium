@@ -33,10 +33,6 @@ namespace Hassium.Interpreter
         {
             {"true", new HassiumBool(true)},
             {"false", new HassiumBool(false)},
-            {"File", new HassiumFile()},
-            {"Directory", new HassiumDirectory()},
-            {"Path", new HassiumPath()},
-            {"Math", new HassiumMath()},
             {"Convert", new HassiumConvert()},
             {"null", null},
         };
@@ -970,6 +966,25 @@ namespace Hassium.Interpreter
                 }
                 SetVariable(node.Name, modu, node);
             }
+            return null;
+        }
+
+        public object Accept(UseNode node)
+        {
+            switch (node.Module)
+            {
+                case "IO":
+                    Constants.Add("File", new HassiumFile());
+                    Constants.Add("Directory", new HassiumDirectory());
+                    Constants.Add("Path", new HassiumPath());
+                    break;
+                case "Math":
+                    Constants.Add("Math", new HassiumMath());
+                    break;
+                default:
+                    throw new Exception("Unknown Module: " + node.Module);
+            }
+
             return null;
         }
 
