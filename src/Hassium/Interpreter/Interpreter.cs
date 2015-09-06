@@ -155,7 +155,7 @@ namespace Hassium.Interpreter
                 {
                     var fnode = ((FuncNode)node);
                     var scope = SymbolTable.ChildScopes[fnode.Name];
-                    SetVariable(fnode.Name, new HassiumFunction(this, fnode, scope), node);
+                    SetVariable(fnode.Name, new HassiumMethod(this, fnode, scope, null), node);
                 }
                 else if (node is ClassNode)
                 {
@@ -181,7 +181,7 @@ namespace Hassium.Interpreter
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
-                        new HassiumFunction(this, fnode, scope).Invoke();
+                        new HassiumMethod(this, fnode, scope, null).Invoke();
                         return;
                     }
                 }
@@ -714,7 +714,7 @@ namespace Hassium.Interpreter
                     return true;
                 });
             }
-            var hfunc = new HassiumFunction(this, fnode, stackFrame);
+            var hfunc = new HassiumMethod(this, fnode, stackFrame, null);
             SetVariable(fnode.Name, hfunc, fnode);
             return hfunc;
         }
@@ -850,7 +850,7 @@ namespace Hassium.Interpreter
                     return true;
                 });
             }
-            return new HassiumFunction(this, (FuncNode)funcNode, stackFrame);
+            return new HassiumMethod(this, (FuncNode)funcNode, stackFrame, null);
         }
 
         public object Accept(MemberAccessNode node)

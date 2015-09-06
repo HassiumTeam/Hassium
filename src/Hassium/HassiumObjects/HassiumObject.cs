@@ -28,9 +28,9 @@ namespace Hassium.HassiumObjects
 
         public void SetAttribute(string name, HassiumObject value)
         {
-            if (value is HassiumFunction)
+            if (value is HassiumMethod)
             {
-                value = new HassiumMethod((HassiumFunction)value, this);
+                ((HassiumMethod) value).SelfReference = this;
             }
             _attributes[name] = value;
         }

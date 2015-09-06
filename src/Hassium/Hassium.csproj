@@ -99,7 +99,6 @@
     <Compile Include="Semantics\LocalScope.cs" />
     <Compile Include="Semantics\SemanticAnalyser.cs" />
     <Compile Include="Interpreter\StackFrame.cs" />
-    <Compile Include="Interpreter\HassiumFunction.cs" />
     <Compile Include="Parser\Ast\ReturnNode.cs" />
     <Compile Include="Parser\Ast\MentalNode.cs" />
     <Compile Include="HassiumObjects\HassiumObject.cs" />

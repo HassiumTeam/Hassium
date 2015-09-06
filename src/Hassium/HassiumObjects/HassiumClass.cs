@@ -24,8 +24,8 @@ namespace Hassium
             foreach (var fnode in value.Children[0].Children.OfType<FuncNode>().Select(node => node))
             {
                 SetAttribute(fnode.Name,
-                    new HassiumFunction(interpreter, fnode,
-                        interpreter.SymbolTable.ChildScopes[((ClassNode) value).Name + "." + fnode.Name]));
+                    new HassiumMethod(interpreter, fnode,
+                        interpreter.SymbolTable.ChildScopes[((ClassNode) value).Name + "." + fnode.Name], this));
             }
         }
     }
