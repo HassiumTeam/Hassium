@@ -62,6 +62,7 @@ func main()
     recursionTest(5);
     instanceTest();
 	importTests();
+	eventTests();
     println();
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
@@ -304,5 +305,47 @@ func importTests()
 	
 	println();
     println("End of module import tests");
+    println();
+}
+
+func eventTests()
+{
+	println("Event tests");
+    println();
+
+	func handler1(args)
+	{
+		println("handler 1: " + args[0] + " " + args[1]);
+	}
+	
+	func handler2(args)
+	{
+		println("handler 2: " + args[0] + " " + args[1]);
+	}
+	
+	func handler3(args)
+	{
+		println("handler 3: " + args[0] + " " + args[1]);
+	}
+	
+	func handler4(args)
+	{
+		println("handler 4: " + args[0] + " " + args[1]);
+	}
+	hand = new Event(handler1, handler2);
+	
+	hand += handler3;
+	hand += handler4;
+	
+	hand("abc", "def");
+	
+	hand -= handler1;
+	hand -= handler2;
+	hand -= handler3;
+	
+	hand("abc", "def");
+	
+	println();
+    println("End of event tests");
     println();
 }

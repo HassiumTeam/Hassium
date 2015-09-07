@@ -20,6 +20,9 @@ namespace Hassium.Functions
 		{
 			throw new Exception(String.Join("", args.Cast<object>()));
 		}
+	
+		
+
 
 		[IntFunc("runtimecall")]
 		public static HassiumObject RuntimeCall(HassiumObject[] args)
@@ -41,25 +44,25 @@ namespace Hassium.Functions
 			var test = t.GetMember(membername).First();
 			switch (test.MemberType)
 			{
-			    case MemberTypes.Field:
-			        var fv = t.GetField(membername).GetValue(null);
-			        if(fv is double) return new HassiumDouble((double)fv);
-                    if(fv is int) return new HassiumInt((int)fv);
-			        if(fv is string) return new HassiumString((string)fv);
-			        if(fv is Array) return new HassiumArray((Array)fv);
-			        if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
-			        if (fv is bool) return new HassiumBool((bool) fv);
-			        else return (HassiumObject)(object) fv;
-			    case MemberTypes.Method:
-			    case MemberTypes.Constructor:
-			        var result = t.InvokeMember(
-			            membername,
-			            BindingFlags.InvokeMethod,
-			            null,
-			            instance,
-			            margs
-			            );
-			        return (HassiumObject)result;
+				case MemberTypes.Field:
+					var fv = t.GetField(membername).GetValue(null);
+					if(fv is double) return new HassiumDouble((double)fv);
+					if(fv is int) return new HassiumInt((int)fv);
+					if(fv is string) return new HassiumString((string)fv);
+					if(fv is Array) return new HassiumArray((Array)fv);
+					if(fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
+					if (fv is bool) return new HassiumBool((bool) fv);
+					else return (HassiumObject)(object) fv;
+				case MemberTypes.Method:
+				case MemberTypes.Constructor:
+					var result = t.InvokeMember(
+						membername,
+						BindingFlags.InvokeMethod,
+						null,
+						instance,
+						margs
+						);
+					return (HassiumObject)result;
 			}
 			return null;
 		}

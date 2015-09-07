@@ -40,6 +40,11 @@ namespace Hassium.Interpreter
             this.stackFrame = stackFrame;
         }
 
+        public static implicit operator HassiumEventHandler(HassiumMethod mt)
+        {
+            return mt.Invoke;
+        }
+
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if (stackFrame == null || (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x))))

@@ -324,10 +324,22 @@ namespace Hassium.Interpreter
                         return new HassiumString(left + right.ToString());
                     if(left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) + Convert.ToInt32(right));
+                    if(left is HassiumEvent && right is HassiumMethod)
+                    {
+                        var ev = (HassiumEvent) left;
+                        ev.AddHandler((HassiumMethod)right);
+                        return ev;
+                    }
                     return new HassiumDouble(Convert.ToDouble(left) + Convert.ToDouble(right));
                 case BinaryOperation.Subtraction:
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) - Convert.ToInt32(right));
+                    if (left is HassiumEvent && right is HassiumMethod)
+                    {
+                        var ev = (HassiumEvent)left;
+                        ev.RemoveHandler((HassiumMethod)right);
+                        return ev;
+                    }
                     return new HassiumDouble(Convert.ToDouble(left) - Convert.ToDouble(right));
                 case BinaryOperation.Division:
                     if(Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
@@ -503,7 +515,7 @@ namespace Hassium.Interpreter
                 {
                     theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
                 }
-                theArray = ((HassiumArray)evaluated);
+                else theArray = ((HassiumArray)evaluated);
 
                 int arid = -1;
                 bool append = false;

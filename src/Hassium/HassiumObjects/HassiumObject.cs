@@ -141,6 +141,7 @@ namespace Hassium.HassiumObjects
             if (fv is double) return new HassiumDouble((double)fv);
             if (fv is int) return new HassiumDouble((int)fv);
             if (fv is string) return new HassiumString((string)fv);
+            if(fv is char) return new HassiumChar((char)fv);
             if (fv is Array) return new HassiumArray((Array)fv);
             if (fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
             if (fv is bool) return new HassiumBool((bool)fv);

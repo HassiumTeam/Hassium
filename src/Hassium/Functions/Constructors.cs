@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,6 +14,7 @@ using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
 
 namespace Hassium.Functions
 {
@@ -110,6 +112,22 @@ namespace Hassium.Functions
         public static HassiumObject Stack(HassiumObject[] args)
         {
             return new HassiumStack(new Stack<HassiumObject>(args[0].HInt().Value));
+        }
+
+        [IntFunc("Event", true)]
+        public static HassiumObject Event(HassiumObject[] args)
+        {
+            if(args.Length > 0)
+            {
+                var ret = new HassiumEvent();
+                args.All(x =>
+                {
+                    if (x is HassiumMethod) ret.AddHandler((HassiumMethod) x);
+                    return true;
+                });
+                return ret;
+            }
+            return new HassiumEvent();
         }
     }
 }
