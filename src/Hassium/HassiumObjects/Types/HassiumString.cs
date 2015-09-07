@@ -70,10 +70,9 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject substr(HassiumObject[] args)
         {
-            if (args.Length >= 2)
-                return new HassiumString(Value.Substring(((HassiumInt)args[0]).Value, ((HassiumInt)args[1]).Value));
-            else
-                return new HassiumString(Value.Substring(((HassiumInt)args[0]).Value));
+            return args.Length == 2
+                ? Value.Substring(args[0].HInt().Value, args[1].HInt().Value)
+                : Value.Substring(args[0].HInt().Value);
         }
 
         private HassiumObject concat(HassiumObject[] args)
@@ -88,7 +87,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject split(HassiumObject[] args)
         {
-            return new HassiumArray(Value.Split(Convert.ToChar(args[0].ToString())));
+            return new HassiumArray(Value.Split(args[0].HChar()));
         }
 
         private HassiumObject index(HassiumObject[] args)

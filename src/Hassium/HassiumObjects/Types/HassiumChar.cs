@@ -15,7 +15,17 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject toString(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(Value));
+            return ToString();
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+        public static implicit operator HassiumString(HassiumChar c)
+        {
+            return new HassiumString(c.ToString());
         }
     }
 }

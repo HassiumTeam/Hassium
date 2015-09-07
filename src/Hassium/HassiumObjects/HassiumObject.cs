@@ -81,6 +81,16 @@ namespace Hassium.HassiumObjects
             return new HassiumString(s);
         }
 
+        public static implicit operator char (HassiumObject obj)
+        {
+            return ((HassiumChar) obj).Value;
+        }
+
+        public static implicit operator HassiumObject(char s)
+        {
+            return new HassiumChar(s);
+        }
+
         public static implicit operator object[] (HassiumObject obj)
         {
             return ((HassiumArray)obj).Value.Cast<object>().ToArray();
@@ -161,6 +171,12 @@ namespace Hassium.HassiumObjects
         public HassiumWebClient HClient()
         {
             return (HassiumWebClient)this;
+        }
+
+        public HassiumChar HChar()
+        {
+            if (this is HassiumString) return new HassiumChar(((HassiumString) this).Value[0]);
+            return (HassiumChar) this;
         }
 
         public HassiumDictionary HDict()
