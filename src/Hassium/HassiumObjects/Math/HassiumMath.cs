@@ -12,6 +12,8 @@ namespace Hassium.HassiumObjects.Math
     {
         public HassiumMath()
         {
+            Attributes.Add("pi", new InternalFunction(x => System.Math.PI, true));
+            Attributes.Add("e", new InternalFunction(x => System.Math.E, true));
             Attributes.Add("hash", new InternalFunction(Hash));
             Attributes.Add("pow", new InternalFunction(Pow));
             Attributes.Add("sqrt", new InternalFunction(Sqrt));

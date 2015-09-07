@@ -942,14 +942,15 @@ namespace Hassium.Interpreter
         {
             if (node.IsModule)
             {
-                switch (node.Path)
+                switch (node.Path.ToLower())
                 {
-                    case "IO":
+                    case "io":
                         Constants.Add("File", new HassiumFile());
                         Constants.Add("Directory", new HassiumDirectory());
                         Constants.Add("Path", new HassiumPath());
+                        Constants.Add("IO", new HassiumIO());
                         break;
-                    case "Math":
+                    case "math":
                         Constants.Add("Math", new HassiumMath());
                         break;
                     default:
