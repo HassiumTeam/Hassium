@@ -284,7 +284,7 @@ func importTests()
 	println("Module import tests");
     println();
 	println("Importing testImport.has as myModule");
-	import "testImport.has" as myModule;
+	use "testImport.has" as myModule;
 	println("\\/ this should print Hello from testImport.has!");
 	myModule.printTest();
 	assert(myModule.importVar == 5, "myModule.importVar should equal 5");
@@ -294,7 +294,7 @@ func importTests()
 	assert(myClass.getName() == "test", "myClass.getName() should equal test");
 	println();
 	println("Importing testImport.has in global scope");
-	import "testImport.has";
+	use "testImport.has";
 	println("\\/ this should print Hello from testImport.has!");
 	printTest();
 	assert(importVar == 5, "importVar should equal 5");

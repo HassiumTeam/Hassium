@@ -123,8 +123,6 @@ namespace Hassium.Parser
 				return ParseContinue(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "break"))
 				return ParseBreak(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "import"))
-				return ParseImport(parser);
 			else if (parser.MatchToken(TokenType.Identifier, "use"))
 				return ParseUse(parser);
 			else if (parser.MatchToken(TokenType.Brace, "{"))
@@ -193,28 +191,29 @@ namespace Hassium.Parser
 			return ret;
 		}
 
-		public static AstNode ParseImport(Parser parser)
-		{
-			parser.ExpectToken(TokenType.Identifier, "import");
-			string path = parser.ExpectToken(TokenType.String).Value.ToString();
-			bool global = true;
-			string name = "";
-			if (parser.AcceptToken(TokenType.Identifier, "as"))
-			{
-				global = false;
-				name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-			}
-			ImportNode ret = new ImportNode(parser.codePos, path, name, global);
-			parser.ExpectToken(TokenType.EndOfLine);
-			return ret;
-		}
-
 		public static AstNode ParseUse(Parser parser)
 		{
 			parser.ExpectToken(TokenType.Identifier, "use");
-			var ret = new UseNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+			string path = "";
+			UseNode ret = null;
+			if (parser.MatchToken(TokenType.Identifier))
+			{
+				path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+				ret = new UseNode(parser.codePos, path,"", true, true);
+			}
+			else
+			{
+				path = parser.ExpectToken(TokenType.String).Value.ToString();
+				bool global = true;
+				string name = "";
+				if (parser.AcceptToken(TokenType.Identifier, "as"))
+				{
+					global = false;
+					name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+				}
+				ret = new UseNode(parser.codePos, path, name, global, false);
+			}
 			parser.ExpectToken(TokenType.EndOfLine);
-
 			return ret;
 		}
 

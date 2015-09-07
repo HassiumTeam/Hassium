@@ -938,53 +938,53 @@ namespace Hassium.Interpreter
             return null;
         }
 
-        public object Accept(ImportNode node)
+        public object Accept(UseNode node)
         {
-            Interpreter inter = new Interpreter(false);
-
-            Parser.Parser hassiumParser = new Parser.Parser(new Lexer.Lexer(File.ReadAllText(node.Path)).Tokenize());
-            AstNode ast = hassiumParser.Parse();
-            inter.SymbolTable = new SemanticAnalyser(ast).Analyse();
-            inter.Code = ast;
-            inter.Execute();
-
-            if (node.Global)
+            if (node.IsModule)
             {
-                foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                switch (node.Path)
                 {
-                    if (Globals.ContainsKey(entry.Key))
-                        Globals.Remove(entry.Key);
-                    Globals.Add(entry.Key, entry.Value);
+                    case "IO":
+                        Constants.Add("File", new HassiumFile());
+                        Constants.Add("Directory", new HassiumDirectory());
+                        Constants.Add("Path", new HassiumPath());
+                        break;
+                    case "Math":
+                        Constants.Add("Math", new HassiumMath());
+                        break;
+                    default:
+                        throw new Exception("Unknown Module: " + node.Path);
                 }
             }
             else
             {
-                var modu = new HassiumModule(node.Name);
-                foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                Interpreter inter = new Interpreter(false);
+
+                Parser.Parser hassiumParser = new Parser.Parser(new Lexer.Lexer(File.ReadAllText(node.Path)).Tokenize());
+                AstNode ast = hassiumParser.Parse();
+                inter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+                inter.Code = ast;
+                inter.Execute();
+
+                if (node.Global)
                 {
-                    modu.SetAttribute(entry.Key, entry.Value);
+                    foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                    {
+                        if (Globals.ContainsKey(entry.Key))
+                            Globals.Remove(entry.Key);
+                        Globals.Add(entry.Key, entry.Value);
+                    }
                 }
-                SetVariable(node.Name, modu, node);
+                else
+                {
+                    var modu = new HassiumModule(node.Name);
+                    foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                    {
+                        modu.SetAttribute(entry.Key, entry.Value);
+                    }
+                    SetVariable(node.Name, modu, node);
+                }
             }
-            return null;
-        }
-
-        public object Accept(UseNode node)
-        {
-            switch (node.Module)
-            {
-                case "IO":
-                    Constants.Add("File", new HassiumFile());
-                    Constants.Add("Directory", new HassiumDirectory());
-                    Constants.Add("Path", new HassiumPath());
-                    break;
-                case "Math":
-                    Constants.Add("Math", new HassiumMath());
-                    break;
-                default:
-                    throw new Exception("Unknown Module: " + node.Module);
-            }
-
             return null;
         }
 
