@@ -157,26 +157,6 @@ namespace Hassium
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
 
 			options.Code = File.ReadAllText(options.FilePath);
-
-			preprocessorDirectives();
-		}
-
-		private static void preprocessorDirectives()
-		{
-			foreach (string line in File.ReadAllLines(options.FilePath))
-			{
-				if (line.StartsWith("$IMPORT"))
-				{
-					if (File.Exists(line.Substring(8, line.Substring(8).LastIndexOf("$", StringComparison.Ordinal))))
-						foreach (KeyValuePair<string, InternalFunction> entry in Interpreter.Interpreter.GetFunctions(line.Substring(8, line.Substring(8).LastIndexOf("$", StringComparison.Ordinal))))
-							CurrentInterpreter.SetVariable(entry.Key, entry.Value, null, true);
-				}
-				else if (line.StartsWith("$DEFINE"))
-				{
-					string[] parts = line.Substring(8, line.Substring(8).LastIndexOf("$", StringComparison.Ordinal)).Split(' ');
-					options.Code = options.Code.Replace(parts[0], parts[1]);
-				}
-			}
 		}
 
 		private static void enterInteractive()
