@@ -63,6 +63,7 @@ func main()
     instanceTest();
 	importTests();
 	eventTests();
+	arrayTests();
     println();
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
@@ -348,4 +349,34 @@ func eventTests()
 	println();
     println("End of event tests");
     println();
+}
+
+func arrayTests()
+{
+	println("Array tests");
+	println();
+	
+	theArr = ["abc", "def", 123, 456, runtimecall("System.Math.PI")];	
+	assert(theArr.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string");
+	theArr2 = [];
+	foreach(x in theArr)
+	{
+		theArr2[] = x;
+	}	
+	assert(theArr2.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string after foreach");
+
+	theDict = ["abc" : 123, 456 : "ghi", "jkl" : 789];
+	theDict[123] = "mno";
+	theDict[] = 456; # if you use the [] operator with nothing inside, it appends at the end of the array
+	assert(theDict[123] == "mno", "check dictionary value after setting with []");
+	assert(theDict.toString() == "Dictionary { [abc] => 123, [456] => ghi, [jkl] => 789, [123] => mno, [4] => 456 }", "dictionary to string");
+	
+	foreach([key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
+	{
+		assert(theDict[key] == value, "check key and value, foreach in a dictionary");
+	}
+	
+	println();
+	println("End of array tests");
+	println();
 }

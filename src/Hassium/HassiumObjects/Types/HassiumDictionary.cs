@@ -100,13 +100,7 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject tostring(HassiumObject[] args)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (HassiumKeyValuePair obj in Value)
-            {
-                sb.Append(obj.ToString());
-            }
-
-            return sb.ToString();
+            return ToString();
         }
 
         public HassiumObject ArrayReverse(HassiumObject[] args)
