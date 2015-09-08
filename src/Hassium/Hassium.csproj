@@ -136,6 +136,7 @@
     <Compile Include="HassiumObjects\HassiumClass.cs" />
     <Compile Include="HassiumObjects\Conversion\HassiumConvert.cs" />
     <Compile Include="Parser\Ast\UseNode.cs" />
+    <Compile Include="HassiumObjects\Types\HassiumList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
