@@ -21,6 +21,7 @@ using Hassium.Semantics;
 
 namespace Hassium.Interpreter
 {
+    public delegate void ExitEventHandler(int code);
     /// <summary>
     /// Interpreter.
     /// </summary>
@@ -28,6 +29,13 @@ namespace Hassium.Interpreter
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
+
+        public event ExitEventHandler OnExited = null;
+
+        public void Exit(int code)
+        {
+            OnExited(code);
+        }
 
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {

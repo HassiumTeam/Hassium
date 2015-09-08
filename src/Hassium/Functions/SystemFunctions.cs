@@ -14,7 +14,7 @@ namespace Hassium.Functions
         [IntFunc("exit")]
         public static HassiumObject Exit(HassiumObject[] args)
         {
-            Environment.Exit(args.Length > 0 ? Convert.ToInt32((object) args[0]) : 0);
+            HassiumInterpreter.CurrentInterpreter.Exit(args.Length > 0 ? args[0].HInt().Value : 0);
 
             return null;
         }

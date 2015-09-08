@@ -38,12 +38,12 @@ namespace Hassium
 		}
 
 		public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
-
+		private static Stopwatch st = null;
 		public static void Main(string[] args)
 		{
 			preformSetUp(args);
 
-			Stopwatch st = null;
+			
 			if(options.ShowTime)
 			{
 				st = new Stopwatch();
@@ -71,6 +71,7 @@ namespace Hassium
 					AstNode ast = hassiumParser.Parse();
 					CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
 					CurrentInterpreter.Code = ast;
+					CurrentInterpreter.OnExited += OnEnd;
 					CurrentInterpreter.Execute();
 				}
 				catch (Exception e)
@@ -88,11 +89,17 @@ namespace Hassium
 					Environment.Exit(-1);
 				}
 			}
-			if(options.ShowTime)
+			
+		}
+
+		private static void OnEnd(int code)
+		{
+			if (options.ShowTime)
 			{
 				st.Stop();
 				Console.WriteLine("\n" + st.Elapsed + " seconds");
 			}
+			Environment.Exit(code);
 		}
 
 		private static void printErr(string str, ParseException e)
@@ -143,13 +150,13 @@ namespace Hassium
 				}
 				else
 				{
-				    if (File.Exists(args[i]))
-				    {
-				        options.FilePath = args[i];
-				        break;
-				    }
-				    else
-				        throw new ArgumentException("The file " + args[i] + " does not exist.");
+					if (File.Exists(args[i]))
+					{
+						options.FilePath = args[i];
+						break;
+					}
+					else
+						throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
