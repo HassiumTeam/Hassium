@@ -51,6 +51,7 @@ namespace Hassium.HassiumObjects
             return null;
         }
 
+        #region Cast
         public static implicit operator int(HassiumObject obj)
         {
             return ((HassiumInt) obj).Value;
@@ -205,5 +206,6 @@ namespace Hassium.HassiumObjects
         {
             return (HassiumString) this;
         }
+        #endregion
     }
 }

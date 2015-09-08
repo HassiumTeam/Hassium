@@ -36,15 +36,13 @@ namespace Hassium.Parser
 
         public abstract object Visit(IVisitor visitor);
 
-        public object VisitChild(IVisitor visitor)
+        public void VisitChild(IVisitor visitor)
         {
-            var list = new List<object>();
             Children.All(x =>
             {
-                list.Add(x.Visit(visitor));
+                x.Visit(visitor);
                 return true;
             });
-            return list.ToArray();
         }
 
         public bool CanBeModified
