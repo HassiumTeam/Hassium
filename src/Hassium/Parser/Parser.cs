@@ -95,44 +95,47 @@ namespace Hassium.Parser
 
 		public static AstNode ParseStatement(Parser parser)
 		{
-			if (parser.MatchToken(TokenType.Identifier, "if"))
-				return ParseIf(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "while"))
-				return ParseWhile(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "for"))
-				return ParseFor(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "foreach"))
-				return ParseForEach(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "try"))
-				return ParseTryCatch(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "class"))
+			if (parser.MatchToken(TokenType.Identifier))
 			{
-				return ParseClass(parser);
+				switch (parser.CurrentToken().Value.ToString().ToLower())
+				{
+					case "if":
+						return ParseIf(parser);
+					case "while":
+						return ParseWhile(parser);
+					case "for":
+						return ParseFor(parser);
+					case "foreach":
+						return ParseForEach(parser);
+					case "try":
+						return ParseTryCatch(parser);
+					case "class":
+						return ParseClass(parser);
+					case "func":
+						return ParseFunc(parser);
+					case "lambda":
+						return ParseLambda(parser);
+					case "thread":
+						return ParseThread(parser);
+					case "switch":
+						return ParseSwitch(parser);
+					case "return":
+						return ParseReturn(parser);
+					case "continue":
+						return ParseContinue(parser);
+					case "break":
+						return ParseBreak(parser);
+					case "use":
+						return ParseUse(parser);
+				}
 			}
-			else if (parser.MatchToken(TokenType.Identifier, "func"))
-				return ParseFunc(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "lambda"))
-				return ParseLambda(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "thread"))
-				return ParseThread(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "switch"))
-				return ParseSwitch(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "return"))
-				return ParseReturn(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "continue"))
-				return ParseContinue(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "break"))
-				return ParseBreak(parser);
-			else if (parser.MatchToken(TokenType.Identifier, "use"))
-				return ParseUse(parser);
 			else if (parser.MatchToken(TokenType.Brace, "{"))
-				return ParseCodeBlock(parser);
-			else
 			{
-				AstNode expr = ParseExpression(parser);
-				parser.ExpectToken(TokenType.EndOfLine);
-				return expr;
+				return ParseCodeBlock(parser);
 			}
+			AstNode expr = ParseExpression(parser);
+			parser.ExpectToken(TokenType.EndOfLine);
+			return expr;
 		}
 
 		public static AstNode ParseClass(Parser parser)
@@ -790,41 +793,41 @@ namespace Hassium.Parser
 		private static AstNode ParseTerm (Parser parser)
 		{
 			int pos = parser.codePos;
-			if (parser.AcceptToken(TokenType.Number))
+			var curt = parser.CurrentToken();
+			if (curt.TokenClass == TokenType.Number)
 			{
-				return new NumberNode(pos, Convert.ToDouble(parser.PreviousToken().Value));
+				return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value));
 			}
-			else if (parser.AcceptToken(TokenType.Parentheses, "("))
+			else if (curt.TokenClass == TokenType.Parentheses)
 			{
+				parser.ExpectToken(TokenType.Parentheses, "(");
 				AstNode statement = ParseExpression(parser);
 				parser.ExpectToken(TokenType.Parentheses, ")");
 				return statement;
 			}
-			else if (parser.AcceptToken(TokenType.Bracket, "["))
+			else if (curt.TokenClass == TokenType.Bracket)
 			{
 				AstNode statement = ParseArrayInitializer(parser);
-				parser.ExpectToken(TokenType.Bracket, "]");
 				return statement;
 			}
-			else if (parser.AcceptToken(TokenType.String))
+			else if (curt.TokenClass == TokenType.String)
 			{
-				return new StringNode(pos, parser.PreviousToken().Value.ToString());
+				return new StringNode(pos, parser.ExpectToken(TokenType.String).Value.ToString());
 			}
-			else if(parser.MatchToken(TokenType.Identifier, "lambda"))
+			else if(curt.TokenClass == TokenType.Identifier)
 			{
-				return ParseLambda(parser);
-			}
-			else if (parser.MatchToken(TokenType.Identifier, "new"))
-			{
-				return ParseInstance(parser);
-			}
-			else if (parser.AcceptToken(TokenType.Identifier))
-			{
-				return new IdentifierNode(pos, parser.PreviousToken().Value.ToString());
+				switch (curt.Value.ToString())
+				{
+					case "lambda":
+						return ParseLambda(parser);
+					case "new":
+						return ParseInstance(parser);
+				}
+				return new IdentifierNode(pos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
 			}
 			else
 			{
-				throw new ParseException("Unexpected " + parser.CurrentToken().Value, pos);
+				throw new ParseException("Unexpected " + curt.Value, pos);
 			}
 
 		}

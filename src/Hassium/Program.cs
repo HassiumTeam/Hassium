@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Hassium.Functions;
@@ -105,21 +106,17 @@ namespace Hassium
 		private static void printErr(string str, ParseException e)
 		{
 			var idx = e.Position;
-			string newline = "";
-			if (str.Contains("\r\n")) newline = "\r\n";
-			else if (str.Contains("\r")) newline = "\r";
-			else newline = "\n";
-			int lower = str.Substring(0, idx + 1).LastIndexOf(newline, StringComparison.Ordinal) + newline.Length;
-			int upper = str.Substring(idx).IndexOf(newline) + idx;
-			string res = str.Substring(lower, upper - lower);
-			string trimd = res.Trim();
-			int line = Regex.Matches(str.Substring(0, lower), newline).Count + 1;
-			int column = (idx - lower + 1);
+			var line = str.Substring(0, idx).Split('\n').Length;
+			var _x = str.Split('\n').Take(line);
+		    var res = _x.Last();
+            string trimd = res.Trim();
+            _x = _x.Take(line - 1);
+			var column = idx - (string.Join("\n", _x).Length + (_x.Any() ? 1 : 0)) + 1;
 			Console.WriteLine("Error at position " + idx + ", line " + line
 							  + " column " + column + ": " +
 							  e.Message);
 			Console.WriteLine("   " + trimd);
-			Console.WriteLine(new string(' ', 3 + (idx - lower - (res.Length - trimd.Length))) + '^');
+			Console.WriteLine(new string(' ', 2 + (column - (res.Length - trimd.Length))) + '^');
 		}
 
 		private static void preformSetUp(IList<string> args)
@@ -133,7 +130,16 @@ namespace Hassium
 				if (args[i].StartsWith("-h") || args[i].StartsWith("--help"))
 				{
 					Console.WriteLine(
-						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\nArguments:\n-h  --help\tShows this help\n-d  --debug\tDisplays tokens from lexer\n-r  --repl\tEnters interactive interpreter\n-t  --time\tShow the running time of the program");
+						"Hassium {0}.{1}.{2}\n\n" + 
+						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" + 
+						"Arguments:\n" +
+						"-h  --help\tShows this help\n" +
+						"-d  --debug\tDisplays tokens from lexer\n" +
+						"-r  --repl\tEnters interactive interpreter (enabled by default)\n" +
+						"-t  --time\tShow the running time of the program",
+						Assembly.GetExecutingAssembly().GetName().Version.Major,
+						Assembly.GetExecutingAssembly().GetName().Version.Minor,
+						Assembly.GetExecutingAssembly().GetName().Version.Build);
 					Environment.Exit(0);
 				}
 				else if (args[i].StartsWith("-d") || args[i].StartsWith("--debug"))
@@ -163,7 +169,8 @@ namespace Hassium
 
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
 
-			options.Code = File.ReadAllText(options.FilePath);
+			options.Code = File.ReadAllText(options.FilePath).Replace("\t", "    ");
+			options.Code = options.Code.Replace("\r\n", "\n").Replace("\r", "\n");
 		}
 
 		private static void enterInteractive()
