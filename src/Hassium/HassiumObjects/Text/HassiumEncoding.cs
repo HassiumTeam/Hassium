@@ -10,11 +10,8 @@ namespace Hassium.HassiumObjects.Text
 
         public HassiumEncoding(HassiumString type)
         {
-            switch (type.Value)
+            switch (type.Value.ToUpper())
             {
-                case "ASCII":
-                    Value = Encoding.ASCII;
-                    break;
                 case "UTF8":
                     Value = Encoding.UTF8;
                     break;
@@ -23,6 +20,9 @@ namespace Hassium.HassiumObjects.Text
                     break;
                 case "UTF32":
                     Value = Encoding.UTF32;
+                    break;
+                case "UNICODE":
+                    Value = Encoding.Unicode;
                     break;
                 default:
                     Value = Encoding.ASCII;
