@@ -1033,6 +1033,15 @@ namespace Hassium.Interpreter
             return interpretUnaryOp(node);
         }
 
+        public object Accept(UncheckedNode node)
+        {
+            unchecked
+            {
+                node.Node.Visit(this);
+            }
+            return null;
+        }
+
         public object Accept(WhileNode node)
         {
             var whileStmt = node;

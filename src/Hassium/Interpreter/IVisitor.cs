@@ -34,6 +34,7 @@ namespace Hassium.Interpreter
         object Accept(ThreadNode node);
         object Accept(TryNode node);
         object Accept(UnaryOpNode node);
+        object Accept(UncheckedNode node);
         object Accept(WhileNode node);
         object Accept(UseNode node);
     }
