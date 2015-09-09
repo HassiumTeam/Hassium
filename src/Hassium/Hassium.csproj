@@ -41,6 +41,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Web" />
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\Downloads\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
@@ -141,6 +145,8 @@
     <Compile Include="HassiumObjects\HassiumClass.cs" />
     <Compile Include="HassiumObjects\Conversion\HassiumConvert.cs" />
     <Compile Include="Parser\Ast\UseNode.cs" />
+    <Compile Include="HassiumObjects\MySql\HassiumSql.cs" />
+    <Compile Include="HassiumObjects\MySql\HassiumSqlDataReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -160,4 +166,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\MySql\" />
+  </ItemGroup>
 </Project>
