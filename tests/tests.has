@@ -7,11 +7,15 @@ exitcode = 0;
 failed = 0;
 passed = 0;
 
+class TestClass {
+    func testFunc(num1, num2) {
+        return num1 + num2;
+    }
+}
+
 func assert(that, msg)
 {
-	theMsg = msg + " [" + (that ? "✓" : "✗") + "]";
-	#if(!result) thePrint += " - expected " + this + " to be " + and + " than " + that;
-	println(theMsg);
+	println(msg + " [" + (that ? "✓" : "✗") + "]");
 	
 	if(that)
 	{
@@ -48,10 +52,26 @@ func assertfail(that, msg)
 	println(theMsg);
 }
 
-
+class ConsoleCursor
+{
+	property Left
+	{
+		get
+		{
+			return console.cursorPos.left;
+		}
+		set
+		{
+			console.cursorPos.left = value;
+		}
+	}
+}
 
 func main()
 {
+	ConsoleCursor.Left = 5;
+	println(console.cursorPos);
+
     println("--- BEGIN TESTS FOR HASSIUM ---");
     
     opTests();
@@ -72,6 +92,8 @@ func main()
     println(failed + " tests failed");
     println("--- END TESTS FOR HASSIUM ---");
     
+	
+	
     exit(exitcode);
 }
 
@@ -238,23 +260,33 @@ func objectTest () {
     {
         func new(name, age)
         {
-            this.name = name;
-            this.age = age;
+            this.Name = name;
+            this.Age = age;
         }
+		
+		
         
-        func getName(this)
-        {
-            return this.name;
-        }
-        
-        func getAge(this)
-        {
-            return this.age;
-        }
+        $property Name
+		{
+			get { return this._name; }
+			set { this._name = value; }
+		}$
+		
+		property Name
+		{
+			get;
+			set;
+		}
+		
+		property Age
+		{
+			get;
+			set;
+		}
         
         func toString(this)
         {
-            return "Hello my name is " + this.name + " and I'm " + this.age + " years old.";
+            return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old.";
         }
     }
     
@@ -262,24 +294,22 @@ func instanceTest () {
     println("Class instance tests");
     println();
 
-    
     person = new PersonClass ("Reagan", 16);
-    assert (person.name == "Reagan", "person.name should equal Reagan");
-    assert (person.age == 16, "person.age should equal 16");
-    assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
-    assert (person.getAge () == 16, "person.getAge () should equal 16");
-    assert(person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+    assert (person.Name == "Reagan", "person.name should equal Reagan");
+    assert (person.Age == 16, "person.age should equal 16");
+	person.Name = "New Reagan";
+	person.Age = 34;
+	assert (person.Name == "New Reagan", "person.name should equal New Reagan");
+    assert (person.Age == 34, "person.age should equal 34");
+    assert(person.toString() == "Hello my name is New Reagan and I'm 34 years old.", "person.toString()");
     
     println();
     println("End of class instance tests");
     println();
 }
 
-class TestClass {
-    func testFunc(num1, num2) {
-        return num1 + num2;
-    }
-}
+
+
 
 
 func importTests()

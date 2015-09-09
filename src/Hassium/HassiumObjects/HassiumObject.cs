@@ -32,13 +32,15 @@ namespace Hassium.HassiumObjects
             {
                 ((HassiumMethod) value).SelfReference = this;
             }
-            _attributes[name] = value;
+            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty) ((HassiumProperty) _attributes[name]).SetValue(this, value);
+            else _attributes[name] = value;
         }
 
         public HassiumObject GetAttribute(string name, int pos)
         {
             if(!_attributes.ContainsKey(name)) throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
-            return _attributes[name];
+            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty) return ((HassiumProperty)_attributes[name]).GetValue(this);
+            else return _attributes[name];
         }
 
         public override string ToString()

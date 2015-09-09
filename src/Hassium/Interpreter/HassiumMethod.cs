@@ -49,7 +49,7 @@ namespace Hassium.Interpreter
         {
             if (stackFrame == null || (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x))))
                 stackFrame = new StackFrame(LocalScope, (IsStatic && !IsConstructor) ? null : SelfReference);
-            else if (!IsStatic || IsConstructor)
+            if (!IsStatic || IsConstructor)
                 stackFrame.Locals["this"] = SelfReference;
 
             Interpreter.inFunc++;
@@ -60,7 +60,8 @@ namespace Hassium.Interpreter
 
             Interpreter.CallStack.Push(stackFrame);
 
-            FuncNode.Body.Visit(Interpreter);
+            if (FuncNode.Body is FuncNode) ((FuncNode) FuncNode.Body).Body.Visit(Interpreter);
+            else FuncNode.Body.Visit(Interpreter);
 
             HassiumObject ret = Interpreter.CallStack.Peek().ReturnValue;
 

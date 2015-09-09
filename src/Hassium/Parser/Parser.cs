@@ -113,12 +113,14 @@ namespace Hassium.Parser
 						return ParseClass(parser);
 					case "func":
 						return ParseFunc(parser);
+					case "property":
+						return ParseProperty(parser);
 					case "lambda":
 						return ParseLambda(parser);
 					case "thread":
 						return ParseThread(parser);
-                    case "unchecked":
-				        return ParseUnchecked(parser);
+					case "unchecked":
+						return ParseUnchecked(parser);
 					case "switch":
 						return ParseSwitch(parser);
 					case "return":
@@ -177,6 +179,44 @@ namespace Hassium.Parser
 			AstNode body = ParseStatement(parser);
 
 			return new FuncNode(pos, name, result, body);
+		}
+
+		public static AstNode ParseProperty(Parser parser)
+		{
+			int pos = parser.codePos;
+
+			parser.ExpectToken(TokenType.Identifier, "property");
+			string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+			parser.ExpectToken(TokenType.Brace, "{");
+
+			parser.ExpectToken(TokenType.Identifier, "get");
+			AstNode getBody = null;
+			if (parser.AcceptToken(TokenType.EndOfLine, ";"))
+			{
+				getBody = new CodeBlock(parser.codePos);
+				getBody.Children.Add(new ReturnNode(parser.codePos,
+					new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name)));
+			}
+			else
+				getBody = ParseCodeBlock(parser);
+			var getnode = new FuncNode(parser.codePos, "__getprop__" + name, new List<string> { "this" }, getBody);
+
+			parser.ExpectToken(TokenType.Identifier, "set");
+			AstNode setBody = null;
+			if (parser.AcceptToken(TokenType.EndOfLine, ";"))
+			{
+				setBody = new CodeBlock(parser.codePos);
+			    setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
+			        new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name),
+			        new IdentifierNode(parser.codePos, "value")));
+			}
+			else
+				setBody = ParseCodeBlock(parser);
+			var setnode = new FuncNode(parser.codePos, "__setprop__" + name, new List<string> { "this", "value" }, setBody);
+
+			parser.ExpectToken(TokenType.Brace, "}");
+
+			return new PropertyNode(pos, name, getnode, setnode);
 		}
 
 		public static AstNode ParseCodeBlock(Parser parser)

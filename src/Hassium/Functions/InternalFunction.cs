@@ -3,7 +3,7 @@ using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
-    public delegate HassiumObject HassiumFunctionDelegate (HassiumObject[] arguments);
+    public delegate HassiumObject HassiumFunctionDelegate (params HassiumObject[] arguments);
 
     public class InternalFunction : HassiumObject
     {
@@ -23,7 +23,7 @@ namespace Hassium.Functions
 
         public override string ToString()
         {
-            return ((object) this).ToString();
+            return target.Method.Name;
         }
 
         public override HassiumObject Invoke(params HassiumObject[] args)

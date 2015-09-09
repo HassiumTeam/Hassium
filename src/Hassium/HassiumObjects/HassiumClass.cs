@@ -27,6 +27,11 @@ namespace Hassium
                     new HassiumMethod(interpreter, fnode,
                         interpreter.SymbolTable.ChildScopes[((ClassNode) value).Name + "." + fnode.Name], this));
             }
+
+            foreach(var pnode in value.Children[0].Children.OfType<PropertyNode>().Select(node => node))
+            {
+                SetAttribute(pnode.Name, (HassiumProperty)pnode.Visit(interpreter));
+            }
         }
     }
 }

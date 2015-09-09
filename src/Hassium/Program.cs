@@ -39,7 +39,7 @@ namespace Hassium
 		}
 
 		public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
-		private static Stopwatch st = null;
+		private static Stopwatch st;
 		public static void Main(string[] args)
 		{
 			preformSetUp(args);
@@ -72,7 +72,6 @@ namespace Hassium
 					AstNode ast = hassiumParser.Parse();
 					CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
 					CurrentInterpreter.Code = ast;
-					CurrentInterpreter.OnExited += OnEnd;
 					CurrentInterpreter.Execute();
 				}
 				catch (Exception e)
@@ -108,9 +107,9 @@ namespace Hassium
 			var idx = e.Position;
 			var line = str.Substring(0, idx).Split('\n').Length;
 			var _x = str.Split('\n').Take(line);
-		    var res = _x.Last();
-            string trimd = res.Trim();
-            _x = _x.Take(line - 1);
+			var res = _x.Last();
+			string trimd = res.Trim();
+			_x = _x.Take(line - 1);
 			var column = idx - (string.Join("\n", _x).Length + (_x.Any() ? 1 : 0)) + 1;
 			Console.WriteLine("Error at position " + idx + ", line " + line
 							  + " column " + column + ": " +
@@ -165,6 +164,8 @@ namespace Hassium
 						throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
+
+			CurrentInterpreter.OnExited += OnEnd;
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
 
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)

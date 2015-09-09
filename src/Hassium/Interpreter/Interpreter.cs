@@ -30,11 +30,12 @@ namespace Hassium.Interpreter
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
 
-        public event ExitEventHandler OnExited = null;
+        public event ExitEventHandler OnExited;
 
         public void Exit(int code)
         {
-            OnExited(code);
+            if(OnExited != null)
+                OnExited(code);
         }
 
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
@@ -42,6 +43,7 @@ namespace Hassium.Interpreter
             {"true", new HassiumBool(true)},
             {"false", new HassiumBool(false)},
             {"Convert", new HassiumConvert()},
+            {"console", new HassiumConsole() },
             {"null", null},
         };
 
@@ -317,6 +319,7 @@ namespace Hassium.Interpreter
         /// <returns>The result of the operation</returns>
         private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
+            if(left == null && _op != BinaryOperation.NullCoalescing) throw new ParseException("Left operand can't be null", pos);
             if (left is AstNode) left = ((AstNode) left).Visit(this);
             if (left is int) left = (double) (int) left; 
             if (right is AstNode) right = ((AstNode)right).Visit(this);
@@ -910,6 +913,33 @@ namespace Hassium.Interpreter
                 return new HassiumInt(Convert.ToInt32(node.Value));
             }
             return new HassiumDouble(node.Value);
+        }
+
+        public object Accept(PropertyNode node)
+        {
+            SetVariable("__prop__" + node.Name, 0, node);
+
+            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]),
+                x =>SetPropVal(node, x[1], x[0]) );
+            SetVariable(node.Name, prop, node);
+            return prop;
+        }
+
+        private HassiumObject GetPropVal(PropertyNode node, HassiumObject self)
+        {
+            var funcnode = new HassiumMethod(this,
+                new FuncNode(node.GetNode.Position, "__getprop__" + node.Name, new List<string> { "this" },
+                    node.GetNode.Body), SymbolTable.ChildScopes["__getprop__" + node.Name], self);
+            return funcnode.Invoke();
+        }
+
+        private HassiumObject SetPropVal(PropertyNode node, HassiumObject value, HassiumObject self)
+        {
+            var funcnode = new HassiumMethod(this,
+                new FuncNode(node.SetNode.Position, "__setprop__" + node.Name, new List<string> {"this", "value"},
+                    node.SetNode.Body), SymbolTable.ChildScopes["__setprop__" + node.Name], self);
+            funcnode.Invoke(value);
+            return null;
         }
 
         public object Accept(ReturnNode node)

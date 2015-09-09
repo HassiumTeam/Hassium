@@ -27,6 +27,7 @@ namespace Hassium.Interpreter
         object Accept(MemberAccessNode node);
         object Accept(MentalNode node);
         object Accept(NumberNode node);
+        object Accept(PropertyNode node);
         object Accept(ReturnNode node);
         object Accept(StatementNode node);
         object Accept(StringNode node);

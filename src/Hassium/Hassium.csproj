@@ -46,6 +46,8 @@
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\HassiumModule.cs" />
+    <Compile Include="HassiumObjects\HassiumProperty.cs" />
+    <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />
     <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFileStream.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Parser\Ast\Expression.cs" />
     <Compile Include="Parser\Ast\InstanceNode.cs" />
     <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
+    <Compile Include="Parser\Ast\PropertyNode.cs" />
     <Compile Include="Parser\Ast\SwitchNode.cs" />
     <Compile Include="Parser\Ast\UncheckedNode.cs" />
     <Compile Include="Program.cs" />
