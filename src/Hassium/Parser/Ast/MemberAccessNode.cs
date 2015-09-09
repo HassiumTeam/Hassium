@@ -24,6 +24,11 @@ namespace Hassium.Parser.Ast
             Member = identifier;
         }
 
+        public override string ToString()
+        {
+            return Left + "." + Member;
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

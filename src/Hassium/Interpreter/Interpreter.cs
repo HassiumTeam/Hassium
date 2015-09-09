@@ -917,10 +917,7 @@ namespace Hassium.Interpreter
 
         public object Accept(PropertyNode node)
         {
-            SetVariable("__prop__" + node.Name, 0, node);
-
-            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]),
-                x =>SetPropVal(node, x[1], x[0]) );
+            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]));
             SetVariable(node.Name, prop, node);
             return prop;
         }
@@ -935,6 +932,7 @@ namespace Hassium.Interpreter
 
         private HassiumObject SetPropVal(PropertyNode node, HassiumObject value, HassiumObject self)
         {
+            if(node.SetNode == null) throw new ParseException("The property is read-only, it cannot be modified.", node);
             var funcnode = new HassiumMethod(this,
                 new FuncNode(node.SetNode.Position, "__setprop__" + node.Name, new List<string> {"this", "value"},
                     node.SetNode.Body), SymbolTable.ChildScopes["__setprop__" + node.Name], self);

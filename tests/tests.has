@@ -260,28 +260,24 @@ func objectTest () {
     {
         func new(name, age)
         {
-            this.Name = name;
-            this.Age = age;
+            this._name = name;
+            this._age = age;
         }
 		
 		
         
-        $property Name
+        property Name
 		{
 			get { return this._name; }
 			set { this._name = value; }
-		}$
-		
-		property Name
-		{
-			get;
-			set;
 		}
+		
+		#property Age => this._age;
 		
 		property Age
 		{
-			get;
-			set;
+			get { return this._age; }
+			set { this._age = value; }
 		}
         
         func toString(this)
