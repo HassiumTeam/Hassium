@@ -43,6 +43,7 @@ namespace Hassium.HassiumObjects
 
         public override string ToString()
         {
+            if (Attributes.ContainsKey("toString")) return GetAttribute("toString", -1).Invoke();
             return "";
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -144,28 +145,12 @@ namespace Hassium.HassiumObjects.Types
 
         private HassiumObject urlEncode(HassiumObject[] args)
         {
-            return System.Net.WebUtility.UrlEncode(args[0].ToString());
+            return HttpUtility.UrlEncode(Value);
         }
 
         private HassiumObject urlDecode(HassiumObject[] args)
         {
-            string spaced = Value.Replace("+", " ");
-            string accum = "";
-
-            for (int x = 0; x < spaced.Length; x++)
-            {
-                if (spaced[x].ToString() == "%")
-                {
-                    var ch = spaced[x + 1] + spaced[x + 2];
-                    accum += (char)Int32.Parse(ch.ToString(), System.Globalization.NumberStyles.HexNumber);
-                }
-                else
-                {
-                    accum += spaced[x];
-                }
-            }
-
-            return accum;
+            return HttpUtility.UrlDecode(Value);
         }
 
         public static implicit operator HassiumDouble(HassiumString str)
