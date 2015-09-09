@@ -40,6 +40,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("trimLeft", new InternalFunction(trimleft));
             Attributes.Add("trimRight", new InternalFunction(trimright));
             Attributes.Add("toString", new InternalFunction(tostring));
+            Attributes.Add("urlEncode", new InternalFunction(urlEncode));
+            Attributes.Add("urlDecode", new InternalFunction(urlDecode));
             Attributes.Add("length", new InternalFunction(x => Value.Length, true));
         }
           
@@ -138,6 +140,32 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject isWhiteSpace(HassiumObject[] args)
         {
             return char.IsWhiteSpace(Convert.ToChar(Value));
+        }
+
+        private HassiumObject urlEncode(HassiumObject[] args)
+        {
+            return System.Net.WebUtility.UrlEncode(args[0].ToString());
+        }
+
+        private HassiumObject urlDecode(HassiumObject[] args)
+        {
+            string spaced = Value.Replace("+", " ");
+            string accum = "";
+
+            for (int x = 0; x < spaced.Length; x++)
+            {
+                if (spaced[x].ToString() == "%")
+                {
+                    var ch = spaced[x + 1] + spaced[x + 2];
+                    accum += (char)Int32.Parse(ch.ToString(), System.Globalization.NumberStyles.HexNumber);
+                }
+                else
+                {
+                    accum += spaced[x];
+                }
+            }
+
+            return accum;
         }
 
         public static implicit operator HassiumDouble(HassiumString str)
