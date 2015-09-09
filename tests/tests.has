@@ -260,24 +260,22 @@ func objectTest () {
     {
         func new(name, age)
         {
-            this._name = name;
-            this._age = age;
+            this.Name = name;
+            this.Age = age;
         }
 		
 		
         
         property Name
 		{
-			get { return this._name; }
-			set { this._name = value; }
+			get;
+			set;
 		}
-		
-		#property Age => this._age;
 		
 		property Age
 		{
-			get { return this._age; }
-			set { this._age = value; }
+			get;
+			set;
 		}
         
         func toString(this)

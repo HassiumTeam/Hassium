@@ -25,6 +25,8 @@ namespace Hassium.Semantics
 
 		private void checkout(AstNode theNode)
 		{
+		    if (theNode == null || theNode.Children == null) return;
+
 			foreach (AstNode node in theNode.Children)
 			{
 				if (node is BinOpNode)

@@ -187,34 +187,75 @@ namespace Hassium.Parser
 
 			parser.ExpectToken(TokenType.Identifier, "property");
 			string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-			parser.ExpectToken(TokenType.Brace, "{");
 
-			parser.ExpectToken(TokenType.Identifier, "get");
 			AstNode getBody = null;
-			if (parser.AcceptToken(TokenType.EndOfLine, ";"))
+			AstNode setBody = null;
+			FuncNode getnode = null;
+			FuncNode setnode = null;
+			bool autoProp = false;
+
+			if(parser.AcceptToken(TokenType.EndOfLine))
 			{
 				getBody = new CodeBlock(parser.codePos);
 				getBody.Children.Add(new ReturnNode(parser.codePos,
 					new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name)));
-			}
-			else
-				getBody = ParseCodeBlock(parser);
-			var getnode = new FuncNode(parser.codePos, "__getprop__" + name, new List<string> { "this" }, getBody);
-
-			parser.ExpectToken(TokenType.Identifier, "set");
-			AstNode setBody = null;
-			if (parser.AcceptToken(TokenType.EndOfLine, ";"))
-			{
 				setBody = new CodeBlock(parser.codePos);
-			    setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
-			        new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name),
-			        new IdentifierNode(parser.codePos, "value")));
+				setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
+					new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name),
+					new IdentifierNode(parser.codePos, "value")));
+			}
+			else if (parser.AcceptToken(TokenType.Lambda, "=>"))
+			{
+				getBody = new CodeBlock(parser.codePos);
+				getBody.Children.Add(new ReturnNode(parser.codePos, ParseExpression(parser)));
+
+				setBody = new CodeBlock(parser.codePos);
+				setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,ParseExpression(parser), new IdentifierNode(parser.codePos, "value")));
+				parser.ExpectToken(TokenType.EndOfLine);
 			}
 			else
-				setBody = ParseCodeBlock(parser);
-			var setnode = new FuncNode(parser.codePos, "__setprop__" + name, new List<string> { "this", "value" }, setBody);
+			{
+				parser.ExpectToken(TokenType.Brace, "{");
 
-			parser.ExpectToken(TokenType.Brace, "}");
+				parser.ExpectToken(TokenType.Identifier, "get");
+
+				if (parser.AcceptToken(TokenType.EndOfLine, ";"))
+				{
+					autoProp = true;
+					getBody = new CodeBlock(parser.codePos);
+					getBody.Children.Add(new ReturnNode(parser.codePos,
+						new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name)));
+				}
+				else
+					getBody = ParseCodeBlock(parser);
+
+
+				if (parser.AcceptToken(TokenType.Identifier, "set"))
+				{
+
+					if (parser.AcceptToken(TokenType.EndOfLine, ";"))
+					{
+						setBody = new CodeBlock(parser.codePos);
+						setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
+							new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name),
+							new IdentifierNode(parser.codePos, "value")));
+					}
+					else
+					{
+						if (autoProp) throw new ParseException("An auto-property cannot declare a set body", pos);
+						setBody = ParseCodeBlock(parser);
+					}
+				}
+				else
+				{
+					if(autoProp) throw new ParseException("An auto-property must contain a set statement", pos);
+				}
+
+				parser.ExpectToken(TokenType.Brace, "}");
+			}
+
+			getnode = new FuncNode(parser.codePos, "__getprop__" + name, new List<string> { "this" }, getBody);
+			setnode = setBody == null ? null : new FuncNode(parser.codePos, "__setprop__" + name, new List<string> { "this", "value" }, setBody);
 
 			return new PropertyNode(pos, name, getnode, setnode);
 		}

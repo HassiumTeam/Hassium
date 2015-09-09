@@ -917,7 +917,7 @@ namespace Hassium.Interpreter
 
         public object Accept(PropertyNode node)
         {
-            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]));
+            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]), node.SetNode == null);
             SetVariable(node.Name, prop, node);
             return prop;
         }
