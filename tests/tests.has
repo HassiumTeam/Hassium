@@ -1,4 +1,4 @@
-# Welcome to HATRED.
+﻿# Welcome to HATRED.
 # Hassium Testing Runtime Environment Distribution
 use Math;
 use io;
@@ -58,11 +58,11 @@ class ConsoleCursor
 	{
 		get
 		{
-			return console.cursorPos.left;
+			return Console.cursorPos.left;
 		}
 		set
 		{
-			console.cursorPos.left = value;
+			Console.cursorPos.left = value;
 		}
 	}
 }
@@ -70,7 +70,7 @@ class ConsoleCursor
 func main()
 {
 	ConsoleCursor.Left = 5;
-	println(console.cursorPos);
+	println(Console.cursorPos);
 
     println("--- BEGIN TESTS FOR HASSIUM ---");
     
