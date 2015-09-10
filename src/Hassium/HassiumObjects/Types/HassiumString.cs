@@ -22,28 +22,28 @@ namespace Hassium.HassiumObjects.Types
         public HassiumString(string value)
         {
             Value = value;
-            Attributes.Add("toLower", new InternalFunction(tolower));
-            Attributes.Add("toUpper", new InternalFunction(toupper));
-            Attributes.Add("begins", new InternalFunction(begins));
-            Attributes.Add("ends", new InternalFunction(ends));
-            Attributes.Add("getAt", new InternalFunction(getat));
-            Attributes.Add("substring", new InternalFunction(substr));
-            Attributes.Add("concat", new InternalFunction(concat));
-            Attributes.Add("contains", new InternalFunction(contains));
-            Attributes.Add("split", new InternalFunction(split));
-            Attributes.Add("replace", new InternalFunction(replace));
-            Attributes.Add("index", new InternalFunction(index));
-            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace));
-            Attributes.Add("lastIndex", new InternalFunction(lastindex));
-            Attributes.Add("padLeft", new InternalFunction(padleft));
-            Attributes.Add("padRight", new InternalFunction(padright));
-            Attributes.Add("trim", new InternalFunction(trim));
-            Attributes.Add("trimLeft", new InternalFunction(trimleft));
-            Attributes.Add("trimRight", new InternalFunction(trimright));
-            Attributes.Add("toString", new InternalFunction(tostring));
-            Attributes.Add("urlEncode", new InternalFunction(urlEncode));
-            Attributes.Add("urlDecode", new InternalFunction(urlDecode));
-            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
+            Attributes.Add("toLower", new InternalFunction(tolower, 0));
+            Attributes.Add("toUpper", new InternalFunction(toupper, 0));
+            Attributes.Add("begins", new InternalFunction(begins, 1));
+            Attributes.Add("ends", new InternalFunction(ends, 1));
+            Attributes.Add("getAt", new InternalFunction(getat, 1));
+            Attributes.Add("substring", new InternalFunction(substr, new []{1,2}));
+            Attributes.Add("concat", new InternalFunction(concat, 1));
+            Attributes.Add("contains", new InternalFunction(contains, 1));
+            Attributes.Add("split", new InternalFunction(split, 1));
+            Attributes.Add("replace", new InternalFunction(replace, 2));
+            Attributes.Add("index", new InternalFunction(index, 1));
+            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace, 0));
+            Attributes.Add("lastIndex", new InternalFunction(lastindex, 1));
+            Attributes.Add("padLeft", new InternalFunction(padleft, 1));
+            Attributes.Add("padRight", new InternalFunction(padright, 1));
+            Attributes.Add("trim", new InternalFunction(trim, 0));
+            Attributes.Add("trimLeft", new InternalFunction(trimleft, 0));
+            Attributes.Add("trimRight", new InternalFunction(trimright, 0));
+            Attributes.Add("toString", new InternalFunction(tostring, 0));
+            Attributes.Add("urlEncode", new InternalFunction(urlEncode, 0));
+            Attributes.Add("urlDecode", new InternalFunction(urlDecode, 0));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
         }
           
         private HassiumObject tolower(HassiumObject[] args)

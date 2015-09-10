@@ -9,13 +9,13 @@ namespace Hassium.Functions
 {
 	public class MiscFunctions : ILibrary
 	{
-		[IntFunc("type")]
+		[IntFunc("type", 1)]
 		public static HassiumObject Type(HassiumObject[] args)
 		{
 			return args[0].GetType().ToString().Substring(args[0].GetType().ToString().LastIndexOf(".", StringComparison.Ordinal) + 1);
 		}
 
-		[IntFunc("throw")]
+		[IntFunc("throw", -1)]
 		public static HassiumObject Throw(HassiumObject[] args)
 		{
 			throw new Exception(String.Join("", args.Cast<object>()));
@@ -24,7 +24,7 @@ namespace Hassium.Functions
 		
 
 
-		[IntFunc("runtimecall")]
+		[IntFunc("runtimecall", -1)]
 		public static HassiumObject RuntimeCall(HassiumObject[] args)
 		{
 			string fullpath = args[0].ToString();

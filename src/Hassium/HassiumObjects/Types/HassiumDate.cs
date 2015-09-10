@@ -10,13 +10,14 @@ namespace Hassium.HassiumObjects.Types
         public HassiumDate(DateTime value)
         {
             Value = value;
-            Attributes.Add("year", new InternalFunction(x => Value.Year, true));
-            Attributes.Add("month", new InternalFunction(x => Value.Month, true));
-            Attributes.Add("day", new InternalFunction(x => Value.Day, true));
-            Attributes.Add("hour", new InternalFunction(x => Value.Hour, true));
-            Attributes.Add("minute", new InternalFunction(x => Value.Minute, true));
-            Attributes.Add("second", new InternalFunction(x => Value.Second, true));
-            Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), true));
+            Attributes.Add("year", new InternalFunction(x => Value.Year, 0, true));
+            Attributes.Add("month", new InternalFunction(x => Value.Month, 0, true));
+            Attributes.Add("day", new InternalFunction(x => Value.Day, 0, true));
+            Attributes.Add("hour", new InternalFunction(x => Value.Hour, 0, true));
+            Attributes.Add("minute", new InternalFunction(x => Value.Minute, 0, true));
+            Attributes.Add("second", new InternalFunction(x => Value.Second, 0, true));
+            Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), 0, true));
+            Attributes.Add("timeStamp", new InternalFunction(x => GetTimestamp(new HassiumObject[]{}), 0, true));
         }
 
         public HassiumObject GetTimestamp(HassiumObject[] args)

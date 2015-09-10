@@ -12,11 +12,11 @@ namespace Hassium.HassiumObjects.Collections
         public HassiumStack(Stack<HassiumObject> value)
         {
             Value = value;
-            Attributes.Add("clear", new InternalFunction(clear));
-            Attributes.Add("contains", new InternalFunction(contains));
-            Attributes.Add("peek", new InternalFunction(peek));
-            Attributes.Add("pop", new InternalFunction(pop));
-            Attributes.Add("push", new InternalFunction(push));
+            Attributes.Add("clear", new InternalFunction(clear, 0));
+            Attributes.Add("contains", new InternalFunction(contains, 1));
+            Attributes.Add("peek", new InternalFunction(peek, 0));
+            Attributes.Add("pop", new InternalFunction(pop, 0));
+            Attributes.Add("push", new InternalFunction(push, 1));
         }
 
         private HassiumObject clear(HassiumObject[] args)

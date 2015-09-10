@@ -14,16 +14,16 @@ namespace Hassium.HassiumObjects.IO
         public HassiumStream(Stream value)
         {
             Value = value;
-            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
-            Attributes.Add("position", new InternalFunction(x => Value.Position, true));
-            Attributes.Add("canRead", new InternalFunction(x => Value.CanRead, true));
-            Attributes.Add("canWrite", new InternalFunction(x => Value.CanWrite, true));
-            Attributes.Add("canSeek", new InternalFunction(x => Value.CanSeek, true));
-            Attributes.Add("flush", new InternalFunction(Flush));
-            Attributes.Add("close", new InternalFunction(Close));
-            Attributes.Add("read", new InternalFunction(Read));
-            Attributes.Add("seek", new InternalFunction(Read));
-            Attributes.Add("write", new InternalFunction(Write));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
+            Attributes.Add("position", new InternalFunction(x => Value.Position, 0, true));
+            Attributes.Add("canRead", new InternalFunction(x => Value.CanRead, 0, true));
+            Attributes.Add("canWrite", new InternalFunction(x => Value.CanWrite, 0, true));
+            Attributes.Add("canSeek", new InternalFunction(x => Value.CanSeek, 0, true));
+            Attributes.Add("flush", new InternalFunction(Flush, 0));
+            Attributes.Add("close", new InternalFunction(Close, 0));
+            Attributes.Add("read", new InternalFunction(Read, 0));
+            Attributes.Add("seek", new InternalFunction(Seek, new []{0,1}));
+            Attributes.Add("write", new InternalFunction(Write, 1));
         }
 
         public HassiumObject Flush(HassiumObject[] args)

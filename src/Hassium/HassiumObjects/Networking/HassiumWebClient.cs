@@ -12,19 +12,19 @@ namespace Hassium.HassiumObjects.Networking
         public HassiumWebClient(WebClient value)
         {
             Value = value;
-            Attributes.Add("downloadString", new InternalFunction(downstr));
-            Attributes.Add("downloadFile", new InternalFunction(downfile));
-            Attributes.Add("uploadFile", new InternalFunction(upfile));
+            Attributes.Add("downloadString", new InternalFunction(downstr, 1));
+            Attributes.Add("downloadFile", new InternalFunction(downfile, 2));
+            Attributes.Add("uploadFile", new InternalFunction(upfile, 2));
         }
 
         private HassiumObject downstr(HassiumObject[] args)
         {
-            return new HassiumString(Value.DownloadString(((HassiumString)args[0]).Value));
+            return new HassiumString(Value.DownloadString(args[0].ToString()));
         }
 
         private HassiumObject downfile(HassiumObject[] args)
         {
-            Value.DownloadFile(((HassiumString)args[0]).Value, ((HassiumString)args[1]).Value);
+            Value.DownloadFile(args[0].ToString(), args[1].ToString());
             return null;
         }
 
@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Networking
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Value.Headers.Add("Content-Type", "binary/octet-stream");
-            return new HassiumString(Encoding.ASCII.GetString(Value.UploadFile(((HassiumString)args[0]).Value, "POST", ((HassiumString)args[1]).Value)));
+            return new HassiumString(Encoding.ASCII.GetString(Value.UploadFile(args[0].ToString(), "POST", args[1].ToString())));
         }
 
         public override string ToString()

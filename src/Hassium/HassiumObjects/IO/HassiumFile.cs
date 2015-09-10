@@ -14,29 +14,29 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumFile()
         {
-            Attributes.Add("writeText", new InternalFunction(PutContent));
-            Attributes.Add("readText", new InternalFunction(ReadContent));
-            Attributes.Add("readLines", new InternalFunction(ReadLines));
-            Attributes.Add("exists", new InternalFunction(Exists));
-            Attributes.Add("create", new InternalFunction(Create));
-            Attributes.Add("append", new InternalFunction(Append));
-            Attributes.Add("appendLines", new InternalFunction(AppendLines));
-            Attributes.Add("copy", new InternalFunction(Copy));
-            Attributes.Add("move", new InternalFunction(Move));
-            Attributes.Add("rename", new InternalFunction(Rename));
-            Attributes.Add("deleteFile", new InternalFunction(DeleteFile));
-            Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory));
-            Attributes.Add("getDirectory", new InternalFunction(GetDirectory));
-            Attributes.Add("setDirectory", new InternalFunction(SetDirectory));
-            Attributes.Add("getFiles", new InternalFunction(GetFiles));
-            Attributes.Add("getDirectories", new InternalFunction(GetDirectories));
-            Attributes.Add("createText", new InternalFunction(createText));
-            Attributes.Add("openText", new InternalFunction(openText));
-            Attributes.Add("getCreationTime", new InternalFunction(getCreationTime));
-            Attributes.Add("getLastAccessTime", new InternalFunction(getLastAccessTime));
-            Attributes.Add("getLastWriteTime", new InternalFunction(getLastWriteTime));
-            Attributes.Add("setLastAccessTime", new InternalFunction(setLastWriteTime));
-            Attributes.Add("setCreationTime", new InternalFunction(setCreationTime));
+            Attributes.Add("writeText", new InternalFunction(PutContent, 2));
+            Attributes.Add("readText", new InternalFunction(ReadContent, 1));
+            Attributes.Add("readLines", new InternalFunction(ReadLines, 1));
+            Attributes.Add("exists", new InternalFunction(Exists, 1));
+            Attributes.Add("create", new InternalFunction(Create, 1));
+            Attributes.Add("append", new InternalFunction(Append, 2));
+            Attributes.Add("appendLines", new InternalFunction(AppendLines, 2));
+            Attributes.Add("copy", new InternalFunction(Copy, 2));
+            Attributes.Add("move", new InternalFunction(Move, 2));
+            Attributes.Add("rename", new InternalFunction(Rename, 2));
+            Attributes.Add("deleteFile", new InternalFunction(DeleteFile, 1));
+            Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory, 1));
+            Attributes.Add("getDirectory", new InternalFunction(GetDirectory, 0));
+            Attributes.Add("setDirectory", new InternalFunction(SetDirectory, 1));
+            Attributes.Add("getFiles", new InternalFunction(GetFiles, 1));
+            Attributes.Add("getDirectories", new InternalFunction(GetDirectories, 1));
+            Attributes.Add("createText", new InternalFunction(createText, 1));
+            Attributes.Add("openText", new InternalFunction(openText, 1));
+            Attributes.Add("getCreationTime", new InternalFunction(getCreationTime, 1));
+            Attributes.Add("getLastAccessTime", new InternalFunction(getLastAccessTime, 1));
+            Attributes.Add("getLastWriteTime", new InternalFunction(getLastWriteTime, 1));
+            Attributes.Add("setLastAccessTime", new InternalFunction(setLastWriteTime, 2));
+            Attributes.Add("setCreationTime", new InternalFunction(setCreationTime, 2));
         }
             
 

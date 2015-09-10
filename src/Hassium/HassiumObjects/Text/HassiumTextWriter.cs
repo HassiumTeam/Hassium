@@ -11,12 +11,12 @@ namespace Hassium.HassiumObjects.Text
         public HassiumTextWriter(TextWriter value)
         {
             Value = value;
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("flush", new InternalFunction(flush));
-            Attributes.Add("write", new InternalFunction(write));
-            Attributes.Add("writeLine", new InternalFunction(writeLine));
-            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("flush", new InternalFunction(flush, 0));
+            Attributes.Add("write", new InternalFunction(write, 1));
+            Attributes.Add("writeLine", new InternalFunction(writeLine, 1));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
         }
 
         private HassiumObject close(HassiumObject[] args)

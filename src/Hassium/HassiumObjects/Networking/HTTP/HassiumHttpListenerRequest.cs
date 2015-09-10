@@ -12,15 +12,15 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         public HassiumHttpListenerRequest(HttpListenerRequest value)
         {
             Value = value;
-            Attributes.Add("contentLength", new InternalFunction(contentLength));
-            Attributes.Add("httpMethod", new InternalFunction(httpMethod));
-            Attributes.Add("inputStream", new InternalFunction(inputStream));
-            Attributes.Add("localEndPoint", new InternalFunction(localEndPoint));
-            Attributes.Add("queryString", new InternalFunction(queryString));
-            Attributes.Add("rawUrl", new InternalFunction(rawUrl));
-            Attributes.Add("remoteEndPoint", new InternalFunction(remoteEndPoint));
-            Attributes.Add("url", new InternalFunction(url));
-            Attributes.Add("userAgent", new InternalFunction(userAgent));
+            Attributes.Add("contentLength", new InternalFunction(contentLength, 0, true));
+            Attributes.Add("httpMethod", new InternalFunction(httpMethod, 0, true));
+            Attributes.Add("inputStream", new InternalFunction(inputStream, 0, true));
+            Attributes.Add("localEndPoint", new InternalFunction(localEndPoint, 0, true));
+            Attributes.Add("queryString", new InternalFunction(queryString, 0, true));
+            Attributes.Add("rawUrl", new InternalFunction(rawUrl, 0, true));
+            Attributes.Add("remoteEndPoint", new InternalFunction(remoteEndPoint, 0, true));
+            Attributes.Add("url", new InternalFunction(url, 0, true));
+            Attributes.Add("userAgent", new InternalFunction(userAgent, 0, true));
         }
 
         private HassiumObject contentLength(HassiumObject[] args)

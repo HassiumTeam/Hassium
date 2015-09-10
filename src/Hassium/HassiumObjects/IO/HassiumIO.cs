@@ -10,9 +10,9 @@ namespace Hassium.HassiumObjects.IO
     {
         public HassiumIO()
         {
-            Attributes.Add("stdin", new InternalFunction(x => new HassiumStream(Console.OpenStandardInput()), true));
-            Attributes.Add("stdout", new InternalFunction(x => new HassiumStream(Console.OpenStandardOutput()), true));
-            Attributes.Add("stderr", new InternalFunction(x => new HassiumStream(Console.OpenStandardError()), true));
+            Attributes.Add("stdin", new InternalFunction(x => new HassiumStream(Console.OpenStandardInput()), 0, true));
+            Attributes.Add("stdout", new InternalFunction(x => new HassiumStream(Console.OpenStandardOutput()), 0, true));
+            Attributes.Add("stderr", new InternalFunction(x => new HassiumStream(Console.OpenStandardError()), 0, true));
         }
     }
 }

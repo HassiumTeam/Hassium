@@ -12,13 +12,13 @@ namespace Hassium.HassiumObjects.Text
         public HassiumTextReader(TextReader value)
         {
             Value = value;
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("peek", new InternalFunction(peek));
-            Attributes.Add("read", new InternalFunction(read));
-            Attributes.Add("readLine", new InternalFunction(readLine));
-            Attributes.Add("readToEnd", new InternalFunction(readToEnd));
-            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("peek", new InternalFunction(peek, 0));
+            Attributes.Add("read", new InternalFunction(read, 0));
+            Attributes.Add("readLine", new InternalFunction(readLine, 0));
+            Attributes.Add("readToEnd", new InternalFunction(readToEnd, 0));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
         }
 
         private HassiumObject close(HassiumObject[] args)

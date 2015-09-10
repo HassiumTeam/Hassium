@@ -10,11 +10,11 @@ namespace Hassium.HassiumObjects.IO
         public HassiumStreamWriter(StreamWriter value)
         {
             Value = value;
-            Attributes.Add("write", new InternalFunction(write));
-            Attributes.Add("flush", new InternalFunction(flush));
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("writeLine", new InternalFunction(writeLine));
+            Attributes.Add("write", new InternalFunction(write, 1));
+            Attributes.Add("flush", new InternalFunction(flush, 0));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("writeLine", new InternalFunction(writeLine, 1));
         }
 
         private HassiumObject write(HassiumObject[] args)

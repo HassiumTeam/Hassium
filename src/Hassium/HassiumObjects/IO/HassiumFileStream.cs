@@ -13,7 +13,7 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumFileStream(Stream value) : base(value)
         {
-            Attributes.Add("readChar", new InternalFunction(ReadChar));
+            Attributes.Add("readChar", new InternalFunction(ReadChar, 0));
         }
 
         public HassiumObject ReadChar(HassiumObject[] args)

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Resources;
 using Hassium.Functions;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Text;
@@ -13,25 +14,24 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         public HassiumHttpListenerResponse(HttpListenerResponse value)
         {
             Value = value;
-            Attributes.Add("contentEncoding", new InternalFunction(contentEncoding));
-            Attributes.Add("contentLength", new InternalFunction(contentLength));
-            Attributes.Add("outputStream", new InternalFunction(outputStream));
-            Attributes.Add("abort", new InternalFunction(abort));
-            Attributes.Add("appendHeader", new InternalFunction(appendHeader));
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("redirect", new InternalFunction(redirect));
-        }
-
-        private HassiumObject contentEncoding(HassiumObject[] args)
-        {
-            Value.ContentEncoding = ((HassiumEncoding)args[0]).Value;
-            return null;
-        }
-
-        private HassiumObject contentLength(HassiumObject[] args)
-        {
-            Value.ContentLength64 = args[0].HInt().Value;
-            return null;
+            Attributes.Add("contentEncoding",
+                new HassiumProperty("contentEncoding", x => new HassiumEncoding(Value.ContentEncoding),
+                    x =>
+                    {
+                        value.ContentEncoding = ((HassiumEncoding) x[0]).Value;
+                        return null;
+                    }));
+            Attributes.Add("contentLength", new HassiumProperty("contentLength", x => value.ContentLength64,
+                    x =>
+                    {
+                        value.ContentLength64 = x[0].HInt().Value;
+                        return null;
+                    }));
+            Attributes.Add("outputStream", new InternalFunction(outputStream, 0, true));
+            Attributes.Add("abort", new InternalFunction(abort, 0));
+            Attributes.Add("appendHeader", new InternalFunction(appendHeader, 2));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("redirect", new InternalFunction(redirect, 1));
         }
 
         private HassiumObject outputStream(HassiumObject[] args)

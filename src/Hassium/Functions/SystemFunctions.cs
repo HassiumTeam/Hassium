@@ -11,7 +11,7 @@ namespace Hassium.Functions
 {
     public class SystemFunctions : ILibrary
     {
-        [IntFunc("exit")]
+        [IntFunc("exit", new []{0,1})]
         public static HassiumObject Exit(HassiumObject[] args)
         {
             HassiumInterpreter.CurrentInterpreter.Exit(args.Length > 0 ? args[0].HInt().Value : 0);
@@ -19,7 +19,7 @@ namespace Hassium.Functions
             return null;
         }
 
-        [IntFunc("system")]
+        [IntFunc("system", -1)]
         public static HassiumObject System(HassiumObject[] args)
         {
             var process = new Process
@@ -41,7 +41,7 @@ namespace Hassium.Functions
             return output;
         }
 
-        [IntFunc("date")]
+        [IntFunc("date", new []{1, 3, 6, 0})]
         public static HassiumObject Date(HassiumObject[] args)
         {
             switch (args.Length)
@@ -60,13 +60,13 @@ namespace Hassium.Functions
             }
         }
 
-        [IntFunc("dateParse")]
+        [IntFunc("dateParse", new []{1, 2})]
         public static HassiumObject DateParse(HassiumObject[] args)
         {
             return args.Length == 2 ? new HassiumDate(DateTime.ParseExact(args[0].ToString(), args[1].ToString(), CultureInfo.InvariantCulture)) : new HassiumDate(DateTime.Parse(args[0].ToString()));
         }
 
-        [IntFunc("time")]
+        [IntFunc("time", new []{0, 3})]
         public static HassiumObject Time(HassiumObject[] args)
         {
             return args.Length == 0
@@ -75,20 +75,20 @@ namespace Hassium.Functions
                     args[0].HDouble().ValueInt, args[1].HDouble().ValueInt, args[2].HDouble().ValueInt));
         }
 
-        [IntFunc("currentUser")]
+        [IntFunc("currentUser", 0)]
         public static HassiumObject CurrentUser(HassiumObject[] args)
         {
             return Environment.UserName;
         }
 
-        [IntFunc("sleep")]
+        [IntFunc("sleep", 1)]
         public static HassiumObject Sleep(HassiumObject[] args)
         {
-            Thread.Sleep(Convert.ToInt32(args[0].ToString()));
+            Thread.Sleep(args[0].HInt().Value);
             return null;
         }
 
-        [IntFunc("eval")]
+        [IntFunc("eval", 1)]
         public static HassiumObject Eval(HassiumObject[] args)
         {
             var tokens = new Lexer.Lexer(args[0].ToString()).Tokenize();

@@ -10,9 +10,9 @@ namespace Hassium.HassiumObjects.Random
         public HassiumRandom(System.Random value)
         {
             Value = value;
-            Attributes.Add("next", new InternalFunction(next));
-            Attributes.Add("nextDouble", new InternalFunction(nextDouble));
-            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("next", new InternalFunction(next, new []{0,1,2}));
+            Attributes.Add("nextDouble", new InternalFunction(nextDouble, 0));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
         }
 
         private HassiumObject next(HassiumObject[] args)

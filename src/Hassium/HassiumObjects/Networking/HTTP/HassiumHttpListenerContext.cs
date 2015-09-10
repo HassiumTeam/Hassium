@@ -10,8 +10,8 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         public HassiumHttpListenerContext(HttpListenerContext value)
         {
             Value = value;
-            Attributes.Add("request", new InternalFunction(request));
-            Attributes.Add("response", new InternalFunction(response));
+            Attributes.Add("request", new InternalFunction(request, 0, true));
+            Attributes.Add("response", new InternalFunction(response, 0, true));
         }
 
         private HassiumObject request(HassiumObject[] args)

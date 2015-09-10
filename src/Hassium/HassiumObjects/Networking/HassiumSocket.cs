@@ -14,17 +14,17 @@ namespace Hassium.HassiumObjects.Networking
         {
             Value = value;
 
-            Attributes.Add("connect", new InternalFunction(connect));
-            Attributes.Add("accept", new InternalFunction(accept));
-            Attributes.Add("available", new InternalFunction(available));
-            Attributes.Add("connected", new InternalFunction(connected));
-            Attributes.Add("protocolType", new InternalFunction(protocolType));
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("disconnect", new InternalFunction(disconnect));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("listen", new InternalFunction(listen));
-            Attributes.Add("sendFile", new InternalFunction(sendFile));
-            Attributes.Add("send", new InternalFunction(send));
+            Attributes.Add("connect", new InternalFunction(connect, 2));
+            Attributes.Add("accept", new InternalFunction(accept, 0));
+            Attributes.Add("available", new InternalFunction(x => value.Available, 0, true));
+            Attributes.Add("connected", new InternalFunction(x => value.Connected, 0, true));
+            Attributes.Add("protocolType", new InternalFunction(x => value.ProtocolType.ToString(), 0, true));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("disconnect", new InternalFunction(disconnect, 1));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("listen", new InternalFunction(listen, 1));
+            Attributes.Add("sendFile", new InternalFunction(sendFile, 1));
+            Attributes.Add("send", new InternalFunction(send, 1));
         }
 
         private HassiumObject connect(HassiumObject[] args)
@@ -35,23 +35,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject accept(HassiumObject[] args)
         {
-            Value.Accept();
-            return null;
-        }
-
-        private HassiumObject available(HassiumObject[] args)
-        {
-            return Value.Available;
-        }
-
-        private HassiumObject connected(HassiumObject[] args)
-        {
-            return Value.Connected;
-        }
-
-        private HassiumObject protocolType(HassiumObject[] args)
-        {
-            return Value.ProtocolType.ToString();
+            return new HassiumSocket(Value.Accept());
         }
 
         private HassiumObject close(HassiumObject[] args)
@@ -86,8 +70,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject send(HassiumObject[] args)
         {
-            Value.Send(Encoding.ASCII.GetBytes(args[0].ToString()));
-            return null;
+            return Value.Send(Encoding.ASCII.GetBytes(args[0].ToString()));
         }
     }
 }

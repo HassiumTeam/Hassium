@@ -14,8 +14,8 @@ namespace Hassium.HassiumObjects.Sql
         public HassiumSqlDataReader(MySqlDataReader value)
         {
             Value = value;
-            Attributes.Add("read", new InternalFunction(read));
-            Attributes.Add("get", new InternalFunction(get));
+            Attributes.Add("read", new InternalFunction(read, 0));
+            Attributes.Add("get", new InternalFunction(get, 1));
         }
 
         private HassiumObject read(HassiumObject[] args)

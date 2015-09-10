@@ -8,17 +8,17 @@ namespace Hassium.HassiumObjects.IO
     {
         public HassiumPath()
         {
-            Attributes.Add("combine", new InternalFunction(combine));
-            Attributes.Add("getDirectoryName", new InternalFunction(getDirectoryName));
-            Attributes.Add("getExtension", new InternalFunction(getExtension));
-            Attributes.Add("getFileName", new InternalFunction(getFileName));
-            Attributes.Add("getFileNameWithoutExtension", new InternalFunction(getFileNameWithoutExtension));
-            Attributes.Add("getFullPath", new InternalFunction(getFullPath));
-            Attributes.Add("getPathRoot", new InternalFunction(getPathRoot));
-            Attributes.Add("getRandomFileName", new InternalFunction(getRandomFileName));
-            Attributes.Add("getTempPath", new InternalFunction(getTempPath));
-            Attributes.Add("changeExtension", new InternalFunction(changeExtension));
-            Attributes.Add("isPathRooted", new InternalFunction(isPathRooted));
+            Attributes.Add("combine", new InternalFunction(combine, 2));
+            Attributes.Add("getDirectoryName", new InternalFunction(getDirectoryName, 1));
+            Attributes.Add("getExtension", new InternalFunction(getExtension, 1));
+            Attributes.Add("getFileName", new InternalFunction(getFileName, 1));
+            Attributes.Add("getFileNameWithoutExtension", new InternalFunction(getFileNameWithoutExtension, 1));
+            Attributes.Add("getFullPath", new InternalFunction(getFullPath, 1));
+            Attributes.Add("getPathRoot", new InternalFunction(getPathRoot, 1));
+            Attributes.Add("getRandomFileName", new InternalFunction(getRandomFileName, 0));
+            Attributes.Add("getTempPath", new InternalFunction(getTempPath, 0));
+            Attributes.Add("changeExtension", new InternalFunction(changeExtension, 2));
+            Attributes.Add("isPathRooted", new InternalFunction(isPathRooted, 1));
         }
 
         public HassiumObject combine(HassiumObject[] args)

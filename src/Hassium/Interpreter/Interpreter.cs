@@ -469,7 +469,7 @@ namespace Hassium.Interpreter
                         {
                             var rfunc = new InternalFunction(
                                 (HassiumFunctionDelegate)
-                                Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), false, theattr.Constructor);
+                                Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), theattr.Arguments, false, theattr.Constructor);
 
                             result.Add(theattr.Name, rfunc);
                             if (theattr.Alias != "") result.Add(theattr.Alias, rfunc);
@@ -755,7 +755,7 @@ namespace Hassium.Interpreter
                     {
                         FreeVariable(args[0].ToString(), node);
                         return null;
-                    });
+                    }, 1);
                     break;
                 default:
                     if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))

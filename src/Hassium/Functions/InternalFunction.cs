@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
@@ -9,16 +11,27 @@ namespace Hassium.Functions
     {
         private HassiumFunctionDelegate target;
 
-        public InternalFunction(HassiumFunctionDelegate target, bool prop = false, bool constr = false)
+        public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false)
         {
             this.target = target;
             IsProperty = prop;
             IsConstructor = constr;
+            Arguments = new[] {args};
+        }
+
+        public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false)
+        {
+            this.target = target;
+            IsProperty = prop;
+            IsConstructor = constr;
+            Arguments = args;
         }
 
         public bool IsProperty { get; set; }
 
         public bool IsConstructor { get; set; }
+
+        public int[] Arguments { get; set; }
 
 
         public override string ToString()
@@ -28,6 +41,8 @@ namespace Hassium.Functions
 
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
+            if (!Arguments.Contains(args.Length) && Arguments[0] != -1)
+                throw new Exception("Funtion " + target.Method.Name + " has " + Arguments + " arguments, but is invoked with " + args.Length);
             return target(args);
         }
     }
@@ -38,23 +53,46 @@ namespace Hassium.Functions
         public string Name { get; set; }
         public string Alias { get; set; }
         public bool Constructor { get; set; }
+        public int[] Arguments { get; set; }
 
-        public IntFunc(string name) : this(name, "")
+        public IntFunc(string name, int args) : this(name, args, "")
         {
         }
 
-        public IntFunc(string name, string alias)
+        public IntFunc(string name, int[] args) : this(name, args, "")
+        {
+        }
+
+        public IntFunc(string name, int args, string alias)
         {
             Name = name;
             Alias = alias;
             Constructor = false;
+            Arguments = new[] {args};
         }
 
-        public IntFunc(string name, bool constr)
+        public IntFunc(string name, int[] args, string alias)
+        {
+            Name = name;
+            Alias = alias;
+            Constructor = false;
+            Arguments = args;
+        }
+
+        public IntFunc(string name, bool constr, int args)
         {
             Name = name;
             Alias = "";
             Constructor = constr;
+            Arguments = new[] {args};
+        }
+
+        public IntFunc(string name, bool constr, int[] args)
+        {
+            Name = name;
+            Alias = "";
+            Constructor = constr;
+            Arguments = args;
         }
     }
 }

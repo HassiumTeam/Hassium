@@ -13,24 +13,14 @@ namespace Hassium.HassiumObjects.Reflection
         public HassiumAssembly(Assembly ass)
         {
             Value = ass;
-            Attributes.Add("entryPoint", new InternalFunction(entryPoint));
-            Attributes.Add("fullName", new InternalFunction(fullName));
-            Attributes.Add("getFile", new InternalFunction(getFile));
-            Attributes.Add("getFiles", new InternalFunction(getFiles));
-            Attributes.Add("getModule", new InternalFunction(getModule));
-            Attributes.Add("getModules", new InternalFunction(getModules));
-            Attributes.Add("getName", new InternalFunction(getName));
-            Attributes.Add("toString", new InternalFunction(toString));
-        }
-
-        private HassiumObject entryPoint(HassiumObject[] args)
-        {
-            return Value.EntryPoint.ToString();
-        }
-
-        private HassiumObject fullName(HassiumObject[] args)
-        {
-            return Value.FullName;
+            Attributes.Add("entryPoint", new InternalFunction(x => Value.EntryPoint.ToString(), 0, true));
+            Attributes.Add("fullName", new InternalFunction(x => Value.FullName, 0, true));
+            Attributes.Add("getFile", new InternalFunction(getFile, 1));
+            Attributes.Add("getFiles", new InternalFunction(getFiles, 0));
+            Attributes.Add("getModule", new InternalFunction(getModule, 1));
+            Attributes.Add("getModules", new InternalFunction(getModules, 0));
+            Attributes.Add("getName", new InternalFunction(getName, 0));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
         }
 
         private HassiumObject getFile(HassiumObject[] args)

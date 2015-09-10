@@ -10,10 +10,10 @@ namespace Hassium.HassiumObjects.Text
         public HassiumBinaryWriter(BinaryWriter value)
         {
             Value = value;
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("flush", new InternalFunction(flush));
-            Attributes.Add("write", new InternalFunction(write));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("flush", new InternalFunction(flush, 0));
+            Attributes.Add("write", new InternalFunction(write, 1));
         }
 
         private HassiumObject close(HassiumObject[] args)

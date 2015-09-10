@@ -12,27 +12,17 @@ namespace Hassium.HassiumObjects.Networking
         public HassiumTcpClient(TcpClient value)
         {
             Value = value;
-            Attributes.Add("available", new InternalFunction(available));
-            Attributes.Add("connect", new InternalFunction(connect));
-            Attributes.Add("connected", new InternalFunction(connected));
-            Attributes.Add("getStream", new InternalFunction(getStream));
-            Attributes.Add("close", new InternalFunction(close));
-        }
-
-        private HassiumObject available(HassiumObject[] args)
-        {
-            return Value.Available;
+            Attributes.Add("available", new InternalFunction(x => value.Available, 0, true));
+            Attributes.Add("connect", new InternalFunction(connect, 2));
+            Attributes.Add("connected", new InternalFunction(x => value.Connected, 0, true));
+            Attributes.Add("getStream", new InternalFunction(getStream, 0));
+            Attributes.Add("close", new InternalFunction(close, 0));
         }
 
         private HassiumObject connect(HassiumObject[] args)
         {
             Value.Connect(args[0].ToString(), args[1].HInt().Value);
             return null;
-        }
-
-        private HassiumObject connected(HassiumObject[] args)
-        {
-            return Value.Connected;
         }
 
         private HassiumObject getStream(HassiumObject[] args)

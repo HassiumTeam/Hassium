@@ -11,14 +11,14 @@ namespace Hassium.HassiumObjects.Text
         public HassiumStringBuilder(StringBuilder value)
         {
             Value = value;
-            Attributes.Add("append", new InternalFunction(append));
-            Attributes.Add("appendLine", new InternalFunction(appendLine));
-            Attributes.Add("clear", new InternalFunction(clear));
-            Attributes.Add("insert", new InternalFunction(insert));
-            Attributes.Add("remove", new InternalFunction(remove));
-            Attributes.Add("replace", new InternalFunction(replace));
-            Attributes.Add("toString", new InternalFunction(toString));
-            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
+            Attributes.Add("append", new InternalFunction(append, 1));
+            Attributes.Add("appendLine", new InternalFunction(appendLine, 1));
+            Attributes.Add("clear", new InternalFunction(clear, 0));
+            Attributes.Add("insert", new InternalFunction(insert, 2));
+            Attributes.Add("remove", new InternalFunction(remove, 2));
+            Attributes.Add("replace", new InternalFunction(replace, 2));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
         }
 
         private HassiumObject append(HassiumObject[] args)

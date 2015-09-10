@@ -13,22 +13,22 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value) : this(value.Select(x => (HassiumKeyValuePair)x).ToList())
         {
-            Attributes.Add("length", new InternalFunction(x => Value.Count, true));
-            Attributes.Add("toString", new InternalFunction(tostring));
+            Attributes.Add("length", new InternalFunction(x => Value.Count, 0, true));
+            Attributes.Add("toString", new InternalFunction(tostring, 0));
 
-            Attributes.Add("resize", new InternalFunction(ResizeArr));
-            Attributes.Add("reverse", new InternalFunction(ArrayReverse));
-            Attributes.Add("contains", new InternalFunction(ArrayContains));
-            Attributes.Add("containsKey", new InternalFunction(ContainsKey));
-            Attributes.Add("containsValue", new InternalFunction(ContainsValue));
+            Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
+            Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));
+            Attributes.Add("contains", new InternalFunction(ArrayContains, 1));
+            Attributes.Add("containsKey", new InternalFunction(ContainsKey, 1));
+            Attributes.Add("containsValue", new InternalFunction(ContainsValue, 1));
 
-            Attributes.Add("op", new InternalFunction(ArrayOp));
-            Attributes.Add("select", new InternalFunction(ArraySelect));
-            Attributes.Add("where", new InternalFunction(ArrayWhere));
-            Attributes.Add("any", new InternalFunction(ArrayAny));
-            Attributes.Add("first", new InternalFunction(ArrayFirst));
-            Attributes.Add("last", new InternalFunction(ArrayLast));
-            Attributes.Add("zip", new InternalFunction(ArrayZip));
+            Attributes.Add("op", new InternalFunction(ArrayOp, 1));
+            Attributes.Add("select", new InternalFunction(ArraySelect, 1));
+            Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
+            Attributes.Add("any", new InternalFunction(ArrayAny, 1));
+            Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
+            Attributes.Add("last", new InternalFunction(ArrayLast, 1));
+            Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
         }
 
         public HassiumDictionary(List<HassiumKeyValuePair> ls)
@@ -164,8 +164,8 @@ namespace Hassium.HassiumObjects.Types
             Key = k;
             Value = v;
 
-            Attributes.Add("key", new InternalFunction(x => Key, true));
-            Attributes.Add("value", new InternalFunction(x => Value, true));
+            Attributes.Add("key", new InternalFunction(x => Key, 0, true));
+            Attributes.Add("value", new InternalFunction(x => Value, 0, true));
         }
 
         public static implicit operator KeyValuePair<HassiumObject, HassiumObject>(HassiumKeyValuePair kvp)

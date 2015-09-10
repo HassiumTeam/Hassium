@@ -12,15 +12,15 @@ namespace Hassium.HassiumObjects.Text
         public HassiumBinaryReader(BinaryReader value)
         {
             Value = value;
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("peekChar", new InternalFunction(peekChar));
-            Attributes.Add("read", new InternalFunction(read));
-            Attributes.Add("readBoolean", new InternalFunction(readBoolean));
-            Attributes.Add("readByte", new InternalFunction(readByte));
-            Attributes.Add("readString", new InternalFunction(readString));
-            Attributes.Add("readChars", new InternalFunction(readChars));
-            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("peekChar", new InternalFunction(peekChar, 0));
+            Attributes.Add("read", new InternalFunction(read, 0));
+            Attributes.Add("readBoolean", new InternalFunction(readBoolean, 0));
+            Attributes.Add("readByte", new InternalFunction(readByte, 0));
+            Attributes.Add("readString", new InternalFunction(readString, 0));
+            Attributes.Add("readChars", new InternalFunction(readChars, 1));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
         }
 
         public HassiumObject close(HassiumObject[] args)

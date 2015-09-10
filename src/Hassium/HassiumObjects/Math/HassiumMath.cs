@@ -12,31 +12,31 @@ namespace Hassium.HassiumObjects.Math
     {
         public HassiumMath()
         {
-            Attributes.Add("pi", new InternalFunction(x => System.Math.PI, true));
-            Attributes.Add("e", new InternalFunction(x => System.Math.E, true));
-            Attributes.Add("hash", new InternalFunction(Hash));
-            Attributes.Add("pow", new InternalFunction(Pow));
-            Attributes.Add("sqrt", new InternalFunction(Sqrt));
-            Attributes.Add("abs", new InternalFunction(Abs));
-            Attributes.Add("acos", new InternalFunction(Acos));
-            Attributes.Add("asin", new InternalFunction(Asin));
-            Attributes.Add("atan", new InternalFunction(Atan));
-            Attributes.Add("atan2", new InternalFunction(Atan2));
-            Attributes.Add("ceil", new InternalFunction(Ceil));
-            Attributes.Add("cos", new InternalFunction(Cos));
-            Attributes.Add("cosh", new InternalFunction(Cosh));
-            Attributes.Add("exp", new InternalFunction(Exp));
-            Attributes.Add("floor", new InternalFunction(Floor));
-            Attributes.Add("ln", new InternalFunction(Ln));
-            Attributes.Add("log", new InternalFunction(Log));
-            Attributes.Add("log10", new InternalFunction(Log10));
-            Attributes.Add("max", new InternalFunction(Max));
-            Attributes.Add("min", new InternalFunction(Min));
-            Attributes.Add("round", new InternalFunction(Round));
-            Attributes.Add("sin", new InternalFunction(Sin));
-            Attributes.Add("sinh", new InternalFunction(Sinh));
-            Attributes.Add("tan", new InternalFunction(Tan));
-            Attributes.Add("tanh", new InternalFunction(Tanh));
+            Attributes.Add("pi", new InternalFunction(x => System.Math.PI, 0, true));
+            Attributes.Add("e", new InternalFunction(x => System.Math.E, 0, true));
+            Attributes.Add("hash", new InternalFunction(Hash, 2));
+            Attributes.Add("pow", new InternalFunction(Pow, 2));
+            Attributes.Add("sqrt", new InternalFunction(Sqrt, 1));
+            Attributes.Add("abs", new InternalFunction(Abs, 1));
+            Attributes.Add("acos", new InternalFunction(Acos, 1));
+            Attributes.Add("asin", new InternalFunction(Asin, 1));
+            Attributes.Add("atan", new InternalFunction(Atan, 1));
+            Attributes.Add("atan2", new InternalFunction(Atan2, 2));
+            Attributes.Add("ceil", new InternalFunction(Ceil, 1));
+            Attributes.Add("cos", new InternalFunction(Cos, 1));
+            Attributes.Add("cosh", new InternalFunction(Cosh, 1));
+            Attributes.Add("exp", new InternalFunction(Exp, 1));
+            Attributes.Add("floor", new InternalFunction(Floor, 1));
+            Attributes.Add("ln", new InternalFunction(Ln, 1));
+            Attributes.Add("log", new InternalFunction(Log, 2));
+            Attributes.Add("log10", new InternalFunction(Log10, 1));
+            Attributes.Add("max", new InternalFunction(Max, 2));
+            Attributes.Add("min", new InternalFunction(Min, 2));
+            Attributes.Add("round", new InternalFunction(Round, new []{1,2}));
+            Attributes.Add("sin", new InternalFunction(Sin, 1));
+            Attributes.Add("sinh", new InternalFunction(Sinh, 1));
+            Attributes.Add("tan", new InternalFunction(Tan, 1));
+            Attributes.Add("tanh", new InternalFunction(Tanh, 1));
         }
 
         public HassiumObject Hash(HassiumObject[] args)

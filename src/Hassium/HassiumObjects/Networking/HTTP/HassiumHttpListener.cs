@@ -10,12 +10,12 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         public HassiumHttpListener(HttpListener value)
         {
             Value = value;
-            Attributes.Add("start", new InternalFunction(start));
-            Attributes.Add("prefixAdd", new InternalFunction(prefixAdd));
-            Attributes.Add("stop", new InternalFunction(stop));
-            Attributes.Add("abort", new InternalFunction(abort));
-            Attributes.Add("getContext", new InternalFunction(getContext));
-            Attributes.Add("close", new InternalFunction(close));
+            Attributes.Add("start", new InternalFunction(start, 0));
+            Attributes.Add("prefixAdd", new InternalFunction(prefixAdd, 1));
+            Attributes.Add("stop", new InternalFunction(stop, 0));
+            Attributes.Add("abort", new InternalFunction(abort, 0));
+            Attributes.Add("getContext", new InternalFunction(getContext, 0));
+            Attributes.Add("close", new InternalFunction(close, 0));
         }
 
         private HassiumObject start(HassiumObject[] args)

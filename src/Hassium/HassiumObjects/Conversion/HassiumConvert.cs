@@ -9,9 +9,9 @@ namespace Hassium.HassiumObjects.Conversion
     {
         public HassiumConvert()
         {
-            Attributes.Add("toNumber", new InternalFunction(toNumber));
-            Attributes.Add("toString", new InternalFunction(toString));
-            Attributes.Add("toBool", new InternalFunction(toBool));
+            Attributes.Add("toNumber", new InternalFunction(toNumber, 1));
+            Attributes.Add("toString", new InternalFunction(toString, 1));
+            Attributes.Add("toBool", new InternalFunction(toBool, 1));
         }
 
         public static HassiumObject toNumber(HassiumObject[] args)

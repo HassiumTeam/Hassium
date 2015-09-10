@@ -11,12 +11,12 @@ namespace Hassium.HassiumObjects.IO
         public HassiumStreamReader(StreamReader value)
         {
             Value = value;
-            Attributes.Add("readLine", new InternalFunction(readLine));
-            Attributes.Add("dispose", new InternalFunction(dispose));
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("peek", new InternalFunction(peek));
-            Attributes.Add("read", new InternalFunction(read));
-            Attributes.Add("readToEnd", new InternalFunction(readToEnd));
+            Attributes.Add("readLine", new InternalFunction(readLine, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("peek", new InternalFunction(peek, 0));
+            Attributes.Add("read", new InternalFunction(read, 0));
+            Attributes.Add("readToEnd", new InternalFunction(readToEnd, 0));
         }
 
         private HassiumObject readLine(HassiumObject[] args)

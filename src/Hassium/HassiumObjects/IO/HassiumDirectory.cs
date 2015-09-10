@@ -8,19 +8,19 @@ namespace Hassium.HassiumObjects.IO
     {
         public HassiumDirectory()
         {
-            Attributes.Add("exists", new InternalFunction(Exists));
-            Attributes.Add("create", new InternalFunction(Create));
-            Attributes.Add("copy", new InternalFunction(Copy));
-            Attributes.Add("move", new InternalFunction(Move));
-            Attributes.Add("rename", new InternalFunction(Rename));
-            Attributes.Add("delete", new InternalFunction(Delete));
-            Attributes.Add("getCreationTime", new InternalFunction(GetCreationTime));
-            Attributes.Add("getLastAccessTime", new InternalFunction(GetLastAccessTime));
-            Attributes.Add("getLastWriteTime", new InternalFunction(GetLastWriteTime));
-            Attributes.Add("setLastAccessTime", new InternalFunction(SetLastWriteTime));
-            Attributes.Add("setLastWriteTime", new InternalFunction(SetLastWriteTime));
-            Attributes.Add("setCreationTime", new InternalFunction(SetCreationTime));
-            Attributes.Add("getParent", new InternalFunction(GetParent));
+            Attributes.Add("exists", new InternalFunction(Exists, 1));
+            Attributes.Add("create", new InternalFunction(Create, 1));
+            Attributes.Add("copy", new InternalFunction(Copy, 2));
+            Attributes.Add("move", new InternalFunction(Move, 2));
+            Attributes.Add("rename", new InternalFunction(Rename, 2));
+            Attributes.Add("delete", new InternalFunction(Delete, 1));
+            Attributes.Add("getCreationTime", new InternalFunction(GetCreationTime, 1));
+            Attributes.Add("getLastAccessTime", new InternalFunction(GetLastAccessTime, 1));
+            Attributes.Add("getLastWriteTime", new InternalFunction(GetLastWriteTime, 1));
+            Attributes.Add("setLastAccessTime", new InternalFunction(SetLastWriteTime, 2));
+            Attributes.Add("setLastWriteTime", new InternalFunction(SetLastWriteTime, 2));
+            Attributes.Add("setCreationTime", new InternalFunction(SetCreationTime, 2));
+            Attributes.Add("getParent", new InternalFunction(GetParent, 1));
         }
 
         public HassiumObject Exists(HassiumObject[] args)

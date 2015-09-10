@@ -11,10 +11,10 @@ namespace Hassium.HassiumObjects.Reflection
         public HassiumModule(Module module)
         {
             Value = module;
-            Attributes.Add("assembly", new InternalFunction(x => new HassiumAssembly(Value.Assembly), true));
-            Attributes.Add("name", new InternalFunction(x => new HassiumString(Value.Name), true));
-            Attributes.Add("scopeName", new InternalFunction(x => new HassiumString(Value.ScopeName), true));
-            Attributes.Add("fullyQualifiedName", new InternalFunction(x => new HassiumString(Value.FullyQualifiedName), true));
+            Attributes.Add("assembly", new InternalFunction(x => new HassiumAssembly(Value.Assembly), 0, true));
+            Attributes.Add("name", new InternalFunction(x => new HassiumString(Value.Name), 0, true));
+            Attributes.Add("scopeName", new InternalFunction(x => new HassiumString(Value.ScopeName), 0, true));
+            Attributes.Add("fullyQualifiedName", new InternalFunction(x => new HassiumString(Value.FullyQualifiedName), 0, true));
         }
     }
 }

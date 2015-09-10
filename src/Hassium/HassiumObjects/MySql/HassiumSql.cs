@@ -14,10 +14,10 @@ namespace Hassium.HassiumObjects.Sql
         public HassiumSql(string server, string database, string user, string password)
         {
             Value = new MySqlConnection("Server=" + server + ";Database=" + database + ";User ID=" + user + ";Password=" + password + ";Pooling=false");
-            Attributes.Add("open", new InternalFunction(open));
-            Attributes.Add("close", new InternalFunction(close));
-            Attributes.Add("query", new InternalFunction(query));
-            Attributes.Add("select", new InternalFunction(select));
+            Attributes.Add("open", new InternalFunction(open, 0));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("query", new InternalFunction(query, 1));
+            Attributes.Add("select", new InternalFunction(select, 1));
         }
 
         private HassiumObject open(HassiumObject[] args)

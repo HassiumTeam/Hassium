@@ -12,7 +12,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">The string to print.</param>
         /// <returns>Nothing</returns>
-        [IntFunc("print")]
+        [IntFunc("print", -1)]
         public static HassiumObject Print(HassiumObject[] args)
         {
             Console.WriteLine(String.Join("", args.Select(x => x.ToString())));
@@ -23,7 +23,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">The string to print.</param>
         /// <returns>Nothing</returns>
-        [IntFunc("println")]
+        [IntFunc("println", -1)]
         public static HassiumObject PrintLn(HassiumObject[] args)
         {
             Console.WriteLine(String.Join("", args.Select(x => x.ToString())));
@@ -34,7 +34,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">The array to print.</param>
         /// <returns>Nothing</returns>
-        [IntFunc("printarr")]
+        [IntFunc("printarr", 1)]
         public static HassiumObject PrintArr(HassiumObject[] args)
         {
             Console.WriteLine(HassiumConvert.toString(new[] {args[0]}).ToString());
@@ -45,7 +45,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">No parameters.</param>
         /// <returns>Nothing.</returns>
-        [IntFunc("input")]
+        [IntFunc("input", 0)]
         public static HassiumObject Input(HassiumObject[] args)
         {
             return Console.ReadLine();
@@ -55,7 +55,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">No parameters.</param>
         /// <returns>Nothing.</returns>
-        [IntFunc("cls")]
+        [IntFunc("cls", 0)]
         public static HassiumObject Cls(HassiumObject[] args)
         {
             Console.Clear();
@@ -66,7 +66,7 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">No parameters.</param>
         /// <returns>Nothing.</returns>
-        [IntFunc("pause")]
+        [IntFunc("pause", 0)]
         public static HassiumObject Pause(HassiumObject[] args)
         {
             Console.ReadKey(true);

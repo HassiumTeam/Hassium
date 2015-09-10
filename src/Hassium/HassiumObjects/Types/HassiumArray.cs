@@ -17,24 +17,24 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumArray(IEnumerable<object> value)
         {
-            Attributes.Add("length", new InternalFunction(x => Value.Length, true));
-            Attributes.Add("toString", new InternalFunction(toString));
+            Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
+            Attributes.Add("toString", new InternalFunction(toString, 0));
 
-            Attributes.Add("add", new InternalFunction(Add));
-            Attributes.Add("remove", new InternalFunction(Remove));
+            Attributes.Add("add", new InternalFunction(Add, 1));
+            Attributes.Add("remove", new InternalFunction(Remove, 1));
 
-            Attributes.Add("resize", new InternalFunction(ResizeArr));
-            Attributes.Add("join", new InternalFunction(ArrayJoin));
-            Attributes.Add("reverse", new InternalFunction(ArrayReverse));
-            Attributes.Add("contains", new InternalFunction(ArrayContains));
+            Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
+            Attributes.Add("join", new InternalFunction(ArrayJoin, new []{0,1}));
+            Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));
+            Attributes.Add("contains", new InternalFunction(ArrayContains, 1));
 
-            Attributes.Add("op", new InternalFunction(ArrayOp));
-            Attributes.Add("select", new InternalFunction(ArraySelect));
-            Attributes.Add("where", new InternalFunction(ArrayWhere));
-            Attributes.Add("any", new InternalFunction(ArrayAny));
-            Attributes.Add("first", new InternalFunction(ArrayFirst));
-            Attributes.Add("last", new InternalFunction(ArrayLast));
-            Attributes.Add("zip", new InternalFunction(ArrayZip));
+            Attributes.Add("op", new InternalFunction(ArrayOp, 1));
+            Attributes.Add("select", new InternalFunction(ArraySelect, 1));
+            Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
+            Attributes.Add("any", new InternalFunction(ArrayAny, 1));
+            Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
+            Attributes.Add("last", new InternalFunction(ArrayLast, 1));
+            Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
 
             _value = value.Select(ToHassiumObject).ToList();
         }
@@ -110,13 +110,14 @@ namespace Hassium.HassiumObjects.Types
 
             return string.Join(separator, objarr.Select(x => x.ToString()));
         }
-
+        /* TODO: Implement static methods
         public static HassiumObject ArrayFill(HassiumObject[] args)
         {
             int num = args[0].HDouble().ValueInt;
             HassiumObject thing = args[1];
             return Enumerable.Repeat(thing, num).ToArray();
         }
+        */
 
         public HassiumObject ArrayReverse(HassiumObject[] args)
         {

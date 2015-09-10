@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -28,9 +29,15 @@ namespace Hassium.HassiumObjects.Text
                     Value = Encoding.ASCII;
                     break;
             }
-            Attributes.Add("bodyName", new InternalFunction(bodyName));
-            Attributes.Add("headerName", new InternalFunction(headerName));
+            Attributes.Add("bodyName", new InternalFunction(bodyName, 0, true));
+            Attributes.Add("headerName", new InternalFunction(headerName, 0, true));
+        }
 
+        public HassiumEncoding(Encoding type)
+        {
+            Value = type;
+            Attributes.Add("bodyName", new InternalFunction(bodyName, 0, true));
+            Attributes.Add("headerName", new InternalFunction(headerName, 0, true));
         }
 
         private HassiumObject bodyName(HassiumObject[] args)
