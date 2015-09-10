@@ -5,6 +5,8 @@
 ##New: Hassium Website
 Visit our website at: http://misiriansoft.com/Hassium/wordpress/
 ### Visit Our Wiki! [HassiumWiki](https://github.com/HassiumTeam/Hassium/wiki)
+One our Wiki you can find specific documentation on Hassium classes and functions
+as well as a general programming in Hassium guide found [here](https://github.com/HassiumTeam/Hassium/wiki/General-Guide)
 ### [YouTube Video](https://www.youtube.com/watch?v=9lFGvJAjJ2g&feature=youtu.be)
 
 
