@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -15,8 +16,27 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("setBackground", new InternalFunction(SetBackground));
             Attributes.Add("getForeground", new InternalFunction(GetForeground));
             Attributes.Add("setForeground", new InternalFunction(SetForeground));
-
+            Attributes.Add("getTitle", new InternalFunction(GetTitle));
+            Attributes.Add("setTitle", new InternalFunction(SetTitle));
             Attributes.Add("cursorPos", new InternalFunction(GetCursorPos, true));
+            Attributes.Add("capsLock", new InternalFunction(CapsLock));
+            Attributes.Add("getKey", new InternalFunction(GetKey));
+        }
+
+        public HassiumObject CapsLock(HassiumObject[] args)
+        {
+            return new HassiumBool(Console.CapsLock);
+        }
+
+        public HassiumObject GetKey(HassiumObject[] args)
+        {
+            return new HassiumString(Console.ReadKey(true).Key.ToString());
+        }
+
+        public HassiumObject ResetColor(HassiumObject[] args)
+        {
+            Console.ResetColor();
+            return null;
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace Hassium.Interpreter
             {"true", new HassiumBool(true)},
             {"false", new HassiumBool(false)},
             {"Convert", new HassiumConvert()},
-            {"console", new HassiumConsole() },
+            {"Console", new HassiumConsole() },
             {"null", null},
         };
 
