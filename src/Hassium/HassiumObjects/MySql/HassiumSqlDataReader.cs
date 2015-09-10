@@ -20,6 +20,8 @@ namespace Hassium.HassiumObjects.Sql
             Attributes.Add("close", new InternalFunction(close));
             Attributes.Add("dispose", new InternalFunction(dispose));
             Attributes.Add("getString", new InternalFunction(getString));
+            Attributes.Add("nextResult", new InternalFunction(nextResult));
+            Attributes.Add("toString", new InternalFunction(toString));
         }
 
         private HassiumObject read(HassiumObject[] args)
@@ -61,6 +63,16 @@ namespace Hassium.HassiumObjects.Sql
                 return new HassiumString(Value.GetString(((HassiumInt)args[0]).Value));
             else
                 throw new Exception("Argument to getString() was not the correct format");
+        }
+
+        private HassiumObject nextResult(HassiumObject[] args)
+        {
+            return new HassiumBool(Value.NextResult());
+        }
+
+        private HassiumObject toString(HassiumObject[] args)
+        {
+            return new HassiumString(Value.ToString());
         }
     }
 }
