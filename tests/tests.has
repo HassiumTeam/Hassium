@@ -79,7 +79,7 @@ func main()
     functionTests();
     closureTest();
     objectTest ();
-    recursionTest(5);
+    recursionTest();
     instanceTest();
 	importTests();
 	eventTests();
@@ -362,13 +362,13 @@ func eventTests()
 	hand += handler3;
 	hand += handler4;
 	
-	hand("abc", "def");
+	hand("abc");
 	
 	hand -= handler1;
 	hand -= handler2;
 	hand -= handler3;
 	
-	hand("abc", "def");
+	hand("abc");
 	
 	println();
     println("End of event tests");

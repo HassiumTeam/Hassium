@@ -54,7 +54,13 @@ namespace Hassium.Interpreter
 
             Interpreter.inFunc++;
             var parms = FuncNode.Parameters;
+
+
             if (parms.Contains("this")) parms.Remove("this");
+
+            if (!(parms.Count == args.Length))
+                throw new Exception("Incorrect arguments for funtion " + Name);
+
             for (int x = 0; x < parms.Count; x++)
                 stackFrame.Locals[parms[x]] = args[x];
 
