@@ -1074,18 +1074,20 @@ namespace Hassium.Interpreter
         {
             var whileStmt = node;
             inLoop++;
-            if ((HassiumBool) whileStmt.Predicate.Visit(this))
-                while ((HassiumBool) whileStmt.Predicate.Visit(this))
+            int counter = 0;
+            while ((HassiumBool) whileStmt.Predicate.Visit(this))
+            {
+                counter++;
+                whileStmt.Body.Visit(this);
+                if (continueLoop) continueLoop = false;
+                if (breakLoop)
                 {
-                    whileStmt.Body.Visit(this);
-                    if (continueLoop) continueLoop = false;
-                    if (breakLoop)
-                    {
-                        breakLoop = false;
-                        break;
-                    }
+                    breakLoop = false;
+                    break;
                 }
-            else
+            }
+
+            if (counter == 0)
             {
                 if(whileStmt.ElseBody != null)
                     whileStmt.ElseBody.Visit(this);
