@@ -42,7 +42,7 @@ namespace Hassium.Functions
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if (!Arguments.Contains(args.Length) && Arguments[0] != -1)
-                throw new Exception("Funtion " + target.Method.Name + " has " + Arguments + " arguments, but is invoked with " + args.Length);
+                throw new Exception("Function " + target.Method.Name + " has " + Arguments.Max() + " arguments, but is invoked with " + args.Length);
             return target(args);
         }
     }
