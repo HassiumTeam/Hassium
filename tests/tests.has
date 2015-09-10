@@ -1,4 +1,4 @@
-# Welcome to HATRED.
+﻿# Welcome to HATRED.
 # Hassium Testing Runtime Environment Distribution
 use Math;
 use io;
@@ -51,27 +51,8 @@ func assertfail(that, msg)
 	}
 	println(theMsg);
 }
-
-class ConsoleCursor
-{
-	property Left
-	{
-		get
-		{
-			return console.cursorPos.left;
-		}
-		set
-		{
-			console.cursorPos.left = value;
-		}
-	}
-}
-
 func main()
 {
-	ConsoleCursor.Left = 5;
-	println(console.cursorPos);
-
     println("--- BEGIN TESTS FOR HASSIUM ---");
     
     opTests();
@@ -256,33 +237,33 @@ func objectTest () {
     println();
 }
     
-    class PersonClass
+class PersonClass
+{
+    func new(name, age)
     {
-        func new(name, age)
-        {
-            this.Name = name;
-            this.Age = age;
-        }
-		
-		
-        
-        property Name
-		{
-			get;
-			set;
-		}
-		
-		property Age
-		{
-			get;
-			set;
-		}
-        
-        func toString(this)
-        {
-            return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old.";
-        }
+        this.Name = name;
+        this.Age = age;
     }
+	
+	
+    
+    property Name
+	{
+		get;
+		set;
+	}
+	
+	property Age
+	{
+		get;
+		set;
+	}
+    
+    func toString(this)
+    {
+        return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old.";
+    }
+}
     
 func instanceTest () {
     println("Class instance tests");
