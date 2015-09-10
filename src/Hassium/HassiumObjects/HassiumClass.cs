@@ -17,6 +17,9 @@ namespace Hassium
                         interpreter.Globals.Where(entry => entry.Key.StartsWith(value.Extends))
                             .SelectMany(entry => ((HassiumClass) entry.Value).Attributes))
                 {
+                    if (Attributes.ContainsKey(attrib.Key))
+                        Attributes.Remove(attrib.Key);
+
                     SetAttribute(attrib.Key, attrib.Value);
                 }
             }
