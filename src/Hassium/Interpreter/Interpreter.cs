@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
@@ -310,6 +311,13 @@ namespace Hassium.Interpreter
                 return right;
             }
             var left = node.Left.Visit(this);
+            if(node.BinOp == BinaryOperation.Is)
+            {
+                var target = right;
+                Type ttype = null;
+                if (target is HassiumClass) ttype = target.GetType();
+                return left.GetType() == ttype;
+            }
             return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
         }
 
