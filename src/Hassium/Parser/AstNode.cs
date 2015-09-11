@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hassium.Interpreter;
@@ -32,6 +33,11 @@ namespace Hassium.Parser
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode || this is BinOpNode ||
                        this is ConditionalOpNode || this is LambdaFuncNode || this is NumberNode || this is UnaryOpNode;
             }
+        }
+
+        public bool Any(Func<AstNode, bool> fc)
+        {
+            return Children.Any(node => node.Children.Count > 0 && (fc(node) || node.Any(fc)));
         }
 
         public abstract object Visit(IVisitor visitor);

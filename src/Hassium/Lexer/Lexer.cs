@@ -19,7 +19,6 @@ namespace Hassium.Lexer
         public Lexer(string code)
         {
             this.code = code;
-            //this.code = this.code.Replace("\t", "    ");
         }
 
         private void Add(Token token)
@@ -342,9 +341,9 @@ namespace Hassium.Lexer
             else
             {
                 double temp = 0;
-                if(double.TryParse(finalNumber, out temp))
+                if(double.TryParse(finalNumber, NumberStyles.Any, CultureInfo.InvariantCulture, out temp))
                 {
-                    return new Token(TokenType.Number, temp);
+                    return (temp == Math.Truncate(temp) && !finalNumber.Contains('.')) ? new Token(TokenType.Number, (int)temp) : new Token(TokenType.Number, temp);
                 }
                 else
                 {

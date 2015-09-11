@@ -59,7 +59,7 @@ namespace Hassium.Interpreter
             if (parms.Contains("this")) parms.Remove("this");
 
             if (parms.Count != args.Length)
-                throw new Exception("Incorrect arguments for funtion " + Name);
+                throw new Exception("Incorrect arguments for function " + Name);
 
             for (int x = 0; x < parms.Count; x++)
                 stackFrame.Locals[parms[x]] = args[x];

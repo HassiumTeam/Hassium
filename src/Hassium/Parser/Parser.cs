@@ -787,9 +787,9 @@ namespace Hassium.Parser
 		{
 			int pos = parser.codePos;
 
-			AstNode left = ParseUnary(parser);
+			AstNode left = ParseExponent(parser);
 			
-			if(parser.AcceptToken(TokenType.Operation, "**"))
+			/*if(parser.AcceptToken(TokenType.Operation, "**"))
 			{
 				AstNode right = ParseMultiplicative(parser);
 				return new BinOpNode(pos, BinaryOperation.Pow, left, right);
@@ -799,7 +799,7 @@ namespace Hassium.Parser
 				AstNode right = ParseMultiplicative(parser);
 				return new BinOpNode(pos, BinaryOperation.Root, left, right);
 			}
-			else if (parser.AcceptToken(TokenType.Operation, "*"))
+			else */if (parser.AcceptToken(TokenType.Operation, "*"))
 			{
 				AstNode right = ParseMultiplicative(parser);
 				return new BinOpNode(pos, BinaryOperation.Multiplication, left, right);
@@ -822,6 +822,29 @@ namespace Hassium.Parser
 
 				if(left is ArrayInitializerNode) return new LambdaFuncNode(pos, ((ArrayInitializerNode)left).Value.Values.Select(x => x.ToString()).ToList(), body);
 				return new LambdaFuncNode(pos, new List<string>() {left.ToString()}, body);
+			}
+			else
+			{
+				return left;
+			}
+		}
+
+
+		private static AstNode ParseExponent(Parser parser)
+		{
+			int pos = parser.codePos;
+
+			AstNode left = ParseUnary(parser);
+
+			if (parser.AcceptToken(TokenType.Operation, "**"))
+			{
+				AstNode right = ParseExponent(parser);
+				return new BinOpNode(pos, BinaryOperation.Pow, left, right);
+			}
+			else if (parser.AcceptToken(TokenType.Operation, "//"))
+			{
+				AstNode right = ParseExponent(parser);
+				return new BinOpNode(pos, BinaryOperation.Root, left, right);
 			}
 			else
 			{
@@ -927,7 +950,7 @@ namespace Hassium.Parser
 			var curt = parser.CurrentToken();
 			if (curt.TokenClass == TokenType.Number)
 			{
-				return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value));
+				return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value), parser.PreviousToken().Value is int);
 			}
 			else if (curt.TokenClass == TokenType.Parentheses)
 			{

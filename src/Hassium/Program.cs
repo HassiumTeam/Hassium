@@ -12,6 +12,7 @@ using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
 using Hassium.Lexer;
 using Hassium.Parser;
+using Hassium.Parser.Ast;
 using Hassium.Semantics;
 
 namespace Hassium
@@ -28,7 +29,7 @@ namespace Hassium
 			}
 		}
 
-		private static bool disableTryCatch = false; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
+		private static bool disableTryCatch = true; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
 
 		private static class options
 		{
@@ -118,6 +119,13 @@ namespace Hassium
 			Console.WriteLine(new string(' ', 2 + (column - (res.Length - trimd.Length))) + '^');
 		}
 
+		public static string GetVersion()
+		{
+			return Assembly.GetExecutingAssembly().GetName().Version.Major + "." +
+				   Assembly.GetExecutingAssembly().GetName().Version.Minor + "." +
+				   Assembly.GetExecutingAssembly().GetName().Version.Build;
+		}
+
 		private static void preformSetUp(IList<string> args)
 		{
 			if (args.Count <= 0)
@@ -129,16 +137,13 @@ namespace Hassium
 				if (args[i].StartsWith("-h") || args[i].StartsWith("--help"))
 				{
 					Console.WriteLine(
-						"Hassium {0}.{1}.{2}\n\n" + 
+						"Hassium " + GetVersion() + "\n\n" + 
 						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" + 
 						"Arguments:\n" +
 						"-h  --help\tShows this help\n" +
 						"-d  --debug\tDisplays tokens from lexer\n" +
 						"-r  --repl\tEnters interactive interpreter (enabled by default)\n" +
-						"-t  --time\tShow the running time of the program",
-						Assembly.GetExecutingAssembly().GetName().Version.Major,
-						Assembly.GetExecutingAssembly().GetName().Version.Minor,
-						Assembly.GetExecutingAssembly().GetName().Version.Build);
+						"-t  --time\tShow the running time of the program");
 					Environment.Exit(0);
 				}
 				else if (args[i].StartsWith("-d") || args[i].StartsWith("--debug"))
@@ -176,12 +181,12 @@ namespace Hassium
 
 		private static void enterInteractive()
 		{
+			Console.WriteLine("Hassium REPL " + GetVersion() + " - (c) HassiumTeam 2015");
 			CurrentInterpreter = new Interpreter.Interpreter(false);
 			while (true)
 			{
 				Console.Write("> ");
 				string input = Console.ReadLine();
-				if (string.IsNullOrWhiteSpace(input)) return;
 				Stopwatch st = null;
 				if (options.ShowTime)
 				{
@@ -195,7 +200,7 @@ namespace Hassium
 				AstNode ast = hassiumParser.Parse();
 				CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
 				CurrentInterpreter.Code = ast;
-				CurrentInterpreter.Execute();
+				CurrentInterpreter.Execute(!ast.Any(x => !(x is BinOpNode || x is NumberNode || x is StringNode)));
 				if (options.ShowTime)
 				{
 					st.Stop();

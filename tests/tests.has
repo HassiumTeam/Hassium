@@ -113,6 +113,17 @@ func opTests()
     # other
     assert(12 ** 3 == 1728, "should pass if ** (power) result is correct");
     assert(512 // 3 == 8, "should pass if // (root) result is correct");
+	
+	# ++ and --
+	abc = 5;
+	assert(abc++ == 5, "post-fix should increment after returning");
+	assert(++abc == 7, "pre-fix should increment before returning");
+	assert(abc-- == 7, "post-fix should decrement after returning");
+	assert(--abc == 5, "pre-fix should increment before returning");
+	
+	# operator precedence
+	assert(8 * 2 ** 3 - 4 * 4 / 8.0 == 62, "operator precedence 1");
+	assert(4 * 4 / 8.0 == 2, "operator precedence 2");
 
     ab = null;
     cd = 5;

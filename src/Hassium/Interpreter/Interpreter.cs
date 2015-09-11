@@ -131,6 +131,9 @@ namespace Hassium.Interpreter
                 SetGlobalVariable(name, value, node);
         }
 
+
+        private bool _repl = false;
+
         public void FreeVariable(string name, AstNode node, bool forceglobal = false)
         {
             if(Constants.ContainsKey(name)) throw new ParseException("Can't delete internal constant '" + name + "'.", node);
@@ -153,8 +156,9 @@ namespace Hassium.Interpreter
         /// <summary>
         /// Execute this instance.
         /// </summary>
-        public void Execute()
+        public void Execute(bool repl = false)
         {
+            _repl = repl;
             foreach (var node in Code.Children)
             {
                 if (node is FuncNode && firstExecute)
@@ -579,7 +583,9 @@ namespace Hassium.Interpreter
         public object Accept(BinOpNode node)
         {
             var bnode = node;
-            return interpretBinaryOp(bnode);
+            var res = interpretBinaryOp(bnode);
+            if (_repl) ConsoleFunctions.PrintLn(new[] {res});
+            return res;
         }
 
         public object Accept(BreakNode node)
@@ -908,7 +914,7 @@ namespace Hassium.Interpreter
 
         public object Accept(NumberNode node)
         {
-            if (node.Value == Math.Truncate(node.Value))
+            if (node.IsInt)
             {
                 return new HassiumInt(Convert.ToInt32(node.Value));
             }
