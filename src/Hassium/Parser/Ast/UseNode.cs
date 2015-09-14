@@ -8,13 +8,15 @@ namespace Hassium.Parser.Ast
         public string Name { get; private set; }
         public bool Global { get; private set; }
         public bool IsModule { get; private set; }
+        public bool IsLibrary { get; private set; }
 
-        public UseNode(int position, string path, string name, bool global, bool module) : base(position)
+        public UseNode(int position, string path, string name, bool global, bool module, bool library = false) : base(position)
         {
             Path = path;
             Name = name;
             Global = global;
             IsModule = module;
+            IsLibrary = library;
         }
 
         public override object Visit(IVisitor visitor)

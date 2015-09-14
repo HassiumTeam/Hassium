@@ -1019,6 +1019,11 @@ namespace Hassium.Interpreter
                         throw new Exception("Unknown Module: " + node.Path);
                 }
             }
+            else if (node.IsLibrary)
+            {
+                foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(node.Path))
+                    Globals.Add(entry.Key, entry.Value);
+            }
             else
             {
                 Interpreter inter = new Interpreter(false);
