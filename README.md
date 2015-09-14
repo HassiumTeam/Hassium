@@ -26,4 +26,4 @@ every single function in Hassium. These files within contain a comment
 that explains what the program does and show the usage of functions.
 
 Any other questions can be directed to myself at misiriansoft@gmail.com
-or on irc.int0x10.com:6697 as Reagan.
+or on irc.int0x10.com:6697 as Reagan, or to zdimension at zippedfire (@) free.fr or on irc.int0x10.com:6697 as zdimension.
