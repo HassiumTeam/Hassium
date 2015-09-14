@@ -1004,6 +1004,7 @@ namespace Hassium.Interpreter
         {
             if (node.IsModule)
             {
+                Console.WriteLine("mod");
                 switch (node.Path.ToLower())
                 {
                     case "io":

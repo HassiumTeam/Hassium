@@ -301,7 +301,7 @@ namespace Hassium.Parser
 			if (parser.MatchToken(TokenType.Identifier))
 			{
 				path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                ret = new UseNode(parser.codePos, path, "", true, false, true);
+                ret = new UseNode(parser.codePos, path, "", true, true, false);
 			}
 			else
 			{
@@ -313,10 +313,15 @@ namespace Hassium.Parser
 					global = false;
 					name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
 				}
+
                 if (path.EndsWith(".dll"))
+                {
                     ret = new UseNode(parser.codePos, path, name, global, false, true);
+                }
                 else
-				    ret = new UseNode(parser.codePos, path, name, global, false);
+                {
+                    ret = new UseNode(parser.codePos, path, name, global, false, false);
+                }
 			}
 			parser.ExpectToken(TokenType.EndOfLine);
 			return ret;
