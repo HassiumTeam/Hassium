@@ -19,16 +19,6 @@ namespace Hassium
 {
 	public static class HassiumInterpreter
 	{
-		public static string LibPath = "";
-		public static bool IsLinux
-		{
-			get
-			{
-				int p = (int) Environment.OSVersion.Platform;
-				return (p == 4) || (p == 6) || (p == 128);
-			}
-		}
-
 		private static bool disableTryCatch = true; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
 
 		private static class options

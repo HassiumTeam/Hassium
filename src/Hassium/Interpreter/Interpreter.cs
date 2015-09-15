@@ -14,6 +14,7 @@ using Hassium.HassiumObjects.Conversion;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Types;
+using Hassium.HassiumObjects.Debug;
 using Hassium.Lexer;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
@@ -114,7 +115,7 @@ namespace Hassium.Interpreter
             {"true", new HassiumBool(true)},
             {"false", new HassiumBool(false)},
             {"Convert", new HassiumConvert()},
-            {"Console", new HassiumConsole() },
+            {"Console", new HassiumConsole()},
             {"null", null},
         };
 
@@ -996,6 +997,9 @@ namespace Hassium.Interpreter
                         break;
                     case "math":
                         Constants.Add("Math", new HassiumMath());
+                        break;
+                    case "debug":
+                        Constants.Add("Debug", new HassiumDebug());
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);

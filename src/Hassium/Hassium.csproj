@@ -147,6 +147,7 @@
     <Compile Include="Parser\Ast\UseNode.cs" />
     <Compile Include="HassiumObjects\MySql\HassiumSql.cs" />
     <Compile Include="HassiumObjects\MySql\HassiumSqlDataReader.cs" />
+    <Compile Include="HassiumObjects\Debug\HassiumDebug.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -167,4 +168,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\Debug\" />
+  </ItemGroup>
 </Project>

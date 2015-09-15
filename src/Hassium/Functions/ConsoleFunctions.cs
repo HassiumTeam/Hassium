@@ -15,7 +15,7 @@ namespace Hassium.Functions
         [IntFunc("print", -1)]
         public static HassiumObject Print(HassiumObject[] args)
         {
-            Console.WriteLine(String.Join("", args.Select(x => x.ToString())));
+            Console.Write(String.Join("", args.Select(x => x.ToString())));
             return null;
         }
         /// <summary>
