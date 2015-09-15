@@ -46,6 +46,68 @@ namespace Hassium.Interpreter
         private bool breakLoop;
         private bool returnFunc;
 
+        public HassiumObject GetVariable(string name, AstNode node)
+        {
+            if (Constants.ContainsKey(name))
+                return Constants[name];
+            if (CallStack.Count > 0 && CallStack.Peek().Locals.ContainsKey(name))
+                return CallStack.Peek().Locals[name];
+            if (Globals.ContainsKey(name))
+                return Globals[name];
+            else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
+        }
+
+        public bool HasVariable(string name, bool onlyglobal = false)
+        {
+            return onlyglobal
+                ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
+                : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
+                  (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)));
+        }
+
+        public void SetGlobalVariable(string name, HassiumObject value, AstNode node)
+        {
+            if (Constants.ContainsKey(name))
+                throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
+
+            Globals[name] = value;
+        }
+
+        public void SetLocalVariable(string name, HassiumObject value, AstNode node)
+        {
+            if (Constants.ContainsKey(name))
+                throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
+
+            if (CallStack.Count > 0)
+                CallStack.Peek().Locals[name] = value;
+        }
+
+        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false, bool onlyexist = false)
+        {
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
+                SetLocalVariable(name, value, node);
+            else
+                SetGlobalVariable(name, value, node);
+        }
+
+        public void FreeVariable(string name, AstNode node, bool forceglobal = false)
+        {
+            if (Constants.ContainsKey(name)) throw new ParseException("Can't delete internal constant '" + name + "'.", node);
+            if (forceglobal)
+            {
+                if (!Globals.ContainsKey(name)) throw new ParseException("The global variable '" + name + "' doesn't exist.", node);
+                Globals.Remove(name);
+            }
+            else
+            {
+                if (!HasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
+                if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
+                    CallStack.Peek().Locals.Remove(name);
+                else
+                    Globals.Remove(name);
+            }
+        }
+
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
             {"true", new HassiumBool(true)},
@@ -82,7 +144,7 @@ namespace Hassium.Interpreter
                 {
                     var fnode = ((FuncNode)node);
                     var scope = SymbolTable.ChildScopes[fnode.Name];
-                    Variables.SetVariable(this, fnode.Name, new HassiumMethod(this, fnode, scope, null), node);
+                    SetVariable(fnode.Name, new HassiumMethod(this, fnode, scope, null), node);
                 }
                 else if (node is ClassNode)
                 {
@@ -169,7 +231,7 @@ namespace Hassium.Interpreter
                             }
                         }
 
-                        Variables.SetVariable(this, call.Target.ToString(), theArray, call);
+                        SetVariable(call.Target.ToString(), theArray, call);
                     }
                     else if (evaluated is HassiumArray || evaluated is HassiumString)
                     {
@@ -202,7 +264,7 @@ namespace Hassium.Interpreter
                             theArray[arid] = theValue;
                         }
 
-                        Variables.SetVariable(this, call.Target.ToString(), theArray, call);
+                        SetVariable(call.Target.ToString(), theArray, call);
                     }
                     else
                     {
@@ -220,7 +282,7 @@ namespace Hassium.Interpreter
                 {
                     if (!(node.Left is IdentifierNode))
                         throw new ParseException("Not a valid identifier", node);
-                    Variables.SetVariable(this, node.Left.ToString(),
+                    SetVariable(node.Left.ToString(),
                         node.IsOpAssign
                         ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
                         : right, node);
@@ -576,12 +638,12 @@ namespace Hassium.Interpreter
                 {
                     valvname = needlestmt.ToString();
                 }
-                if (keyvname != "") Variables.SetVariable(this, keyvname, null, forStmt);
-                Variables.SetVariable(this, valvname, null, forStmt);
+                if (keyvname != "") SetVariable(keyvname, null, forStmt);
+                SetVariable(valvname, null, forStmt);
                 foreach (var needle in (keyvname != "" ? theArray : (IEnumerable)(theArray.Value.Select(x => x.Value))))
                 {
-                    if (keyvname != "") Variables.SetVariable(this, keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
-                    Variables.SetVariable(this, valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
+                    if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
+                    SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
                     if (breakLoop)
@@ -590,8 +652,8 @@ namespace Hassium.Interpreter
                         break;
                     }
                 }
-                if (keyvname != "") Variables.FreeVariable(this, keyvname, forStmt);
-                Variables.FreeVariable(this, valvname, forStmt);
+                if (keyvname != "") FreeVariable(keyvname, forStmt);
+                FreeVariable(valvname, forStmt);
                 inLoop--;
             }
             else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
@@ -605,10 +667,10 @@ namespace Hassium.Interpreter
 
                 var valvname = needlestmt.ToString();
 
-                Variables.SetVariable(this, valvname, null, forStmt);
+                SetVariable(valvname, null, forStmt);
                 foreach (var needle in theArray.Value)
                 {
-                    Variables.SetVariable(this, valvname, HassiumObject.ToHassiumObject(needle), forStmt);
+                    SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
                     if (breakLoop)
@@ -617,7 +679,7 @@ namespace Hassium.Interpreter
                         break;
                     }
                 }
-                Variables.FreeVariable(this, valvname, forStmt);
+                FreeVariable(valvname, forStmt);
                 inLoop--;
             }
             else
@@ -662,7 +724,7 @@ namespace Hassium.Interpreter
                 });
             }
             var hfunc = new HassiumMethod(this, fnode, stackFrame, null);
-            Variables.SetVariable(this, fnode.Name, hfunc, fnode);
+            SetVariable(fnode.Name, hfunc, fnode);
             return hfunc;
         }
 
@@ -681,12 +743,12 @@ namespace Hassium.Interpreter
                     dontEval = true;
                     target = new InternalFunction(args =>
                     {
-                        Variables.FreeVariable(this, args[0].ToString(), node);
+                        FreeVariable(args[0].ToString(), node);
                         return null;
                     }, 1);
                     break;
                 default:
-                    if ((!(call.Target is MemberAccessNode) && !Variables.HasVariable(this, call.Target.ToString())))
+                    if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))
                     {
                         throw new ParseException("Attempt to run a non-valid function", node);
                     }
@@ -729,7 +791,7 @@ namespace Hassium.Interpreter
 
         public object Accept(IdentifierNode node)
         {
-            return Variables.GetVariable(this, node.Identifier, node);
+            return GetVariable(node.Identifier, node);
         }
 
         public object Accept(IfNode node)
@@ -757,7 +819,7 @@ namespace Hassium.Interpreter
             {
                 theVar = (HassiumObject)fcall.Target.Visit(this);
             }
-            else theVar = Variables.GetVariable(this, fcall.Target.ToString(), node);
+            else theVar = GetVariable(fcall.Target.ToString(), node);
 
             if (theVar is InternalFunction)
             {
@@ -818,20 +880,20 @@ namespace Hassium.Interpreter
         public object Accept(MentalNode node)
         {
             var mnode = node;
-            if (!Variables.HasVariable(this, mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
-            var oldValue = Variables.GetVariable(this, mnode.Name, mnode);
+            if (!HasVariable(mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
+            var oldValue = GetVariable(mnode.Name, mnode);
             switch (mnode.OpType)
             {
                 case "++":
-                    Variables.SetVariable(this, mnode.Name, Convert.ToDouble((object)Variables.GetVariable(this, mnode.Name, mnode)) + 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
                     break;
                 case "--":
-                    Variables.SetVariable(this, mnode.Name, Convert.ToDouble((object)Variables.GetVariable(this, mnode.Name, mnode)) - 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
                     break;
                 default:
                     throw new ParseException("Unknown operation " + mnode.OpType, mnode);
             }
-            return mnode.IsBefore ? Variables.GetVariable(this, mnode.Name, mnode) : oldValue;
+            return mnode.IsBefore ? GetVariable(mnode.Name, mnode) : oldValue;
         }
 
         public object Accept(NumberNode node)
@@ -846,7 +908,7 @@ namespace Hassium.Interpreter
         public object Accept(PropertyNode node)
         {
             var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]), node.SetNode == null);
-            Variables.SetVariable(this, node.Name, prop, node);
+            SetVariable(node.Name, prop, node);
             return prop;
         }
 
@@ -965,7 +1027,7 @@ namespace Hassium.Interpreter
                     {
                         modu.SetAttribute(entry.Key, entry.Value);
                     }
-                    Variables.SetVariable(this, node.Name, modu, node);
+                    SetVariable(node.Name, modu, node);
                 }
             }
             return null;
