@@ -11,13 +11,6 @@ namespace Hassium.Functions
 {
     public class SystemFunctions : ILibrary
     {
-        [IntFunc("exit", new []{0,1})]
-        public static HassiumObject Exit(HassiumObject[] args)
-        {
-            HassiumInterpreter.CurrentInterpreter.Exit(args.Length > 0 ? args[0].HInt().Value : 0);
-
-            return null;
-        }
 
         [IntFunc("system", -1)]
         public static HassiumObject System(HassiumObject[] args)

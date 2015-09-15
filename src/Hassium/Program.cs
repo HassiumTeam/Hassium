@@ -90,18 +90,13 @@ namespace Hassium
 					Environment.Exit(-1);
 				}
 			}
-			
-		}
-
-		private static void OnEnd(int code)
-		{
-			if (options.ShowTime)
-			{
-				st.Stop();
-				Console.WriteLine("\n" + st.Elapsed + " seconds");
-			}
-			Environment.Exit(code);
-		}
+            if (options.ShowTime)
+            {
+                st.Stop();
+                Console.WriteLine("\n" + st.Elapsed + " seconds");
+            }
+            Environment.Exit(CurrentInterpreter.exitcode);
+        }
 
 		private static void printErr(string str, ParseException e)
 		{
@@ -169,9 +164,7 @@ namespace Hassium
 						throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
-
-			CurrentInterpreter.OnExited += OnEnd;
-            CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
+			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
 
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
 

@@ -33,8 +33,6 @@ namespace Hassium.Interpreter
         public AstNode Code { get; set; }
         public SymbolTable SymbolTable { get; set; }
 
-        public event ExitEventHandler OnExited;
-
         public int inFunc;
 
         private bool forceMain;
@@ -108,6 +106,9 @@ namespace Hassium.Interpreter
             }
         }
 
+        private bool exit = false;
+        public int exitcode = -1;
+
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
             {"true", new HassiumBool(true)},
@@ -163,6 +164,7 @@ namespace Hassium.Interpreter
             firstExecute = false;
             foreach (var node in Code.Children)
             {
+                if (exit) return;
                 if (node is FuncNode)
                 {
                     var fnode = ((FuncNode)node);
@@ -462,12 +464,6 @@ namespace Hassium.Interpreter
             return result;
         }
 
-        public void Exit(int code)
-        {
-            if(OnExited != null)
-                OnExited(code);
-        }
-
         public object Accept(Expression expr)
         {
             VisitSubnodes(expr);
@@ -741,11 +737,9 @@ namespace Hassium.Interpreter
             {
                 case "free":
                     dontEval = true;
-                    target = new InternalFunction(args =>
-                    {
-                        FreeVariable(args[0].ToString(), node);
-                        return null;
-                    }, 1);
+                    break;
+                case "exit":
+                    // internal interpreter functions
                     break;
                 default:
                     if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))
@@ -782,6 +776,18 @@ namespace Hassium.Interpreter
             {
                 arguments[x] = dontEval ? new HassiumString(call.Arguments.Children[x].ToString()) : (HassiumObject)call.Arguments.Children[x].Visit(this);
             }
+
+            switch (call.Target.ToString())
+            {
+                case "free":
+                    FreeVariable(arguments[0].ToString(), node);
+                    break;
+                case "exit":
+                    exit = true;
+                    exitcode = arguments.Length == 0 ? 0 : arguments[0].HInt().Value;
+                    return null;
+            }
+
             HassiumObject ret = target.Invoke(arguments);
             if (returnFunc)
                 returnFunc = false;
@@ -980,7 +986,6 @@ namespace Hassium.Interpreter
         {
             if (node.IsModule)
             {
-                Console.WriteLine("mod");
                 switch (node.Path.ToLower())
                 {
                     case "io":
@@ -1097,7 +1102,7 @@ namespace Hassium.Interpreter
             foreach(var nd in node.Children)
             {
                 nd.Visit(this);
-                if (continueLoop || breakLoop || returnFunc) break;
+                if (continueLoop || breakLoop || returnFunc || exit) break;
             }
         }
     }
