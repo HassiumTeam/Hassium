@@ -76,6 +76,8 @@ func main()
 	
 	
     exit(exitcode);
+	
+	println("This should not be seen, as there's an exit() line above.");
 }
 
 func opTests()
