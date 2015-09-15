@@ -171,7 +171,7 @@ namespace Hassium
 			}
 
 			CurrentInterpreter.OnExited += OnEnd;
-			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
+            Variables.SetVariable(CurrentInterpreter, "args", new HassiumArray(args.Skip(i + 1)), null, true);
 
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
 
