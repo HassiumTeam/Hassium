@@ -12,7 +12,6 @@ using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Random;
-using Hassium.HassiumObjects.Sql;
 using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
@@ -115,11 +114,7 @@ namespace Hassium.Functions
             return new HassiumStack(new Stack<HassiumObject>(args[0].HInt().Value));
         }
 
-        [IntFunc("Sql", true, 4)]
-        public static HassiumObject Sql(HassiumObject[] args)
-        {
-            return new HassiumSql(args[0].ToString(), args[1].ToString(), args[2].ToString(), args[3].ToString());
-        }
+        
 
         [IntFunc("Event", true, -1)]
         public static HassiumObject Event(HassiumObject[] args)

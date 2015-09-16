@@ -42,9 +42,6 @@
     <Reference Include="System" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
-    <Reference Include="MySql.Data">
-      <HintPath>bin\Debug\MySql.Data.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
@@ -145,12 +142,12 @@
     <Compile Include="HassiumObjects\HassiumClass.cs" />
     <Compile Include="HassiumObjects\Conversion\HassiumConvert.cs" />
     <Compile Include="Parser\Ast\UseNode.cs" />
-    <Compile Include="HassiumObjects\MySql\HassiumSql.cs" />
-    <Compile Include="HassiumObjects\MySql\HassiumSqlDataReader.cs" />
     <Compile Include="HassiumObjects\Interactive\HassiumDebug.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="HassiumObjects\Debug\" />
+  </ItemGroup>
   <ItemGroup />
   <ProjectExtensions>
     <MonoDevelop>
@@ -168,7 +165,5 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="HassiumObjects\Debug\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
