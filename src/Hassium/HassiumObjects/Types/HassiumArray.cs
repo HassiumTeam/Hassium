@@ -106,7 +106,7 @@ namespace Hassium.HassiumObjects.Types
         {
             HassiumObject[] objarr = Value;
             string separator = "";
-            if (args.Length > 1) separator = args[0].ToString();
+            if (args.Length > 0) separator = args[0].ToString();
 
             return string.Join(separator, objarr.Select(x => x.ToString()));
         }
@@ -133,7 +133,13 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
-            return Value.Select(x => args[0].Invoke(x)).ToArray();
+            var a = new List<HassiumObject>();
+            foreach(HassiumObject v in Value)
+            {
+                var ta = (args[0].Invoke(new HassiumObject[] {v}));
+                a.Add(ta);
+            }
+                return a.ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)

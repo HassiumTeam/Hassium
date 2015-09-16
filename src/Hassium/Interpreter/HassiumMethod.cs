@@ -75,6 +75,7 @@ namespace Hassium.Interpreter
 
             if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
             Interpreter.inFunc--;
+            Interpreter.returnFunc = false;
             return ret;
         }
 

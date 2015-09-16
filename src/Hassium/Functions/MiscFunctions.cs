@@ -43,8 +43,8 @@ namespace Hassium.Functions
             return from == to
                 ? new[] { from }.Select(x => new HassiumDouble(x)).ToArray()
                 : (to < from
-                    ? Enumerable.Range((int)to, (int)from).Reverse().ToArray()
-                    : Enumerable.Range((int)from, (int)to)).Select(x => new HassiumDouble(x)).ToArray();
+                    ? Enumerable.Range((int)to, (int)from).Reverse().Cast<HassiumDouble>().ToArray()
+                    : Enumerable.Range((int)from, (int)to).Select(x => new HassiumDouble(x)).ToArray());
         }
 
         [IntFunc("runtimecall", -1)]

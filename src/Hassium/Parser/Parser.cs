@@ -414,12 +414,12 @@ namespace Hassium.Parser
 
 			parser.ExpectToken(TokenType.Identifier, "for");
 			parser.ExpectToken(TokenType.Parentheses, "(");
-            AstNode left = new CodeBlock(parser.codePos);
-		    AstNode predicate = new CodeBlock(parser.codePos);
-		    AstNode right = new CodeBlock(parser.codePos);
+			AstNode left = new CodeBlock(parser.codePos);
+			AstNode predicate = new CodeBlock(parser.codePos);
+			AstNode right = new CodeBlock(parser.codePos);
 			if(!parser.AcceptToken(TokenType.EndOfLine, ";")) left = ParseStatement(parser);
-            if(!parser.AcceptToken(TokenType.EndOfLine, ";")) predicate = ParseStatement(parser);
-            if (!parser.AcceptToken(TokenType.EndOfLine, ";")) right = ParseStatement(parser);
+			if(!parser.AcceptToken(TokenType.EndOfLine, ";")) predicate = ParseStatement(parser);
+			if (!parser.AcceptToken(TokenType.EndOfLine, ";")) right = ParseStatement(parser);
 			parser.ExpectToken(TokenType.Parentheses, ")");
 			AstNode forBody = ParseStatement(parser);
 
@@ -827,7 +827,8 @@ namespace Hassium.Parser
 			}
 			else if(parser.AcceptToken(TokenType.Lambda, "=>"))
 			{
-				AstNode body = new ReturnNode(pos, ParseStatement(parser));
+				AstNode body = ParseStatement(parser);
+				if(!(body is CodeBlock)) body = new ReturnNode(body.Position, body);
 
 				if (parser.AcceptToken(TokenType.EndOfLine)) parser.ExpectToken(TokenType.EndOfLine);
 
@@ -946,6 +947,7 @@ namespace Hassium.Parser
 				else if (parser.AcceptToken(TokenType.Dot, "."))
 				{
 					Token ident = parser.ExpectToken(TokenType.Identifier);
+
 					left = new MemberAccessNode(pos, left, ident.Value.ToString());
 				}
 				else
@@ -1006,10 +1008,10 @@ namespace Hassium.Parser
 
 			while (!parser.MatchToken(TokenType.Bracket, "]"))
 			{
-                if(!parser.AcceptToken(TokenType.Identifier, ":"))
-				    ret.Children.Add(ParseExpression(parser));
+				if(!parser.AcceptToken(TokenType.Identifier, ":"))
+					ret.Children.Add(ParseExpression(parser));
 			}
-            if(ret.Children.Count == 2 && ret.Children[1].ToString() == ":") throw new ParseException("Expected slice number", parser.codePos); 
+			if(ret.Children.Count == 2 && ret.Children[1].ToString() == ":") throw new ParseException("Expected slice number", parser.codePos); 
 			parser.ExpectToken(TokenType.Bracket, "]");
 
 			return ret;
@@ -1072,9 +1074,16 @@ namespace Hassium.Parser
 			int pos = parser.codePos;
 
 			parser.ExpectToken(TokenType.Identifier, "new");
-			var target = ParseStatement(parser);
-			parser.ExpectToken(TokenType.EndOfLine);
-			return new InstanceNode(pos, target);
+		    var target = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            AstNode res = new IdentifierNode(parser.codePos, target);
+            while(parser.AcceptToken(TokenType.Dot, "."))
+            {
+                res = new MemberAccessNode(parser.codePos, res, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+            }
+			parser.ExpectToken(TokenType.Parentheses, "(");
+			
+
+			return new InstanceNode(pos, new FunctionCallNode(parser.codePos, res, ParseArgList(parser)));
 		}
 
 		public static AstNode ParseLambda(Parser parser)

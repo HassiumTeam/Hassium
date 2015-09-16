@@ -43,14 +43,14 @@ namespace Hassium.Interpreter
         private int inLoop;
         private bool continueLoop;
         private bool breakLoop;
-        private bool returnFunc;
+        public bool returnFunc;
 
         public HassiumObject GetVariable(string name, AstNode node)
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
-            if (CallStack.Count > 0 && CallStack.Peek().Locals.ContainsKey(name))
-                return CallStack.Peek().Locals[name];
+            if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.ContainsKey(name)))
+                return CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name];
             if (Globals.ContainsKey(name))
                 return Globals[name];
             else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
@@ -61,7 +61,7 @@ namespace Hassium.Interpreter
             return onlyglobal
                 ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
                 : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
-                  (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)));
+                  (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))));
         }
 
         public void SetGlobalVariable(string name, HassiumObject value, AstNode node)
@@ -77,13 +77,19 @@ namespace Hassium.Interpreter
             if (Constants.ContainsKey(name))
                 throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
 
+
+
             if (CallStack.Count > 0)
-                CallStack.Peek().Locals[name] = value;
+            {
+                if (CallStack.Any(x => x.Locals.ContainsKey(name)))
+                    CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name] = value;
+                else CallStack.Peek().Locals[name] = value;
+            }
         }
 
         public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false, bool onlyexist = false)
         {
-            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name))) && !Globals.ContainsKey(name))
+            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name)))) && !Globals.ContainsKey(name))
                 SetLocalVariable(name, value, node);
             else
                 SetGlobalVariable(name, value, node);
@@ -100,8 +106,8 @@ namespace Hassium.Interpreter
             else
             {
                 if (!HasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
-                if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Peek().Locals.ContainsKey(name)))
-                    CallStack.Peek().Locals.Remove(name);
+                if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))))
+                    CallStack.First(x => x.Locals.ContainsKey(name) || x.Scope.Symbols.Contains(name)).Locals.Remove(name);
                 else
                     Globals.Remove(name);
             }
@@ -796,7 +802,7 @@ namespace Hassium.Interpreter
             HassiumObject ret = target.Invoke(arguments);
             if (returnFunc)
                 returnFunc = false;
-            if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
+            //if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
             return ret;
         }
 

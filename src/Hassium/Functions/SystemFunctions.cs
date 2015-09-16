@@ -40,7 +40,7 @@ namespace Hassium.Functions
             switch (args.Length)
             {
                 case 1:
-                    return DateTime.Now.ToString(args[0].ToString());
+                    return new HassiumDate(DateTime.Now).toString(new HassiumObject[] {args[0].ToString()});
                 case 3:
                     return new HassiumDate(new DateTime(args[0].HDouble().ValueInt, args[1].HDouble().ValueInt,
                         args[2].HDouble().ValueInt));
@@ -59,13 +59,19 @@ namespace Hassium.Functions
             return args.Length == 2 ? new HassiumDate(DateTime.ParseExact(args[0].ToString(), args[1].ToString(), CultureInfo.InvariantCulture)) : new HassiumDate(DateTime.Parse(args[0].ToString()));
         }
 
-        [IntFunc("time", new []{0, 3})]
+        [IntFunc("time", new []{0, 1, 3})]
         public static HassiumObject Time(HassiumObject[] args)
         {
-            return args.Length == 0
-                ? new HassiumDate(DateTime.Now)
-                : new HassiumDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+            switch(args.Length)
+            {
+                case 0:
+                    return new HassiumDate(DateTime.Now);
+                case 1:
+                    return new HassiumDate(DateTime.Now).toString(new HassiumObject[] { args[0].ToString() });
+                default:
+                    return new HassiumDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                     args[0].HDouble().ValueInt, args[1].HDouble().ValueInt, args[2].HDouble().ValueInt));
+            }
         }
 
         [IntFunc("currentUser", 0)]

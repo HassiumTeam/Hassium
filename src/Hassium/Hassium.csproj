@@ -47,7 +47,7 @@
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\HassiumModule.cs" />
-    <Compile Include="HassiumObjects\HassiumProperty.cs" />
+    <Compile Include="Interpreter\HassiumProperty.cs" />
     <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />
     <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
     <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
