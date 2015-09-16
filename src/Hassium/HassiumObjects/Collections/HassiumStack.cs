@@ -13,6 +13,7 @@ namespace Hassium.HassiumObjects.Collections
         {
             Value = value;
             Attributes.Add("clear", new InternalFunction(clear, 0));
+            Attributes.Add("count", new InternalFunction(count, 0));
             Attributes.Add("contains", new InternalFunction(contains, 1));
             Attributes.Add("peek", new InternalFunction(peek, 0));
             Attributes.Add("pop", new InternalFunction(pop, 0));
@@ -23,6 +24,11 @@ namespace Hassium.HassiumObjects.Collections
         {
             Value.Clear();
             return null;
+        }
+
+        private HassiumObject count(HassiumObject[] args)
+        {
+            return new HassiumDouble(Value.Count);
         }
 
         private HassiumObject contains(HassiumObject[] args)

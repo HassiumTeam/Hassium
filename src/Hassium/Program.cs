@@ -150,16 +150,17 @@ namespace Hassium
 					case "--repl":
 						enterInteractive();
 						break;
-					default:
-						if (File.Exists(args[i]))
-						{
-							options.FilePath = args[i];
-							break;
-						}
-						else
+                    default:
+                        if (File.Exists(args[i]))
+                        {
+                            options.FilePath = args[i];
+                            goto setArgs;
+                        }
+                        else
 							throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
+            setArgs:
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
 
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture; // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
