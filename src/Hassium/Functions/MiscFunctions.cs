@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Hassium.HassiumObjects;
@@ -20,11 +21,33 @@ namespace Hassium.Functions
 		{
 			throw new Exception(String.Join("", args.Cast<object>()));
 		}
-	
-		
 
+        [IntFunc("range", new []{2,3})]
+        public static HassiumObject Range(HassiumObject[] args)
+        {
+            var from = args[0].HDouble().Value;
+            var to = args[1].HDouble().Value;
+            if (args.Length > 2)
+            {
+                var step = args[2].HDouble().Value;
+                var list = new List<double>();
+                if (step == 0) throw new Exception("The step for range() can't be zero");
+                if (to < from && step > 0) step = -step;
+                if (to > from && step < 0) step = -step;
+                for (var i = from; step < 0 ? i > to : i < to; i += step)
+                {
+                    list.Add(i);
+                }
+                return list.ToArray().Select(x => new HassiumDouble(x)).ToArray();
+            }
+            return from == to
+                ? new[] { from }.Select(x => new HassiumDouble(x)).ToArray()
+                : (to < from
+                    ? Enumerable.Range((int)to, (int)from).Reverse().ToArray()
+                    : Enumerable.Range((int)from, (int)to)).Select(x => new HassiumDouble(x)).ToArray();
+        }
 
-		[IntFunc("runtimecall", -1)]
+        [IntFunc("runtimecall", -1)]
 		public static HassiumObject RuntimeCall(HassiumObject[] args)
 		{
 			string fullpath = args[0].ToString();

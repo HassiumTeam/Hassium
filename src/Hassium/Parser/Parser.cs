@@ -414,9 +414,12 @@ namespace Hassium.Parser
 
 			parser.ExpectToken(TokenType.Identifier, "for");
 			parser.ExpectToken(TokenType.Parentheses, "(");
-			AstNode left = ParseStatement(parser);
-			AstNode predicate = ParseStatement(parser);
-			AstNode right = ParseStatement(parser);
+            AstNode left = new CodeBlock(parser.codePos);
+		    AstNode predicate = new CodeBlock(parser.codePos);
+		    AstNode right = new CodeBlock(parser.codePos);
+			if(!parser.AcceptToken(TokenType.EndOfLine, ";")) left = ParseStatement(parser);
+            if(!parser.AcceptToken(TokenType.EndOfLine, ";")) predicate = ParseStatement(parser);
+            if (!parser.AcceptToken(TokenType.EndOfLine, ";")) right = ParseStatement(parser);
 			parser.ExpectToken(TokenType.Parentheses, ")");
 			AstNode forBody = ParseStatement(parser);
 

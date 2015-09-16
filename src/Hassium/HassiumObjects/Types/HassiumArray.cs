@@ -168,29 +168,7 @@ namespace Hassium.HassiumObjects.Types
 
         #endregion
 
-        public static HassiumObject Range(HassiumObject[] args)
-        {
-            var from = args[0].HDouble().Value;
-            var to = args[1].HDouble().Value;
-            if (args.Length > 2)
-            {
-                var step = args[2].HDouble().Value;
-                var list = new List<double>();
-                if (step == 0) throw new Exception("The step for range() can't be zero");
-                if (to < from && step > 0) step = -step;
-                if (to > from && step < 0) step = -step;
-                for (var i = from; step < 0 ? i > to : i < to; i += step)
-                {
-                    list.Add(i);
-                }
-                return list.ToArray().Select(x => new HassiumDouble(x)).ToArray();
-            }
-            return from == to
-                ? new[] {from}.Select(x => new HassiumDouble(x)).ToArray()
-                : (to < from
-                    ? Enumerable.Range((int) to, (int) from).Reverse().ToArray()
-                    : Enumerable.Range((int) from, (int) to)).Select(x => new HassiumDouble(x)).ToArray();
-        }
+        
     }
 }
 

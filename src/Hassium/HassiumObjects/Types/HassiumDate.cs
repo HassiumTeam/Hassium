@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -18,6 +20,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("second", new InternalFunction(x => Value.Second, 0, true));
             Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), 0, true));
             Attributes.Add("timeStamp", new InternalFunction(x => GetTimestamp(new HassiumObject[]{}), 0, true));
+            Attributes.Add("toString", new InternalFunction(toString, new []{0,1}));
         }
 
         public HassiumObject GetTimestamp(HassiumObject[] args)
@@ -28,6 +31,29 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public HassiumObject toString(HassiumObject[] args)
+        {
+            if(args.Length == 0) return ToString();
+            else
+            {
+                var final = new List<string>();
+                var n = DateTime.Now;
+                foreach(var cur in args[0].ToString())
+                {
+                    string ta = "";
+                    switch(cur)
+                    {
+                        case 'd':
+                            ta = n.Day.ToString().PadLeft(2, '0');
+                            break;
+
+                    }
+                    final.Add(ta);
+                }
+                return string.Join(" ", final);
+            }
         }
 
         public static HassiumDate operator +(HassiumDate d1, HassiumDate d2)
