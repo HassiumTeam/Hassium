@@ -90,13 +90,13 @@ namespace Hassium
 					Environment.Exit(-1);
 				}
 			}
-            if (options.ShowTime)
-            {
-                st.Stop();
-                Console.WriteLine("\n" + st.Elapsed + " seconds");
-            }
-            Environment.Exit(CurrentInterpreter.exitcode);
-        }
+			if (options.ShowTime)
+			{
+				st.Stop();
+				Console.WriteLine("\n" + st.Elapsed + " seconds");
+			}
+			Environment.Exit(CurrentInterpreter.exitcode);
+		}
 
 		private static void printErr(string str, ParseException e)
 		{
@@ -129,39 +129,45 @@ namespace Hassium
 			int i = 0;
 			for (i = 0; i < args.Count; i++)
 			{
-				if (args[i].StartsWith("-h") || args[i].StartsWith("--help"))
+				switch(args[i].ToLower())
 				{
-					Console.WriteLine(
-						"Hassium " + GetVersion() + "\n\n" + 
-						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" + 
+					case "-h":
+					case "--help":
+						Console.WriteLine(
+						"Hassium " + GetVersion() + "\n\n" +
+						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" +
 						"Arguments:\n" +
 						"-h  --help\tShows this help\n" +
 						"-d  --debug\tDisplays tokens from lexer\n" +
 						"-r  --repl\tEnters interactive interpreter (enabled by default)\n" +
 						"-t  --time\tShow the running time of the program");
-					Environment.Exit(0);
-				}
-				else if (args[i].StartsWith("-d") || args[i].StartsWith("--debug"))
-				{
-					options.Debug = true;
-				}
-				else if (args[i].StartsWith("-t") || args[i].StartsWith("--time"))
-				{
-					options.ShowTime = true;
-				}
-				else if (args[i].StartsWith("-r") || args[i].StartsWith("--repl"))
-				{
-					enterInteractive();
-				}
-				else
-				{
-					if (File.Exists(args[i]))
-					{
-						options.FilePath = args[i];
+						Environment.Exit(0);
 						break;
-					}
-					else
-						throw new ArgumentException("The file " + args[i] + " does not exist.");
+					case "-v":
+					case "--version":
+						Console.WriteLine("Hassium " + GetVersion());
+						Environment.Exit(0);
+						break;
+					case "-d":
+					case "--debug":
+						options.Debug = true;
+						break;
+					case "-t":
+					case "--time":
+						options.ShowTime = true;
+						break;
+					case "-r":
+					case "--repl":
+						enterInteractive();
+						break;
+					default:
+						if (File.Exists(args[i]))
+						{
+							options.FilePath = args[i];
+							break;
+						}
+						else
+							throw new ArgumentException("The file " + args[i] + " does not exist.");
 				}
 			}
 			CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
@@ -176,16 +182,19 @@ namespace Hassium
 		{
 			Console.WriteLine("Hassium REPL " + GetVersion() + " - (c) HassiumTeam 2015");
 			CurrentInterpreter = new Interpreter.Interpreter(false);
-			while (true)
+            if (options.ShowTime)
+            {
+                st = new Stopwatch();
+            }
+            while (true)
 			{
 				Console.Write("> ");
 				string input = Console.ReadLine();
-				Stopwatch st = null;
-				if (options.ShowTime)
-				{
-					st = new Stopwatch();
-					st.Start();
-				}
+				if(options.ShowTime)
+                {
+                    st.Reset();
+                    st.Start();
+                }
 				List<Token> tokens = new Lexer.Lexer(input).Tokenize();
 				if (options.Debug)
 					Debug.Debug.PrintTokens(tokens);

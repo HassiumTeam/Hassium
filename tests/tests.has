@@ -126,6 +126,8 @@ func opTests()
 	# operator precedence
 	assert(8 * 2 ** 3 - 4 * 4 / 8.0 == 62, "operator precedence 1");
 	assert(4 * 4 / 8.0 == 2, "operator precedence 2");
+	
+	assert(0b1111_1111_1111_1111 == 0xFFFF, "binary / hex / digit separator");
 
     ab = null;
     cd = 5;
@@ -381,6 +383,7 @@ func arrayTests()
 	{
 		theArr2[] = x;
 	}	
+	assert(theArr[1 : 3] == ["def", 123, 456], "array slice");
 	assert(theArr2.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string after foreach");
 
 	theDict = ["abc" : 123, 456 : "ghi", "jkl" : 789];

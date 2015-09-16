@@ -301,7 +301,7 @@ namespace Hassium.Parser
 			if (parser.MatchToken(TokenType.Identifier))
 			{
 				path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                ret = new UseNode(parser.codePos, path, "", true, true, false);
+				ret = new UseNode(parser.codePos, path, "", true, true, false);
 			}
 			else
 			{
@@ -314,14 +314,14 @@ namespace Hassium.Parser
 					name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
 				}
 
-                if (path.EndsWith(".dll"))
-                {
-                    ret = new UseNode(parser.codePos, path, name, global, false, true);
-                }
-                else
-                {
-                    ret = new UseNode(parser.codePos, path, name, global, false, false);
-                }
+				if (path.EndsWith(".dll"))
+				{
+					ret = new UseNode(parser.codePos, path, name, global, false, true);
+				}
+				else
+				{
+					ret = new UseNode(parser.codePos, path, name, global, false, false);
+				}
 			}
 			parser.ExpectToken(TokenType.EndOfLine);
 			return ret;
@@ -1003,8 +1003,10 @@ namespace Hassium.Parser
 
 			while (!parser.MatchToken(TokenType.Bracket, "]"))
 			{
-				ret.Children.Add(ParseExpression(parser));
+                if(!parser.AcceptToken(TokenType.Identifier, ":"))
+				    ret.Children.Add(ParseExpression(parser));
 			}
+            if(ret.Children.Count == 2 && ret.Children[1].ToString() == ":") throw new ParseException("Expected slice number", parser.codePos); 
 			parser.ExpectToken(TokenType.Bracket, "]");
 
 			return ret;

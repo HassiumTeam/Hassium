@@ -304,9 +304,20 @@ namespace Hassium.Lexer
         private Token ScanNumber()
         {
             var stringBuilder = new StringBuilder();
-            while (HasChar() && (char.IsDigit(PeekChar()) || IsHexChar(PeekChar()) || "xo.".Contains(PeekChar())))
+            bool separator = false;
+            while (HasChar() && (char.IsDigit(PeekChar()) || IsHexChar(PeekChar()) || "xo._".Contains(PeekChar())))
             {
-                stringBuilder.Append(ReadChar().ToString());
+                var cchar = ReadChar();
+                if (cchar == '_')
+                {
+                    if (separator) break;
+                    separator = true;
+                }
+                else
+                {
+                    separator = false;
+                    stringBuilder.Append(cchar);
+                }
             }
             var finalNumber = stringBuilder.ToString();
             var baseName = "";

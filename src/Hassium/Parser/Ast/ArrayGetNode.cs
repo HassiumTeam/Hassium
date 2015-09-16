@@ -20,10 +20,17 @@ namespace Hassium.Parser.Ast
             }
         }
 
+        public AstNode Count
+        {
+            get { return Children[2]; }
+        }
+
         public ArrayGetNode(int position, AstNode target, AstNode arguments) : base(position)
         {
             Children.Add(target);
             Children.Add(arguments);
+            if (arguments.Children.Count == 2) Children.Add(arguments.Children[1]);
+            else Children.Add(new NumberNode(position, 1, true));
         }
 
         public override object Visit(IVisitor visitor)

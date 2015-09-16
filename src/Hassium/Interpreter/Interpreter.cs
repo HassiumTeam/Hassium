@@ -520,14 +520,18 @@ namespace Hassium.Interpreter
                 else
                     append = true;
 
+                int count = (HassiumObject)call.Count.Visit(this);
+
                 if (append)
                     return theArray.Value.Last();
                 else
                 {
-                    if (arid >= theArray.Value.Length)
+                    if (arid >= theArray.Value.Length || arid + count > theArray.Value.Length)
                         throw new ParseException("The index is out of the bounds of the array", call);
 
-                    return theArray[arid];
+                    var r = theArray.Value.Skip(arid).Take(count).ToArray();
+                    return r.Length == 1 ? r[0] : r.ToArray();
+                    //return theArray[arid];
                 }
             }
             else
