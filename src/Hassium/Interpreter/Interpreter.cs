@@ -1,20 +1,29 @@
 // Credit to contributer Zdimension, who has done countless amounts of work on this project
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
+using Hassium.HassiumObjects.Collections;
 using Hassium.HassiumObjects.Conversion;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Types;
 using Hassium.HassiumObjects.Debug;
+using Hassium.HassiumObjects.Networking;
+using Hassium.HassiumObjects.Networking.HTTP;
+using Hassium.HassiumObjects.Text;
 using Hassium.Lexer;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
@@ -1004,12 +1013,32 @@ namespace Hassium.Interpreter
                         Constants.Add("Directory", new HassiumDirectory());
                         Constants.Add("Path", new HassiumPath());
                         Constants.Add("IO", new HassiumIO());
+                        Constants.Add("StreamWriter", new InternalFunction(x => new HassiumStreamWriter(x[0] is HassiumStream ? new StreamWriter(((HassiumStream)x[0]).Value) : new StreamWriter(x[0].ToString())), 1, false, true));
+                        Constants.Add("StreamReader", new InternalFunction(x => new HassiumStreamReader(x[0] is HassiumStream ? new StreamReader(((HassiumStream)x[0]).Value) : new StreamReader(x[0].ToString())), 1, false, true));
+                        Constants.Add("FileStream", new InternalFunction(x => new HassiumFileStream(new FileStream(x[0].ToString(), FileMode.OpenOrCreate)), 1, false, true));
+                        Constants.Add("BinaryWriter", new InternalFunction(x => new HassiumBinaryWriter(new BinaryWriter(((HassiumStream)x[0]).Value)), 1, false, true));
+                        Constants.Add("BinaryReader", new InternalFunction(x => new HassiumBinaryReader(new BinaryReader(((HassiumStream)x[0]).Value)), 1, false, true));
                         break;
                     case "math":
                         Constants.Add("Math", new HassiumMath());
                         break;
                     case "debug":
                         Constants.Add("Debug", new HassiumDebug());
+                        break;
+                    case "collections":
+                        Constants.Add("Stack", new InternalFunction(x => new HassiumStack(new Stack<HassiumObject>(x[0].HInt().Value)), 1, false, true));
+                        break;
+                    case "net":
+                    case "network":
+                        Constants.Add("WebClient", new InternalFunction(x => new HassiumWebClient(new WebClient()), 0, false, true));
+                        Constants.Add("TcpClient", new InternalFunction(x => new HassiumTcpClient(new TcpClient()), 0, false, true));
+                        Constants.Add("NetworkStream", new InternalFunction(x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket)x[0]).Value)), 1, false, true));
+                        Constants.Add("HttpListener", new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
+                        break;
+                    case "text":
+                        Constants.Add("StringBuilder", new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
+                        Constants.Add("TextWriter", new InternalFunction(x => new HassiumTextWriter(File.CreateText(x[0].ToString())), 1, false, true));
+                        Constants.Add("TextReader", new InternalFunction(x => new HassiumTextReader(File.OpenText(x[0].ToString())), 1, false, true));
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);
