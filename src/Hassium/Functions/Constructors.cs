@@ -114,12 +114,8 @@ namespace Hassium.Functions
             return new HassiumStack(new Stack<HassiumObject>(args[0].HInt().Value));
         }
 
-        [IntFunc("List", true, 0)]
-        public static HassiumObject List(HassiumObject[] args)
-        {
-            return new HassiumList();
-        }
-       
+        
+
         [IntFunc("Event", true, -1)]
         public static HassiumObject Event(HassiumObject[] args)
         {
