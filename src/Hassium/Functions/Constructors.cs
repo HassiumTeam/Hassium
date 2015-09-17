@@ -13,6 +13,7 @@ using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Random;
 using Hassium.HassiumObjects.Text;
+using Hassium.HassiumObjects.Drawing;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
 

@@ -21,6 +21,7 @@ using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Types;
 using Hassium.HassiumObjects.Debug;
+using Hassium.HassiumObjects.Drawing;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Text;
@@ -1039,6 +1040,11 @@ namespace Hassium.Interpreter
                         Constants.Add("StringBuilder", new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
                         Constants.Add("TextWriter", new InternalFunction(x => new HassiumTextWriter(File.CreateText(x[0].ToString())), 1, false, true));
                         Constants.Add("TextReader", new InternalFunction(x => new HassiumTextReader(File.OpenText(x[0].ToString())), 1, false, true));
+                        break;
+                    case "drawing":
+                        Constants.Add("Color", new InternalFunction(x => new HassiumColor(x), new []{1, 3, 4, 5}, false, true));
+                        Constants.Add("Bitmap", new InternalFunction(x => new HassiumBitmap(x), new []{1,2}, false, true));
+                        Constants.Add("Image", new InternalFunction(x => new HassiumImage(x[0].HString()), 1, false, true));
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);

@@ -77,6 +77,8 @@ namespace Hassium.Semantics
 				}
 
 			}
+
+            if(theNode.Children.Count > 0) foreach(AstNode x in theNode.Children) checkout(x);
 		}
 
 		private void analyseLocalCode(AstNode theNode)

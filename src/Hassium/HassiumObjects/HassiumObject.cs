@@ -32,7 +32,12 @@ namespace Hassium.HassiumObjects
             {
                 ((HassiumMethod) value).SelfReference = this;
             }
-            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty) ((HassiumProperty) _attributes[name]).SetValue(this, value);
+            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
+            {
+                var prop = ((HassiumProperty)_attributes[name]);
+                if(prop.ReadOnly) throw new ParseException("The property " + prop.Name + " is read-only", -1);
+                prop.SetValue(this, value);
+            }
             else _attributes[name] = value;
         }
 

@@ -133,13 +133,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
-            var a = new List<HassiumObject>();
-            foreach(HassiumObject v in Value)
-            {
-                var ta = (args[0].Invoke(new HassiumObject[] {v}));
-                a.Add(ta);
-            }
-                return a.ToArray();
+            return Value.Select(v => (args[0].Invoke(v))).ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)

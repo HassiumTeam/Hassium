@@ -16,6 +16,13 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("length", new InternalFunction(x => Value.Count, 0, true));
             Attributes.Add("toString", new InternalFunction(tostring, 0));
 
+            Attributes.Add("keys",
+                new HassiumProperty("keys",
+                x => new HassiumArray(Value.Select(y => y.Key)), x => null, true));
+            Attributes.Add("values",
+                new HassiumProperty("values", 
+                x => new HassiumArray(Value.Select(y => y.Value)), x => null, true));
+
             Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
             Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));
             Attributes.Add("contains", new InternalFunction(ArrayContains, 1));
