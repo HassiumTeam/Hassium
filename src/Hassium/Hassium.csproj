@@ -40,12 +40,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumBitmap.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumColor.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumImage.cs" />
     <Compile Include="HassiumObjects\HassiumModule.cs" />
     <Compile Include="Interpreter\HassiumProperty.cs" />
     <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />

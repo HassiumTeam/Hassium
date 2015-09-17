@@ -11,6 +11,8 @@ namespace Hassium.HassiumObjects.Debug
     {
         public HassiumDebug()
         {
+            Attributes.Add("localVariables", new InternalFunction(localVariables, 0));
+            Attributes.Add("globalVariables", new InternalFunction(globalVariables, 0));
         }
 
         private HassiumObject localVariables(HassiumObject[] args)

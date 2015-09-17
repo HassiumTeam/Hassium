@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Collections;
+using Hassium.HassiumObjects.Drawing;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
@@ -114,7 +115,23 @@ namespace Hassium.Functions
             return new HassiumStack(new Stack<HassiumObject>(args[0].HInt().Value));
         }
 
-        
+        [IntFunc("Bitmap", true, -1)]
+        public static HassiumObject Bitmap(HassiumObject[] args)
+        {
+            return new HassiumBitmap(args);
+        }
+
+        [IntFunc("Image", true, 1)]
+        public static HassiumObject Image(HassiumObject[] args)
+        {
+            return new HassiumImage(((HassiumString)args[0]));
+        }
+
+        [IntFunc("Color", true, 1)]
+        public static HassiumObject Color(HassiumObject[] args)
+        {
+            return new HassiumColor(((HassiumString)args[0]));
+        }
 
         [IntFunc("Event", true, -1)]
         public static HassiumObject Event(HassiumObject[] args)
