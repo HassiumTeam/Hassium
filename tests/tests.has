@@ -416,27 +416,43 @@ func drawingTests()
 	assert(clr.red == 43, "color.red");
 	assert(clr.green == 225, "color.green");
 	assert(clr.blue == 206, "color.blue");
-	assert(clr.toCmyk().values.select(x => Math.round(x, 2)) == [0.81, 0, 0.08, 0.12], "color CMYK conversion");
-	assert(clr.toHsl().values.select(x => Math.round(x, 1)) == [173.7, 75.2, 52.5], "color HSL conversion");
-	assert(clr.toHsv().values.select(x => Math.round(x, 1)) == [173.7, 80.9, 88.2], "color HSV (HSB) conversion");
+	
+	assert(clr.toHsl().values.select(x => Math.round(x, 1)) == [173.7, 75.2, 52.5], "color to HSL conversion");
+	assert(clr.toHsv().values.select(x => Math.round(x, 1)) == [173.7, 80.9, 88.2], "color to HSV conversion");
+	assert(clr.toCmyk().values.select(x => Math.round(x, 2)) == [80.89, 0, 8.44, 11.76], "color to CMYK conversion");
+	assert(clr.toCmy().values.select(x => Math.round(x, 2)) == [83.14, 11.76, 19.22], "color to CMY conversion");
+	assert(clr.toXyz().values.select(x => Math.round(x, 2)) == [39.06, 58.82, 67.69], "color to XYZ conversion");
+	assert(clr.toLab().values.select(x => Math.round(x, 2)) == [81.19, -47.19, -3.12], "color to CIE-LAB conversion");
+	assert(clr.toLch().values.select(x => Math.round(x, 2)) == [81.19, 47.29, 183.78], "color to CIE-LCH conversion");
+	assert(clr.toLuv().values.select(x => Math.round(x, 2)) == [81.19, -62.15, 2.6], "color to CIE-LUV conversion");
+	assert(clr.toHunterLab().values.select(x => Math.round(x, 2)) == [76.69, -43.30, 1.36], "color to Hunter-Lab conversion");
 	
 	clr = new Color("hsl", 173.7, 75.2, 52.5);
-	println();
-	assert(clr.red == 43, "color.red after converting from hsl");
-	assert(clr.green == 225, "color.green after converting from hsl");
-	assert(clr.blue == 206, "color.blue after converting from hsl");
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from HSL");
 	
 	clr = new Color("hsv", 173.7, 80.9, 88.2);
-	println();
-	assert(clr.red == 43, "color.red after converting from hsv");
-	assert(clr.green == 225, "color.green after converting from hsv");
-	assert(clr.blue == 206, "color.blue after converting from hsv");
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from HSV");
 	
-	$clr = new Color("cmyk", 81, 0, 8, 12);
-	println();
-	assert(clr.red == 43, "color.red after converting from cmyk");
-	assert(clr.green == 225, "color.green after converting from cmyk");
-	assert(clr.blue == 206, "color.blue after converting from cmyk");$
+	clr = new Color("cmyk", 80.89, 0, 8.44, 11.76);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CMYK");
+	
+	clr = new Color("cmy", 83.14, 11.76, 19.22);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CMY");
+	
+	clr = new Color("xyz", 39.06, 58.82, 67.69);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from XYZ");
+	
+	clr = new Color("lab", 81.19, -47.19, -3.12);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LAB");
+	
+	clr = new Color("lch", 81.192692, 47.294403, 183.780079);
+	assert(clr.red == 44 && clr.green == 224 && clr.blue == 205, "color after converting from CIE-LCH");
+	
+	clr = new Color("luv", 81.19, -62.15, 2.6);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LUV");
+	
+	clr = new Color("hunter-lab", 76.69, -43.30, 1.36);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from Hunter-Lab");
 	
 	println();
 	println("End of drawing module tests");
