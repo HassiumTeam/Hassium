@@ -1,3 +1,5 @@
+# type function returns the string type of data
+
 func main() {
 	println(type("this is a string"));
 	println(type(420));
