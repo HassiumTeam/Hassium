@@ -1,3 +1,5 @@
+# Functions can be called recursively
+
 func factorial (n) {
 	if(n == 0) { 
 		return 1;

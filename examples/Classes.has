@@ -1,8 +1,12 @@
+# Define classes with class <className>
+
 class Dog {
+	# Constructors are called new
 	func new(name) {
 		this.Name = name;
 	}
 
+	# Instance methods must have the argument this
 	func showName(this) {
 		println(this.Name);
 	}
@@ -12,6 +16,7 @@ class Dog {
 	}
 }
 
+# You can extend classes with class <newClassName> : <otherClassName>
 class BigDog : Dog {
 	func new() {
 	}
