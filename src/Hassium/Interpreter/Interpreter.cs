@@ -1017,10 +1017,14 @@ namespace Hassium.Interpreter
             if (node.IsModule)
             {
                 string mname = node.Path.ToLower();
-                var forbidden = new List<string> {"io", "net", "network"};
-                if(forbidden.Contains(mname))
+                if (HassiumInterpreter.options.Secure)
                 {
-                    throw new ParseException("The module " + mname + " is cannot be imported for security reasons.", node);
+                    var forbidden = new List<string> {"io", "net", "network"};
+                    if (forbidden.Contains(mname))
+                    {
+                        throw new ParseException(
+                            "The module " + mname + " is cannot be imported for security reasons.", node);
+                    }
                 }
                 switch (mname)
                 {
