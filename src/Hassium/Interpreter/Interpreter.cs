@@ -771,6 +771,15 @@ namespace Hassium.Interpreter
                     break;
             }
 
+            if(HassiumInterpreter.options.Secure)
+            {
+                var forbidden = new List<string> {"system", "runtimecall", "input"};
+                if(forbidden.Contains(call.Target.ToString()))
+                {
+                    throw new ParseException("The " + call.Target + "() function is disabled for security reasons.", node);
+                }
+            }
+
 
             if (target is InternalFunction && (target as InternalFunction).IsConstructor)
                 throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
@@ -1007,7 +1016,13 @@ namespace Hassium.Interpreter
         {
             if (node.IsModule)
             {
-                switch (node.Path.ToLower())
+                string mname = node.Path.ToLower();
+                var forbidden = new List<string> {"io", "net", "network"};
+                if(forbidden.Contains(mname))
+                {
+                    throw new ParseException("The module " + mname + " is cannot be imported for security reasons.", node);
+                }
+                switch (mname)
                 {
                     case "io":
                         Constants.Add("File", new HassiumFile());
@@ -1038,8 +1053,15 @@ namespace Hassium.Interpreter
                         break;
                     case "text":
                         Constants.Add("StringBuilder", new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
-                        Constants.Add("TextWriter", new InternalFunction(x => new HassiumTextWriter(File.CreateText(x[0].ToString())), 1, false, true));
-                        Constants.Add("TextReader", new InternalFunction(x => new HassiumTextReader(File.OpenText(x[0].ToString())), 1, false, true));
+                        if (!HassiumInterpreter.options.Secure)
+                        {
+                            Constants.Add("TextWriter",
+                                new InternalFunction(x => new HassiumTextWriter(File.CreateText(x[0].ToString())), 1,
+                                    false, true));
+                            Constants.Add("TextReader",
+                                new InternalFunction(x => new HassiumTextReader(File.OpenText(x[0].ToString())), 1,
+                                    false, true));
+                        }
                         break;
                     case "drawing":
                         Constants.Add("Color", new InternalFunction(x => new HassiumColor(x), new []{1, 3, 4, 5}, false, true));

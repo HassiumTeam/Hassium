@@ -295,13 +295,15 @@ namespace Hassium.Parser
 
 		public static AstNode ParseUse(Parser parser)
 		{
+		    int pos = parser.codePos;
+
 			parser.ExpectToken(TokenType.Identifier, "use");
 			string path = "";
 			UseNode ret = null;
 			if (parser.MatchToken(TokenType.Identifier))
 			{
 				path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-				ret = new UseNode(parser.codePos, path, "", true, true, false);
+				ret = new UseNode(pos, path, "", true, true, false);
 			}
 			else
 			{
@@ -316,11 +318,11 @@ namespace Hassium.Parser
 
 				if (path.EndsWith(".dll"))
 				{
-					ret = new UseNode(parser.codePos, path, name, global, false, true);
+					ret = new UseNode(pos, path, name, global, false, true);
 				}
 				else
 				{
-					ret = new UseNode(parser.codePos, path, name, global, false, false);
+					ret = new UseNode(pos, path, name, global, false, false);
 				}
 			}
 			parser.ExpectToken(TokenType.EndOfLine);

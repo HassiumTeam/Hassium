@@ -19,15 +19,16 @@ namespace Hassium
 {
 	public static class HassiumInterpreter
 	{
-		private static bool disableTryCatch = true; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
+		private static bool disableTryCatch = false; // set this to true so run the code without exception handling, so the debugger can stop at exceptions
 
-		private static class options
+		public static class options
 		{
 			public static bool Debug;
 			public static string FilePath = "";
 			public static bool ShowTime;
 			public static string Code = "";
             public static bool Golf;
+		    public static bool Secure;
 		}
 
 		public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
@@ -135,11 +136,12 @@ namespace Hassium
 						"Hassium " + GetVersion() + "\n\n" +
 						"USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" +
 						"Arguments:\n" +
-						"-h  --help\tShows this help\n" +
-						"-d  --debug\tDisplays tokens from lexer\n" +
-						"-r  --repl\tEnters interactive interpreter (enabled by default)\n" +
-                        "-g  --golf\tShrinks the code down as best it can\n" +
-						"-t  --time\tShow the running time of the program");
+						"-h    --help\tShows this help\n" +
+						"-d    --debug\tDisplays tokens from lexer\n" +
+						"-r    --repl\tEnters interactive interpreter (enabled by default)\n" +
+                        "-g    --golf\tShrinks the code down as best it can\n" +
+						"-t    --time\tShow the running time of the program\n" +
+                        "-s    --safe\tEnables the secure mode (disable dangerous functions)");
 						Environment.Exit(0);
 						break;
 					case "-v":
@@ -159,6 +161,10 @@ namespace Hassium
                     case "--golf":
                         options.Golf = true;
                         break;
+                    case "-s":
+                    case "--secure":
+				        options.Secure = true;
+				        break;
 					case "-r":
 					case "--repl":
 						enterInteractive();
