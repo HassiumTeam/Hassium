@@ -25,11 +25,7 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("move", new InternalFunction(Move, 2));
             Attributes.Add("rename", new InternalFunction(Rename, 2));
             Attributes.Add("deleteFile", new InternalFunction(DeleteFile, 1));
-            Attributes.Add("deleteDirectory", new InternalFunction(DeleteDirectory, 1));
-            Attributes.Add("getDirectory", new InternalFunction(GetDirectory, 0));
-            Attributes.Add("setDirectory", new InternalFunction(SetDirectory, 1));
-            Attributes.Add("getFiles", new InternalFunction(GetFiles, 1));
-            Attributes.Add("getDirectories", new InternalFunction(GetDirectories, 1));
+            
             Attributes.Add("createText", new InternalFunction(createText, 1));
             Attributes.Add("openText", new InternalFunction(openText, 1));
             Attributes.Add("getCreationTime", new InternalFunction(getCreationTime, 1));
@@ -104,32 +100,7 @@ namespace Hassium.HassiumObjects.IO
             return null;
         }
 
-        public HassiumObject DeleteDirectory(HassiumObject[] args)
-        {
-            Directory.Delete(args[0].ToString());
-            return null;
-        }
-
-        public HassiumObject GetDirectory(HassiumObject[] args)
-        {
-            return Directory.GetCurrentDirectory();
-        }
-
-        public HassiumObject SetDirectory(HassiumObject[] args)
-        {
-            Directory.SetCurrentDirectory(args[0].ToString());
-            return null;
-        }
-
-        public HassiumObject GetFiles(HassiumObject[] args)
-        {
-            return Directory.GetFiles(args[0].ToString());
-        }
-
-        public HassiumObject GetDirectories(HassiumObject[] args)
-        {
-            return Directory.GetDirectories(args[0].ToString());
-        }
+        
 
         public HassiumObject createText(HassiumObject[] args)
         {
