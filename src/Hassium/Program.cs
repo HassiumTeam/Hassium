@@ -27,6 +27,7 @@ namespace Hassium
 			public static string FilePath = "";
 			public static bool ShowTime;
 			public static string Code = "";
+            public static bool Golf;
 		}
 
 		public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
@@ -41,6 +42,13 @@ namespace Hassium
 				st = new Stopwatch();
 				st.Start();
 			}
+            if (options.Golf)
+            {
+                Lexer.Lexer lex = new Lexer.Lexer(options.Code);
+                lex.Tokenize();
+                Console.WriteLine(lex.Trimmed);
+                Environment.Exit(0);
+            }
 			if (disableTryCatch)
 			{
 				List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
@@ -130,6 +138,7 @@ namespace Hassium
 						"-h  --help\tShows this help\n" +
 						"-d  --debug\tDisplays tokens from lexer\n" +
 						"-r  --repl\tEnters interactive interpreter (enabled by default)\n" +
+                        "-g  --golf\tShrinks the code down as best it can\n" +
 						"-t  --time\tShow the running time of the program");
 						Environment.Exit(0);
 						break;
@@ -146,6 +155,10 @@ namespace Hassium
 					case "--time":
 						options.ShowTime = true;
 						break;
+                    case "-g":
+                    case "--golf":
+                        options.Golf = true;
+                        break;
 					case "-r":
 					case "--repl":
 						enterInteractive();

@@ -13,6 +13,7 @@ namespace Hassium.Lexer
     public class Lexer
     {
         private string code;
+        public string Trimmed = "";
         private int position;
         private List<Token> result = new List<Token>();
 
@@ -52,10 +53,24 @@ namespace Hassium.Lexer
             if ("0123456789".Contains(current))
             {
                 Add(ScanNumber());
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString();
+                }
+                catch
+                {
+                }
             }
             else if (char.IsLetter(current) || "_".Contains(current))
             {
                 Add(ScanIdentifier());
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString() + " ";
+                }
+                catch
+                {
+                }
             }
             else
             {
@@ -183,6 +198,14 @@ namespace Hassium.Lexer
                             "Unexpected " + PeekChar() + " encountered at position " + position));
                         ReadChar();
                         break;
+                }
+
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString();
+                }
+                catch
+                {
                 }
             }
 
