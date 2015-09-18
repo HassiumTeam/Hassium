@@ -53,12 +53,24 @@ namespace Hassium.Lexer
             if ("0123456789".Contains(current))
             {
                 Add(ScanNumber());
-                Trimmed += result[result.Count - 1].Value.ToString();
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString();
+                }
+                catch
+                {
+                }
             }
             else if (char.IsLetter(current) || "_".Contains(current))
             {
                 Add(ScanIdentifier());
-                Trimmed += result[result.Count - 1].Value.ToString() + " ";
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString() + " ";
+                }
+                catch
+                {
+                }
             }
             else
             {
@@ -188,7 +200,13 @@ namespace Hassium.Lexer
                         break;
                 }
 
-                Trimmed += result[result.Count - 1].Value.ToString();
+                try
+                {
+                    Trimmed += result[result.Count - 1].Value.ToString();
+                }
+                catch
+                {
+                }
             }
 
             EatWhiteSpaces();
