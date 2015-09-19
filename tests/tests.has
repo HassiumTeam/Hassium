@@ -74,14 +74,7 @@ func main()
     println(passed + " test" + (passed == 1 ? "" : "s") + " passed");
     println(failed + " test" + (failed == 1 ? "" : "s") + " failed");
     println("--- END TESTS FOR HASSIUM ---");
-    
-	use debug;
-	printarr(Debug.localVariables);
-	println(Debug.fileName);
-	println(Debug.secureMode);
-	println(date("c"));
-	
-	
+
     exit(exitcode);
 	
 	println("This should not be seen, as there's an exit() line above.");

@@ -1112,6 +1112,7 @@ namespace Hassium.Interpreter
                         break;
                     case "text":
                         Constants.Add("StringBuilder", new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
+                        Constants.Add("Encoding", new InternalFunction(x => new HassiumEncoding(x[0].HString()), 1, false, true));
                         if (!HassiumInterpreter.options.Secure)
                         {
                             Constants.Add("TextWriter",
