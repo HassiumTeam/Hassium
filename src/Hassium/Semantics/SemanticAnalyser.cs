@@ -25,7 +25,7 @@ namespace Hassium.Semantics
 
 		private void checkout(AstNode theNode)
 		{
-		    if (theNode == null || theNode.Children == null) return;
+			if (theNode == null || theNode.Children == null) return;
 
 			foreach (AstNode node in theNode.Children)
 			{
@@ -51,21 +51,21 @@ namespace Hassium.Semantics
 				{
 					FuncNode fnode = ((FuncNode)node);
 					currentLocalScope = new LocalScope();
-					result.ChildScopes[fnode.Name] = currentLocalScope;
+					result.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count] = currentLocalScope;
 					currentLocalScope.Symbols.AddRange(fnode.Parameters);
 					analyseLocalCode(fnode.Body);
 				}
 				else if (node is ClassNode)
 				{
-				    var cnode = ((ClassNode)node);
+					var cnode = ((ClassNode)node);
 
-				    foreach (var fnode in cnode.Children[0].Children.OfType<FuncNode>().Select(pnode => pnode))
-				    {
-				        currentLocalScope = new LocalScope();
-				        result.ChildScopes[cnode.Name + "." + fnode.Name] = currentLocalScope;
-				        currentLocalScope.Symbols.AddRange(fnode.Parameters);
-				        analyseLocalCode(fnode.Body);
-				    }
+					foreach (var fnode in cnode.Children[0].Children.OfType<FuncNode>().Select(pnode => pnode))
+					{
+						currentLocalScope = new LocalScope();
+						result.ChildScopes[cnode.Name + "." + fnode.Name] = currentLocalScope;
+						currentLocalScope.Symbols.AddRange(fnode.Parameters);
+						analyseLocalCode(fnode.Body);
+					}
 				}
 				else if (node is LambdaFuncNode)
 				{
@@ -78,7 +78,7 @@ namespace Hassium.Semantics
 
 			}
 
-            if(theNode.Children.Count > 0) foreach(AstNode x in theNode.Children) checkout(x);
+			if(theNode.Children.Count > 0) foreach(AstNode x in theNode.Children) checkout(x);
 		}
 
 		private void analyseLocalCode(AstNode theNode)

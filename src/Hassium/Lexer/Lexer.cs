@@ -397,6 +397,11 @@ namespace Hassium.Lexer
             {
                 stringBuilder.Append(ReadChar());
             }
+            if(PeekChar() == '`' && "0123456789i".Contains(PeekChar(1)))
+            {
+                stringBuilder.Append(ReadChar());
+                stringBuilder.Append(ReadChar());
+            }
             var finalId = stringBuilder.ToString();
             if (finalId.Contains('.')) throw new ParseException("Invalid character in Identifier: . (period)", position);
             return new Token(TokenType.Identifier, finalId);

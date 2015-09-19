@@ -61,8 +61,13 @@ namespace Hassium.Interpreter
                 return Constants[name];
             if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.ContainsKey(name)))
                 return CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name];
+            if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.Any(y => y.Key.StartsWith(name))))
+                return CallStack.First(x => x.Locals.Any(y => y.Key.StartsWith(name))).Locals.First(x => x.Key.StartsWith(name)).Value;
             if (Globals.ContainsKey(name))
                 return Globals[name];
+            if (Globals.Any(x => x.Key.StartsWith(name)))
+                return Globals.First(x => x.Key.StartsWith(name)).Value;
+
             else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
         }
 
@@ -123,6 +128,28 @@ namespace Hassium.Interpreter
             }
         }
 
+        public bool HasFunction(string name, int parm, AstNode node)
+        {
+            return HasVariable(name + "`" + parm) || HasVariable(name + "`i") || HasVariable(name);
+        }
+
+        public IFunction GetFunction(string name, int parm, AstNode node)
+        {
+            if (HasVariable(name + "`" + parm))
+            {
+                return GetVariable(name + "`" + parm, node);
+            }
+            if (HasVariable(name + "`i"))
+            {
+                return GetVariable(name + "`i", node);
+            }
+            if(HasVariable(name))
+            {
+                return GetVariable(name, node);
+            }
+            throw new ParseException("The function " + name + " doesn't exist", node);
+        }
+
         private bool exit = false;
         public int exitcode = -1;
 
@@ -161,8 +188,8 @@ namespace Hassium.Interpreter
                 if (node is FuncNode && firstExecute)
                 {
                     var fnode = ((FuncNode)node);
-                    var scope = SymbolTable.ChildScopes[fnode.Name];
-                    SetVariable(fnode.Name, new HassiumMethod(this, fnode, scope, null), node);
+                    var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
+                    SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null), node);
                 }
                 else if (node is ClassNode)
                 {
@@ -172,7 +199,7 @@ namespace Hassium.Interpreter
                 }
             }
 
-            if (!Globals.ContainsKey("main") && forceMain)
+            if (!Globals.ContainsKey("main`0") && forceMain)
             {
                 Console.WriteLine("Could not execute, no main entry point of program!");
                 Environment.Exit(-1);
@@ -185,7 +212,7 @@ namespace Hassium.Interpreter
                 if (node is FuncNode)
                 {
                     var fnode = ((FuncNode)node);
-                    var scope = SymbolTable.ChildScopes[fnode.Name];
+                    var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
                     {
@@ -468,12 +495,17 @@ namespace Hassium.Interpreter
                         var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
                         foreach (var theattr in theattr1.OfType<IntFunc>())
                         {
-                            var rfunc = new InternalFunction(
+                            for(int i=0; i < theattr.Arguments.Length; i++)
+                            {
+                                var rfunc = new InternalFunction(
                                 (HassiumFunctionDelegate)
-                                Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc), theattr.Arguments, false, theattr.Constructor);
+                                Delegate.CreateDelegate(typeof(HassiumFunctionDelegate), myfunc), theattr.Arguments[i], false, theattr.Constructor);
+                                int an = theattr.Arguments[i];
+                                result.Add(theattr.Name + "`" + (an == -1 ? "i" : an.ToString()), rfunc);
+                                if (theattr.Alias != "") result.Add(theattr.Alias + "`" + (an == -1 ? "i" : an.ToString()), rfunc);
+                            }
 
-                            result.Add(theattr.Name, rfunc);
-                            if (theattr.Alias != "") result.Add(theattr.Alias, rfunc);
+                            
                         }
                     }
                 }
@@ -730,7 +762,7 @@ namespace Hassium.Interpreter
         public object Accept(FuncNode node)
         {
             var fnode = node;
-            var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name]);
+            var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count]);
             if (CallStack.Count > 0)
             {
                 stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
@@ -741,9 +773,11 @@ namespace Hassium.Interpreter
                 });
             }
             var hfunc = new HassiumMethod(this, fnode, stackFrame, null);
-            SetVariable(fnode.Name, hfunc, fnode);
+            SetVariable(fnode.Name + "`" + fnode.Parameters.Count, hfunc, fnode);
             return hfunc;
         }
+
+
 
         public object Accept(FunctionCallNode node)
         {
@@ -763,11 +797,30 @@ namespace Hassium.Interpreter
                     // internal interpreter functions
                     break;
                 default:
-                    if ((!(call.Target is MemberAccessNode) && !HasVariable(call.Target.ToString())))
+                    if ((!(call.Target is MemberAccessNode) &&
+                         !HasFunction(call.Target.ToString(), call.Arguments.Children.Count, node)))
                     {
-                        throw new ParseException("Attempt to run a non-valid function", node);
+                        throw new ParseException("The function " + call.Target + " doesn't exist", node);
                     }
-                    target = (HassiumObject) call.Target.Visit(this);
+                    if (call.Target is MemberAccessNode)
+                    {
+                        var man = (MemberAccessNode) call.Target;
+                        var targ = (HassiumObject)man.Left.Visit(this);
+                        if(targ.Attributes.ContainsKey(man.Member + "`" + call.Arguments.Children.Count))
+                        {
+                            target = targ.GetAttribute(man.Member + "`" + call.Arguments.Children.Count, node.Position);
+                        }
+                        else if(targ.Attributes.ContainsKey(man.Member))
+                        {
+                            target = targ.GetAttribute(man.Member, node.Position);
+                        }
+                        else
+                        {
+                            throw new ParseException("The function " + man.Member + " doesn't exist for the object " + man.Left, node);
+                        }
+                    }
+                    else
+                        target = GetFunction(call.Target.ToString(), call.Arguments.Children.Count, node);
                     break;
             }
 
@@ -811,12 +864,14 @@ namespace Hassium.Interpreter
             {
                 case "free":
                     FreeVariable(arguments[0].ToString(), node);
-                    break;
+                    return null;
                 case "exit":
                     exit = true;
                     exitcode = arguments.Length == 0 ? 0 : arguments[0].HInt().Value;
                     return null;
             }
+
+
 
             HassiumObject ret = target.Invoke(arguments);
             if (returnFunc)
@@ -855,7 +910,7 @@ namespace Hassium.Interpreter
             {
                 theVar = (HassiumObject)fcall.Target.Visit(this);
             }
-            else theVar = GetVariable(fcall.Target.ToString(), node);
+            else theVar = (HassiumObject)GetFunction(fcall.Target.ToString(), fcall.Arguments.Children.Count, node);
 
             if (theVar is InternalFunction)
             {
@@ -951,8 +1006,8 @@ namespace Hassium.Interpreter
         private HassiumObject GetPropVal(PropertyNode node, HassiumObject self)
         {
             var funcnode = new HassiumMethod(this,
-                new FuncNode(node.GetNode.Position, "__getprop__" + node.Name, new List<string> { "this" },
-                    node.GetNode.Body), SymbolTable.ChildScopes["__getprop__" + node.Name], self);
+                new FuncNode(node.GetNode.Position, "__getprop__" + node.Name + "`1", new List<string> { "this" },
+                    node.GetNode.Body), SymbolTable.ChildScopes["__getprop__" + node.Name + "`1"], self);
             return funcnode.Invoke();
         }
 
@@ -960,8 +1015,8 @@ namespace Hassium.Interpreter
         {
             if(node.SetNode == null) throw new ParseException("The property is read-only, it cannot be modified.", node);
             var funcnode = new HassiumMethod(this,
-                new FuncNode(node.SetNode.Position, "__setprop__" + node.Name, new List<string> {"this", "value"},
-                    node.SetNode.Body), SymbolTable.ChildScopes["__setprop__" + node.Name], self);
+                new FuncNode(node.SetNode.Position, "__setprop__" + node.Name + "`2", new List<string> {"this", "value"},
+                    node.SetNode.Body), SymbolTable.ChildScopes["__setprop__" + node.Name + "`2"], self);
             funcnode.Invoke(value);
             return null;
         }

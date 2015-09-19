@@ -71,8 +71,8 @@ func main()
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
     println();
-    println(passed + " tests passed");
-    println(failed + " tests failed");
+    println(passed + " test" + (passed == 1 ? "" : "s") + " passed");
+    println(failed + " test" + (failed == 1 ? "" : "s") + " failed");
     println("--- END TESTS FOR HASSIUM ---");
     
 	
