@@ -141,18 +141,14 @@ namespace Hassium
                         Console.WriteLine(
                             "Hassium " + GetVersion() + "\n\n" +
                             "USAGE: Hassium.exe [OPTIONS] [FILE] [ARGUMENTS]\n" +
-                            "Arguments:\n" +
+                            "Options:\n" +
                             "-h    --help\tShows this help\n" +
                             "-d    --debug\tDisplays tokens from lexer\n" +
                             "-r    --repl\tEnters interactive interpreter (enabled by default)\n" +
                             "-g    --golf\tShrinks the code down as best it can\n" +
                             "-t    --time\tShow the running time of the program\n" +
+                            "-v    --version\tShows the version and info of the Interpreter\n" +
                             "-s    --safe\tEnables the secure mode (disable dangerous functions)");
-                        Environment.Exit(0);
-                        break;
-                    case "-v":
-                    case "--version":
-                        Console.WriteLine("Hassium " + GetVersion());
                         Environment.Exit(0);
                         break;
                     case "-d":
@@ -174,6 +170,10 @@ namespace Hassium
                     case "-r":
                     case "--repl":
                         enterInteractive();
+                        break;
+                    case "-v":
+                    case "--version":
+                        displayInfo();
                         break;
                     default:
                         if (File.Exists(args[i]))
@@ -226,6 +226,15 @@ namespace Hassium
                     Console.WriteLine("\n" + st.Elapsed + " seconds");
                 }
             }
+        }
+
+        private static void displayInfo()
+        {
+            Console.WriteLine("Hassium Interpreter Version " + GetVersion());
+            Console.WriteLine("Creators: Jacob Misirian (MisirianSoft), Monsieur Z (zdimension), and Sloan Crandell (GruntTheDivine)");
+            Console.WriteLine("Official Website: http://HassiumLang.com");
+            Console.WriteLine("Find us on GitHub at https://github.com/HassiumTeam/Hassium");
+            Console.WriteLine("Hassium is open source and licensed under the GPLV2 License\n\n");
         }
     }
 }
