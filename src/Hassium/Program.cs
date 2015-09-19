@@ -107,8 +107,8 @@ namespace Hassium
             _x = _x.Take(line - 1);
             var column = idx - (string.Join("\n", _x).Length + (_x.Any() ? 1 : 0)) + 1;
             Console.WriteLine("Error at position " + idx + ", line " + line
-                              + " column " + column + ": " +
-                              e.Message);
+            + " column " + column + ": " +
+            e.Message);
             Console.WriteLine("   " + trimd);
             Console.WriteLine(new string(' ', 2 + (column - (res.Length - trimd.Length))) + '^');
         }
@@ -116,8 +116,8 @@ namespace Hassium
         public static string GetVersion()
         {
             return Assembly.GetExecutingAssembly().GetName().Version.Major + "." +
-                   Assembly.GetExecutingAssembly().GetName().Version.Minor + "." +
-                   Assembly.GetExecutingAssembly().GetName().Version.Build;
+            Assembly.GetExecutingAssembly().GetName().Version.Minor + "." +
+            Assembly.GetExecutingAssembly().GetName().Version.Build;
         }
 
         private static void preformSetUp(IList<string> args)
