@@ -129,8 +129,12 @@ namespace Hassium
 		    bool ff = false;
 			for (i = 0; i < args.Count; i++)
 			{
-			    if (ff) break;
-				switch(args[i].ToLower())
+			    if (ff)
+			    {
+			        i--;
+			        break;
+			    }
+			    switch(args[i].ToLower())
 				{
 					case "-h":
 					case "--help":
