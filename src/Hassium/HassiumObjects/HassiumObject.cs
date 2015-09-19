@@ -213,6 +213,7 @@ namespace Hassium.HassiumObjects
 
         public HassiumString HString()
         {
+            if (this is HassiumChar) return new HassiumString(((HassiumChar) this).Value.ToString());
             return (HassiumString) this;
         }
         #endregion

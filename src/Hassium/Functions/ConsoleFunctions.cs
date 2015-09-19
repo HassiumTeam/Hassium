@@ -45,9 +45,10 @@ namespace Hassium.Functions
         /// </summary>
         /// <param name="args">No parameters.</param>
         /// <returns>Nothing.</returns>
-        [IntFunc("input", 0)]
+        [IntFunc("input", new []{0,1,2})]
         public static HassiumObject Input(HassiumObject[] args)
         {
+            if (args.Length > 0 && args[0].HBool().Value) return Console.ReadKey(args.Length == 2 && args[1].HBool().Value).KeyChar;
             return Console.ReadLine();
         }
         /// <summary>

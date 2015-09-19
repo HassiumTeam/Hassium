@@ -50,7 +50,12 @@ namespace Hassium.HassiumObjects.Types
         {
             return new HassiumArray(s.Value);
         }
-          
+
+        public static implicit operator HassiumString(HassiumChar c)
+        {
+            return new HassiumString(c.ToString());
+        }
+
         private HassiumObject tolower(HassiumObject[] args)
         {
             return Value.ToLower();
