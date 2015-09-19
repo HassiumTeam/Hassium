@@ -1286,7 +1286,7 @@ namespace Hassium.Interpreter
         public object Accept(DoNode node)
         {
             var doStmt = node;
-            inLoop++;
+            isInLoop++;
             do
             {
                 doStmt.DoBody.Visit(this);
@@ -1299,7 +1299,7 @@ namespace Hassium.Interpreter
                 }
             } while ((HassiumBool)doStmt.Predicate.Visit(this));
 
-            inLoop--;
+            isInLoop--;
             return null;
         }
 
