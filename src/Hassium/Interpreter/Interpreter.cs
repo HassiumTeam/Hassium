@@ -921,10 +921,10 @@ namespace Hassium.Interpreter
             switch (mnode.OpType)
             {
                 case "++":
-                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToInt32((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
                     break;
                 case "--":
-                    SetVariable(mnode.Name, Convert.ToDouble((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToInt32((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
                     break;
                 default:
                     throw new ParseException("Unknown operation " + mnode.OpType, mnode);
