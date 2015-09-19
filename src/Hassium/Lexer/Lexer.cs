@@ -13,7 +13,6 @@ namespace Hassium.Lexer
     public class Lexer
     {
         private string code;
-        public string Trimmed = "";
         private int position;
         private List<Token> result = new List<Token>();
 
@@ -25,6 +24,52 @@ namespace Hassium.Lexer
         private void Add(Token token)
         {
             result.Add(new Token(token.TokenClass, token.Value, position - token.Value.ToString().Length));
+        }
+
+        public static string Minimize(string code)
+        {
+            string result = "";
+            bool isIdentifier = false;
+
+            for (int index = 0; index < code.Length; index++)
+            {
+                char c = code[index];
+
+                if((char.IsLetter(c) || "_".Contains(c)))
+                {
+                    isIdentifier = true;
+                    result += c;
+                    continue;
+                }
+                else if(" \r\n".Contains(c) && !isIdentifier)
+                {
+                    continue;
+                }
+                else
+                {
+                    isIdentifier = false;
+                }
+
+                if(c == '#')
+                {
+                    while(code[index++] != '\n')
+                    {
+                    }
+                    continue;
+                }
+
+                if(c == ';')
+                {
+                    if(index != 0 && !char.IsLetterOrDigit(code[index - 1]))
+                    {
+                        continue;
+                    }
+                }
+
+                result += c;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -53,24 +98,10 @@ namespace Hassium.Lexer
             if ("0123456789".Contains(current))
             {
                 Add(ScanNumber());
-                try
-                {
-                    Trimmed += result[result.Count - 1].Value.ToString();
-                }
-                catch
-                {
-                }
             }
             else if (char.IsLetter(current) || "_".Contains(current))
             {
                 Add(ScanIdentifier());
-                try
-                {
-                    Trimmed += result[result.Count - 1].Value.ToString() + " ";
-                }
-                catch
-                {
-                }
             }
             else
             {
@@ -198,14 +229,6 @@ namespace Hassium.Lexer
                             "Unexpected " + PeekChar() + " encountered at position " + position));
                         ReadChar();
                         break;
-                }
-
-                try
-                {
-                    Trimmed += result[result.Count - 1].Value.ToString();
-                }
-                catch
-                {
                 }
             }
 
