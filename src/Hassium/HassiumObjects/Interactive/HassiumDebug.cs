@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Hassium;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
@@ -11,44 +13,27 @@ namespace Hassium.HassiumObjects.Debug
     {
         public HassiumDebug()
         {
-            Attributes.Add("localVariables", new InternalFunction(localVariables, 0));
-            Attributes.Add("globalVariables", new InternalFunction(globalVariables, 0));
+            Attributes.Add("localVariables", new HassiumProperty("localVariables", x => localVariables(new HassiumObject[] {}), null, true));
+            Attributes.Add("globalVariables", new HassiumProperty("globalVariables", x => globalVariables(new HassiumObject[] { }), null, true));
+            Attributes.Add("fileName", new HassiumProperty("fileName", x => HassiumInterpreter.options.FilePath, null, true));
+            Attributes.Add("secureMode", new HassiumProperty("secureMode", x => HassiumInterpreter.options.Secure, null, true));
+            Attributes.Add("sourceCode", new HassiumProperty("sourceCode", x => HassiumInterpreter.options.Code, null, true));
         }
 
         private HassiumObject localVariables(HassiumObject[] args)
         {
-            Dictionary<HassiumString, HassiumString> res = new Dictionary<HassiumString, HassiumString>();
-            foreach (KeyValuePair<string, HassiumObject> entry in HassiumInterpreter.CurrentInterpreter.CallStack.Peek().Locals)
-            {
-                try
-                {
-                    res.Add(new HassiumString(entry.Key), new HassiumString(entry.Value.ToString()));
-                }
-                catch
-                {
-                    res.Add(new HassiumString(entry.Key), new HassiumString("Non-convertable format"));
-                }
-            }
-
-            return new HassiumDictionary(res);
+            return new HassiumDictionary(HassiumInterpreter.CurrentInterpreter.CallStack.SelectMany(x => x.Locals).ToDictionary(x => new HassiumString(x.Key), x => x.Value));
         }
 
         private HassiumObject globalVariables(HassiumObject[] args)
         {
-            Dictionary<HassiumString, HassiumString> res = new Dictionary<HassiumString, HassiumString>();
-            foreach (KeyValuePair<string, HassiumObject> entry in HassiumInterpreter.CurrentInterpreter.Globals)
+            var res = HassiumInterpreter.CurrentInterpreter.Globals;
+            HassiumInterpreter.CurrentInterpreter.Constants.All(x =>
             {
-                try
-                {
-                    res.Add(new HassiumString(entry.Key), new HassiumString(entry.Value.ToString()));
-                }
-                catch
-                {
-                    res.Add(new HassiumString(entry.Key), new HassiumString("Non-convertable format"));
-                }
-            }
-
-            return new HassiumDictionary(res);
+                res.Add(x.Key, x.Value);
+                return true;
+            });
+            return new HassiumDictionary(res.ToDictionary(x => new HassiumString(x.Key), x => x.Value));
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return "Dictionary { " +
-                   string.Join(", ", Value.Select(x => "[" + x.Key.ToString() + "] => " + x.Value.ToString())) + " }";
+                   string.Join(", ", Value.Select(x => "[" + x.Key.ToString() + "] => " + (x.Value ?? "null"))) + " }";
         }
 
         public HassiumDictionary(Dictionary<object, object> value)

@@ -15,7 +15,7 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return Convert.ToString(Value);
+            return Convert.ToString(Value).ToLower();
         }
 
         private HassiumObject tostring(HassiumObject[] args)

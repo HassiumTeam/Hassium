@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Hassium.Functions;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Types;
@@ -50,7 +51,7 @@ namespace Hassium.HassiumObjects
 
         public override string ToString()
         {
-            if (Attributes.ContainsKey("toString")) return GetAttribute("toString", -1).Invoke();
+            if (Attributes.Any(x => x.Key == "toString" && (x.Value is InternalFunction && ((InternalFunction)x.Value).Arguments.Length == 0))) return GetAttribute("toString", -1).Invoke();
             return "";
         }
 

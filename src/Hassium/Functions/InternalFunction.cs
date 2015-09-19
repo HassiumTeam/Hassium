@@ -36,7 +36,7 @@ namespace Hassium.Functions
 
         public override string ToString()
         {
-            return target.Method.Name;
+            return string.Format("[InternalFunction: {0}`{1}]", target.Method.Name, target.Method.GetParameters().Count());
         }
 
         public override HassiumObject Invoke(params HassiumObject[] args)

@@ -110,7 +110,7 @@ namespace Hassium.HassiumObjects.Types
                             ta = n.Hour > 12 ? "P.M." : "A.M.";
                             break;
                         case 'B':
-                            ta = ((int)((n.Day * 86400 + n.Hour * 3600 + n.Minute * 60 + n.Second) / 86.4)).ToString();
+                            ta = ((int)(n.ToUniversalTime().AddHours(1).TimeOfDay.TotalMilliseconds / 86400d)).ToString();
                             break;
                         case 'g':
                             ta = (n.Hour > 12 ? n.Hour - 12 : n.Hour).ToString();
@@ -137,6 +137,13 @@ namespace Hassium.HassiumObjects.Types
                             ta = n.IsDaylightSavingTime() ? "1" : "0";
                             break;
                         case 'c':
+                            var offset = TimeZoneInfo.Local.GetUtcOffset(n);
+                            var offstr = "";
+                            if (offset.ToString().StartsWith("-"))
+                                offstr = "-" + offset.ToString().Replace(":", "").Substring(1, 4);
+                            else
+                                offstr = "+" + offset.ToString().Replace(":", "").Substring(0, 4);
+                            ta = string.Format("{0}T{1}{2}", n.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), n.ToString("HH:mm:ss", CultureInfo.InvariantCulture), offstr);
                             break;
                         case 'r':
                             ta = n.ToString("ddd, dd MMM yyyy hh:mm:ss ") + "GMT";

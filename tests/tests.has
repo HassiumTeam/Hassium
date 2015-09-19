@@ -75,6 +75,11 @@ func main()
     println(failed + " test" + (failed == 1 ? "" : "s") + " failed");
     println("--- END TESTS FOR HASSIUM ---");
     
+	use debug;
+	printarr(Debug.localVariables);
+	println(Debug.fileName);
+	println(Debug.secureMode);
+	println(date("c"));
 	
 	
     exit(exitcode);

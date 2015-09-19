@@ -149,9 +149,7 @@
     <Compile Include="HassiumObjects\Interactive\HassiumDebug.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="HassiumObjects\Debug\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup />
   <ProjectExtensions>
     <MonoDevelop>
