@@ -1019,7 +1019,7 @@ namespace Hassium.Interpreter
                 string mname = node.Path.ToLower();
                 if (HassiumInterpreter.options.Secure)
                 {
-                    var forbidden = new List<string> {"io", "net", "network"};
+                    var forbidden = new List<string> {"io", "net", "network", "drawing"};
                     if (forbidden.Contains(mname))
                     {
                         throw new ParseException(
