@@ -162,7 +162,7 @@ namespace Hassium
                         options.Golf = true;
                         break;
                     case "-s":
-                    case "--secure":
+                    case "--safe":
 				        options.Secure = true;
 				        break;
 					case "-r":
