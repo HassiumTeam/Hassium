@@ -1,0 +1,116 @@
+use text;
+use collections;
+
+func main()
+{
+    code = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
+    execute(code);
+}
+
+func execute(cod)
+{
+    finalCode = [];
+	instructionPointer = 0;
+    targets = new Dictionary();
+	memory = [];
+	memoryPointer = 0;
+    
+    # init program, remove useless chars
+    foreach(chr in cod)
+    {
+        if("><+-.,[]".contains(chr))
+        {
+            finalCode[] = chr;
+        }
+    }
+    
+	# init loop targets
+    tmp = new Stack();
+    for(i = 0; i < finalCode.length; i++)
+    {
+        op = finalCode[i];
+        if(op == "[")
+        {
+            tmp.push(i);
+        }
+        if(op == "]")
+        {
+            if(tmp.length == 0)
+            {
+				println("ERROR: ] with no matching [");
+				input();
+				exit(-1);
+            }
+            target = tmp.pop();
+            targets[i] = target;
+            targets[target] = i;
+        }
+    }
+    if(tmp.length > 0)
+    {
+		println("ERROR: [ with no closing ]");
+		input();
+		exit(-1);
+    }
+    
+    
+    # init memory
+	memory = fillzero(1000);
+    
+    
+    # groovy baby
+    while(true)
+    {
+        op = finalCode[instructionPointer];
+        
+        executeOp(op);
+        
+        instructionPointer++;
+        
+        if(instructionPointer >= finalCode.length)
+        {
+			break;
+        }
+    }
+}
+
+func executeOp(op)
+{
+    if(op == "+")
+    {
+		memory[memoryPointer] = memory[memoryPointer] + 1;
+		if(memory[memoryPointer] > 255) memory[memoryPointer] = 0;
+    }
+    if(op == "-")
+    {
+		memory[memoryPointer] = memory[memoryPointer] - 1;
+		if(memory[memoryPointer] < 0) memory[memoryPointer] = 255;
+    }
+    if(op == ">")
+    {
+		memoryPointer++;
+		if(memoryPointer >= 1000) memoryPointer = 0;
+    }
+    if(op == "<")
+    {
+		memoryPointer--;
+		if(memoryPointer < 0) memoryPointer = 999;
+    }
+    if(op == "[")
+    {
+        if(memory[memoryPointer] == 0) instructionPointer = targets[instructionPointer];
+    }
+    if(op == "]")
+    {
+        instructionPointer = targets[instructionPointer] - 1;
+    }
+    if(op == ".")
+    {
+        print(new Encoding("UTF8").getChar(memory[memoryPointer]));
+    }
+    if(op == ",")
+    {
+		inp = input(true, true);
+		memory[memoryPointer] = new Encoding("UTF8").getByte(inp);
+    }
+}
