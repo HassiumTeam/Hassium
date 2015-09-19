@@ -126,8 +126,10 @@ namespace Hassium
 				enterInteractive();
 
 			int i = 0;
+		    bool ff = false;
 			for (i = 0; i < args.Count; i++)
 			{
+			    if (ff) break;
 				switch(args[i].ToLower())
 				{
 					case "-h":
@@ -173,6 +175,7 @@ namespace Hassium
 						if (File.Exists(args[i]))
 						{
 							options.FilePath = args[i];
+						    ff = true;
 							break;
 						}
 						else
