@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Hassium.HassiumObjects.Types
+﻿namespace Hassium.HassiumObjects.Types
 {
     public delegate HassiumObject HassiumEventHandler(HassiumObject[] args);
 
     public class HassiumEvent : HassiumObject
     {
         public event HassiumEventHandler EventHandler;
-
-        public HassiumEvent()
-        {
-        }
 
         public void AddHandler(HassiumEventHandler hand)
         {

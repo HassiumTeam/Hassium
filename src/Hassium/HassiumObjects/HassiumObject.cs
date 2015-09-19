@@ -211,7 +211,7 @@ namespace Hassium.HassiumObjects
 
         public HassiumDouble HDouble()
         {
-            if (this is HassiumInt) return new HassiumDouble(this.HInt().Value);
+            if (this is HassiumInt) return new HassiumDouble(HInt().Value);
             return (HassiumDouble) this;
         }
 

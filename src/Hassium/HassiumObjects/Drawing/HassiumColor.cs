@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Web.Configuration;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
@@ -13,9 +12,9 @@ namespace Hassium.HassiumObjects.Drawing
     {
         public Color Value { get; private set; }
 
-        public HassiumColor(HassiumObject[] args)
+        public HassiumColor(IList<HassiumObject> args)
         {
-            switch (args.Length)
+            switch (args.Count)
             {
                 case 0:
                     throw new ParseException("Not enough arguments for HassiumColor constructor", -1);
@@ -136,7 +135,7 @@ namespace Hassium.HassiumObjects.Drawing
                                 break;
                             case "rgbp":
                             case "rgbpercent":
-                                Value = args.Length == 5
+                                Value = args.Count == 5
                                     ? Color.FromArgb(Convert.ToInt32(args[1].HDouble().Value * 255),
                                         Convert.ToInt32(args[2].HDouble().Value * 255),
                                         Convert.ToInt32(args[3].HDouble().Value * 255),

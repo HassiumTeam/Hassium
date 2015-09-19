@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.IO
@@ -295,7 +292,7 @@ namespace Hassium.HassiumObjects.IO
             return null;
         }
 
-        private ConsoleColor parseColor(string color)
+        public ConsoleColor parseColor(string color)
         {
             switch (color)
             {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Hassium;
-using Hassium.Functions;
-using Hassium.HassiumObjects;
+﻿using System.Linq;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Debug
@@ -14,9 +8,9 @@ namespace Hassium.HassiumObjects.Debug
         public HassiumDebug()
         {
             Attributes.Add("localVariables",
-                new HassiumProperty("localVariables", x => localVariables(new HassiumObject[] {}), null, true));
+                new HassiumProperty("localVariables", x => localVariables(), null, true));
             Attributes.Add("globalVariables",
-                new HassiumProperty("globalVariables", x => globalVariables(new HassiumObject[] {}), null, true));
+                new HassiumProperty("globalVariables", x => globalVariables(), null, true));
             Attributes.Add("fileName",
                 new HassiumProperty("fileName", x => HassiumInterpreter.options.FilePath, null, true));
             Attributes.Add("secureMode",
@@ -25,7 +19,7 @@ namespace Hassium.HassiumObjects.Debug
                 new HassiumProperty("sourceCode", x => HassiumInterpreter.options.Code, null, true));
         }
 
-        private HassiumObject localVariables(HassiumObject[] args)
+        public HassiumObject localVariables()
         {
             return
                 new HassiumDictionary(
@@ -33,7 +27,7 @@ namespace Hassium.HassiumObjects.Debug
                         .ToDictionary(x => new HassiumString(x.Key), x => x.Value));
         }
 
-        private HassiumObject globalVariables(HassiumObject[] args)
+        public HassiumObject globalVariables()
         {
             var res = HassiumInterpreter.CurrentInterpreter.Globals;
             HassiumInterpreter.CurrentInterpreter.Constants.All(x =>

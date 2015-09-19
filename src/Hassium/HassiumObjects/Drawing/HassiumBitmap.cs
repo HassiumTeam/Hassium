@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using System.Linq;
-using System.Text;
-using Hassium;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
-
 
 namespace Hassium.HassiumObjects.Drawing
 {
@@ -27,7 +20,7 @@ namespace Hassium.HassiumObjects.Drawing
             else if (cctr[0] is HassiumDouble)
                 Value = new Bitmap(((HassiumDouble) cctr[0]).ValueInt, ((HassiumDouble) cctr[1]).ValueInt);
             else
-                throw new Exception("Unknown type " + cctr[0].GetType().ToString() + " in HassiumBitmap constructor");
+                throw new Exception("Unknown type " + cctr[0].GetType() + " in HassiumBitmap constructor");
 
             Attributes.Add("height", new HassiumProperty("height", x => Value.Height, x => null, true));
             Attributes.Add("width", new HassiumProperty("width", x => Value.Width, x => null, true));

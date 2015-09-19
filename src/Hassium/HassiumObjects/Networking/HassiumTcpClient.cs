@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using Hassium.Functions;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking
 {

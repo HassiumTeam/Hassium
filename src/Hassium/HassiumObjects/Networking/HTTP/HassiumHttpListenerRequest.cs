@@ -1,7 +1,6 @@
 using System.Net;
 using Hassium.Functions;
 using Hassium.HassiumObjects.IO;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {

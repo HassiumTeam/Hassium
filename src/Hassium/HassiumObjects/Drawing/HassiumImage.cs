@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using System.Linq;
-using System.Text;
-using Hassium;
+﻿using System.Drawing;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Drawing

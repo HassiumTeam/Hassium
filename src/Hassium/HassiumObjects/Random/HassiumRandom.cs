@@ -1,5 +1,4 @@
 ﻿using Hassium.Functions;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Random
 {

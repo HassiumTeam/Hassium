@@ -23,8 +23,7 @@ namespace Hassium.Parser.Ast
         {
             Children.Add(target);
             Children.Add(arguments);
-            if (arguments.Children.Count == 2) Children.Add(arguments.Children[1]);
-            else Children.Add(new NumberNode(position, 1, true));
+            Children.Add(arguments.Children.Count == 2 ? arguments.Children[1] : new NumberNode(position, 1, true));
         }
 
         public override object Visit(IVisitor visitor)

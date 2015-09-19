@@ -5,9 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
-using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
 using Hassium.Lexer;
@@ -19,8 +17,9 @@ namespace Hassium
 {
     public static class HassiumInterpreter
     {
-        private static bool disableTryCatch = false;
         // set this to true so run the code without exception handling, so the debugger can stop at exceptions
+        private static bool disableTryCatch = false;
+        
 
         public static class options
         {
@@ -188,8 +187,9 @@ namespace Hassium
             }
             CurrentInterpreter.SetVariable("args", new HassiumArray(args.Skip(i + 1)), null, true);
 
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             // zdimension: without that, decimal numbers doesn't work on other cultures (in france and other countries we use , instead of . for floating-point number)
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            
 
             options.Code = File.ReadAllText(options.FilePath).Replace("\t", "    ");
             options.Code = options.Code.Replace("\r\n", "\n").Replace("\r", "\n");
@@ -207,6 +207,7 @@ namespace Hassium
             {
                 Console.Write("> ");
                 string input = Console.ReadLine();
+                if (input == "exit") break;
                 if (options.ShowTime)
                 {
                     st.Reset();

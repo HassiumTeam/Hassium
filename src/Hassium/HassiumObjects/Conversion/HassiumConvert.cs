@@ -19,10 +19,7 @@ namespace Hassium.HassiumObjects.Conversion
             if (args[0] is HassiumString)
             {
                 var ret = Convert.ToDouble(((HassiumString) args[0]).Value);
-                if (ret == System.Math.Truncate(ret))
-                    return new HassiumInt((int) ret);
-                else
-                    return new HassiumDouble(ret);
+                return ret == System.Math.Truncate(ret) ? new HassiumInt((int) ret) : new HassiumDouble(ret);
             }
             else if (args[0] is HassiumInt)
             {

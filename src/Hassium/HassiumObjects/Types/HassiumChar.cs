@@ -1,5 +1,4 @@
-﻿using System;
-using Hassium.Functions;
+﻿using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {

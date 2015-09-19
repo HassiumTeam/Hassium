@@ -316,7 +316,7 @@ namespace Hassium.Parser
             if (parser.MatchToken(TokenType.Identifier))
             {
                 path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                ret = new UseNode(pos, path, "", true, true, false);
+                ret = new UseNode(pos, path, "", true, true);
             }
             else
             {
@@ -329,14 +329,7 @@ namespace Hassium.Parser
                     name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
                 }
 
-                if (path.EndsWith(".dll"))
-                {
-                    ret = new UseNode(pos, path, name, global, false, true);
-                }
-                else
-                {
-                    ret = new UseNode(pos, path, name, global, false, false);
-                }
+                ret = path.EndsWith(".dll") ? new UseNode(pos, path, name, global, false, true) : new UseNode(pos, path, name, global, false);
             }
             parser.ExpectToken(TokenType.EndOfLine);
             return ret;
@@ -998,41 +991,36 @@ namespace Hassium.Parser
         {
             int pos = parser.codePos;
             var curt = parser.CurrentToken();
-            if (curt.TokenClass == TokenType.Number)
+            switch (curt.TokenClass)
             {
-                return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value),
-                    parser.PreviousToken().Value is int);
-            }
-            else if (curt.TokenClass == TokenType.Parentheses)
-            {
-                parser.ExpectToken(TokenType.Parentheses, "(");
-                AstNode statement = ParseExpression(parser);
-                parser.ExpectToken(TokenType.Parentheses, ")");
-                return statement;
-            }
-            else if (curt.TokenClass == TokenType.Bracket)
-            {
-                AstNode statement = ParseArrayInitializer(parser);
-                return statement;
-            }
-            else if (curt.TokenClass == TokenType.String)
-            {
-                return new StringNode(pos, parser.ExpectToken(TokenType.String).Value.ToString());
-            }
-            else if (curt.TokenClass == TokenType.Identifier)
-            {
-                switch (curt.Value.ToString())
+                case TokenType.Number:
+                    return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value),
+                        parser.PreviousToken().Value is int);
+                case TokenType.Parentheses:
                 {
-                    case "lambda":
-                        return ParseLambda(parser);
-                    case "new":
-                        return ParseInstance(parser);
+                    parser.ExpectToken(TokenType.Parentheses, "(");
+                    AstNode statement = ParseExpression(parser);
+                    parser.ExpectToken(TokenType.Parentheses, ")");
+                    return statement;
                 }
-                return new IdentifierNode(pos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
-            }
-            else
-            {
-                throw new ParseException("Unexpected " + curt.Value, pos);
+                case TokenType.Bracket:
+                {
+                    AstNode statement = ParseArrayInitializer(parser);
+                    return statement;
+                }
+                case TokenType.String:
+                    return new StringNode(pos, parser.ExpectToken(TokenType.String).Value.ToString());
+                case TokenType.Identifier:
+                    switch (curt.Value.ToString())
+                    {
+                        case "lambda":
+                            return ParseLambda(parser);
+                        case "new":
+                            return ParseInstance(parser);
+                    }
+                    return new IdentifierNode(pos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+                default:
+                    throw new ParseException("Unexpected " + curt.Value, pos);
             }
         }
 

@@ -50,20 +50,19 @@ namespace Hassium.Lexer
                     isIdentifier = false;
                 }
 
-                if (c == '#')
+                switch (c)
                 {
-                    while (code[index++] != '\n')
-                    {
-                    }
-                    continue;
-                }
-
-                if (c == ';')
-                {
-                    if (index != 0 && !char.IsLetterOrDigit(code[index - 1]))
-                    {
+                    case '#':
+                        while (code[index++] != '\n')
+                        {
+                        }
                         continue;
-                    }
+                    case ';':
+                        if (index != 0 && !char.IsLetterOrDigit(code[index - 1]))
+                        {
+                            continue;
+                        }
+                        break;
                 }
 
                 result += c;
@@ -180,12 +179,18 @@ namespace Hassium.Lexer
                         Add(new Token(TokenType.Identifier, ReadChar()));
                         break;
                     case '=':
-                        if (next1 == '>')
-                            Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
-                        else if (next1 == '=')
-                            Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                        else
-                            Add(new Token(TokenType.Assignment, "" + ReadChar()));
+                        switch (next1)
+                        {
+                            case '>':
+                                Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
+                                break;
+                            case '=':
+                                Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                                break;
+                            default:
+                                Add(new Token(TokenType.Assignment, "" + ReadChar()));
+                                break;
+                        }
                         break;
                     case '!':
                         Add(next1 == '='

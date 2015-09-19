@@ -1,19 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Collections;
-using Hassium.HassiumObjects.IO;
-using Hassium.HassiumObjects.Networking;
-using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.HassiumObjects.Random;
-using Hassium.HassiumObjects.Text;
-using Hassium.HassiumObjects.Drawing;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
 

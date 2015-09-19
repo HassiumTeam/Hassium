@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hassium.Functions;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Collections
 {

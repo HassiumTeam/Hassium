@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using Hassium.Functions;
-using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Types
 {
@@ -22,6 +22,7 @@ namespace Hassium.HassiumObjects.Types
         public HassiumString(string value)
         {
             Value = value;
+            Attributes.Add("toArray", new InternalFunction(toArray, 0));
             Attributes.Add("toLower", new InternalFunction(tolower, 0));
             Attributes.Add("toUpper", new InternalFunction(toupper, 0));
             Attributes.Add("begins", new InternalFunction(begins, 1));
@@ -54,6 +55,11 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        private HassiumObject toArray(HassiumObject[] args)
+        {
+            return Value.ToCharArray().Select(x => new HassiumChar(x)).ToArray();
         }
 
         private HassiumObject tolower(HassiumObject[] args)
