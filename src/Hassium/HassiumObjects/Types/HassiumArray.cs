@@ -7,7 +7,7 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumArray : HassiumObject, IEnumerable
     {
-        private List<HassiumObject> _value;
+        public List<HassiumObject> _value { get; set; }
 
         public HassiumObject[] Value
         {

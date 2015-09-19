@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Hassium.Interpreter;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 
@@ -87,6 +88,17 @@ namespace Hassium.Functions
                 : (to < from
                     ? Enumerable.Range((int) to, (int) from).Reverse().Select(x => new HassiumDouble(x)).ToArray()
                     : Enumerable.Range((int) from, (int) to).Select(x => new HassiumDouble(x)).ToArray());
+        }
+
+        [IntFunc("map", 2)]
+        public static HassiumObject Map(HassiumObject[] args)
+        {
+            HassiumArray array = ((HassiumArray)args[0]);
+            HassiumArray ret = new HassiumArray(array._value);
+            for (int x = 0; x < array._value.Count; x++)
+                ret[x] = ((HassiumMethod)args[1]).Invoke(array._value[x]);
+
+            return ret;
         }
 
         [IntFunc("runtimecall", -1)]

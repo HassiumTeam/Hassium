@@ -1283,6 +1283,26 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(DoNode node)
+        {
+            var doStmt = node;
+            inLoop++;
+            do
+            {
+                doStmt.DoBody.Visit(this);
+                if (continueLoop)
+                    continueLoop = false;
+                if (breakLoop)
+                {
+                    breakLoop = false;
+                    break;
+                }
+            } while ((HassiumBool)doStmt.Predicate.Visit(this));
+
+            inLoop--;
+            return null;
+        }
+
         private void VisitSubnodes(AstNode node)
         {
             foreach (var nd in node.Children)

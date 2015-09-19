@@ -136,6 +136,8 @@ namespace Hassium.Parser
                         return ParseBreak(parser);
                     case "use":
                         return ParseUse(parser);
+                    case "do":
+                        return ParseDo(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.Brace, "{"))
@@ -455,6 +457,21 @@ namespace Hassium.Parser
             AstNode forBody = ParseStatement(parser);
 
             return new ForEachNode(pos, needle, haystack, forBody);
+        }
+
+        public static AstNode ParseDo(Parser parser)
+        {
+            int pos = parser.codePos;
+
+            parser.ExpectToken(TokenType.Identifier, "do");
+            AstNode doBody = ParseStatement(parser);
+            parser.ExpectToken(TokenType.Identifier, "while");
+            parser.ExpectToken(TokenType.Parentheses, "(");
+            AstNode predicate = ParseExpression(parser);
+            parser.ExpectToken(TokenType.Parentheses, ")");
+            parser.ExpectToken(TokenType.EndOfLine);
+
+            return new DoNode(pos, predicate, doBody);
         }
 
         public static AstNode ParseWhile(Parser parser)

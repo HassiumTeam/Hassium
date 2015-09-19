@@ -38,5 +38,6 @@ namespace Hassium.Interpreter
         object Accept(UncheckedNode node);
         object Accept(WhileNode node);
         object Accept(UseNode node);
+        object Accept(DoNode node);
     }
 }
