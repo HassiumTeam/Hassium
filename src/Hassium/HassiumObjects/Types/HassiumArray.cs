@@ -42,7 +42,7 @@ namespace Hassium.HassiumObjects.Types
         public HassiumObject this[int index]
         {
             get { return _value[index]; }
-            set { if(index >= _value.Count) _value.Add(value); else _value[index] = value; }
+            set { _value[index] = value; }
         }
 
         public override string ToString()

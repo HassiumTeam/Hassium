@@ -304,6 +304,9 @@ namespace Hassium.Interpreter
                             theArray.Add(new[] {theValue});
                         else
                         {
+                            if (arid >= theArray.Value.Length)
+                                throw new ParseException("The index is out of the bounds of the array", call);
+
                             theArray[arid] = theValue;
                         }
 
@@ -577,7 +580,6 @@ namespace Hassium.Interpreter
 
                     var r = theArray.Value.Skip(arid).Take(count).ToArray();
                     return r.Length == 1 ? r[0] : r.ToArray();
-                    //return theArray[arid];
                 }
             }
             else
@@ -1099,6 +1101,7 @@ namespace Hassium.Interpreter
                         break;
                     case "collections":
                         Constants.Add("Stack", new InternalFunction(x => new HassiumStack(x.Length == 0 ? new Stack<HassiumObject>() : new Stack<HassiumObject>(x[0].HInt().Value)), new []{0,1}, false, true));
+                        Constants.Add("Dictionary", new InternalFunction(x => new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>()), 0, false, true));
                         break;
                     case "net":
                     case "network":

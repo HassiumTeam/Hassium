@@ -22,6 +22,45 @@ namespace Hassium.Functions
 			throw new Exception(String.Join("", args.Cast<object>()));
 		}
 
+        [IntFunc("fill", 2)]
+        public static HassiumObject Fill(HassiumObject[] args)
+        {
+            HassiumObject[] array = new HassiumObject[args[1].HInt().Value];
+
+            var fillvalue = new[] { args[0] };
+            Array.Copy(fillvalue, array, 1);
+            int arraylgt = array.Length / 2;
+            for(int i = 1; i < array.Length; i *= 2)
+            {
+                int cplength = i;
+                if(i > arraylgt)
+                {
+                    cplength = array.Length - i;
+                }
+                Array.Copy(array, 0, array, i, cplength);
+            }
+            return array;
+        }
+
+        [IntFunc("fillzero", 1)]
+        public static HassiumObject FillZero(HassiumObject[] args)
+        {
+            /*int[] array = new int[args[0].HInt().Value];
+
+            Array.Clear(array, 0, array.Length);
+
+            var tmp = new HassiumInt(-1);
+
+            return array.Select(x =>
+            {
+                tmp.Value = x;
+                return tmp;
+            }).ToArray();*/
+            var zero = new HassiumInt(0);
+
+            return Enumerable.Repeat(zero, args[0].HInt().Value).ToArray();
+        }
+
         [IntFunc("range", new []{2,3})]
         public static HassiumObject Range(HassiumObject[] args)
         {
