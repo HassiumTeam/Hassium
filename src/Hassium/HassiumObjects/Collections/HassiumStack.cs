@@ -17,6 +17,7 @@ namespace Hassium.HassiumObjects.Collections
             Attributes.Add("peek", new InternalFunction(peek, 0));
             Attributes.Add("pop", new InternalFunction(pop, 0));
             Attributes.Add("push", new InternalFunction(push, 1));
+            Attributes.Add("length", new HassiumProperty("length", x => Value.Count, null, true));
         }
 
         private HassiumObject clear(HassiumObject[] args)

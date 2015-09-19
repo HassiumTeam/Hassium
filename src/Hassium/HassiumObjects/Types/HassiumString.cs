@@ -45,6 +45,11 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("urlDecode", new InternalFunction(urlDecode, 0));
             Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
         }
+
+        public static implicit operator HassiumArray(HassiumString s)
+        {
+            return new HassiumArray(s.Value);
+        }
           
         private HassiumObject tolower(HassiumObject[] args)
         {

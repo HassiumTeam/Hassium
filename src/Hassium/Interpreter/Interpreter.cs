@@ -292,7 +292,7 @@ namespace Hassium.Interpreter
                         bool append = false;
 
                         if (call.Arguments.Children.Count > 0)
-                            arid = (int) call.Arguments.Children[0].Visit(this);
+                            arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
                         else
                             append = true;
 
@@ -304,9 +304,6 @@ namespace Hassium.Interpreter
                             theArray.Add(new[] {theValue});
                         else
                         {
-                            if(arid >= theArray.Value.Length)
-                                throw new ParseException("The index is out of the bounds of the array", call);
-
                             theArray[arid] = theValue;
                         }
 
@@ -712,7 +709,7 @@ namespace Hassium.Interpreter
                 {
                     theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
                 }
-                theArray = ((HassiumArray)haystackstmt);
+                else theArray = ((HassiumArray)haystackstmt);
 
                 var valvname = needlestmt.ToString();
 
@@ -1101,7 +1098,7 @@ namespace Hassium.Interpreter
                         Constants.Add("Debug", new HassiumDebug());
                         break;
                     case "collections":
-                        Constants.Add("Stack", new InternalFunction(x => new HassiumStack(new Stack<HassiumObject>(x[0].HInt().Value)), 1, false, true));
+                        Constants.Add("Stack", new InternalFunction(x => new HassiumStack(x.Length == 0 ? new Stack<HassiumObject>() : new Stack<HassiumObject>(x[0].HInt().Value)), new []{0,1}, false, true));
                         break;
                     case "net":
                     case "network":
