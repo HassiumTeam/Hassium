@@ -2,12 +2,12 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class NumberNode: AstNode
+    public class NumberNode : AstNode
     {
         public double Value { private set; get; }
         public bool IsInt { get; private set; }
 
-        public NumberNode (int position, double value, bool isint) : base(position)
+        public NumberNode(int position, double value, bool isint) : base(position)
         {
             Value = value;
             IsInt = isint;
@@ -19,4 +19,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

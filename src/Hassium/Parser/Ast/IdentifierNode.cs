@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class IdentifierNode: AstNode
+    public class IdentifierNode : AstNode
     {
         public string Identifier { get; private set; }
 
@@ -22,4 +22,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {
-    public class HassiumHttpListenerRequest: HassiumObject
+    public class HassiumHttpListenerRequest : HassiumObject
     {
         public HttpListenerRequest Value { get; private set; }
 
@@ -69,4 +69,3 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         }
     }
 }
-

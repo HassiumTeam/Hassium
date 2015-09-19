@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class MentalNode: AstNode
+    public class MentalNode : AstNode
     {
         public string OpType { get; private set; }
 
@@ -23,4 +23,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

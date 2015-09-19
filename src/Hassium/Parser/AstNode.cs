@@ -8,11 +8,7 @@ namespace Hassium.Parser
 {
     public abstract class AstNode
     {
-        public List<AstNode> Children
-        {
-            get;
-            private set;
-        }
+        public List<AstNode> Children { get; private set; }
 
         public int Position { get; set; }
 
@@ -20,7 +16,8 @@ namespace Hassium.Parser
         {
             get
             {
-                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode || this is StringNode ||
+                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode ||
+                       this is StringNode ||
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode;
             }
         }
@@ -29,9 +26,11 @@ namespace Hassium.Parser
         {
             get
             {
-                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode || this is StringNode ||
+                return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode ||
+                       this is StringNode ||
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode || this is BinOpNode ||
-                       this is ConditionalOpNode || this is LambdaFuncNode || this is NumberNode || this is UnaryOpNode || (this is CodeBlock && this.Children.Any(x => x.ReturnsValue));
+                       this is ConditionalOpNode || this is LambdaFuncNode || this is NumberNode || this is UnaryOpNode ||
+                       (this is CodeBlock && this.Children.Any(x => x.ReturnsValue));
             }
         }
 
@@ -56,8 +55,8 @@ namespace Hassium.Parser
             get { return this is IdentifierNode || this is MemberAccessNode; }
         }
 
-        protected AstNode () : this(-1)
-        {                   
+        protected AstNode() : this(-1)
+        {
         }
 
         protected AstNode(int position)
@@ -67,4 +66,3 @@ namespace Hassium.Parser
         }
     }
 }
-

@@ -2,22 +2,16 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class ArrayGetNode: AstNode
+    public class ArrayGetNode : AstNode
     {
         public AstNode Target
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public AstNode Arguments
         {
-            get
-            {
-                return Children[1];
-            }
+            get { return Children[1]; }
         }
 
         public AstNode Count
@@ -39,4 +33,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

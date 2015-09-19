@@ -16,7 +16,9 @@ namespace Hassium.Debug
             var position = 0;
             foreach (Token token in tokens)
             {
-                Console.WriteLine(position + new string(' ', tokens.Count.ToString().Length + 2 - position.ToString().Length) + "Type: " + token.TokenClass +
+                Console.WriteLine(position +
+                                  new string(' ', tokens.Count.ToString().Length + 2 - position.ToString().Length) +
+                                  "Type: " + token.TokenClass +
                                   new string(' ',
                                       tokens.Max(x => x.TokenClass.ToString().Length) + 3 -
                                       token.TokenClass.ToString().Length) + "Value: " + token.Value);
@@ -27,4 +29,3 @@ namespace Hassium.Debug
         }
     }
 }
-

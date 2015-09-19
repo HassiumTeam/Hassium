@@ -33,6 +33,7 @@ using Hassium.Semantics;
 namespace Hassium.Interpreter
 {
     public delegate void ExitEventHandler(int code);
+
     /// <summary>
     /// Interpreter.
     /// </summary>
@@ -62,7 +63,10 @@ namespace Hassium.Interpreter
             if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.ContainsKey(name)))
                 return CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name];
             if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.Any(y => y.Key.StartsWith(name))))
-                return CallStack.First(x => x.Locals.Any(y => y.Key.StartsWith(name))).Locals.First(x => x.Key.StartsWith(name)).Value;
+                return
+                    CallStack.First(x => x.Locals.Any(y => y.Key.StartsWith(name)))
+                        .Locals.First(x => x.Key.StartsWith(name))
+                        .Value;
             if (Globals.ContainsKey(name))
                 return Globals[name];
             if (Globals.Any(x => x.Key.StartsWith(name)))
@@ -76,7 +80,8 @@ namespace Hassium.Interpreter
             return onlyglobal
                 ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
                 : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
-                  (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))));
+                  (CallStack.Count > 0 &&
+                   (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))));
         }
 
         public void SetGlobalVariable(string name, HassiumObject value, AstNode node)
@@ -93,7 +98,6 @@ namespace Hassium.Interpreter
                 throw new ParseException("Can't change the value of the internal constant '" + name + "'.", node);
 
 
-
             if (CallStack.Count > 0)
             {
                 if (CallStack.Any(x => x.Locals.ContainsKey(name)))
@@ -102,9 +106,13 @@ namespace Hassium.Interpreter
             }
         }
 
-        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false, bool onlyexist = false)
+        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false,
+            bool onlyexist = false)
         {
-            if (!forceglobal && CallStack.Count > 0 && (!onlyexist || (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name)))) && !Globals.ContainsKey(name))
+            if (!forceglobal && CallStack.Count > 0 &&
+                (!onlyexist ||
+                 (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name)))) &&
+                !Globals.ContainsKey(name))
                 SetLocalVariable(name, value, node);
             else
                 SetGlobalVariable(name, value, node);
@@ -112,17 +120,21 @@ namespace Hassium.Interpreter
 
         public void FreeVariable(string name, AstNode node, bool forceglobal = false)
         {
-            if (Constants.ContainsKey(name)) throw new ParseException("Can't delete internal constant '" + name + "'.", node);
+            if (Constants.ContainsKey(name))
+                throw new ParseException("Can't delete internal constant '" + name + "'.", node);
             if (forceglobal)
             {
-                if (!Globals.ContainsKey(name)) throw new ParseException("The global variable '" + name + "' doesn't exist.", node);
+                if (!Globals.ContainsKey(name))
+                    throw new ParseException("The global variable '" + name + "' doesn't exist.", node);
                 Globals.Remove(name);
             }
             else
             {
                 if (!HasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
-                if (CallStack.Count > 0 && (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))))
-                    CallStack.First(x => x.Locals.ContainsKey(name) || x.Scope.Symbols.Contains(name)).Locals.Remove(name);
+                if (CallStack.Count > 0 &&
+                    (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))))
+                    CallStack.First(x => x.Locals.ContainsKey(name) || x.Scope.Symbols.Contains(name))
+                        .Locals.Remove(name);
                 else
                     Globals.Remove(name);
             }
@@ -143,7 +155,7 @@ namespace Hassium.Interpreter
             {
                 return GetVariable(name + "`i", node);
             }
-            if(HasVariable(name))
+            if (HasVariable(name))
             {
                 return GetVariable(name, node);
             }
@@ -187,13 +199,14 @@ namespace Hassium.Interpreter
             {
                 if (node is FuncNode && firstExecute)
                 {
-                    var fnode = ((FuncNode)node);
+                    var fnode = ((FuncNode) node);
                     var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
-                    SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null), node);
+                    SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null),
+                        node);
                 }
                 else if (node is ClassNode)
                 {
-                    var cnode = ((ClassNode)node);
+                    var cnode = ((ClassNode) node);
                     if (!Globals.ContainsKey(cnode.Name))
                         Globals.Add(cnode.Name, new HassiumClass(cnode, this));
                 }
@@ -211,7 +224,7 @@ namespace Hassium.Interpreter
                 if (exit) return;
                 if (node is FuncNode)
                 {
-                    var fnode = ((FuncNode)node);
+                    var fnode = ((FuncNode) node);
                     var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
                     //If there is a main, let it be the main entry point of the program
                     if (fnode.Name == "main")
@@ -238,12 +251,13 @@ namespace Hassium.Interpreter
             {
                 if (node.Left is ArrayGetNode)
                 {
-                    var call = (ArrayGetNode)(node.Left);
+                    var call = (ArrayGetNode) (node.Left);
 
                     if (!call.Target.CanBeIndexed)
-                        throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+                        throw new ParseException(
+                            "The [] operator only applies to objects of type Array, Dictionary or String.", node);
 
-                    if(!call.Target.CanBeModified)
+                    if (!call.Target.CanBeModified)
                         throw new ParseException("The specified target cannot be modified.", node);
 
                     var evaluated = call.Target.Visit(this);
@@ -282,7 +296,7 @@ namespace Hassium.Interpreter
                     else if (evaluated is HassiumArray || evaluated is HassiumString)
                     {
                         HassiumArray theArray = null;
-                        if(evaluated is HassiumString)
+                        if (evaluated is HassiumString)
                         {
                             theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
                         }
@@ -300,7 +314,7 @@ namespace Hassium.Interpreter
                             ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
                             : right;
 
-                        if(append)
+                        if (append)
                             theArray.Add(new[] {theValue});
                         else
                         {
@@ -314,9 +328,9 @@ namespace Hassium.Interpreter
                     }
                     else
                     {
-                        throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+                        throw new ParseException(
+                            "The [] operator only applies to objects of type Array, Dictionary or String.", node);
                     }
-
                 }
                 else if (node.Left is MemberAccessNode)
                 {
@@ -330,13 +344,13 @@ namespace Hassium.Interpreter
                         throw new ParseException("Not a valid identifier", node);
                     SetVariable(node.Left.ToString(),
                         node.IsOpAssign
-                        ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
-                        : right, node);
+                            ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
+                            : right, node);
                 }
                 return right;
             }
             var left = node.Left.Visit(this);
-            if(node.BinOp == BinaryOperation.Is)
+            if (node.BinOp == BinaryOperation.Is)
             {
                 var target = right;
                 Type ttype = null;
@@ -356,11 +370,12 @@ namespace Hassium.Interpreter
         /// <returns>The result of the operation</returns>
         private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
-            if(left == null && _op != BinaryOperation.NullCoalescing) throw new ParseException("Left operand can't be null", pos);
+            if (left == null && _op != BinaryOperation.NullCoalescing)
+                throw new ParseException("Left operand can't be null", pos);
             if (left is AstNode) left = ((AstNode) left).Visit(this);
-            if (left is int) left = (double) (int) left; 
-            if (right is AstNode) right = ((AstNode)right).Visit(this);
-            if (right is int) right = (double)(int)right;
+            if (left is int) left = (double) (int) left;
+            if (right is AstNode) right = ((AstNode) right).Visit(this);
+            if (right is int) right = (double) (int) right;
             switch (_op)
             {
                 case BinaryOperation.Addition:
@@ -370,12 +385,12 @@ namespace Hassium.Interpreter
                         return (HassiumDate) left + (HassiumDate) right;
                     if (left is HassiumKeyValuePair || right is HassiumKeyValuePair)
                         return new HassiumString(left + right.ToString());
-                    if(left is HassiumInt && right is HassiumInt)
+                    if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) + Convert.ToInt32(right));
-                    if(left is HassiumEvent && right is HassiumMethod)
+                    if (left is HassiumEvent && right is HassiumMethod)
                     {
                         var ev = (HassiumEvent) left;
-                        ev.AddHandler((HassiumMethod)right);
+                        ev.AddHandler((HassiumMethod) right);
                         return ev;
                     }
                     return new HassiumDouble(Convert.ToDouble(left) + Convert.ToDouble(right));
@@ -384,13 +399,13 @@ namespace Hassium.Interpreter
                         return new HassiumInt(Convert.ToInt32(left) - Convert.ToInt32(right));
                     if (left is HassiumEvent && right is HassiumMethod)
                     {
-                        var ev = (HassiumEvent)left;
-                        ev.RemoveHandler((HassiumMethod)right);
+                        var ev = (HassiumEvent) left;
+                        ev.RemoveHandler((HassiumMethod) right);
                         return ev;
                     }
                     return new HassiumDouble(Convert.ToDouble(left) - Convert.ToDouble(right));
                 case BinaryOperation.Division:
-                    if(Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
+                    if (Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) / Convert.ToInt32(right));
                     return new HassiumDouble(Convert.ToDouble(left) / Convert.ToDouble(right));
@@ -423,8 +438,11 @@ namespace Hassium.Interpreter
                 case BinaryOperation.LesserOrEqual:
                     return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
-                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan))) return new HassiumInt(1);
-                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan)) ? new HassiumInt(-1) : new HassiumInt(0);
+                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan)))
+                        return new HassiumInt(1);
+                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan))
+                        ? new HassiumInt(-1)
+                        : new HassiumInt(0);
                 case BinaryOperation.Xor:
                     return new HassiumInt(Convert.ToInt32(left) ^ Convert.ToInt32(right));
                 case BinaryOperation.BitwiseAnd:
@@ -440,7 +458,7 @@ namespace Hassium.Interpreter
 
                 case BinaryOperation.Pow:
                     if (left is HassiumInt && right is HassiumInt)
-                        return new HassiumInt((int)Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
+                        return new HassiumInt((int) Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
                     return new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
                 case BinaryOperation.Root:
                     /*if (left is HassiumInt && right is HassiumInt)
@@ -453,6 +471,7 @@ namespace Hassium.Interpreter
             // Raise error
             return new HassiumInt(-1);
         }
+
         /// <summary>
         /// Interprets the unary op.
         /// </summary>
@@ -469,7 +488,7 @@ namespace Hassium.Interpreter
                     if (value is int) return -(int) value;
                     return -Convert.ToDouble(value);
                 case UnaryOperation.Complement:
-                    return ~(int)Convert.ToDouble(value);
+                    return ~(int) Convert.ToDouble(value);
             }
             //Raise error
             return -1;
@@ -495,17 +514,17 @@ namespace Hassium.Interpreter
                         var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
                         foreach (var theattr in theattr1.OfType<IntFunc>())
                         {
-                            for(int i=0; i < theattr.Arguments.Length; i++)
+                            for (int i = 0; i < theattr.Arguments.Length; i++)
                             {
                                 var rfunc = new InternalFunction(
-                                (HassiumFunctionDelegate)
-                                Delegate.CreateDelegate(typeof(HassiumFunctionDelegate), myfunc), theattr.Arguments[i], false, theattr.Constructor);
+                                    (HassiumFunctionDelegate)
+                                        Delegate.CreateDelegate(typeof (HassiumFunctionDelegate), myfunc),
+                                    theattr.Arguments[i], false, theattr.Constructor);
                                 int an = theattr.Arguments[i];
                                 result.Add(theattr.Name + "`" + (an == -1 ? "i" : an.ToString()), rfunc);
-                                if (theattr.Alias != "") result.Add(theattr.Alias + "`" + (an == -1 ? "i" : an.ToString()), rfunc);
+                                if (theattr.Alias != "")
+                                    result.Add(theattr.Alias + "`" + (an == -1 ? "i" : an.ToString()), rfunc);
                             }
-
-                            
                         }
                     }
                 }
@@ -524,7 +543,7 @@ namespace Hassium.Interpreter
             var arguments = new HassiumObject[node.Children.Count];
             for (var x = 0; x < node.Children.Count; x++)
             {
-                arguments[x] = (HassiumObject)node.Children[x].Visit(this);
+                arguments[x] = (HassiumObject) node.Children[x].Visit(this);
             }
             return arguments;
         }
@@ -534,22 +553,25 @@ namespace Hassium.Interpreter
             var call = node;
 
             if (!call.Target.CanBeIndexed)
-                throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+                throw new ParseException(
+                    "The [] operator only applies to objects of type Array, Dictionary or String.", node);
 
-            var evaluated = (HassiumObject)call.Target.Visit(this);
+            var evaluated = (HassiumObject) call.Target.Visit(this);
             if (evaluated is HassiumDictionary)
             {
-                var theArray = ((HassiumDictionary)evaluated);
+                var theArray = ((HassiumDictionary) evaluated);
                 HassiumObject arid = null;
 
                 if (call.Arguments.Children.Count > 0)
-                    arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
+                    arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
 
                 if (arid == null)
                     return theArray.Value.Last().Value;
                 else
                 {
-                    return theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()) ? theArray.Value.First(cur => cur.Key.ToString() == arid.ToString()).Value : theArray[arid];
+                    return theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString())
+                        ? theArray.Value.First(cur => cur.Key.ToString() == arid.ToString()).Value
+                        : theArray[arid];
                 }
             }
             else if (evaluated is HassiumArray || evaluated is HassiumString)
@@ -559,17 +581,17 @@ namespace Hassium.Interpreter
                 {
                     theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
                 }
-                else theArray = ((HassiumArray)evaluated);
+                else theArray = ((HassiumArray) evaluated);
 
                 int arid = -1;
                 bool append = false;
 
                 if (call.Arguments.Children.Count > 0)
-                    arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
+                    arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
                 else
                     append = true;
 
-                int count = (HassiumObject)call.Count.Visit(this);
+                int count = (HassiumObject) call.Count.Visit(this);
 
                 if (append)
                     return theArray.Value.Last();
@@ -584,7 +606,8 @@ namespace Hassium.Interpreter
             }
             else
             {
-                throw new ParseException("The [] operator only applies to objects of type Array, Dictionary or String.", node);
+                throw new ParseException(
+                    "The [] operator only applies to objects of type Array, Dictionary or String.", node);
             }
         }
 
@@ -600,16 +623,18 @@ namespace Hassium.Interpreter
             if (ainode.IsDictionary)
                 return new HassiumDictionary(content.Select(
                     pair =>
-                    new KeyValuePair<HassiumObject, HassiumObject>(
-                        pair.Key is AstNode
-                        ? (HassiumObject)((AstNode)(pair.Key)).Visit(this)
-                        : HassiumObject.ToHassiumObject(pair.Key),
-                        pair.Value is AstNode
-                        ? (HassiumObject)((AstNode)(pair.Value)).Visit(this)
-                        : HassiumObject.ToHassiumObject(pair.Value)))
+                        new KeyValuePair<HassiumObject, HassiumObject>(
+                            pair.Key is AstNode
+                                ? (HassiumObject) ((AstNode) (pair.Key)).Visit(this)
+                                : HassiumObject.ToHassiumObject(pair.Key),
+                            pair.Value is AstNode
+                                ? (HassiumObject) ((AstNode) (pair.Value)).Visit(this)
+                                : HassiumObject.ToHassiumObject(pair.Value)))
                     .ToDictionary(x => x.Key, x => x.Value));
             else
-                return new HassiumArray(content.Values.Select(x => x is AstNode ? (HassiumObject)((AstNode)x).Visit(this) : x));
+                return
+                    new HassiumArray(
+                        content.Values.Select(x => x is AstNode ? (HassiumObject) ((AstNode) x).Visit(this) : x));
         }
 
         public object Accept(BinOpNode node)
@@ -647,7 +672,7 @@ namespace Hassium.Interpreter
         public object Accept(ConditionalOpNode node)
         {
             var ifStmt = node;
-            if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
+            if ((HassiumBool) (ifStmt.Predicate.Visit(this)))
             {
                 return ifStmt.Body.Visit(this);
             }
@@ -673,14 +698,14 @@ namespace Hassium.Interpreter
             inLoop++;
             if (haystackstmt is HassiumDictionary)
             {
-                var theArray = ((HassiumDictionary)haystackstmt);
+                var theArray = ((HassiumDictionary) haystackstmt);
 
                 var keyvname = "";
                 var valvname = "";
                 if (needlestmt is ArrayInitializerNode)
                 {
-                    keyvname = ((ArrayInitializerNode)needlestmt).Value[0].ToString();
-                    valvname = ((ArrayInitializerNode)needlestmt).Value[1].ToString();
+                    keyvname = ((ArrayInitializerNode) needlestmt).Value[0].ToString();
+                    valvname = ((ArrayInitializerNode) needlestmt).Value[1].ToString();
                 }
                 else
                 {
@@ -688,10 +713,13 @@ namespace Hassium.Interpreter
                 }
                 if (keyvname != "") SetVariable(keyvname, null, forStmt);
                 SetVariable(valvname, null, forStmt);
-                foreach (var needle in (keyvname != "" ? theArray : (IEnumerable)(theArray.Value.Select(x => x.Value))))
+                foreach (var needle in (keyvname != "" ? theArray : (IEnumerable) (theArray.Value.Select(x => x.Value)))
+                    )
                 {
-                    if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair)needle).Key, forStmt);
-                    SetVariable(valvname, keyvname != "" ? ((HassiumKeyValuePair)needle).Value : HassiumObject.ToHassiumObject(needle), forStmt);
+                    if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair) needle).Key, forStmt);
+                    SetVariable(valvname,
+                        keyvname != "" ? ((HassiumKeyValuePair) needle).Value : HassiumObject.ToHassiumObject(needle),
+                        forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
                     if (breakLoop)
@@ -711,7 +739,7 @@ namespace Hassium.Interpreter
                 {
                     theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
                 }
-                else theArray = ((HassiumArray)haystackstmt);
+                else theArray = ((HassiumArray) haystackstmt);
 
                 var valvname = needlestmt.ToString();
 
@@ -733,7 +761,8 @@ namespace Hassium.Interpreter
             else
             {
                 inLoop--;
-                throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.", node);
+                throw new ParseException("Foreach can only be used with objects of type Array, Dictionary or String.",
+                    node);
             }
             return null;
         }
@@ -777,7 +806,6 @@ namespace Hassium.Interpreter
         }
 
 
-
         public object Accept(FunctionCallNode node)
         {
             var call = node;
@@ -804,18 +832,19 @@ namespace Hassium.Interpreter
                     if (call.Target is MemberAccessNode)
                     {
                         var man = (MemberAccessNode) call.Target;
-                        var targ = (HassiumObject)man.Left.Visit(this);
-                        if(targ.Attributes.ContainsKey(man.Member + "`" + call.Arguments.Children.Count))
+                        var targ = (HassiumObject) man.Left.Visit(this);
+                        if (targ.Attributes.ContainsKey(man.Member + "`" + call.Arguments.Children.Count))
                         {
                             target = targ.GetAttribute(man.Member + "`" + call.Arguments.Children.Count, node.Position);
                         }
-                        else if(targ.Attributes.ContainsKey(man.Member))
+                        else if (targ.Attributes.ContainsKey(man.Member))
                         {
                             target = targ.GetAttribute(man.Member, node.Position);
                         }
                         else
                         {
-                            throw new ParseException("The function " + man.Member + " doesn't exist for the object " + man.Left, node);
+                            throw new ParseException(
+                                "The function " + man.Member + " doesn't exist for the object " + man.Left, node);
                         }
                     }
                     else
@@ -823,12 +852,13 @@ namespace Hassium.Interpreter
                     break;
             }
 
-            if(HassiumInterpreter.options.Secure)
+            if (HassiumInterpreter.options.Secure)
             {
                 var forbidden = new List<string> {"system", "runtimecall", "input"};
-                if(forbidden.Contains(call.Target.ToString()))
+                if (forbidden.Contains(call.Target.ToString()))
                 {
-                    throw new ParseException("The " + call.Target + "() function is disabled for security reasons.", node);
+                    throw new ParseException("The " + call.Target + "() function is disabled for security reasons.",
+                        node);
                 }
             }
 
@@ -836,16 +866,15 @@ namespace Hassium.Interpreter
             if (target is InternalFunction && (target as InternalFunction).IsConstructor)
                 throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
 
-            if(target is HassiumMethod)
+            if (target is HassiumMethod)
             {
                 var th = target as HassiumMethod;
                 if (!th.IsStatic)
                 {
-                    if(call.Target is MemberAccessNode)
+                    if (call.Target is MemberAccessNode)
                     {
-
                         var man = (MemberAccessNode) call.Target;
-                        if(!((HassiumObject)man.Left.Visit(this)).IsInstance)
+                        if (!((HassiumObject) man.Left.Visit(this)).IsInstance)
                         {
                             throw new ParseException("Non-static method can only be used with instance of class", call);
                         }
@@ -856,7 +885,9 @@ namespace Hassium.Interpreter
             var arguments = new HassiumObject[call.Arguments.Children.Count];
             for (var x = 0; x < call.Arguments.Children.Count; x++)
             {
-                arguments[x] = dontEval ? new HassiumString(call.Arguments.Children[x].ToString()) : (HassiumObject)call.Arguments.Children[x].Visit(this);
+                arguments[x] = dontEval
+                    ? new HassiumString(call.Arguments.Children[x].ToString())
+                    : (HassiumObject) call.Arguments.Children[x].Visit(this);
             }
 
             switch (call.Target.ToString())
@@ -869,7 +900,6 @@ namespace Hassium.Interpreter
                     exitcode = arguments.Length == 0 ? 0 : arguments[0].HInt().Value;
                     return null;
             }
-
 
 
             HassiumObject ret = target.Invoke(arguments);
@@ -887,7 +917,7 @@ namespace Hassium.Interpreter
         public object Accept(IfNode node)
         {
             var ifStmt = node;
-            if ((HassiumBool)(ifStmt.Predicate.Visit(this)))
+            if ((HassiumBool) (ifStmt.Predicate.Visit(this)))
             {
                 ifStmt.Body.Visit(this);
             }
@@ -907,9 +937,9 @@ namespace Hassium.Interpreter
             HassiumObject theVar = null;
             if (fcall.Target is MemberAccessNode)
             {
-                theVar = (HassiumObject)fcall.Target.Visit(this);
+                theVar = (HassiumObject) fcall.Target.Visit(this);
             }
-            else theVar = (HassiumObject)GetFunction(fcall.Target.ToString(), fcall.Arguments.Children.Count, node);
+            else theVar = (HassiumObject) GetFunction(fcall.Target.ToString(), fcall.Arguments.Children.Count, node);
 
             if (theVar is InternalFunction)
             {
@@ -949,17 +979,17 @@ namespace Hassium.Interpreter
                     return true;
                 });
             }
-            return new HassiumMethod(this, (FuncNode)funcNode, stackFrame, null);
+            return new HassiumMethod(this, (FuncNode) funcNode, stackFrame, null);
         }
 
         public object Accept(MemberAccessNode node)
         {
             var accessor = node;
-            var target = (HassiumObject)accessor.Left.Visit(this);
+            var target = (HassiumObject) accessor.Left.Visit(this);
             var attr = target.GetAttribute(accessor.Member, node.Position + 1);
-            if (attr is InternalFunction && ((InternalFunction)attr).IsProperty)
+            if (attr is InternalFunction && ((InternalFunction) attr).IsProperty)
             {
-                return ((InternalFunction)attr).Invoke();
+                return ((InternalFunction) attr).Invoke();
             }
             else
             {
@@ -970,15 +1000,17 @@ namespace Hassium.Interpreter
         public object Accept(MentalNode node)
         {
             var mnode = node;
-            if (!HasVariable(mnode.Name)) throw new ParseException("The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
+            if (!HasVariable(mnode.Name))
+                throw new ParseException(
+                    "The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
             var oldValue = GetVariable(mnode.Name, mnode);
             switch (mnode.OpType)
             {
                 case "++":
-                    SetVariable(mnode.Name, Convert.ToInt32((object)GetVariable(mnode.Name, mnode)) + 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) + 1, mnode);
                     break;
                 case "--":
-                    SetVariable(mnode.Name, Convert.ToInt32((object)GetVariable(mnode.Name, mnode)) - 1, mnode);
+                    SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) - 1, mnode);
                     break;
                 default:
                     throw new ParseException("Unknown operation " + mnode.OpType, mnode);
@@ -997,7 +1029,8 @@ namespace Hassium.Interpreter
 
         public object Accept(PropertyNode node)
         {
-            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]), node.SetNode == null);
+            var prop = new HassiumProperty(node.Name, x => GetPropVal(node, x[0]), x => SetPropVal(node, x[1], x[0]),
+                node.SetNode == null);
             SetVariable(node.Name, prop, node);
             return prop;
         }
@@ -1005,14 +1038,15 @@ namespace Hassium.Interpreter
         private HassiumObject GetPropVal(PropertyNode node, HassiumObject self)
         {
             var funcnode = new HassiumMethod(this,
-                new FuncNode(node.GetNode.Position, "__getprop__" + node.Name + "`1", new List<string> { "this" },
+                new FuncNode(node.GetNode.Position, "__getprop__" + node.Name + "`1", new List<string> {"this"},
                     node.GetNode.Body), SymbolTable.ChildScopes["__getprop__" + node.Name + "`1"], self);
             return funcnode.Invoke();
         }
 
         private HassiumObject SetPropVal(PropertyNode node, HassiumObject value, HassiumObject self)
         {
-            if(node.SetNode == null) throw new ParseException("The property is read-only, it cannot be modified.", node);
+            if (node.SetNode == null)
+                throw new ParseException("The property is read-only, it cannot be modified.", node);
             var funcnode = new HassiumMethod(this,
                 new FuncNode(node.SetNode.Position, "__setprop__" + node.Name + "`2", new List<string> {"this", "value"},
                     node.SetNode.Body), SymbolTable.ChildScopes["__setprop__" + node.Name + "`2"], self);
@@ -1024,10 +1058,11 @@ namespace Hassium.Interpreter
         {
             if (inFunc == 0) throw new ParseException("'return' cannot be used outside a function", node);
             var returnStmt = node;
-            if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue) throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
+            if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue)
+                throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
             var ret = returnStmt.Value.Visit(this);
             returnFunc = true;
-            CallStack.Peek().ReturnValue = (HassiumObject)ret;
+            CallStack.Peek().ReturnValue = (HassiumObject) ret;
             return ret;
         }
 
@@ -1087,11 +1122,30 @@ namespace Hassium.Interpreter
                         Constants.Add("Directory", new HassiumDirectory());
                         Constants.Add("Path", new HassiumPath());
                         Constants.Add("IO", new HassiumIO());
-                        Constants.Add("StreamWriter", new InternalFunction(x => new HassiumStreamWriter(x[0] is HassiumStream ? new StreamWriter(((HassiumStream)x[0]).Value) : new StreamWriter(x[0].ToString())), 1, false, true));
-                        Constants.Add("StreamReader", new InternalFunction(x => new HassiumStreamReader(x[0] is HassiumStream ? new StreamReader(((HassiumStream)x[0]).Value) : new StreamReader(x[0].ToString())), 1, false, true));
-                        Constants.Add("FileStream", new InternalFunction(x => new HassiumFileStream(new FileStream(x[0].ToString(), FileMode.OpenOrCreate)), 1, false, true));
-                        Constants.Add("BinaryWriter", new InternalFunction(x => new HassiumBinaryWriter(new BinaryWriter(((HassiumStream)x[0]).Value)), 1, false, true));
-                        Constants.Add("BinaryReader", new InternalFunction(x => new HassiumBinaryReader(new BinaryReader(((HassiumStream)x[0]).Value)), 1, false, true));
+                        Constants.Add("StreamWriter",
+                            new InternalFunction(
+                                x =>
+                                    new HassiumStreamWriter(x[0] is HassiumStream
+                                        ? new StreamWriter(((HassiumStream) x[0]).Value)
+                                        : new StreamWriter(x[0].ToString())), 1, false, true));
+                        Constants.Add("StreamReader",
+                            new InternalFunction(
+                                x =>
+                                    new HassiumStreamReader(x[0] is HassiumStream
+                                        ? new StreamReader(((HassiumStream) x[0]).Value)
+                                        : new StreamReader(x[0].ToString())), 1, false, true));
+                        Constants.Add("FileStream",
+                            new InternalFunction(
+                                x => new HassiumFileStream(new FileStream(x[0].ToString(), FileMode.OpenOrCreate)), 1,
+                                false, true));
+                        Constants.Add("BinaryWriter",
+                            new InternalFunction(
+                                x => new HassiumBinaryWriter(new BinaryWriter(((HassiumStream) x[0]).Value)), 1, false,
+                                true));
+                        Constants.Add("BinaryReader",
+                            new InternalFunction(
+                                x => new HassiumBinaryReader(new BinaryReader(((HassiumStream) x[0]).Value)), 1, false,
+                                true));
                         break;
                     case "math":
                         Constants.Add("Math", new HassiumMath());
@@ -1100,19 +1154,35 @@ namespace Hassium.Interpreter
                         Constants.Add("Debug", new HassiumDebug());
                         break;
                     case "collections":
-                        Constants.Add("Stack", new InternalFunction(x => new HassiumStack(x.Length == 0 ? new Stack<HassiumObject>() : new Stack<HassiumObject>(x[0].HInt().Value)), new []{0,1}, false, true));
-                        Constants.Add("Dictionary", new InternalFunction(x => new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>()), 0, false, true));
+                        Constants.Add("Stack",
+                            new InternalFunction(
+                                x =>
+                                    new HassiumStack(x.Length == 0
+                                        ? new Stack<HassiumObject>()
+                                        : new Stack<HassiumObject>(x[0].HInt().Value)), new[] {0, 1}, false, true));
+                        Constants.Add("Dictionary",
+                            new InternalFunction(
+                                x => new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>()), 0, false,
+                                true));
                         break;
                     case "net":
                     case "network":
-                        Constants.Add("WebClient", new InternalFunction(x => new HassiumWebClient(new WebClient()), 0, false, true));
-                        Constants.Add("TcpClient", new InternalFunction(x => new HassiumTcpClient(new TcpClient()), 0, false, true));
-                        Constants.Add("NetworkStream", new InternalFunction(x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket)x[0]).Value)), 1, false, true));
-                        Constants.Add("HttpListener", new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
+                        Constants.Add("WebClient",
+                            new InternalFunction(x => new HassiumWebClient(new WebClient()), 0, false, true));
+                        Constants.Add("TcpClient",
+                            new InternalFunction(x => new HassiumTcpClient(new TcpClient()), 0, false, true));
+                        Constants.Add("NetworkStream",
+                            new InternalFunction(
+                                x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket) x[0]).Value)), 1, false,
+                                true));
+                        Constants.Add("HttpListener",
+                            new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
                         break;
                     case "text":
-                        Constants.Add("StringBuilder", new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
-                        Constants.Add("Encoding", new InternalFunction(x => new HassiumEncoding(x[0].HString()), 1, false, true));
+                        Constants.Add("StringBuilder",
+                            new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
+                        Constants.Add("Encoding",
+                            new InternalFunction(x => new HassiumEncoding(x[0].HString()), 1, false, true));
                         if (!HassiumInterpreter.options.Secure)
                         {
                             Constants.Add("TextWriter",
@@ -1124,9 +1194,12 @@ namespace Hassium.Interpreter
                         }
                         break;
                     case "drawing":
-                        Constants.Add("Color", new InternalFunction(x => new HassiumColor(x), new []{1, 3, 4, 5}, false, true));
-                        Constants.Add("Bitmap", new InternalFunction(x => new HassiumBitmap(x), new []{1,2}, false, true));
-                        Constants.Add("Image", new InternalFunction(x => new HassiumImage(x[0].HString()), 1, false, true));
+                        Constants.Add("Color",
+                            new InternalFunction(x => new HassiumColor(x), new[] {1, 3, 4, 5}, false, true));
+                        Constants.Add("Bitmap",
+                            new InternalFunction(x => new HassiumBitmap(x), new[] {1, 2}, false, true));
+                        Constants.Add("Image",
+                            new InternalFunction(x => new HassiumImage(x[0].HString()), 1, false, true));
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);
@@ -1182,7 +1255,7 @@ namespace Hassium.Interpreter
             }
             finally
             {
-                if(tryStmt.FinallyBody != null)
+                if (tryStmt.FinallyBody != null)
                     tryStmt.FinallyBody.Visit(this);
             }
             return null;
@@ -1221,7 +1294,7 @@ namespace Hassium.Interpreter
 
             if (counter == 0)
             {
-                if(whileStmt.ElseBody != null)
+                if (whileStmt.ElseBody != null)
                     whileStmt.ElseBody.Visit(this);
             }
             inLoop--;
@@ -1230,7 +1303,7 @@ namespace Hassium.Interpreter
 
         private void VisitSubnodes(AstNode node)
         {
-            foreach(var nd in node.Children)
+            foreach (var nd in node.Children)
             {
                 nd.Visit(this);
                 if (continueLoop || breakLoop || returnFunc || exit) break;

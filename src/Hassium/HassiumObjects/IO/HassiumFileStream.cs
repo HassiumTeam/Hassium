@@ -3,11 +3,11 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.IO
 {
-    public class HassiumFileStream: HassiumStream
+    public class HassiumFileStream : HassiumStream
     {
         public new FileStream Value
         {
-            get { return (FileStream)base.Value; }
+            get { return (FileStream) base.Value; }
             set { base.Value = value; }
         }
 
@@ -22,4 +22,3 @@ namespace Hassium.HassiumObjects.IO
         }
     }
 }
-

@@ -35,13 +35,13 @@ namespace Hassium.Lexer
             {
                 char c = code[index];
 
-                if((char.IsLetter(c) || "_".Contains(c)))
+                if ((char.IsLetter(c) || "_".Contains(c)))
                 {
                     isIdentifier = true;
                     result += c;
                     continue;
                 }
-                else if(" \r\n".Contains(c) && !isIdentifier)
+                else if (" \r\n".Contains(c) && !isIdentifier)
                 {
                     continue;
                 }
@@ -50,17 +50,17 @@ namespace Hassium.Lexer
                     isIdentifier = false;
                 }
 
-                if(c == '#')
+                if (c == '#')
                 {
-                    while(code[index++] != '\n')
+                    while (code[index++] != '\n')
                     {
                     }
                     continue;
                 }
 
-                if(c == ';')
+                if (c == ';')
                 {
-                    if(index != 0 && !char.IsLetterOrDigit(code[index - 1]))
+                    if (index != 0 && !char.IsLetterOrDigit(code[index - 1]))
                     {
                         continue;
                     }
@@ -78,7 +78,7 @@ namespace Hassium.Lexer
         public List<Token> Tokenize()
         {
             EatWhiteSpaces();
-            
+
             while (HasChar())
             {
                 ReadToken();
@@ -246,6 +246,7 @@ namespace Hassium.Lexer
 
             if (!oneLine && HasChar()) ReadChar();
         }
+
         /// <summary>
         /// Scans the string.
         /// </summary>
@@ -263,7 +264,7 @@ namespace Hassium.Lexer
             while (HasChar() && (isEscaping || PeekChar() != quote))
             {
                 var currentChar = ReadChar();
-                if(currentChar == '#' && !isEscaping && !isVerbatim && PeekChar() == '{')
+                if (currentChar == '#' && !isEscaping && !isVerbatim && PeekChar() == '{')
                 {
                     ReadChar();
                     if (PeekChar() == '}')
@@ -334,15 +335,17 @@ namespace Hassium.Lexer
                 }
             }
 
-            if(HasChar()) ReadChar();
+            if (HasChar()) ReadChar();
             else throw new ParseException("Unfinished string", position);
 
             Add(new Token(TokenType.String, stringBuilder));
         }
+
         private static bool IsHexChar(char c)
         {
             return "abcdefABCDEF".Contains(c);
         }
+
         /// <summary>
         /// Scans a number
         /// </summary>
@@ -368,7 +371,7 @@ namespace Hassium.Lexer
             var finalNumber = stringBuilder.ToString();
             var baseName = "";
             var baseSize = 0;
-            if(finalNumber.StartsWith("0x"))
+            if (finalNumber.StartsWith("0x"))
             {
                 baseName = "hex";
                 baseSize = 16;
@@ -383,9 +386,10 @@ namespace Hassium.Lexer
                 baseName = "octal";
                 baseSize = 8;
             }
-            if(baseName != "")
+            if (baseName != "")
             {
-                if (finalNumber.Length == 2) throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
+                if (finalNumber.Length == 2)
+                    throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
                 try
                 {
                     return new Token(TokenType.Number, Convert.ToInt32(finalNumber.Substring(2), baseSize).ToString());
@@ -398,9 +402,11 @@ namespace Hassium.Lexer
             else
             {
                 double temp = 0;
-                if(double.TryParse(finalNumber, NumberStyles.Any, CultureInfo.InvariantCulture, out temp))
+                if (double.TryParse(finalNumber, NumberStyles.Any, CultureInfo.InvariantCulture, out temp))
                 {
-                    return (temp == Math.Truncate(temp) && !finalNumber.Contains('.')) ? new Token(TokenType.Number, (int)temp) : new Token(TokenType.Number, temp);
+                    return (temp == Math.Truncate(temp) && !finalNumber.Contains('.'))
+                        ? new Token(TokenType.Number, (int) temp)
+                        : new Token(TokenType.Number, temp);
                 }
                 else
                 {
@@ -420,19 +426,20 @@ namespace Hassium.Lexer
             {
                 stringBuilder.Append(ReadChar());
             }
-            if(PeekChar() == '`' && "0123456789i".Contains(PeekChar(1)))
+            if (PeekChar() == '`' && "0123456789i".Contains(PeekChar(1)))
             {
                 stringBuilder.Append(ReadChar());
                 stringBuilder.Append(ReadChar());
             }
             var finalId = stringBuilder.ToString();
-            if (finalId.Contains('.')) throw new ParseException("Invalid character in Identifier: . (period)", position);
+            if (finalId.Contains('.'))
+                throw new ParseException("Invalid character in Identifier: . (period)", position);
             return new Token(TokenType.Identifier, finalId);
         }
 
         private void EatWhiteSpaces()
         {
-            while(HasChar() && char.IsWhiteSpace(PeekChar())) ReadChar();
+            while (HasChar() && char.IsWhiteSpace(PeekChar())) ReadChar();
         }
 
         private char PeekChar(int n = 0)
@@ -451,4 +458,3 @@ namespace Hassium.Lexer
         }
     }
 }
-

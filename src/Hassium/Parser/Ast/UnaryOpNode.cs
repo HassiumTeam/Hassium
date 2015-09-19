@@ -10,16 +10,13 @@ namespace Hassium.Parser.Ast
     }
 
     //Class for the urinary operations
-    public class UnaryOpNode: AstNode
+    public class UnaryOpNode : AstNode
     {
         public UnaryOperation UnOp { get; set; }
 
         public AstNode Value
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public UnaryOpNode(int position, UnaryOperation type, AstNode value) : base(position)
@@ -34,4 +31,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

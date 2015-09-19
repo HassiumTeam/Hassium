@@ -6,7 +6,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking
 {
-    public class HassiumSocket: HassiumObject
+    public class HassiumSocket : HassiumObject
     {
         public Socket Value { get; private set; }
 
@@ -74,4 +74,3 @@ namespace Hassium.HassiumObjects.Networking
         }
     }
 }
-

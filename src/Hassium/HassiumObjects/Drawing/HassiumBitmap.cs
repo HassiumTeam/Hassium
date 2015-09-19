@@ -12,20 +12,20 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Drawing
 {
-    public class HassiumBitmap: HassiumObject
+    public class HassiumBitmap : HassiumObject
     {
         public Bitmap Value { get; private set; }
 
         public HassiumBitmap(HassiumObject[] cctr)
         {
             if (cctr[0] is HassiumString)
-                Value = new Bitmap(((HassiumString)cctr).Value);
+                Value = new Bitmap(((HassiumString) cctr).Value);
             else if (cctr[0] is HassiumImage)
-                Value = new Bitmap(((HassiumImage)cctr).Value);
+                Value = new Bitmap(((HassiumImage) cctr).Value);
             else if (cctr[0] is HassiumInt)
-                Value = new Bitmap(((HassiumInt)cctr[0]).Value, ((HassiumInt)cctr[1]).Value);
+                Value = new Bitmap(((HassiumInt) cctr[0]).Value, ((HassiumInt) cctr[1]).Value);
             else if (cctr[0] is HassiumDouble)
-                Value = new Bitmap(((HassiumDouble)cctr[0]).ValueInt, ((HassiumDouble)cctr[1]).ValueInt);
+                Value = new Bitmap(((HassiumDouble) cctr[0]).ValueInt, ((HassiumDouble) cctr[1]).ValueInt);
             else
                 throw new Exception("Unknown type " + cctr[0].GetType().ToString() + " in HassiumBitmap constructor");
 
@@ -51,28 +51,29 @@ namespace Hassium.HassiumObjects.Drawing
             if (args.Length <= 0)
                 Value.MakeTransparent();
             else
-                Value.MakeTransparent(((HassiumColor)args[0]).Value);
+                Value.MakeTransparent(((HassiumColor) args[0]).Value);
 
             return null;
         }
 
         private HassiumObject save(HassiumObject[] args)
         {
-            Value.Save(((HassiumString)args[0]).Value);
+            Value.Save(((HassiumString) args[0]).Value);
 
             return null;
         }
 
         private HassiumObject setPixel(HassiumObject[] args)
         {
-            Value.SetPixel(((HassiumDouble)args[0]).ValueInt, ((HassiumDouble)args[1]).ValueInt, ((HassiumColor)args[2]).Value);
+            Value.SetPixel(((HassiumDouble) args[0]).ValueInt, ((HassiumDouble) args[1]).ValueInt,
+                ((HassiumColor) args[2]).Value);
 
             return null;
         }
 
         private HassiumObject setResolution(HassiumObject[] args)
         {
-            Value.SetResolution(((float)((HassiumDouble)args[0]).Value), ((float)((HassiumDouble)args[1]).Value));
+            Value.SetResolution(((float) ((HassiumDouble) args[0]).Value), ((float) ((HassiumDouble) args[1]).Value));
 
             return null;
         }

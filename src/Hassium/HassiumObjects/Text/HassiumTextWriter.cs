@@ -4,7 +4,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumTextWriter: HassiumObject
+    public class HassiumTextWriter : HassiumObject
     {
         public TextWriter Value { get; private set; }
 
@@ -55,4 +55,3 @@ namespace Hassium.HassiumObjects.Text
         }
     }
 }
-

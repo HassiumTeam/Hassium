@@ -2,14 +2,11 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class UncheckedNode: AstNode
+    public class UncheckedNode : AstNode
     {
         public AstNode Node
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public UncheckedNode(int position, AstNode node) : base(position)

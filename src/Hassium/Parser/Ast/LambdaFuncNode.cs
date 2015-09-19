@@ -9,10 +9,7 @@ namespace Hassium.Parser.Ast
 
         public AstNode Body
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public LambdaFuncNode(int position, List<string> paramaters, AstNode body) : base(position)
@@ -21,7 +18,7 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
-        public static explicit operator FuncNode (LambdaFuncNode funcNode)
+        public static explicit operator FuncNode(LambdaFuncNode funcNode)
         {
             return new FuncNode(funcNode.Position, "", funcNode.Parameters, funcNode.Body);
         }

@@ -1,6 +1,6 @@
 ﻿namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumByte: HassiumObject
+    public class HassiumByte : HassiumObject
     {
         public byte Value { get; private set; }
 
@@ -15,4 +15,3 @@
         }
     }
 }
-

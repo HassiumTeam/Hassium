@@ -2,7 +2,7 @@
 
 namespace Hassium.Parser.Ast
 {
-    public class UseNode: AstNode
+    public class UseNode : AstNode
     {
         public string Path { get; private set; }
         public string Name { get; private set; }
@@ -10,7 +10,8 @@ namespace Hassium.Parser.Ast
         public bool IsModule { get; private set; }
         public bool IsLibrary { get; private set; }
 
-        public UseNode(int position, string path, string name, bool global, bool module, bool library = false) : base(position)
+        public UseNode(int position, string path, string name, bool global, bool module, bool library = false)
+            : base(position)
         {
             Path = path;
             Name = name;
@@ -25,4 +26,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

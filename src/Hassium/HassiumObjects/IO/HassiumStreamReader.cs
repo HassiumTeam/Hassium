@@ -2,9 +2,9 @@
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
-namespace Hassium.HassiumObjects.IO   
+namespace Hassium.HassiumObjects.IO
 {
-    public class HassiumStreamReader: HassiumObject
+    public class HassiumStreamReader : HassiumObject
     {
         public StreamReader Value { get; private set; }
 
@@ -38,12 +38,12 @@ namespace Hassium.HassiumObjects.IO
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return new HassiumChar(((char)Value.Peek()));
+            return new HassiumChar(((char) Value.Peek()));
         }
 
         private HassiumObject read(HassiumObject[] args)
         {
-            return new HassiumChar(((char)Value.Read()));
+            return new HassiumChar(((char) Value.Read()));
         }
 
         private HassiumObject readToEnd(HassiumObject[] args)
@@ -52,4 +52,3 @@ namespace Hassium.HassiumObjects.IO
         }
     }
 }
-

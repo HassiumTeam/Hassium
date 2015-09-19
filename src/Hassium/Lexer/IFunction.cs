@@ -7,4 +7,3 @@ namespace Hassium.Lexer
         HassiumObject Invoke(HassiumObject[] args);
     }
 }
-

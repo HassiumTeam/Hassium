@@ -3,7 +3,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumChar: HassiumObject
+    public class HassiumChar : HassiumObject
     {
         public char Value { get; private set; }
 
@@ -29,4 +29,3 @@ namespace Hassium.HassiumObjects.Types
         }
     }
 }
-

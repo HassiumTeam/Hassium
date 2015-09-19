@@ -3,14 +3,14 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Random
 {
-    public class HassiumRandom: HassiumObject
+    public class HassiumRandom : HassiumObject
     {
         public System.Random Value { get; private set; }
 
         public HassiumRandom(System.Random value)
         {
             Value = value;
-            Attributes.Add("next", new InternalFunction(next, new []{0,1,2}));
+            Attributes.Add("next", new InternalFunction(next, new[] {0, 1, 2}));
             Attributes.Add("nextDouble", new InternalFunction(nextDouble, 0));
             Attributes.Add("toString", new InternalFunction(toString, 0));
         }
@@ -39,4 +39,3 @@ namespace Hassium.HassiumObjects.Random
         }
     }
 }
-

@@ -18,6 +18,7 @@ namespace Hassium.Functions
             Console.Write(String.Join("", args.Select(x => x.ToString())));
             return null;
         }
+
         /// <summary>
         /// Prints the specified string to the console (see <c>Print</c>) followed by a newline.
         /// </summary>
@@ -29,6 +30,7 @@ namespace Hassium.Functions
             Console.WriteLine(String.Join("", args.Select(x => x.ToString())));
             return null;
         }
+
         /// <summary>
         /// Prints the specified array to the console followed by a newline.
         /// </summary>
@@ -40,17 +42,20 @@ namespace Hassium.Functions
             Console.WriteLine(HassiumConvert.toString(new[] {args[0]}).ToString());
             return null;
         }
+
         /// <summary>
         /// Prompt the user to type something and return the input.
         /// </summary>
         /// <param name="args">No parameters.</param>
         /// <returns>Nothing.</returns>
-        [IntFunc("input", new []{0,1,2})]
+        [IntFunc("input", new[] {0, 1, 2})]
         public static HassiumObject Input(HassiumObject[] args)
         {
-            if (args.Length > 0 && args[0].HBool().Value) return Console.ReadKey(args.Length == 2 && args[1].HBool().Value).KeyChar;
+            if (args.Length > 0 && args[0].HBool().Value)
+                return Console.ReadKey(args.Length == 2 && args[1].HBool().Value).KeyChar;
             return Console.ReadLine();
         }
+
         /// <summary>
         /// Clears the console.
         /// </summary>
@@ -62,6 +67,7 @@ namespace Hassium.Functions
             Console.Clear();
             return null;
         }
+
         /// <summary>
         /// Waits for the user to press any key.
         /// </summary>

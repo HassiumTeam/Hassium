@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class CodeBlock: AstNode
+    public class CodeBlock : AstNode
     {
         public CodeBlock(int codePos) : base(codePos)
         {
@@ -14,4 +14,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

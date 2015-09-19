@@ -6,27 +6,21 @@ namespace Hassium.Parser.Ast
     {
         public AstNode Predicate
         {
-            get
-            {
-                return Children[0];
-            }
-        }
-        public AstNode Body
-        {
-            get
-            {
-                return Children[1];
-            }
-        }
-        public AstNode ElseBody
-        {
-            get
-            {
-                return Children[2];
-            }
+            get { return Children[0]; }
         }
 
-        public ConditionalOpNode(int position, AstNode predicate, AstNode body) : this(position, predicate, body, new CodeBlock(position))
+        public AstNode Body
+        {
+            get { return Children[1]; }
+        }
+
+        public AstNode ElseBody
+        {
+            get { return Children[2]; }
+        }
+
+        public ConditionalOpNode(int position, AstNode predicate, AstNode body)
+            : this(position, predicate, body, new CodeBlock(position))
         {
         }
 

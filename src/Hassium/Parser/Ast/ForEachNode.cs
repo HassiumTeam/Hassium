@@ -6,26 +6,17 @@ namespace Hassium.Parser.Ast
     {
         public AstNode Needle
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public AstNode Haystack
         {
-            get
-            {
-                return Children[1];
-            }
+            get { return Children[1]; }
         }
 
         public AstNode Body
         {
-            get
-            {
-                return Children[2];
-            }
+            get { return Children[2]; }
         }
 
         public ForEachNode(int position, AstNode needle, AstNode haystack, AstNode body) : base(position)
@@ -41,4 +32,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

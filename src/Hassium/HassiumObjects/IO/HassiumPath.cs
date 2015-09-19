@@ -4,7 +4,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
 {
-    public class HassiumPath: HassiumObject
+    public class HassiumPath : HassiumObject
     {
         public HassiumPath()
         {
@@ -77,4 +77,3 @@ namespace Hassium.HassiumObjects.IO
         }
     }
 }
-

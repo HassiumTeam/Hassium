@@ -36,20 +36,15 @@ namespace Hassium.Parser.Ast
         public BinaryOperation BinOp { get; set; }
         public BinaryOperation AssignOperation { get; set; }
         public bool IsOpAssign { get; set; }
+
         public AstNode Left
         {
-            get 
-            {
-                return Children [0];
-            }
+            get { return Children[0]; }
         }
 
         public AstNode Right
         {
-            get
-            {
-                return Children [1];
-            }
+            get { return Children[1]; }
         }
 
         public BinOpNode(int position, BinaryOperation type, AstNode left, AstNode right) : base(position)
@@ -60,7 +55,8 @@ namespace Hassium.Parser.Ast
             Children.Add(right);
         }
 
-        public BinOpNode(int position, BinaryOperation type, BinaryOperation assign, AstNode left, AstNode right) : base(position)
+        public BinOpNode(int position, BinaryOperation type, BinaryOperation assign, AstNode left, AstNode right)
+            : base(position)
         {
             BinOp = type;
             AssignOperation = assign;
@@ -75,4 +71,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

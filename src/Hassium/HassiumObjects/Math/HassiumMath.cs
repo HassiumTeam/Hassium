@@ -8,7 +8,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Math
 {
-    public class HassiumMath: HassiumObject
+    public class HassiumMath : HassiumObject
     {
         public HassiumMath()
         {
@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Math
             Attributes.Add("log10", new InternalFunction(Log10, 1));
             Attributes.Add("max", new InternalFunction(Max, 2));
             Attributes.Add("min", new InternalFunction(Min, 2));
-            Attributes.Add("round", new InternalFunction(Round, new []{1,2}));
+            Attributes.Add("round", new InternalFunction(Round, new[] {1, 2}));
             Attributes.Add("sin", new InternalFunction(Sin, 1));
             Attributes.Add("sinh", new InternalFunction(Sinh, 1));
             Attributes.Add("tan", new InternalFunction(Tan, 1));
@@ -42,7 +42,8 @@ namespace Hassium.HassiumObjects.Math
         public HassiumObject Hash(HassiumObject[] args)
         {
             byte[] encodedText = new UTF8Encoding().GetBytes(args[1].ToString());
-            byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName(args[0].ToString().ToUpper())).ComputeHash(encodedText);
+            byte[] hash =
+                ((HashAlgorithm) CryptoConfig.CreateFromName(args[0].ToString().ToUpper())).ComputeHash(encodedText);
             return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
         }
 
@@ -128,12 +129,14 @@ namespace Hassium.HassiumObjects.Math
 
         public HassiumObject Min(HassiumObject[] args)
         {
-            return new HassiumDouble(System.Math.Min(args[0].HDouble().Value, ((HassiumDouble)args[1].HDouble().Value)));
+            return new HassiumDouble(System.Math.Min(args[0].HDouble().Value, ((HassiumDouble) args[1].HDouble().Value)));
         }
 
         public HassiumObject Round(HassiumObject[] args)
         {
-            return args.Count() > 1 ? new HassiumDouble(System.Math.Round(args[0].HDouble().Value, args[1].HInt().Value)) : new HassiumDouble(System.Math.Round(args[0].HDouble().Value));
+            return args.Count() > 1
+                ? new HassiumDouble(System.Math.Round(args[0].HDouble().Value, args[1].HInt().Value))
+                : new HassiumDouble(System.Math.Round(args[0].HDouble().Value));
         }
 
         public HassiumObject Sin(HassiumObject[] args)

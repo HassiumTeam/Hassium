@@ -39,13 +39,14 @@ namespace Hassium.Functions
             return new HassiumArray(new HassiumObject[args[0].HInt().Value]);
         }
 
-        [IntFunc("Random", true, new []{0, 1})]
+        [IntFunc("Random", true, new[] {0, 1})]
         public static HassiumObject Random(HassiumObject[] args)
         {
-            return args.Length > 0 ? new HassiumRandom(new Random(args[0].HInt().Value)) : new HassiumRandom(new Random());
+            return args.Length > 0
+                ? new HassiumRandom(new Random(args[0].HInt().Value))
+                : new HassiumRandom(new Random());
         }
 
-        
 
         [IntFunc("Event", true, -1)]
         public static HassiumObject Event(HassiumObject[] args)
@@ -63,4 +64,3 @@ namespace Hassium.Functions
         }
     }
 }
-

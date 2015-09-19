@@ -63,7 +63,7 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumObject Move(HassiumObject[] args)
         {
-            Copy(new HassiumObject[]{args[0], args[1].ToString()});
+            Copy(new HassiumObject[] {args[0], args[1].ToString()});
             Directory.Delete(args[0], true);
             args[0] = args[1].ToString();
             return null;
@@ -72,7 +72,7 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject Rename(HassiumObject[] args)
         {
             var dname = Path.GetDirectoryName(args[0]);
-            if(dname != null) Move(new HassiumObject[] { args[0], Path.Combine(dname, args[1].ToString())});
+            if (dname != null) Move(new HassiumObject[] {args[0], Path.Combine(dname, args[1].ToString())});
             return null;
         }
 
@@ -99,19 +99,19 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumObject SetLastAccessTime(HassiumObject[] args)
         {
-            Directory.SetLastAccessTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            Directory.SetLastAccessTime(args[0].ToString(), ((HassiumDate) args[1]).Value);
             return null;
         }
 
         public HassiumObject SetLastWriteTime(HassiumObject[] args)
         {
-            Directory.SetLastWriteTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            Directory.SetLastWriteTime(args[0].ToString(), ((HassiumDate) args[1]).Value);
             return null;
         }
 
         public HassiumObject SetCreationTime(HassiumObject[] args)
         {
-            Directory.SetCreationTime(args[0].ToString(), ((HassiumDate)args[1]).Value);
+            Directory.SetCreationTime(args[0].ToString(), ((HassiumDate) args[1]).Value);
             return null;
         }
 

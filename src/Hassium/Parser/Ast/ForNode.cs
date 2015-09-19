@@ -2,38 +2,26 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class ForNode: AstNode
+    public class ForNode : AstNode
     {
         public AstNode Left
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public AstNode Predicate
         {
-            get
-            {
-                return Children[1];
-            }
+            get { return Children[1]; }
         }
 
         public AstNode Right
         {
-            get
-            {
-                return Children[2];
-            }
+            get { return Children[2]; }
         }
 
         public AstNode Body
         {
-            get
-            {
-                return Children[3];
-            }
+            get { return Children[3]; }
         }
 
         public ForNode(int position, AstNode left, AstNode predicate, AstNode right, AstNode body) : base(position)
@@ -50,4 +38,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

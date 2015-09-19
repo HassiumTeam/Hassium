@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class StatementNode: AstNode
+    public class StatementNode : AstNode
     {
         public override object Visit(IVisitor visitor)
         {
@@ -10,4 +10,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

@@ -6,7 +6,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumEncoding: HassiumObject
+    public class HassiumEncoding : HassiumObject
     {
         public Encoding Value { get; private set; }
 
@@ -66,8 +66,7 @@ namespace Hassium.HassiumObjects.Text
 
         private HassiumObject getByte(HassiumObject[] args)
         {
-            return (int)(Value.GetBytes(args[0].HString().Value)[0]);
+            return (int) (Value.GetBytes(args[0].HString().Value)[0]);
         }
     }
 }
-

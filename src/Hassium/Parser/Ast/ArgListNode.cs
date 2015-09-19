@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class ArgListNode: AstNode
+    public class ArgListNode : AstNode
     {
         public ArgListNode(int position) : base(position)
         {
@@ -14,4 +14,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

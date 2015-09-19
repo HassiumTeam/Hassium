@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Collections
 {
-    public class HassiumStack: HassiumObject
+    public class HassiumStack : HassiumObject
     {
         public Stack<HassiumObject> Value { get; private set; }
 
@@ -48,4 +48,3 @@ namespace Hassium.HassiumObjects.Collections
         }
     }
 }
-

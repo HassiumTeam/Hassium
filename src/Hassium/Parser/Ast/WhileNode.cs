@@ -2,31 +2,25 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class WhileNode: AstNode
+    public class WhileNode : AstNode
     {
         public AstNode Predicate
         {
-            get
-            {
-                return Children[0];
-            }
-        }
-        public AstNode Body
-        {
-            get
-            {
-                return Children[1];
-            }
-        }
-        public AstNode ElseBody
-        {
-            get
-            {
-                return Children[2];
-            }
+            get { return Children[0]; }
         }
 
-        public WhileNode(int position, AstNode predicate, AstNode body) : this(position, predicate, body, new CodeBlock(position))
+        public AstNode Body
+        {
+            get { return Children[1]; }
+        }
+
+        public AstNode ElseBody
+        {
+            get { return Children[2]; }
+        }
+
+        public WhileNode(int position, AstNode predicate, AstNode body)
+            : this(position, predicate, body, new CodeBlock(position))
         {
         }
 
@@ -43,4 +37,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

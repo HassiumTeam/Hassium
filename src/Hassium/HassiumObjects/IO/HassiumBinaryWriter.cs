@@ -3,7 +3,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumBinaryWriter: HassiumObject
+    public class HassiumBinaryWriter : HassiumObject
     {
         public BinaryWriter Value { get; private set; }
 
@@ -41,4 +41,3 @@ namespace Hassium.HassiumObjects.Text
         }
     }
 }
-

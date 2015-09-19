@@ -11,7 +11,6 @@ namespace Hassium.Functions
 {
     public class SystemFunctions : ILibrary
     {
-
         [IntFunc("system", -1)]
         public static HassiumObject System(HassiumObject[] args)
         {
@@ -27,14 +26,14 @@ namespace Hassium.Functions
                 }
             };
             process.Start();
-                
+
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
             return output;
         }
 
-        [IntFunc("date", new []{1, 3, 6, 0})]
+        [IntFunc("date", new[] {1, 3, 6, 0})]
         public static HassiumObject Date(HassiumObject[] args)
         {
             switch (args.Length)
@@ -53,24 +52,27 @@ namespace Hassium.Functions
             }
         }
 
-        [IntFunc("dateParse", new []{1, 2})]
+        [IntFunc("dateParse", new[] {1, 2})]
         public static HassiumObject DateParse(HassiumObject[] args)
         {
-            return args.Length == 2 ? new HassiumDate(DateTime.ParseExact(args[0].ToString(), args[1].ToString(), CultureInfo.InvariantCulture)) : new HassiumDate(DateTime.Parse(args[0].ToString()));
+            return args.Length == 2
+                ? new HassiumDate(DateTime.ParseExact(args[0].ToString(), args[1].ToString(),
+                    CultureInfo.InvariantCulture))
+                : new HassiumDate(DateTime.Parse(args[0].ToString()));
         }
 
-        [IntFunc("time", new []{0, 1, 3})]
+        [IntFunc("time", new[] {0, 1, 3})]
         public static HassiumObject Time(HassiumObject[] args)
         {
-            switch(args.Length)
+            switch (args.Length)
             {
                 case 0:
                     return new HassiumDate(DateTime.Now);
                 case 1:
-                    return new HassiumDate(DateTime.Now).toString(new HassiumObject[] { args[0].ToString() });
+                    return new HassiumDate(DateTime.Now).toString(new HassiumObject[] {args[0].ToString()});
                 default:
                     return new HassiumDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
-                    args[0].HDouble().ValueInt, args[1].HDouble().ValueInt, args[2].HDouble().ValueInt));
+                        args[0].HDouble().ValueInt, args[1].HDouble().ValueInt, args[2].HDouble().ValueInt));
             }
         }
 

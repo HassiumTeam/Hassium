@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking
 {
-    public class HassiumTcpClient: HassiumObject
+    public class HassiumTcpClient : HassiumObject
     {
         public TcpClient Value { get; private set; }
 
@@ -37,4 +37,3 @@ namespace Hassium.HassiumObjects.Networking
         }
     }
 }
-

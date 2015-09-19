@@ -12,4 +12,3 @@ namespace Hassium.Semantics
         }
     }
 }
-

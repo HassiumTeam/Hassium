@@ -3,17 +3,21 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumDouble: HassiumObject, IConvertible
+    public class HassiumDouble : HassiumObject, IConvertible
     {
         public double Value { get; set; }
 
-        public int ValueInt { get { return Convert.ToInt32(Value); } set { Value = (double) value; } }
+        public int ValueInt
+        {
+            get { return Convert.ToInt32(Value); }
+            set { Value = (double) value; }
+        }
 
         public HassiumDouble(double value)
         {
             Attributes.Add("toString", new InternalFunction(tostring, 0));
             Attributes.Add("compare", new InternalFunction(compare, 1));
-            Attributes.Add("isBetween", new InternalFunction(isBetween, new []{2,3}));
+            Attributes.Add("isBetween", new InternalFunction(isBetween, new[] {2, 3}));
             Value = value;
         }
 
@@ -29,7 +33,8 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject isBetween(HassiumObject[] args)
         {
-            if(args.Length == 3) if(args[2].HBool().Value) return Value >= args[0].HDouble().Value && Value <= args[1].HDouble().Value;
+            if (args.Length == 3)
+                if (args[2].HBool().Value) return Value >= args[0].HDouble().Value && Value <= args[1].HDouble().Value;
             return Value > args[0].HDouble().Value && Value < args[1].HDouble().Value;
         }
 
@@ -45,6 +50,7 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #region IConvertible stuff
+
         public TypeCode GetTypeCode()
         {
             return TypeCode.Double;
@@ -129,7 +135,7 @@ namespace Hassium.HassiumObjects.Types
         {
             return Convert.ToUInt64(Value);
         }
-#endregion
+
+        #endregion
     }
 }
-

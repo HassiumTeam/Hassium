@@ -4,7 +4,7 @@ using Hassium.HassiumObjects.IO;
 
 namespace Hassium.HassiumObjects.Networking
 {
-    public class HassiumNetworkStream: HassiumStream
+    public class HassiumNetworkStream : HassiumStream
     {
         public new NetworkStream Value
         {
@@ -15,7 +15,5 @@ namespace Hassium.HassiumObjects.Networking
         public HassiumNetworkStream(Stream s) : base(s)
         {
         }
-
     }
 }
-

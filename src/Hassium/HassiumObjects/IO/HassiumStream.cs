@@ -1,4 +1,3 @@
-
 using System.IO;
 using System.Linq;
 using Hassium.Functions;
@@ -6,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
 {
-    public class HassiumStream: HassiumObject
+    public class HassiumStream : HassiumObject
     {
         public Stream Value { get; protected set; }
 
@@ -22,7 +21,7 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("flush", new InternalFunction(Flush, 0));
             Attributes.Add("close", new InternalFunction(Close, 0));
             Attributes.Add("read", new InternalFunction(Read, 0));
-            Attributes.Add("seek", new InternalFunction(Seek, new []{0,1}));
+            Attributes.Add("seek", new InternalFunction(Seek, new[] {0, 1}));
             Attributes.Add("write", new InternalFunction(Write, 1));
         }
 
@@ -55,7 +54,7 @@ namespace Hassium.HassiumObjects.IO
                 var buffer = args[0].ToString().ToCharArray().Select(x => (byte) x).ToArray();
                 Value.Write(buffer, 0, buffer.Length);
             }
-            else Value.WriteByte((byte)args[0].HDouble().ValueInt);
+            else Value.WriteByte((byte) args[0].HDouble().ValueInt);
             return null;
         }
     }

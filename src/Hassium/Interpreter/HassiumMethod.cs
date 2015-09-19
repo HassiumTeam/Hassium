@@ -16,11 +16,20 @@ namespace Hassium.Interpreter
         public FuncNode FuncNode;
         public StackFrame stackFrame;
 
-        public string Name { get { return FuncNode.Name; } }
+        public string Name
+        {
+            get { return FuncNode.Name; }
+        }
 
-        public bool IsStatic { get { return !FuncNode.Parameters.Contains("this"); } }
+        public bool IsStatic
+        {
+            get { return !FuncNode.Parameters.Contains("this"); }
+        }
 
-        public bool IsConstructor { get { return Name == "new"; } }
+        public bool IsConstructor
+        {
+            get { return Name == "new"; }
+        }
 
         public HassiumMethod(Interpreter interpreter, FuncNode funcNode, LocalScope localScope, HassiumObject self)
         {
@@ -47,7 +56,8 @@ namespace Hassium.Interpreter
 
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
-            if (stackFrame == null || (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x))))
+            if (stackFrame == null ||
+                (stackFrame.Locals.Count == 0 || FuncNode.Parameters.Any(x => stackFrame.Locals.ContainsKey(x))))
                 stackFrame = new StackFrame(LocalScope, (IsStatic && !IsConstructor) ? null : SelfReference);
             if (!IsStatic || IsConstructor)
                 stackFrame.Locals["this"] = SelfReference;
@@ -73,7 +83,10 @@ namespace Hassium.Interpreter
 
             Interpreter.CallStack.Pop();
 
-            if (ret is HassiumArray) ret = ((HassiumArray) ret).Cast<object>().Select((s, i) => new {s, i}).ToDictionary(x => (object)x.i, x => (object)x.s);
+            if (ret is HassiumArray)
+                ret = ((HassiumArray) ret).Cast<object>()
+                    .Select((s, i) => new {s, i})
+                    .ToDictionary(x => (object) x.i, x => (object) x.s);
             Interpreter.inFunc--;
             Interpreter.returnFunc = false;
             return ret;
@@ -81,7 +94,8 @@ namespace Hassium.Interpreter
 
         public override string ToString()
         {
-            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2}]", Name, FuncNode.Parameters.Count, SelfReference ?? "null");
+            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2}]", Name, FuncNode.Parameters.Count,
+                SelfReference ?? "null");
         }
 
         /// <summary>
@@ -129,10 +143,10 @@ namespace Hassium.Interpreter
         /// </summary>
         /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/></returns>
-        public static Func<HassiumObject, HassiumObject, HassiumObject, HassiumObject> GetFunc3(HassiumObject internalFunction)
+        public static Func<HassiumObject, HassiumObject, HassiumObject, HassiumObject> GetFunc3(
+            HassiumObject internalFunction)
         {
             return (arg1, arg2, arg3) => (internalFunction).Invoke(arg1, arg2, arg3);
         }
     }
 }
-

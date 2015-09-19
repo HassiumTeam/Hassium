@@ -5,4 +5,3 @@ namespace Hassium.Functions
         //Dictionary<string, InternalFunction> GetFunctions();
     }
 }
-

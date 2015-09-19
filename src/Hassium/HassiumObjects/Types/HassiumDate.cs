@@ -20,13 +20,13 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("minute", new InternalFunction(x => Value.Minute, 0, true));
             Attributes.Add("second", new InternalFunction(x => Value.Second, 0, true));
             Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), 0, true));
-            Attributes.Add("timeStamp", new InternalFunction(x => GetTimestamp(new HassiumObject[]{}), 0, true));
-            Attributes.Add("toString", new InternalFunction(toString, new []{0,1}));
+            Attributes.Add("timeStamp", new InternalFunction(x => GetTimestamp(new HassiumObject[] {}), 0, true));
+            Attributes.Add("toString", new InternalFunction(toString, new[] {0, 1}));
         }
 
         public HassiumObject GetTimestamp(HassiumObject[] args)
         {
-            return new HassiumInt((int)(Value - new DateTime(1970, 1, 1)).TotalSeconds);
+            return new HassiumInt((int) (Value - new DateTime(1970, 1, 1)).TotalSeconds);
         }
 
         public override string ToString()
@@ -59,10 +59,10 @@ namespace Hassium.HassiumObjects.Types
                             ta = n.DayOfWeek.ToString();
                             break;
                         case 'N':
-                            ta = (int)(n.DayOfWeek + 6) % 7 + "";
+                            ta = (int) (n.DayOfWeek + 6) % 7 + "";
                             break;
                         case 'w':
-                            ta = (int)(n.DayOfWeek) + "";
+                            ta = (int) (n.DayOfWeek) + "";
                             break;
                         case 'z':
                             ta = n.DayOfYear.ToString();
@@ -70,7 +70,7 @@ namespace Hassium.HassiumObjects.Types
                         case 'W':
                             ta =
                                 CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
-                                    n.AddDays(4 - ((int)(n.DayOfWeek + 6) % 7 == 0 ? 7 : (int)(n.DayOfWeek + 6) % 7)),
+                                    n.AddDays(4 - ((int) (n.DayOfWeek + 6) % 7 == 0 ? 7 : (int) (n.DayOfWeek + 6) % 7)),
                                     CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday).ToString();
                             break;
                         case 'F':
@@ -86,7 +86,7 @@ namespace Hassium.HassiumObjects.Types
                             ta = n.Month.ToString();
                             break;
                         case 't':
-                            ta = new[] { 31, 30, 28, 30, 31, 30, 31, 31, 30, 31, 30, 31 }[n.Month - 1].ToString();
+                            ta = new[] {31, 30, 28, 30, 31, 30, 31, 31, 30, 31, 30, 31}[n.Month - 1].ToString();
                             break;
                         case 'L':
                             ta = DateTime.IsLeapYear(n.Year) ? "1" : "0";
@@ -110,7 +110,8 @@ namespace Hassium.HassiumObjects.Types
                             ta = n.Hour > 12 ? "P.M." : "A.M.";
                             break;
                         case 'B':
-                            ta = ((int)(n.ToUniversalTime().AddHours(1).TimeOfDay.TotalMilliseconds / 86400d)).ToString();
+                            ta =
+                                ((int) (n.ToUniversalTime().AddHours(1).TimeOfDay.TotalMilliseconds / 86400d)).ToString();
                             break;
                         case 'g':
                             ta = (n.Hour > 12 ? n.Hour - 12 : n.Hour).ToString();
@@ -143,13 +144,14 @@ namespace Hassium.HassiumObjects.Types
                                 offstr = "-" + offset.ToString().Replace(":", "").Substring(1, 4);
                             else
                                 offstr = "+" + offset.ToString().Replace(":", "").Substring(0, 4);
-                            ta = string.Format("{0}T{1}{2}", n.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), n.ToString("HH:mm:ss", CultureInfo.InvariantCulture), offstr);
+                            ta = string.Format("{0}T{1}{2}", n.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                n.ToString("HH:mm:ss", CultureInfo.InvariantCulture), offstr);
                             break;
                         case 'r':
                             ta = n.ToString("ddd, dd MMM yyyy hh:mm:ss ") + "GMT";
                             break;
                         case 'U':
-                            ta = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds + "";
+                            ta = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds + "";
                             break;
                         default:
                             ta = cur.ToString();
@@ -165,7 +167,8 @@ namespace Hassium.HassiumObjects.Types
         {
             var a = d1.Value;
             var b = d2.Value;
-            var c = new HassiumDate(a + new TimeSpan(b.Year * 365 + b.DayOfYear, b.Hour, b.Minute, b.Second, b.Millisecond));
+            var c =
+                new HassiumDate(a + new TimeSpan(b.Year * 365 + b.DayOfYear, b.Hour, b.Minute, b.Second, b.Millisecond));
             return c;
         }
 

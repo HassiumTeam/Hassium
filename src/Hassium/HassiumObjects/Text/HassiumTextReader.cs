@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumTextReader: HassiumObject
+    public class HassiumTextReader : HassiumObject
     {
         public TextReader Value { get; private set; }
 
@@ -35,12 +35,12 @@ namespace Hassium.HassiumObjects.Text
 
         private HassiumObject peek(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(((char)Value.Peek())));
+            return new HassiumString(Convert.ToString(((char) Value.Peek())));
         }
 
         private HassiumObject read(HassiumObject[] args)
         {
-            return new HassiumString(Convert.ToString(((char)Value.Read())));
+            return new HassiumString(Convert.ToString(((char) Value.Read())));
         }
 
         private HassiumObject readLine(HassiumObject[] args)
@@ -59,4 +59,3 @@ namespace Hassium.HassiumObjects.Text
         }
     }
 }
-

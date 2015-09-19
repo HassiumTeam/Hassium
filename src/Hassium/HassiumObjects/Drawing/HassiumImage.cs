@@ -11,7 +11,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Drawing
 {
-    public class HassiumImage: HassiumObject
+    public class HassiumImage : HassiumObject
     {
         public Image Value { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Drawing
 
         private HassiumObject save(HassiumObject[] args)
         {
-            Value.Save(((HassiumString)args[0]).ToString());
+            Value.Save(((HassiumString) args[0]).ToString());
 
             return null;
         }

@@ -3,7 +3,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.IO
 {
-    public class HassiumStreamWriter: HassiumObject
+    public class HassiumStreamWriter : HassiumObject
     {
         public StreamWriter Value { get; private set; }
 
@@ -48,4 +48,3 @@ namespace Hassium.HassiumObjects.IO
         }
     }
 }
-

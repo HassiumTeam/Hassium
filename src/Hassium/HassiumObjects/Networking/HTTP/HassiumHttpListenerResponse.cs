@@ -7,7 +7,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {
-    public class HassiumHttpListenerResponse: HassiumObject
+    public class HassiumHttpListenerResponse : HassiumObject
     {
         public HttpListenerResponse Value { get; private set; }
 
@@ -22,11 +22,11 @@ namespace Hassium.HassiumObjects.Networking.HTTP
                         return null;
                     }));
             Attributes.Add("contentLength", new HassiumProperty("contentLength", x => value.ContentLength64,
-                    x =>
-                    {
-                        value.ContentLength64 = x[0].HInt().Value;
-                        return null;
-                    }));
+                x =>
+                {
+                    value.ContentLength64 = x[0].HInt().Value;
+                    return null;
+                }));
             Attributes.Add("outputStream", new InternalFunction(outputStream, 0, true));
             Attributes.Add("abort", new InternalFunction(abort, 0));
             Attributes.Add("appendHeader", new InternalFunction(appendHeader, 2));
@@ -64,4 +64,3 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         }
     }
 }
-

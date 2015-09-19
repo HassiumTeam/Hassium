@@ -3,7 +3,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumBool: HassiumObject, IConvertible
+    public class HassiumBool : HassiumObject, IConvertible
     {
         public bool Value { get; private set; }
 
@@ -24,6 +24,7 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #region IConvertible stuff
+
         public TypeCode GetTypeCode()
         {
             return TypeCode.Boolean;
@@ -108,7 +109,7 @@ namespace Hassium.HassiumObjects.Types
         {
             return Convert.ToUInt64(Value);
         }
+
         #endregion
     }
 }
-

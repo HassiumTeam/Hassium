@@ -35,8 +35,8 @@ namespace Hassium.HassiumObjects
             }
             if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
             {
-                var prop = ((HassiumProperty)_attributes[name]);
-                if(prop.ReadOnly) throw new ParseException("The property " + prop.Name + " is read-only", -1);
+                var prop = ((HassiumProperty) _attributes[name]);
+                if (prop.ReadOnly) throw new ParseException("The property " + prop.Name + " is read-only", -1);
                 prop.SetValue(this, value);
             }
             else _attributes[name] = value;
@@ -44,14 +44,21 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject GetAttribute(string name, int pos)
         {
-            if(!_attributes.ContainsKey(name)) throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
-            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty) return ((HassiumProperty)_attributes[name]).GetValue(this);
+            if (!_attributes.ContainsKey(name))
+                throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
+            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
+                return ((HassiumProperty) _attributes[name]).GetValue(this);
             else return _attributes[name];
         }
 
         public override string ToString()
         {
-            if (Attributes.Any(x => x.Key == "toString" && (x.Value is InternalFunction && ((InternalFunction)x.Value).Arguments.Length == 0))) return GetAttribute("toString", -1).Invoke();
+            if (
+                Attributes.Any(
+                    x =>
+                        x.Key == "toString" &&
+                        (x.Value is InternalFunction && ((InternalFunction) x.Value).Arguments.Length == 0)))
+                return GetAttribute("toString", -1).Invoke();
             return "";
         }
 
@@ -61,6 +68,7 @@ namespace Hassium.HassiumObjects
         }
 
         #region Cast
+
         public static implicit operator int(HassiumObject obj)
         {
             return ((HassiumInt) obj).Value;
@@ -71,9 +79,9 @@ namespace Hassium.HassiumObjects
             return new HassiumInt(i);
         }
 
-        public static implicit operator double (HassiumObject obj)
+        public static implicit operator double(HassiumObject obj)
         {
-            return ((HassiumDouble)obj).Value;
+            return ((HassiumDouble) obj).Value;
         }
 
         public static implicit operator HassiumObject(double d)
@@ -81,7 +89,7 @@ namespace Hassium.HassiumObjects
             return new HassiumDouble(d);
         }
 
-        public static implicit operator string (HassiumObject obj)
+        public static implicit operator string(HassiumObject obj)
         {
             return obj.ToString();
         }
@@ -91,7 +99,7 @@ namespace Hassium.HassiumObjects
             return new HassiumString(s);
         }
 
-        public static implicit operator char (HassiumObject obj)
+        public static implicit operator char(HassiumObject obj)
         {
             return ((HassiumChar) obj).Value;
         }
@@ -101,9 +109,9 @@ namespace Hassium.HassiumObjects
             return new HassiumChar(s);
         }
 
-        public static implicit operator object[] (HassiumObject obj)
+        public static implicit operator object[](HassiumObject obj)
         {
-            return ((HassiumArray)obj).Value.Cast<object>().ToArray();
+            return ((HassiumArray) obj).Value.Cast<object>().ToArray();
         }
 
         public static implicit operator Dictionary<HassiumObject, HassiumObject>(HassiumObject obj)
@@ -118,7 +126,7 @@ namespace Hassium.HassiumObjects
 
         public static implicit operator Dictionary<object, object>(HassiumObject obj)
         {
-            return ((HassiumDictionary)obj).Value.ToDictionary(x => (object)x.Key, x => (object)x.Value);
+            return ((HassiumDictionary) obj).Value.ToDictionary(x => (object) x.Key, x => (object) x.Value);
         }
 
         public static implicit operator HassiumObject(Dictionary<object, object> dict)
@@ -148,15 +156,16 @@ namespace Hassium.HassiumObjects
 
         public static HassiumObject ToHassiumObject(object fv)
         {
-            if (fv is double) return new HassiumDouble((double)fv);
-            if (fv is int) return new HassiumDouble((int)fv);
-            if (fv is string) return new HassiumString((string)fv);
-            if(fv is char) return new HassiumChar((char)fv);
-            if (fv is Array) return new HassiumArray((Array)fv);
-            if (fv is IDictionary) return new HassiumDictionary((IDictionary)fv);
-            if (fv is bool) return new HassiumBool((bool)fv);
-            if (fv is KeyValuePair<HassiumObject, HassiumObject>) return HKvp((KeyValuePair<HassiumObject, HassiumObject>)fv);
-            else return (HassiumObject)(object)fv;
+            if (fv is double) return new HassiumDouble((double) fv);
+            if (fv is int) return new HassiumDouble((int) fv);
+            if (fv is string) return new HassiumString((string) fv);
+            if (fv is char) return new HassiumChar((char) fv);
+            if (fv is Array) return new HassiumArray((Array) fv);
+            if (fv is IDictionary) return new HassiumDictionary((IDictionary) fv);
+            if (fv is bool) return new HassiumBool((bool) fv);
+            if (fv is KeyValuePair<HassiumObject, HassiumObject>)
+                return HKvp((KeyValuePair<HassiumObject, HassiumObject>) fv);
+            else return (HassiumObject) (object) fv;
         }
 
         public KeyValuePair<HassiumObject, HassiumObject> HKvp(HassiumKeyValuePair kvp)
@@ -171,17 +180,17 @@ namespace Hassium.HassiumObjects
 
         public HassiumArray HArray()
         {
-            return (HassiumArray)this;
+            return (HassiumArray) this;
         }
 
         public HassiumBool HBool()
         {
-            return (HassiumBool)this;
+            return (HassiumBool) this;
         }
 
         public HassiumWebClient HClient()
         {
-            return (HassiumWebClient)this;
+            return (HassiumWebClient) this;
         }
 
         public HassiumChar HChar()
@@ -192,23 +201,23 @@ namespace Hassium.HassiumObjects
 
         public HassiumDictionary HDict()
         {
-            return (HassiumDictionary)this;
+            return (HassiumDictionary) this;
         }
 
         public HassiumFile HFile()
         {
-            return (HassiumFile)this;
+            return (HassiumFile) this;
         }
 
         public HassiumDouble HDouble()
         {
-            if(this is HassiumInt) return new HassiumDouble(this.HInt().Value);
-            return (HassiumDouble)this;
+            if (this is HassiumInt) return new HassiumDouble(this.HInt().Value);
+            return (HassiumDouble) this;
         }
 
         public HassiumInt HInt()
         {
-            return (HassiumInt)this;
+            return (HassiumInt) this;
         }
 
         public HassiumString HString()
@@ -216,6 +225,7 @@ namespace Hassium.HassiumObjects
             if (this is HassiumChar) return new HassiumString(((HassiumChar) this).Value.ToString());
             return (HassiumString) this;
         }
+
         #endregion
     }
 }

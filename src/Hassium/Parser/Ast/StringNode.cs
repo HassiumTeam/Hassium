@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class StringNode: AstNode
+    public class StringNode : AstNode
     {
         public string Value { get; private set; }
 
@@ -17,4 +17,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

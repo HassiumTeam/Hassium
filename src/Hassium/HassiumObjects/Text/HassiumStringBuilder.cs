@@ -4,7 +4,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumStringBuilder: HassiumObject
+    public class HassiumStringBuilder : HassiumObject
     {
         public StringBuilder Value { get; private set; }
 
@@ -63,4 +63,3 @@ namespace Hassium.HassiumObjects.Text
         }
     }
 }
-

@@ -24,7 +24,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("remove", new InternalFunction(Remove, 1));
 
             Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
-            Attributes.Add("join", new InternalFunction(ArrayJoin, new []{0,1}));
+            Attributes.Add("join", new InternalFunction(ArrayJoin, new[] {0, 1}));
             Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));
             Attributes.Add("contains", new InternalFunction(ArrayContains, 1));
 
@@ -84,7 +84,6 @@ namespace Hassium.HassiumObjects.Types
         }
 
 
-
         private HassiumObject toString(HassiumObject[] args)
         {
             return ToString();
@@ -110,6 +109,7 @@ namespace Hassium.HassiumObjects.Types
 
             return string.Join(separator, objarr.Select(x => x.ToString()));
         }
+
         /* TODO: Implement static methods
         public static HassiumObject ArrayFill(HassiumObject[] args)
         {
@@ -167,8 +167,5 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #endregion
-
-        
     }
 }
-

@@ -3,7 +3,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
 {
-    public class HassiumHttpListener: HassiumObject
+    public class HassiumHttpListener : HassiumObject
     {
         public HttpListener Value { get; private set; }
 
@@ -54,4 +54,3 @@ namespace Hassium.HassiumObjects.Networking.HTTP
         }
     }
 }
-

@@ -7,21 +7,22 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumDictionary: HassiumObject, IEnumerable
+    public class HassiumDictionary : HassiumObject, IEnumerable
     {
         public List<HassiumKeyValuePair> Value { get; private set; }
 
-        public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value) : this(value.Select(x => (HassiumKeyValuePair)x).ToList())
+        public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value)
+            : this(value.Select(x => (HassiumKeyValuePair) x).ToList())
         {
             Attributes.Add("length", new InternalFunction(x => Value.Count, 0, true));
             Attributes.Add("toString", new InternalFunction(tostring, 0));
 
             Attributes.Add("keys",
                 new HassiumProperty("keys",
-                x => new HassiumArray(Value.Select(y => y.Key)), x => null, true));
+                    x => new HassiumArray(Value.Select(y => y.Key)), x => null, true));
             Attributes.Add("values",
-                new HassiumProperty("values", 
-                x => new HassiumArray(Value.Select(y => y.Value)), x => null, true));
+                new HassiumProperty("values",
+                    x => new HassiumArray(Value.Select(y => y.Value)), x => null, true));
 
             Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
             Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));
@@ -91,10 +92,11 @@ namespace Hassium.HassiumObjects.Types
         }
 
         public HassiumDictionary(IDictionary value) : this(value.Keys.Cast<object>()
-                    .Zip(value.Values.Cast<object>(), (a, b) => new KeyValuePair<object, object>(a, b))
-                    .Select(x => new HassiumKeyValuePair((HassiumObject)x.Key, (HassiumObject)x.Value)).ToList())
+            .Zip(value.Values.Cast<object>(), (a, b) => new KeyValuePair<object, object>(a, b))
+            .Select(x => new HassiumKeyValuePair((HassiumObject) x.Key, (HassiumObject) x.Value)).ToList())
         {
         }
+
         public IEnumerator GetEnumerator()
         {
             return Value.GetEnumerator();
@@ -118,7 +120,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayOp(HassiumObject[] args)
         {
-            return Value.Aggregate((a, b) => (HassiumKeyValuePair)args[0].Invoke(a, b));
+            return Value.Aggregate((a, b) => (HassiumKeyValuePair) args[0].Invoke(a, b));
         }
 
         #region LINQ-like functions
@@ -191,6 +193,7 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #region IConvertible stuff
+
         public TypeCode GetTypeCode()
         {
             return TypeCode.Single;
@@ -198,57 +201,57 @@ namespace Hassium.HassiumObjects.Types
 
         bool IConvertible.ToBoolean(IFormatProvider provider)
         {
-            return Convert.ToBoolean((object)Value);
+            return Convert.ToBoolean((object) Value);
         }
 
         byte IConvertible.ToByte(IFormatProvider provider)
         {
-            return Convert.ToByte((object)Value);
+            return Convert.ToByte((object) Value);
         }
 
         char IConvertible.ToChar(IFormatProvider provider)
         {
-            return Convert.ToChar((object)Value);
+            return Convert.ToChar((object) Value);
         }
 
         DateTime IConvertible.ToDateTime(IFormatProvider provider)
         {
-            return Convert.ToDateTime((object)Value);
+            return Convert.ToDateTime((object) Value);
         }
 
         decimal IConvertible.ToDecimal(IFormatProvider provider)
         {
-            return Convert.ToDecimal((object)Value);
+            return Convert.ToDecimal((object) Value);
         }
 
         double IConvertible.ToDouble(IFormatProvider provider)
         {
-            return Convert.ToDouble((object)Value);
+            return Convert.ToDouble((object) Value);
         }
 
         short IConvertible.ToInt16(IFormatProvider provider)
         {
-            return Convert.ToInt16((object)Value);
+            return Convert.ToInt16((object) Value);
         }
 
         int IConvertible.ToInt32(IFormatProvider provider)
         {
-            return Convert.ToInt32((object)Value);
+            return Convert.ToInt32((object) Value);
         }
 
         long IConvertible.ToInt64(IFormatProvider provider)
         {
-            return Convert.ToInt64((object)Value);
+            return Convert.ToInt64((object) Value);
         }
 
         sbyte IConvertible.ToSByte(IFormatProvider provider)
         {
-            return Convert.ToSByte((object)Value);
+            return Convert.ToSByte((object) Value);
         }
 
         float IConvertible.ToSingle(IFormatProvider provider)
         {
-            return Convert.ToSingle((object)Value);
+            return Convert.ToSingle((object) Value);
         }
 
         string IConvertible.ToString(IFormatProvider provider)
@@ -263,19 +266,19 @@ namespace Hassium.HassiumObjects.Types
 
         ushort IConvertible.ToUInt16(IFormatProvider provider)
         {
-            return Convert.ToUInt16((object)Value);
+            return Convert.ToUInt16((object) Value);
         }
 
         uint IConvertible.ToUInt32(IFormatProvider provider)
         {
-            return Convert.ToUInt32((object)Value);
+            return Convert.ToUInt32((object) Value);
         }
 
         ulong IConvertible.ToUInt64(IFormatProvider provider)
         {
-            return Convert.ToUInt64((object)Value);
+            return Convert.ToUInt64((object) Value);
         }
+
         #endregion
     }
 }
-

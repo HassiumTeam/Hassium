@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumString: HassiumObject, IConvertible
+    public class HassiumString : HassiumObject, IConvertible
     {
         protected bool Equals(HassiumString other)
         {
@@ -27,7 +27,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("begins", new InternalFunction(begins, 1));
             Attributes.Add("ends", new InternalFunction(ends, 1));
             Attributes.Add("getAt", new InternalFunction(getat, 1));
-            Attributes.Add("substring", new InternalFunction(substr, new []{1,2}));
+            Attributes.Add("substring", new InternalFunction(substr, new[] {1, 2}));
             Attributes.Add("concat", new InternalFunction(concat, 1));
             Attributes.Add("contains", new InternalFunction(contains, 1));
             Attributes.Add("split", new InternalFunction(split, 1));
@@ -175,6 +175,7 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #region IConvertible stuff
+
         public TypeCode GetTypeCode()
         {
             return TypeCode.String;
@@ -264,7 +265,7 @@ namespace Hassium.HassiumObjects.Types
         {
             return Convert.ToUInt64(Value);
         }
+
         #endregion
     }
 }
-

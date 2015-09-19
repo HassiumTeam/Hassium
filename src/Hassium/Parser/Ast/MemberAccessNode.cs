@@ -6,17 +6,10 @@ namespace Hassium.Parser.Ast
     {
         public AstNode Left
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
-        public string Member
-        {
-            private set;
-            get;
-        }
+        public string Member { private set; get; }
 
         public MemberAccessNode(int position, AstNode left, string identifier) : base(position)
         {
@@ -35,4 +28,3 @@ namespace Hassium.Parser.Ast
         }
     }
 }
-

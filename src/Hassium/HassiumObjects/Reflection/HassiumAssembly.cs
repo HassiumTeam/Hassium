@@ -6,7 +6,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Reflection
 {
-    public class HassiumAssembly: HassiumObject
+    public class HassiumAssembly : HassiumObject
     {
         public Assembly Value { get; private set; }
 
@@ -54,4 +54,3 @@ namespace Hassium.HassiumObjects.Reflection
         }
     }
 }
-

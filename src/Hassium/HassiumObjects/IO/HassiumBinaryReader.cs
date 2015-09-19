@@ -5,7 +5,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Text
 {
-    public class HassiumBinaryReader: HassiumObject
+    public class HassiumBinaryReader : HassiumObject
     {
         public BinaryReader Value { get; private set; }
 
@@ -57,7 +57,7 @@ namespace Hassium.HassiumObjects.Text
 
         public HassiumObject readChars(HassiumObject[] args)
         {
-            return new HassiumString(Value.ReadChars(((HassiumInt)args[0])).ToString());
+            return new HassiumString(Value.ReadChars(((HassiumInt) args[0])).ToString());
         }
 
         public HassiumObject readString(HassiumObject[] args)
@@ -71,4 +71,3 @@ namespace Hassium.HassiumObjects.Text
         }
     }
 }
-

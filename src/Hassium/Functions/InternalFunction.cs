@@ -5,7 +5,7 @@ using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
-    public delegate HassiumObject HassiumFunctionDelegate (params HassiumObject[] arguments);
+    public delegate HassiumObject HassiumFunctionDelegate(params HassiumObject[] arguments);
 
     public class InternalFunction : HassiumObject
     {
@@ -36,13 +36,15 @@ namespace Hassium.Functions
 
         public override string ToString()
         {
-            return string.Format("[InternalFunction: {0}`{1}]", target.Method.Name, target.Method.GetParameters().Count());
+            return string.Format("[InternalFunction: {0}`{1}]", target.Method.Name,
+                target.Method.GetParameters().Count());
         }
 
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if (!Arguments.Contains(args.Length) && Arguments[0] != -1)
-                throw new Exception("Function " + target.Method.Name + " has " + Arguments.Max() + " arguments, but is invoked with " + args.Length);
+                throw new Exception("Function " + target.Method.Name + " has " + Arguments.Max() +
+                                    " arguments, but is invoked with " + args.Length);
             return target(args);
         }
     }
@@ -96,4 +98,3 @@ namespace Hassium.Functions
         }
     }
 }
-

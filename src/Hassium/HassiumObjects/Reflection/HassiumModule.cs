@@ -4,7 +4,7 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Reflection
 {
-    public class HassiumModule: HassiumObject
+    public class HassiumModule : HassiumObject
     {
         public Module Value { get; private set; }
 
@@ -14,8 +14,8 @@ namespace Hassium.HassiumObjects.Reflection
             Attributes.Add("assembly", new InternalFunction(x => new HassiumAssembly(Value.Assembly), 0, true));
             Attributes.Add("name", new InternalFunction(x => new HassiumString(Value.Name), 0, true));
             Attributes.Add("scopeName", new InternalFunction(x => new HassiumString(Value.ScopeName), 0, true));
-            Attributes.Add("fullyQualifiedName", new InternalFunction(x => new HassiumString(Value.FullyQualifiedName), 0, true));
+            Attributes.Add("fullyQualifiedName",
+                new InternalFunction(x => new HassiumString(Value.FullyQualifiedName), 0, true));
         }
     }
 }
-

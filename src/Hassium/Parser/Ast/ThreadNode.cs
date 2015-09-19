@@ -2,14 +2,11 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class ThreadNode: AstNode
+    public class ThreadNode : AstNode
     {
         public AstNode Node
         {
-            get
-            {
-                return Children[0];
-            }
+            get { return Children[0]; }
         }
 
         public ThreadNode(int position, AstNode node) : base(position)

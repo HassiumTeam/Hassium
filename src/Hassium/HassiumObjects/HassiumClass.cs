@@ -6,7 +6,7 @@ using Hassium.Parser.Ast;
 
 namespace Hassium
 {
-    public class HassiumClass: HassiumObject
+    public class HassiumClass : HassiumObject
     {
         public HassiumClass(ClassNode value, Interpreter.Interpreter interpreter)
         {
@@ -31,11 +31,10 @@ namespace Hassium
                         interpreter.SymbolTable.ChildScopes[((ClassNode) value).Name + "." + fnode.Name], this));
             }
 
-            foreach(var pnode in value.Children[0].Children.OfType<PropertyNode>().Select(node => node))
+            foreach (var pnode in value.Children[0].Children.OfType<PropertyNode>().Select(node => node))
             {
-                SetAttribute(pnode.Name, (HassiumProperty)pnode.Visit(interpreter));
+                SetAttribute(pnode.Name, (HassiumProperty) pnode.Visit(interpreter));
             }
         }
     }
 }
-
