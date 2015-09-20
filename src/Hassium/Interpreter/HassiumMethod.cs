@@ -1,4 +1,29 @@
-﻿using System;
+﻿// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+// 
+//  * Redistributions of source code must retain the above copyright notice, this list
+//    of conditions and the following disclaimer.
+// 
+//  * Redistributions in binary form must reproduce the above copyright notice, this
+//    list of conditions and the following disclaimer in the documentation and/or
+//    other materials provided with the distribution.
+// Neither the name of the copyright holder nor the names of its contributors may be
+// used to endorse or promote products derived from this software without specific
+// prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
+
+using System;
 using System.Linq;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
@@ -99,50 +124,52 @@ namespace Hassium.Interpreter
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{TResult}"/>
+        ///     Converts an <see cref="IFunction" /> to a <see cref="Func{TResult}" />
         /// </summary>
-        /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
+        /// <param name="internalFunction">The <see cref="IFunction" /> to convert</param>
+        /// <returns>The resulting <see cref="Func{HassiumObject}" /></returns>
         public static Func<HassiumObject> GetFuncVoid(HassiumObject internalFunction)
         {
             return () => (internalFunction).Invoke();
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see typeref="Func"/> &lt;<see cref="HassiumObject"/>, <see cref="HassiumObject"/>&gt;
+        ///     Converts an <see cref="IFunction" /> to a <see typeref="Func" /> &lt;<see cref="HassiumObject" />,
+        ///     <see cref="HassiumObject" />&gt;
         /// </summary>
-        /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}"/></returns>
+        /// <param name="internalFunction">The <see cref="IFunction" /> to convert</param>
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}" /></returns>
         public static Func<HassiumObject, HassiumObject> GetFunc1(HassiumObject internalFunction)
         {
             return arg1 => (internalFunction).Invoke();
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="T:Func{HassiumArray, HassiumObject}"/>
+        ///     Converts an <see cref="IFunction" /> to a <see cref="T:Func{HassiumArray, HassiumObject}" />
         /// </summary>
-        /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{HassiumObject}"/></returns>
+        /// <param name="internalFunction">The <see cref="IFunction" /> to convert</param>
+        /// <returns>The resulting <see cref="Func{HassiumObject}" /></returns>
         public static Func<HassiumObject[], HassiumObject> GetFunc1Arr(HassiumObject internalFunction)
         {
             return (internalFunction).Invoke;
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{HassiumObject, HassiumObject, HassiumObject}"/>
+        ///     Converts an <see cref="IFunction" /> to a <see cref="Func{HassiumObject, HassiumObject, HassiumObject}" />
         /// </summary>
-        /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject}"/></returns>
+        /// <param name="internalFunction">The <see cref="IFunction" /> to convert</param>
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject}" /></returns>
         public static Func<HassiumObject, HassiumObject, HassiumObject> GetFunc2(HassiumObject internalFunction)
         {
             return (arg1, arg2) => (internalFunction).Invoke(arg1, arg2);
         }
 
         /// <summary>
-        /// Converts an <see cref="IFunction"/> to a <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/>
+        ///     Converts an <see cref="IFunction" /> to a
+        ///     <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}" />
         /// </summary>
-        /// <param name="internalFunction">The <see cref="IFunction"/> to convert</param>
-        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}"/></returns>
+        /// <param name="internalFunction">The <see cref="IFunction" /> to convert</param>
+        /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject, HassiumObject, HassiumObject}" /></returns>
         public static Func<HassiumObject, HassiumObject, HassiumObject, HassiumObject> GetFunc3(
             HassiumObject internalFunction)
         {

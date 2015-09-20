@@ -1,4 +1,29 @@
-﻿using System;
+﻿// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+// 
+//  * Redistributions of source code must retain the above copyright notice, this list
+//    of conditions and the following disclaimer.
+// 
+//  * Redistributions in binary form must reproduce the above copyright notice, this
+//    list of conditions and the following disclaimer in the documentation and/or
+//    other materials provided with the distribution.
+// Neither the name of the copyright holder nor the names of its contributors may be
+// used to endorse or promote products derived from this software without specific
+// prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
+
+using System;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.IO
@@ -23,60 +48,92 @@ namespace Hassium.HassiumObjects.IO
         }
 
         /// <summary>
-        /// Sets the console foreground color.
+        ///     Sets the console foreground color.
         /// </summary>
         /// <param name="args">
-        /// The color to apply. Can be :
-        /// <list type="bullet">
-        ///    <item>
-        ///        <term><c>black</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>blue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkBlue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>green</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGreen</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>red</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkRed</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>magenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkMagenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>yellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkYellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>gray</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGray</c></term>
-        ///    </item>
-        ///     <item>
-        ///        <term><c>cyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkCyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>white</c></term>
-        ///    </item>
-        /// </list>
+        ///     The color to apply. Can be :
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <term>
+        ///                 <c>black</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>blue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkBlue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>green</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGreen</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>red</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkRed</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>magenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkMagenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>yellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkYellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>gray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>cyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkCyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>white</c>
+        ///             </term>
+        ///         </item>
+        ///     </list>
         /// </param>
         /// <returns>Nothing</returns>
         public HassiumObject SetForeground(HassiumObject[] args)
@@ -86,60 +143,92 @@ namespace Hassium.HassiumObjects.IO
         }
 
         /// <summary>
-        /// Sets the console background color.
+        ///     Sets the console background color.
         /// </summary>
         /// <param name="args">
-        /// The color to apply. Can be :
-        /// <list type="bullet">
-        ///    <item>
-        ///        <term><c>black</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>blue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkBlue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>green</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGreen</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>red</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkRed</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>magenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkMagenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>yellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkYellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>gray</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGray</c></term>
-        ///    </item>
-        ///     <item>
-        ///        <term><c>cyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkCyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>white</c></term>
-        ///    </item>
-        /// </list>
+        ///     The color to apply. Can be :
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <term>
+        ///                 <c>black</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>blue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkBlue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>green</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGreen</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>red</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkRed</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>magenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkMagenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>yellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkYellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>gray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>cyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkCyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>white</c>
+        ///             </term>
+        ///         </item>
+        ///     </list>
         /// </param>
         /// <returns>Nothing</returns>
         public HassiumObject SetBackground(HassiumObject[] args)
@@ -149,122 +238,188 @@ namespace Hassium.HassiumObjects.IO
         }
 
         /// <summary>
-        /// Gets the console foreground color.
+        ///     Gets the console foreground color.
         /// </summary>
         /// <param name="args">No parameters</param>
         /// <returns>
-        /// The current foreground color. Can be :
-        /// <list type="bullet">
-        ///    <item>
-        ///        <term><c>black</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>blue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkBlue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>green</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGreen</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>red</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkRed</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>magenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkMagenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>yellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkYellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>gray</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGray</c></term>
-        ///    </item>
-        ///     <item>
-        ///        <term><c>cyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkCyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>white</c></term>
-        ///    </item>
-        /// </list></returns>
+        ///     The current foreground color. Can be :
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <term>
+        ///                 <c>black</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>blue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkBlue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>green</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGreen</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>red</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkRed</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>magenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkMagenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>yellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkYellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>gray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>cyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkCyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>white</c>
+        ///             </term>
+        ///         </item>
+        ///     </list>
+        /// </returns>
         public HassiumObject GetForeground(HassiumObject[] args)
         {
             return Console.ForegroundColor.ToString();
         }
 
         /// <summary>
-        /// Gets the console background color.
+        ///     Gets the console background color.
         /// </summary>
         /// <param name="args">No parameters</param>
         /// <returns>
-        /// The current background color. Can be :
-        /// <list type="bullet">
-        ///    <item>
-        ///        <term><c>black</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>blue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkBlue</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>green</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGreen</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>red</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkRed</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>magenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkMagenta</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>yellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkYellow</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>gray</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkGray</c></term>
-        ///    </item>
-        ///     <item>
-        ///        <term><c>cyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>darkCyan</c></term>
-        ///    </item>
-        ///    <item>
-        ///        <term><c>white</c></term>
-        ///    </item>
-        /// </list></returns>
+        ///     The current background color. Can be :
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <term>
+        ///                 <c>black</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>blue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkBlue</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>green</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGreen</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>red</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkRed</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>magenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkMagenta</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>yellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkYellow</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>gray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkGray</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>cyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>darkCyan</c>
+        ///             </term>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 <c>white</c>
+        ///             </term>
+        ///         </item>
+        ///     </list>
+        /// </returns>
         public HassiumObject GetBackground(HassiumObject[] args)
         {
             return Console.BackgroundColor.ToString();

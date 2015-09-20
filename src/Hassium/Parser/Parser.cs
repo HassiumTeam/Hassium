@@ -1,3 +1,28 @@
+// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+// 
+//  * Redistributions of source code must retain the above copyright notice, this list
+//    of conditions and the following disclaimer.
+// 
+//  * Redistributions in binary form must reproduce the above copyright notice, this
+//    list of conditions and the following disclaimer in the documentation and/or
+//    other materials provided with the distribution.
+// Neither the name of the copyright holder nor the names of its contributors may be
+// used to endorse or promote products derived from this software without specific
+// prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +33,7 @@ using Hassium.Parser.Ast;
 namespace Hassium.Parser
 {
     /// <summary>
-    /// Parser.
+    ///     Parser.
     /// </summary>
     public class Parser
     {
@@ -31,7 +56,7 @@ namespace Hassium.Parser
         }
 
         /// <summary>
-        /// ParseStatement this instance.
+        ///     ParseStatement this instance.
         /// </summary>
         public AstNode Parse()
         {
@@ -173,7 +198,7 @@ namespace Hassium.Parser
 
             parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            
+
             parser.ExpectToken(TokenType.Parentheses, "(");
 
             List<string> result = new List<string>();
@@ -188,14 +213,15 @@ namespace Hassium.Parser
 
             FunctionCallNode constr = null;
 
-            if(name == "new" && parser.AcceptToken(TokenType.Identifier, ":"))
+            if (name == "new" && parser.AcceptToken(TokenType.Identifier, ":"))
             {
                 int tmppos = parser.codePos;
                 var callee = parser.ExpectToken(TokenType.Identifier);
-                if(callee.Value.ToString() == "base" || callee.Value.ToString() == "this")
+                if (callee.Value.ToString() == "base" || callee.Value.ToString() == "this")
                 {
                     parser.ExpectToken(TokenType.Parentheses, "(");
-                    constr = new FunctionCallNode(tmppos, new IdentifierNode(tmppos, callee.Value.ToString()), ParseArgList(parser));
+                    constr = new FunctionCallNode(tmppos, new IdentifierNode(tmppos, callee.Value.ToString()),
+                        ParseArgList(parser));
                 }
                 else
                 {
@@ -350,7 +376,9 @@ namespace Hassium.Parser
                     name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
                 }
 
-                ret = path.EndsWith(".dll") ? new UseNode(pos, path, name, global, false, true) : new UseNode(pos, path, name, global, false);
+                ret = path.EndsWith(".dll")
+                    ? new UseNode(pos, path, name, global, false, true)
+                    : new UseNode(pos, path, name, global, false);
             }
             parser.ExpectToken(TokenType.EndOfLine);
             return ret;
@@ -899,7 +927,7 @@ namespace Hassium.Parser
                 if (left is ArrayInitializerNode)
                     return new LambdaFuncNode(pos,
                         ((ArrayInitializerNode) left).Value.Values.Select(x => x.ToString()).ToList(), body);
-                return new LambdaFuncNode(pos, new List<string>() {left.ToString()}, body);
+                return new LambdaFuncNode(pos, new List<string> {left.ToString()}, body);
             }
             else
             {
