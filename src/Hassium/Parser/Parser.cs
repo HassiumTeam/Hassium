@@ -173,6 +173,7 @@ namespace Hassium.Parser
 
             parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            
             parser.ExpectToken(TokenType.Parentheses, "(");
 
             List<string> result = new List<string>();
@@ -184,6 +185,24 @@ namespace Hassium.Parser
             }
 
             parser.ExpectToken(TokenType.Parentheses, ")");
+
+            FunctionCallNode constr = null;
+
+            if(name == "new" && parser.AcceptToken(TokenType.Identifier, ":"))
+            {
+                int tmppos = parser.codePos;
+                var callee = parser.ExpectToken(TokenType.Identifier);
+                if(callee.Value.ToString() == "base" || callee.Value.ToString() == "this")
+                {
+                    parser.ExpectToken(TokenType.Parentheses, "(");
+                    constr = new FunctionCallNode(tmppos, new IdentifierNode(tmppos, callee.Value.ToString()), ParseArgList(parser));
+                }
+                else
+                {
+                    throw new ParseException("Expected 'this' or 'base' in constructor", tmppos);
+                }
+            }
+
             AstNode body = ParseStatement(parser);
 
             return new FuncNode(pos, name, result, body);
@@ -918,9 +937,9 @@ namespace Hassium.Parser
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
                 return new UnaryOpNode(pos, UnaryOperation.Not, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-                return new MentalNode(pos, "++", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
+                return new IncDecNode(pos, "++", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-                return new MentalNode(pos, "--", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
+                return new IncDecNode(pos, "--", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
             else if (parser.AcceptToken(TokenType.Operation, "-"))
                 return new UnaryOpNode(pos, UnaryOperation.Negate, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))
@@ -947,7 +966,7 @@ namespace Hassium.Parser
                 {
                     varname = parser.PreviousToken(2).Value.ToString();
                 }
-                return new MentalNode(pos, "++", varname, before);
+                return new IncDecNode(pos, "++", varname, before);
             }
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
             {
@@ -962,7 +981,7 @@ namespace Hassium.Parser
                 {
                     varname = parser.PreviousToken(2).Value.ToString();
                 }
-                return new MentalNode(pos, "--", varname, before);
+                return new IncDecNode(pos, "--", varname, before);
             }
             else
             {

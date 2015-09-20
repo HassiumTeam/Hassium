@@ -978,7 +978,7 @@ namespace Hassium.Interpreter
             }
         }
 
-        public object Accept(MentalNode node)
+        public object Accept(IncDecNode node)
         {
             var mnode = node;
             if (!HasVariable(mnode.Name))

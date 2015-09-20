@@ -36,7 +36,7 @@ namespace Hassium
 
         public static void Main(string[] args)
         {
-            preformSetUp(args);
+            Initialize(args);
 
 
             if (options.ShowTime)
@@ -119,7 +119,7 @@ namespace Hassium
                    Assembly.GetExecutingAssembly().GetName().Version.Build;
         }
 
-        private static void preformSetUp(IList<string> args)
+        private static void Initialize(IList<string> args)
         {
             if (args.Count <= 0)
                 enterInteractive();

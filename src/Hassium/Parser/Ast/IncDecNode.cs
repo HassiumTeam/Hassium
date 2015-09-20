@@ -2,7 +2,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
-    public class MentalNode : AstNode
+    public class IncDecNode : AstNode
     {
         public string OpType { get; private set; }
 
@@ -10,7 +10,7 @@ namespace Hassium.Parser.Ast
 
         public bool IsBefore { get; private set; }
 
-        public MentalNode(int position, string type, string name, bool before) : base(position)
+        public IncDecNode(int position, string type, string name, bool before) : base(position)
         {
             OpType = type;
             Name = name;
