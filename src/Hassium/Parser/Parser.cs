@@ -231,7 +231,7 @@ namespace Hassium.Parser
 
             AstNode body = ParseStatement(parser);
 
-            return new FuncNode(pos, name, result, body);
+            return new FuncNode(pos, name, result, body, constr);
         }
 
         public static AstNode ParseProperty(Parser parser)

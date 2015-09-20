@@ -43,7 +43,7 @@ namespace Hassium
     public static class HassiumInterpreter
     {
         // set this to true so run the code without exception handling, so the debugger can stop at exceptions
-        private static bool disableTryCatch = false;
+        private static bool disableTryCatch = true;
 
 
         public static class options

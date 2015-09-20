@@ -958,14 +958,15 @@ namespace Hassium.Interpreter
             }
             else if (theVar is HassiumClass)
             {
-                var iCl = (HassiumClass) theVar;
-                if (iCl.Attributes.ContainsKey("new"))
+                var iCl = ((HassiumClass) theVar);
+                /*if (iCl.Attributes.ContainsKey("new"))
                 {
                     var ctor = iCl.GetAttribute("new", fcall.Position);
                     ctor.Invoke(arguments);
                     iCl.IsInstance = true;
                     return iCl;
-                }
+                }*/
+                return iCl.Instanciate(arguments, fcall.Position);
             }
 
             throw new ParseException("No constructor found for " + fcall.Target, node);
