@@ -131,7 +131,7 @@ namespace Hassium.Semantics
             {
                 if (node is BinOpNode)
                 {
-                    BinOpNode bnode = ((BinOpNode) node);
+                    BinOpNode bnode = ((BinOpNode)node);
                     if (bnode.BinOp == BinaryOperation.Assignment)
                     {
                         if (!result.Symbols.Contains(bnode.Left.ToString()) &&
@@ -141,6 +141,8 @@ namespace Hassium.Semantics
                         }
                     }
                 }
+                else if (node is LabelNode)
+                    currentLocalScope.Symbols.Add("label " + ((LabelNode)node).Name);
                 else
                     analyseLocalCode(node);
             }

@@ -61,6 +61,8 @@ namespace Hassium.Interpreter
     {
         public Stack<StackFrame> CallStack = new Stack<StackFrame>();
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
+        public Dictionary<string, int> Labels = new Dictionary<string, int>();
+
 
         public AstNode Code { get; set; }
         public SymbolTable SymbolTable { get; set; }
@@ -200,12 +202,16 @@ namespace Hassium.Interpreter
         public void Execute(bool repl = false)
         {
             isRepl = repl;
-            foreach (var node in Code.Children)
+            for (int position = 0; position < Code.Children.Count; position++)
             {
+                var node = Code.Children[position];
                 if (node is FuncNode && firstExecute)
                 {
                     var fnode = ((FuncNode) node);
                     var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
+                    foreach (string symbol in scope.Symbols)
+                        if (symbol.StartsWith("label"))
+                            Labels.Add(symbol.Split(' ')[1], position);
                     SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null),
                         node);
                 }
@@ -663,7 +669,19 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(GotoNode node) //Ahoy zdimension
+        {
+          //  if (!Labels.Contains(node.Name))
+          //      throw new ParseException("Unknown label " + node.Name, node.Position);
+            return null; 
+        }
+
         public object Accept(ClassNode node)
+        {
+            return null;
+        }
+
+        public object Accept(LabelNode node)
         {
             return null;
         }

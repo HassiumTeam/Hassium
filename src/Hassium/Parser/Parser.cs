@@ -163,6 +163,10 @@ namespace Hassium.Parser
                         return ParseUse(parser);
                     case "do":
                         return ParseDo(parser);
+                    case "label":
+                        return ParseLabel(parser);
+                    case "goto":
+                        return ParseGoto(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.Brace, "{"))
@@ -190,6 +194,26 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.Brace);
 
             return new ClassNode(pos, name, body, extends);
+        }
+
+        public static AstNode ParseLabel(Parser parser)
+        {
+            int pos = parser.codePos;
+
+            parser.ExpectToken(TokenType.Identifier, "label");
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            parser.ExpectToken(TokenType.Extend);
+            return new LabelNode(pos, name);
+        }
+
+        public static AstNode ParseGoto(Parser parser)
+        {
+            int pos = parser.codePos;
+
+            parser.ExpectToken(TokenType.Identifier, "goto");
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            parser.ExpectToken(TokenType.EndOfLine);
+            return new GotoNode(pos, name);
         }
 
         public static AstNode ParseFunc(Parser parser)
