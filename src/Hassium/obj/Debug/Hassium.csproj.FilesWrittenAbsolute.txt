@@ -3,9 +3,3 @@
 /home/jacob/Hassium/src/Hassium/bin/Debug/Hassium.exe
 /home/jacob/Hassium/src/Hassium/obj/Debug/Hassium.exe
 /home/jacob/Hassium/src/Hassium/obj/Debug/Hassium.exe.mdb
-/home/jacob/Hassium/src/Hassium/bin/Debug/MySql.Data.dll
-/root/Hassium/src/Hassium/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
-/root/Hassium/src/Hassium/bin/Debug/Hassium.exe.mdb
-/root/Hassium/src/Hassium/bin/Debug/Hassium.exe
-/root/Hassium/src/Hassium/obj/Debug/Hassium.exe
-/root/Hassium/src/Hassium/obj/Debug/Hassium.exe.mdb

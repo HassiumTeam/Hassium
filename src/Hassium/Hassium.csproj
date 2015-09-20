@@ -148,6 +148,8 @@
     <Compile Include="Parser\Ast\UseNode.cs" />
     <Compile Include="HassiumObjects\Interactive\HassiumDebug.cs" />
     <Compile Include="Parser\Ast\DoNode.cs" />
+    <Compile Include="Parser\Ast\LabelNode.cs" />
+    <Compile Include="Parser\Ast\GotoNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
