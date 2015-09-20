@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -17,6 +18,7 @@ namespace Hassium.Parser.Ast
         public ArrayInitializerNode(int position, Dictionary<object, object> items) : base(position)
         {
             _value = items;
+            _value.All(x => {Children.Add((AstNode)x.Key); Children.Add((AstNode)x.Value);  return true; });
         }
 
         public ArrayInitializerNode(int position) : this(position, new Dictionary<object, object>())
@@ -25,12 +27,14 @@ namespace Hassium.Parser.Ast
 
         public void AddItem(object item)
         {
-            _value.Add(_value.Count, item);
+            AddItem(_value.Count, item);
         }
 
         public void AddItem(object key, object item)
         {
             _value.Add(key, item);
+            Children.Add(key is int ? new NumberNode(-1, (int)key, true) : (AstNode)key);
+            Children.Add((AstNode)item);
         }
 
         public override object Visit(IVisitor visitor)
