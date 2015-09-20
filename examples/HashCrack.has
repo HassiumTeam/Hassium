@@ -13,7 +13,7 @@ func main () {
 
 	# Sort through the dictionary and determine if the hash matches
 	for (x = 0; x < dict.length; x++) {
-		line = dict[Convert.toNumber(Convert.toString(x))];
+		line = dict[x];
 
 		if (Math.hash(algo, line) == passwd) {
 			println("The password is: " + line);
