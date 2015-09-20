@@ -7,11 +7,11 @@ Visit our website at: http://HassiumLang.com
 ### [Run Hassium Online](http://HassiumLang.com/Hassium)
 You can execute safe Hassium code in our online interpreter.
 Want to embed Hassium in your site/blog?
-```
+```html
 <iframe src="http://hassiumlang.com/Hassium/index.php" height="500px" width="500px"></iframe>
 ```
 ### [HassiumWiki](https://github.com/HassiumTeam/Hassium/wiki)
-One our Wiki you can find specific documentation on Hassium classes and functions
+On our Wiki you can find specific documentation on Hassium classes and functions
 as well as a general programming in Hassium guide found [here](https://github.com/HassiumTeam/Hassium/wiki/General-Guide).
 ### [YouTube Video](https://www.youtube.com/watch?v=9lFGvJAjJ2g&feature=youtu.be)
 
