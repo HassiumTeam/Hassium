@@ -8,7 +8,7 @@ Visit our website at: http://HassiumLang.com
 You can execute safe Hassium code in our online interpreter.
 Want to embed Hassium in your site/blog?
 ```html
-<iframe src="http://hassiumlang.com/Hassium/embed.php" height="500px" width="500px"></iframe>
+<iframe src="http://hassiumlang.com/Hassium/embed.php" height="540px" width="475px"></iframe>
 ```
 ### [HassiumWiki](https://github.com/HassiumTeam/Hassium/wiki)
 On our Wiki you can find specific documentation on Hassium classes and functions
