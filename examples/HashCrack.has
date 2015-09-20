@@ -12,9 +12,7 @@ func main () {
 	algo = "md5";
 
 	# Sort through the dictionary and determine if the hash matches
-	for (x = 0; x < dict.length; x++) {
-		line = dict[Convert.toNumber(Convert.toString(x))];
-
+	foreach(line in dict) {
 		if (Math.hash(algo, line) == passwd) {
 			println("The password is: " + line);
 			exit(0);
