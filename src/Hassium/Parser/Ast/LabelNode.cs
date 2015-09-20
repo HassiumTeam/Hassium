@@ -32,9 +32,12 @@ namespace Hassium.Parser.Ast
     {
         public string Name { get; private set; }
 
-        public LabelNode(int position, string name) : base(position)
+        public int AfterPos { get; private set; }
+
+        public LabelNode(int position, string name, int afpos) : base(position)
         {
             Name = name;
+            AfterPos = afpos;
         }
 
         public override object Visit(IVisitor visitor)

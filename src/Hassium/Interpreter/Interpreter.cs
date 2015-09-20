@@ -669,10 +669,16 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        private bool gotoposition = false;
+        private int positiontogo = -1;
+
         public object Accept(GotoNode node) //Ahoy zdimension
         {
-          //  if (!Labels.Contains(node.Name))
-          //      throw new ParseException("Unknown label " + node.Name, node.Position);
+            if (!Labels.ContainsKey(node.Name))
+                throw new ParseException("Unknown label " + node.Name, node.Position);
+
+            gotoposition = true;
+            positiontogo = Labels[node.Name];
             return null; 
         }
 
@@ -1348,9 +1354,17 @@ namespace Hassium.Interpreter
 
         private void VisitSubnodes(AstNode node)
         {
-            foreach (var nd in node.Children)
+            for (int index = 0; index < node.Children.Count; index++)
             {
+                var nd = node.Children[index];
                 nd.Visit(this);
+                if(gotoposition)
+                {
+                    index = positiontogo;
+                    gotoposition = false;
+                    positiontogo = -1;
+                    continue;
+                }
                 if (continueLoop || breakLoop || returnFunc || exit) break;
             }
         }

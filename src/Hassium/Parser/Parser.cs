@@ -202,8 +202,8 @@ namespace Hassium.Parser
 
             parser.ExpectToken(TokenType.Identifier, "label");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            parser.ExpectToken(TokenType.Extend);
-            return new LabelNode(pos, name);
+            parser.ExpectToken(TokenType.Identifier, ":");
+            return new LabelNode(pos, name, parser.codePos);
         }
 
         public static AstNode ParseGoto(Parser parser)
@@ -1099,6 +1099,12 @@ namespace Hassium.Parser
                 case TokenType.String:
                     return new StringNode(pos, parser.ExpectToken(TokenType.String).Value.ToString());
                 case TokenType.Identifier:
+                    if(parser.PreviousToken(-1).Value.ToString() == ":")
+                    {
+                        var t = new LabelNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString(), parser.codePos);
+                        parser.ExpectToken(TokenType.Identifier, ":");
+                        return t;
+                    }
                     switch (curt.Value.ToString())
                     {
                         case "lambda":
