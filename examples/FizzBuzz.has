@@ -1,14 +1,38 @@
 # FizzBuzz program
 
-func main() {
-	for (x = 0; x < 101; x++) {
-		if (x % 3 == 0 && x % 5 == 0)
-			println("FizzBuzz");
-		else if (x % 3 == 0)
-			println("Fizz");
-		else if (x % 5 == 0)
-			println("Buzz");
-		else
-			println(x);
-	}
+func main () {
+    first();
+    println("\n");
+    second();
+}
+
+# Classic FizzBuzz example
+func first() {
+    for (x = 0; x <= 100; x++) {
+        if (x % 3 == 0 && x % 5 == 0)
+            print("fizzbuzz ");
+        else if (x % 3 == 0)
+            print("fizz ");
+        else if (x % 5 == 0)
+            print("buzz ");
+        else
+            print(x + " ");
+    }
+}
+
+# This method uses no loops
+func second() {
+    func fizzBuzz(y) {
+        if (y % 3 == 0 && y % 5 == 0)
+            return "fizzbuzz";
+        else if (y % 3 == 0)
+            return "fizz";
+        else if (y % 5 == 0)
+            return "buzz";
+        else
+            return y;
+    }
+    
+    numbers = map(range(0, 100), fizzBuzz);
+    println(numbers);
 }
