@@ -853,7 +853,7 @@ namespace Hassium.Interpreter
                     // internal interpreter functions
                     break;
                 default:
-                    if ((!(call.Target is MemberAccessNode) &&
+                    if (((call.Target is IdentifierNode) &&
                          !HasFunction(call.Target.ToString(), call.Arguments.Children.Count, node)))
                     {
                         throw new ParseException("The function " + call.Target + " doesn't exist", node);
@@ -876,8 +876,12 @@ namespace Hassium.Interpreter
                                 "The function " + man.Member + " doesn't exist for the object " + man.Left, node);
                         }
                     }
-                    else
+                    else if(call.Target is IdentifierNode)
+                    {
                         target = GetFunction(call.Target.ToString(), call.Arguments.Children.Count, node);
+                    }
+                    else
+                        target = (HassiumObject) call.Target.Visit(this);
                     break;
             }
 
