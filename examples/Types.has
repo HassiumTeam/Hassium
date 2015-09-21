@@ -5,4 +5,6 @@ func main() {
 	println(type(420));
 	println(type(true));
 	println(type(args));
+	println(type(["this", "that", "other"]));
+	println(type(["x" : 3, "y" : 4]));
 }
