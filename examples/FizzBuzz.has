@@ -4,6 +4,8 @@ func main () {
     first();
     println("\n");
     second();
+    println("\n");
+    third();
 }
 
 # Classic FizzBuzz example
@@ -35,4 +37,19 @@ func second() {
     
     numbers = map(range(0, 100), fizzBuzz);
     println(numbers);
+}
+
+# This method has no loops and uses lambdas
+func third() {
+	result = map (range(0, 100), lambda (x) {
+        if (x % 3 == 0 && x % 5 == 0) {
+            return "fizzbuzz";
+        } else if (x % 3 == 0) {
+            return "fizz";
+        } else if (x % 5 == 0) {
+            return "buzz";
+        }
+            return x;
+    });
+    println(result);
 }
