@@ -977,9 +977,9 @@ namespace Hassium.Parser
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
                 return new UnaryOpNode(pos, UnaryOperation.Not, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-                return new IncDecNode(pos, "++", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
+                return new IncDecNode(pos, "++", ParseFunctionCall(parser), true);
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-                return new IncDecNode(pos, "--", parser.ExpectToken(TokenType.Identifier).Value.ToString(), true);
+                return new IncDecNode(pos, "--", ParseFunctionCall(parser), true);
             else if (parser.AcceptToken(TokenType.Operation, "-"))
                 return new UnaryOpNode(pos, UnaryOperation.Negate, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))
@@ -995,7 +995,7 @@ namespace Hassium.Parser
             var left = ParseFunctionCall(parser);
             if (parser.AcceptToken(TokenType.MentalOperation, "++"))
             {
-                var varname = "";
+                /*var varname = "";
                 var before = false;
                 if (parser.AcceptToken(TokenType.Identifier))
                 {
@@ -1005,12 +1005,12 @@ namespace Hassium.Parser
                 else
                 {
                     varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new IncDecNode(pos, "++", varname, before);
+                }*/
+                return new IncDecNode(pos, "++", left, false);
             }
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
             {
-                var varname = "";
+                /*var varname = "";
                 var before = false;
                 if (parser.AcceptToken(TokenType.Identifier))
                 {
@@ -1020,8 +1020,8 @@ namespace Hassium.Parser
                 else
                 {
                     varname = parser.PreviousToken(2).Value.ToString();
-                }
-                return new IncDecNode(pos, "--", varname, before);
+                }*/
+                return new IncDecNode(pos, "--", left, false);
             }
             else
             {

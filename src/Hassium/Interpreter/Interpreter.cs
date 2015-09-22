@@ -598,7 +598,7 @@ namespace Hassium.Interpreter
                 bool append = false;
 
                 if (call.Arguments.Children.Count > 0)
-                    arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
+                    arid = ((HassiumObject) call.Arguments.Children[0].Visit(this)).HDouble().ValueInt;
                 else
                     append = true;
 
@@ -1034,22 +1034,29 @@ namespace Hassium.Interpreter
         public object Accept(IncDecNode node)
         {
             var mnode = node;
-            if (!HasVariable(mnode.Name))
+            var tg = (HassiumObject) mnode.Target.Visit(this);
+            /*if (!HasVariable(mnode.Name))
                 throw new ParseException(
-                    "The operand of an increment or decrement operator must be a variable, property or indexer", mnode);
-            var oldValue = GetVariable(mnode.Name, mnode);
+                    "The operand of an increment or decrement operator must be a variable, property or indexer", mnode);*/
+            var oldValue = tg;
             switch (mnode.OpType)
             {
                 case "++":
-                    SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) + 1, mnode);
+                    //SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) + 1, mnode);
+                    new BinOpNode(node.Position, BinaryOperation.Assignment, mnode.Target,
+                        new BinOpNode(node.Position, BinaryOperation.Addition, mnode.Target,
+                            new NumberNode(node.Position, 1, true))).Visit(this);
                     break;
                 case "--":
-                    SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) - 1, mnode);
+                    //SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) - 1, mnode);
+                    new BinOpNode(node.Position, BinaryOperation.Assignment, mnode.Target,
+                       new BinOpNode(node.Position, BinaryOperation.Subtraction, mnode.Target,
+                           new NumberNode(node.Position, 1, true))).Visit(this);
                     break;
                 default:
                     throw new ParseException("Unknown operation " + mnode.OpType, mnode);
             }
-            return mnode.IsBefore ? GetVariable(mnode.Name, mnode) : oldValue;
+            return mnode.IsBefore ? mnode.Target.Visit(this) : tg;
         }
 
         public object Accept(NumberNode node)

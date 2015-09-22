@@ -31,14 +31,14 @@ namespace Hassium.Parser.Ast
     {
         public string OpType { get; private set; }
 
-        public string Name { get; private set; }
+        public AstNode Target { get; private set; }
 
         public bool IsBefore { get; private set; }
 
-        public IncDecNode(int position, string type, string name, bool before) : base(position)
+        public IncDecNode(int position, string type, AstNode tg, bool before) : base(position)
         {
             OpType = type;
-            Name = name;
+            Target = tg;
             IsBefore = before;
         }
 

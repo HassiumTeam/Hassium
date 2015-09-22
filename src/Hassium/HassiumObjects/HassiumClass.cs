@@ -63,6 +63,8 @@ namespace Hassium
 
                     SetAttribute(attrib.Key, attrib.Value);
                 }
+
+                if (Extends.HasConstructor) Constructor = Extends.Constructor;
             }
 
             var clone = (HassiumClass)MemberwiseClone();
