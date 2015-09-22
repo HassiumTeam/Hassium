@@ -108,6 +108,8 @@ namespace Hassium.Lexer
                 ReadToken();
             }
 
+            new Checker(result).Check();
+
             return result;
         }
 

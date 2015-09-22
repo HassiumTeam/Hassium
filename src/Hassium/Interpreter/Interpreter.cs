@@ -1139,7 +1139,7 @@ namespace Hassium.Interpreter
         public object Accept(ThreadNode node)
         {
             var threadStmt = node;
-            Task.Factory.StartNew(() => threadStmt.Node.Visit(this));
+            new System.Threading.Thread(() => threadStmt.Node.Visit(this)).Start();
             return null;
         }
 
