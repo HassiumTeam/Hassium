@@ -672,7 +672,7 @@ namespace Hassium.Interpreter
         private bool gotoposition = false;
         private int positiontogo = -1;
 
-        public object Accept(GotoNode node) //Ahoy zdimension
+        public object Accept(GotoNode node)
         {
             if (!Labels.ContainsKey(node.Name))
                 throw new ParseException("Unknown label " + node.Name, node.Position);
