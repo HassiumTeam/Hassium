@@ -30,6 +30,24 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumInt : HassiumObject, IConvertible
     {
+        protected bool Equals(HassiumInt other)
+        {
+            return Value == other.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumInt) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value;
+        }
+
         public int Value { get; set; }
 
         public HassiumInt(int value)
@@ -40,6 +58,15 @@ namespace Hassium.HassiumObjects.Types
             Value = value;
         }
 
+        public static bool operator ==(HassiumInt a, HassiumInt b)
+        {
+            return a.Value == b.Value;
+        }
+
+        public static bool operator !=(HassiumInt a, HassiumInt b)
+        {
+            return a.Value != b.Value;
+        }
         public override string ToString()
         {
             return Convert.ToString(Value);

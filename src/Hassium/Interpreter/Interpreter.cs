@@ -381,7 +381,7 @@ namespace Hassium.Interpreter
         /// <returns>The result of the operation</returns>
         private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
-            if (left == null && _op != BinaryOperation.NullCoalescing)
+            if (left == null && (_op != BinaryOperation.NullCoalescing && _op != BinaryOperation.Equals && _op != BinaryOperation.NotEqualTo))
                 throw new ParseException("Left operand can't be null", pos);
             if (left is AstNode) left = ((AstNode) left).Visit(this);
             if (left is int) left = (double) (int) left;
@@ -433,13 +433,20 @@ namespace Hassium.Interpreter
                         return new HassiumInt(Convert.ToInt32(left) * Convert.ToInt32(right));
                     return new HassiumDouble(Convert.ToDouble(left) * Convert.ToDouble(right));
                 case BinaryOperation.Equals:
+                    if (left == null && right == null) return true;
+                    if (left == null) return right == null;
+                    if (right == null) return left == null;
+                    if ((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
+                        return new HassiumBool(((HassiumObject)left).HDouble().Value == ((HassiumObject)right).HDouble().Value);
                     return new HassiumBool(left.ToString() == right.ToString());
                 case BinaryOperation.LogicalAnd:
                     return new HassiumBool(Convert.ToBoolean(left) && Convert.ToBoolean(right));
                 case BinaryOperation.LogicalOr:
                     return new HassiumBool(Convert.ToBoolean(left) || Convert.ToBoolean(right));
                 case BinaryOperation.NotEqualTo:
-                    return new HassiumBool(left.GetHashCode() != right.GetHashCode());
+                    if((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
+                        return new HassiumBool(((HassiumObject)left).HDouble().Value != ((HassiumObject)right).HDouble().Value);
+                    return new HassiumBool(left.ToString() != right.ToString());
                 case BinaryOperation.LessThan:
                     return new HassiumBool(Convert.ToDouble(left) < Convert.ToDouble(right));
                 case BinaryOperation.GreaterThan:
@@ -703,12 +710,13 @@ namespace Hassium.Interpreter
             var ifStmt = node;
             if ((HassiumBool) (ifStmt.Predicate.Visit(this)))
             {
-                return ifStmt.Body.Visit(this);
+                if(ifStmt.Body != null) return ifStmt.Body.Visit(this);
             }
             else
             {
-                return ifStmt.ElseBody.Visit(this);
+                if(ifStmt.ElseBody != null) return ifStmt.ElseBody.Visit(this);
             }
+            return null;
         }
 
         public object Accept(ContinueNode node)

@@ -678,8 +678,12 @@ namespace Hassium.Parser
 
             while (parser.AcceptToken(TokenType.Operation, "?"))
             {
-                var ifbody = ParseConditional(parser);
-                parser.ExpectToken(TokenType.Identifier, ":");
+                AstNode ifbody = null;
+                if (!parser.AcceptToken(TokenType.Identifier, ":"))
+                {
+                    ifbody = ParseConditional(parser);
+                    parser.ExpectToken(TokenType.Identifier, ":");
+                }
                 var elsebody = ParseConditional(parser);
                 left = new ConditionalOpNode(pos, left, ifbody, elsebody);
             }

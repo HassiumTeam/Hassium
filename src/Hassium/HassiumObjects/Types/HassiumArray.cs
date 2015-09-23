@@ -32,11 +32,39 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumArray : HassiumObject, IEnumerable
     {
+        protected bool Equals(HassiumArray other)
+        {
+            return Equals(_value, other._value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumArray) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_value != null ? _value.GetHashCode() : 0);
+        }
+
         public List<HassiumObject> _value { get; set; }
 
         public HassiumObject[] Value
         {
             get { return _value.ToArray(); }
+        }
+
+        public static bool operator ==(HassiumArray a, HassiumArray b)
+        {
+            return a.Value.SequenceEqual(b.Value);
+        }
+
+        public static bool operator !=(HassiumArray a, HassiumArray b)
+        {
+            return !a.Value.SequenceEqual(b.Value);
         }
 
         public HassiumArray(IEnumerable<object> value)

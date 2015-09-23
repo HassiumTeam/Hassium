@@ -42,6 +42,16 @@ namespace Hassium.HassiumObjects.Types
             return (Value != null ? Value.GetHashCode() : 0);
         }
 
+        public static bool operator ==(HassiumString a, HassiumString b)
+        {
+            return a.Value == b.Value;
+        }
+
+        public static bool operator !=(HassiumString a, HassiumString b)
+        {
+            return a.Value != b.Value;
+        }
+
         public string Value { get; private set; }
 
         public HassiumString(string value)

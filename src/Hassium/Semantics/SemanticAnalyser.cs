@@ -51,10 +51,12 @@ namespace Hassium.Semantics
 
         private List<AstNode> flatten(List<AstNode> node)
         {
+
             List<AstNode> ch = new List<AstNode>();
             if (node.Count > 0 && node[0] is CodeBlock) node = ((CodeBlock) node[0]).Children;
             foreach (AstNode cur in node)
             {
+                if (cur == null || cur.Children == null) continue;
                 if (cur.Children.Count > 0)
                 {
                     ch.AddRange(flatten(cur.Children));
@@ -127,6 +129,7 @@ namespace Hassium.Semantics
 
         private void analyseLocalCode(AstNode theNode)
         {
+            if (theNode == null || theNode.Children == null) return;
             foreach (AstNode node in theNode.Children)
             {
                 if (node is BinOpNode)

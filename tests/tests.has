@@ -55,7 +55,7 @@ func assertfail(that, msg)
 func main()
 {
     println("--- BEGIN TESTS FOR HASSIUM ---");
-    
+
     opTests();
     numberFormatTests();
     functionTests();
@@ -71,8 +71,8 @@ func main()
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
     println();
-    println(passed + " test" + (passed == 1 ? "" : "s") + " passed");
-    println(failed + " test" + (failed == 1 ? "" : "s") + " failed");
+    println(passed + " test" + (passed == 1 ?: "s") + " passed");
+    println(failed + " test" + (failed == 1 ?: "s") + " failed");
     println("--- END TESTS FOR HASSIUM ---");
 
     exit(exitcode);
@@ -93,8 +93,16 @@ func opTests()
     assert(41 * 3 == 123, "should pass if multiplication result is correct");
     assert(117 % 17 == 15, "should pass if modulo result is correct");
 
+	# equals
+	assert(5 == 5, "int should be equal to itself");
+	assert(3.14 == Math.round(Math.pi, 2), "int should be equal to itself");
+	assert("abc" == "abc", "string should be equal to itself");
+	assert(["abc", 123, 4.81654] == [4.81654, 123, "abc"].reverse(), "array should be equal to itself");
+	assert(["abc": 123, 456: "def", "ghi": 789] == ["ghi": 789, 456: "def", "abc": 123].reverse(), "dictionary should be equal to itself");
+	assert(true == !false, "true should be equal to !false");
+	assert(date(1,2,3,4,5,6) == date(1,2,3,4,5,6), "date should be equal to itself");
+	
     # comparison
-    assert(5 == 5, "object should be equals to itself");
     assert(14 < 21, "object should be less than value");
     assert(38 > -8, "object should be greater than value");
     assert(1 != 2, "object should not be equal to value");
@@ -134,6 +142,10 @@ func opTests()
     assert((ab ?? cd) == 5, "should pass if ?? (null-coalescing) result is correct");
 
     assert(1 <=> 2 == -1, "should pass if <=> result is correct");
+	
+	boolean = true;
+	assert((boolean ? "ab" : "cd") == "ab", "should pass if ?: (ternary operator) result is correct");
+	assert((boolean ?: "cd") == null, "should pass if ?: (ternary operator) result is correct");
 
 
     println();
@@ -202,6 +214,7 @@ func closureTest() {
     }
     
     func fib (n) {
+	println("i " + n);
         if (n == 0) {
             return 0;
         } else if (n == 1) {

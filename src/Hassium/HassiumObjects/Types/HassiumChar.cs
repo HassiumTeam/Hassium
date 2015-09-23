@@ -29,6 +29,29 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumChar : HassiumObject
     {
+        protected bool Equals(HassiumChar other)
+        {
+            return Value == other.Value;
+        }
+
+        protected bool Equals(HassiumString other)
+        {
+            return this == other;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumChar) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public char Value { get; private set; }
 
         public HassiumChar(char value)
@@ -40,6 +63,26 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject toString(HassiumObject[] args)
         {
             return ToString();
+        }
+
+        public static bool operator ==(HassiumChar a, HassiumChar b)
+        {
+            return a.Value == b.Value;
+        }
+
+        public static bool operator ==(HassiumChar a, HassiumString b)
+        {
+            return b.Value.Length == 1 && a.Value == b.Value[0];
+        }
+
+        public static bool operator !=(HassiumChar a, HassiumString b)
+        {
+            return !(a == b);
+        }
+
+        public static bool operator !=(HassiumChar a, HassiumChar b)
+        {
+            return a.Value != b.Value;
         }
 
         public override string ToString()

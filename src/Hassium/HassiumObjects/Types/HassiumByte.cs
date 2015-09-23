@@ -27,11 +27,39 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumByte : HassiumObject
     {
+        protected bool Equals(HassiumByte other)
+        {
+            return Value == other.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumByte) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public byte Value { get; private set; }
 
         public HassiumByte(byte value)
         {
             Value = value;
+        }
+
+        public static bool operator ==(HassiumByte a, HassiumByte b)
+        {
+            return a.Value == b.Value;
+        }
+
+        public static bool operator !=(HassiumByte a, HassiumByte b)
+        {
+            return a.Value != b.Value;
         }
 
         public override string ToString()

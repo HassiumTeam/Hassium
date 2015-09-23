@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using Hassium.Functions;
@@ -51,6 +52,16 @@ namespace Hassium.HassiumObjects.Types
         public HassiumObject GetTimestamp(HassiumObject[] args)
         {
             return new HassiumInt((int) (Value - new DateTime(1970, 1, 1)).TotalSeconds);
+        }
+
+        public static bool operator ==(HassiumDate a, HassiumDate b)
+        {
+            return a.Value.Equals(b.Value);
+        }
+
+        public static bool operator !=(HassiumDate a, HassiumDate b)
+        {
+            return !(a == b);
         }
 
         public override string ToString()

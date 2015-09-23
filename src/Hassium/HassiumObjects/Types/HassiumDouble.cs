@@ -30,6 +30,24 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumDouble : HassiumObject, IConvertible
     {
+        protected bool Equals(HassiumDouble other)
+        {
+            return Value.Equals(other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumDouble) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public double Value { get; set; }
 
         public int ValueInt
@@ -43,7 +61,17 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toString", new InternalFunction(tostring, 0));
             Attributes.Add("compare", new InternalFunction(compare, 1));
             Attributes.Add("isBetween", new InternalFunction(isBetween, new[] {2, 3}));
-            Value = value;
+            Value = System.Math.Round(value, 14);
+        }
+
+        public static bool operator ==(HassiumDouble a, HassiumDouble b)
+        {
+            return a.Value == b.Value;
+        }
+
+        public static bool operator !=(HassiumDouble a, HassiumDouble b)
+        {
+            return a.Value != b.Value;
         }
 
         public override string ToString()
