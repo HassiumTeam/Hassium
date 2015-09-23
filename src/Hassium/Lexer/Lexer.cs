@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Hassium.Interpreter;
 
@@ -108,8 +109,6 @@ namespace Hassium.Lexer
                 ReadToken();
             }
 
-            new Checker(result).Check();
-
             return result;
         }
 
@@ -128,6 +127,10 @@ namespace Hassium.Lexer
             else if (char.IsLetter(current) || "_".Contains(current))
             {
                 Add(ScanIdentifier());
+            }
+            else if ("\r\n".Contains(current))
+            {
+                Add(new Token(TokenType.EndOfLine, ReadChar()));
             }
             else
             {
@@ -191,16 +194,22 @@ namespace Hassium.Lexer
                         Add(new Token(TokenType.Comma, ReadChar()));
                         break;
                     case '(':
+                        Add(new Token(TokenType.LParen, ReadChar()));
+                        break;
                     case ')':
-                        Add(new Token(TokenType.Parentheses, ReadChar()));
+                        Add(new Token(TokenType.RParen, ReadChar()));
                         break;
                     case '[':
+                        Add(new Token(TokenType.LBracket, ReadChar()));
+                        break;
                     case ']':
-                        Add(new Token(TokenType.Bracket, ReadChar()));
+                        Add(new Token(TokenType.RBracket, ReadChar()));
                         break;
                     case '{':
+                        Add(new Token(TokenType.LBrace, ReadChar()));
+                        break;
                     case '}':
-                        Add(new Token(TokenType.Brace, ReadChar()));
+                        Add(new Token(TokenType.RBrace, ReadChar()));
                         break;
                     case ':':
                         Add(new Token(TokenType.Identifier, ReadChar()));
@@ -310,11 +319,11 @@ namespace Hassium.Lexer
                     isUnicode = false;
                     currentUnicodeChar = "";
                     Add(new Token(TokenType.Operation, '+'));
-                    Add(new Token(TokenType.Parentheses, '('));
+                    Add(new Token(TokenType.LParen, '('));
                     while (HasChar() && PeekChar() != '}')
                         ReadToken();
                     ReadChar();
-                    Add(new Token(TokenType.Parentheses, ')'));
+                    Add(new Token(TokenType.RParen, ')'));
                     Add(new Token(TokenType.Operation, '+'));
                     continue;
                 }
@@ -473,7 +482,7 @@ namespace Hassium.Lexer
         {
             while (HasChar() && char.IsWhiteSpace(PeekChar())) ReadChar();
         }
-
+        
         private char PeekChar(int n = 0)
         {
             return position + n < code.Length ? code[position + n] : '\0';

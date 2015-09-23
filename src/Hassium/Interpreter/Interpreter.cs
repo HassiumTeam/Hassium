@@ -390,6 +390,8 @@ namespace Hassium.Interpreter
             switch (_op)
             {
                 case BinaryOperation.Addition:
+                    if (right == null) return (HassiumObject)left;
+                    if (left == null) return (HassiumObject)right;
                     if (left is HassiumString || right is HassiumString)
                         return new HassiumString(left + right.ToString());
                     if (left is HassiumDate || right is HassiumDate)
@@ -1265,7 +1267,8 @@ namespace Hassium.Interpreter
             {
                 Interpreter inter = new Interpreter(false);
 
-                Parser.Parser hassiumParser = new Parser.Parser(new Lexer.Lexer(File.ReadAllText(node.Path)).Tokenize());
+                string code = File.ReadAllText(node.Path);
+                Parser.Parser hassiumParser = new Parser.Parser(new Lexer.Lexer(code).Tokenize(), code);
                 AstNode ast = hassiumParser.Parse();
                 inter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 inter.Code = ast;

@@ -77,7 +77,7 @@ namespace Hassium.Parser
 
         public bool CanBeModified
         {
-            get { return this is IdentifierNode || this is MemberAccessNode; }
+            get { return this is IdentifierNode || this is MemberAccessNode || this is ArrayGetNode; }
         }
 
         protected AstNode() : this(-1)

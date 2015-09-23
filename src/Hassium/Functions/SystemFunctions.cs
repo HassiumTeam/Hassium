@@ -117,8 +117,9 @@ namespace Hassium.Functions
         [IntFunc("eval", 1)]
         public static HassiumObject Eval(HassiumObject[] args)
         {
-            var tokens = new Lexer.Lexer(args[0].ToString()).Tokenize();
-            var hassiumParser = new Parser.Parser(tokens);
+            var code = args[0].ToString();
+            var tokens = new Lexer.Lexer(code).Tokenize();
+            var hassiumParser = new Parser.Parser(tokens, code);
             var ast = hassiumParser.Parse();
             var intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
             {

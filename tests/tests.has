@@ -9,6 +9,7 @@ exitcode = 0;
 failed = 0;
 passed = 0;
 
+
 class TestClass {
     func testFunc(num1, num2) {
         return num1 + num2;
@@ -61,7 +62,7 @@ func main()
     numberFormatTests();
     functionTests();
     closureTest();
-    objectTest ();
+    objectTest();
     recursionTest();
     instanceTest();
 	importTests();
@@ -150,7 +151,7 @@ func opTests()
 	
 	boolean = true;
 	assert((boolean ? "ab" : "cd") == "ab", "should pass if ?: (ternary operator) result is correct");
-	assert((boolean ?: "cd") == null, "should pass if ?: (ternary operator) result is correct");
+	assert((boolean ? "cd") == "cd", "should pass if ? (ternary operator) result is correct");
 
 
     println();
@@ -219,7 +220,6 @@ func closureTest() {
     }
     
     func fib (n) {
-	println("i " + n);
         if (n == 0) {
             return 0;
         } else if (n == 1) {
@@ -259,7 +259,7 @@ func objectTest () {
     assert (person.age == 16, "person.age should equal 16");
     assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
     assert (person.getAge () == 16, "person.getAge () should equal 16");
-    assert(person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+    assert (person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
     
     println();
     println("End of prototyping tests");

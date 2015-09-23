@@ -27,12 +27,15 @@ namespace Hassium.Lexer
 {
     public enum TokenType
     {
-        Brace,
-        Bracket,
+        LBrace,
+        RBrace,
+        LBracket,
+        RBracket,
         Identifier,
         String,
         Number,
-        Parentheses,
+        LParen,
+        RParen,
         Comma,
         Operation,
         OpAssign,

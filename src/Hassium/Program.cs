@@ -79,7 +79,7 @@ namespace Hassium
                 List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
                 if (options.Debug)
                     Debug.Debug.PrintTokens(tokens);
-                Parser.Parser hassiumParser = new Parser.Parser(tokens);
+                Parser.Parser hassiumParser = new Parser.Parser(tokens, options.Code);
                 AstNode ast = hassiumParser.Parse();
                 CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 CurrentInterpreter.Code = ast;
@@ -92,7 +92,7 @@ namespace Hassium
                     List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
                     if (options.Debug)
                         Debug.Debug.PrintTokens(tokens);
-                    Parser.Parser hassiumParser = new Parser.Parser(tokens);
+                    Parser.Parser hassiumParser = new Parser.Parser(tokens, options.Code);
                     AstNode ast = hassiumParser.Parse();
                     CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                     CurrentInterpreter.Code = ast;
@@ -124,6 +124,11 @@ namespace Hassium
         private static void printErr(string str, ParseException e)
         {
             var idx = e.Position;
+            if(idx == -1)
+            {
+                Console.WriteLine("Error at position <unknown>: " + e.Message);
+                return;
+            }
             var line = str.Substring(0, idx).Split('\n').Length;
             var _x = str.Split('\n').Take(line);
             var res = _x.Last();
@@ -241,7 +246,7 @@ namespace Hassium
                 List<Token> tokens = new Lexer.Lexer(input).Tokenize();
                 if (options.Debug)
                     Debug.Debug.PrintTokens(tokens);
-                Parser.Parser hassiumParser = new Parser.Parser(tokens);
+                Parser.Parser hassiumParser = new Parser.Parser(tokens, input);
                 AstNode ast = hassiumParser.Parse();
                 CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 CurrentInterpreter.Code = ast;
