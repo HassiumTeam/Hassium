@@ -71,7 +71,7 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return "Array { " + string.Join(", ", Value.Select(x => x.ToString())) + " }";
+            return "Array { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
         }
 
         public HassiumObject Add(HassiumObject[] args)
