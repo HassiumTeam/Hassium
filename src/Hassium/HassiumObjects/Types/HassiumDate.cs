@@ -33,6 +33,24 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumDate : HassiumObject
     {
+        protected bool Equals(HassiumDate other)
+        {
+            return Value.Equals(other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumDate) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         public DateTime Value { get; private set; }
 
         public HassiumDate(DateTime value)

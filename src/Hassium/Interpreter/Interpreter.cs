@@ -37,8 +37,8 @@ using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Collections;
 using Hassium.HassiumObjects.Conversion;
-using Hassium.HassiumObjects.Debug;
 using Hassium.HassiumObjects.Drawing;
+using Hassium.HassiumObjects.Interpreter;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Networking;
@@ -893,7 +893,7 @@ namespace Hassium.Interpreter
                     break;
             }
 
-            if (HassiumInterpreter.options.Secure)
+            if (Program.options.Secure)
             {
                 var forbidden = new List<string> {"system", "runtimecall", "input"};
                 if (forbidden.Contains(call.Target.ToString()))
@@ -1156,7 +1156,7 @@ namespace Hassium.Interpreter
             if (node.IsModule)
             {
                 string mname = node.Path.ToLower();
-                if (HassiumInterpreter.options.Secure)
+                if (Program.options.Secure)
                 {
                     var forbidden = new List<string> {"io", "net", "network", "drawing"};
                     if (forbidden.Contains(mname))
@@ -1202,6 +1202,7 @@ namespace Hassium.Interpreter
                         break;
                     case "debug":
                         Constants.Add("Debug", new HassiumDebug());
+                        Constants.Add("Interpreter", new HassiumInterpreter());
                         break;
                     case "collections":
                         Constants.Add("Stack",
@@ -1233,7 +1234,7 @@ namespace Hassium.Interpreter
                             new InternalFunction(x => new HassiumStringBuilder(new StringBuilder()), 0, false, true));
                         Constants.Add("Encoding",
                             new InternalFunction(x => new HassiumEncoding(x[0].HString()), 1, false, true));
-                        if (!HassiumInterpreter.options.Secure)
+                        if (!Program.options.Secure)
                         {
                             Constants.Add("TextWriter",
                                 new InternalFunction(x => new HassiumTextWriter(File.CreateText(x[0].ToString())), 1,

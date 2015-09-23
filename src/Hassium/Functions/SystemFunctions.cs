@@ -122,8 +122,8 @@ namespace Hassium.Functions
             var ast = hassiumParser.Parse();
             var intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
             {
-                Globals = HassiumInterpreter.CurrentInterpreter.Globals,
-                CallStack = HassiumInterpreter.CurrentInterpreter.CallStack
+                Globals = Program.CurrentInterpreter.Globals,
+                CallStack = Program.CurrentInterpreter.CallStack
             };
             intp.Execute();
             return null;

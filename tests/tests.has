@@ -3,6 +3,7 @@
 use Math;
 use io;
 use drawing;
+use debug;
 
 exitcode = 0;
 failed = 0;
@@ -54,7 +55,7 @@ func assertfail(that, msg)
 }
 func main()
 {
-    println("--- BEGIN TESTS FOR HASSIUM ---");
+    println("--- BEGIN TESTS FOR HASSIUM " + Interpreter.version + " ---");
 
     opTests();
     numberFormatTests();
@@ -74,6 +75,10 @@ func main()
     println(passed + " test" + (passed == 1 ?: "s") + " passed");
     println(failed + " test" + (failed == 1 ?: "s") + " failed");
     println("--- END TESTS FOR HASSIUM ---");
+	println();
+	println("Current version: Hassium ", Interpreter.version);
+	println("Build date: " + Interpreter.buildDate);
+	
 
     exit(exitcode);
 	

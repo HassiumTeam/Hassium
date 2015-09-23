@@ -33,6 +33,24 @@ namespace Hassium.HassiumObjects.Types
 {
     public class HassiumDictionary : HassiumObject, IEnumerable
     {
+        protected bool Equals(HassiumDictionary other)
+        {
+            return Equals(Value, other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HassiumDictionary) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Value != null ? Value.GetHashCode() : 0);
+        }
+
         public List<HassiumKeyValuePair> Value { get; private set; }
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value)
