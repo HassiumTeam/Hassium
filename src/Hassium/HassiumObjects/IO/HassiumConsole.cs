@@ -25,6 +25,7 @@
 
 using System;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -45,6 +46,21 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("capsLock", new InternalFunction(x => Console.CapsLock, 0, true));
             Attributes.Add("getKey", new InternalFunction(x => Console.ReadKey(true).KeyChar.ToString(), 0));
             Attributes.Add("cursorPos", new InternalFunction(GetCursorPos, 0, true));
+            Attributes.Add("getClipboard", new InternalFunction(GetClipboard, 0));
+        }
+
+        [STAThread]
+        public HassiumObject GetClipboard(HassiumObject[] args)
+        {
+            return new HassiumString(System.Windows.Forms.Clipboard.GetText());
+        }
+
+        [STAThread]
+        public HassiumObject SetClipboard(HassiumObject[] args)
+        {
+            System.Windows.Forms.Clipboard.SetText(args[0].ToString());
+
+            return null;
         }
 
         /// <summary>

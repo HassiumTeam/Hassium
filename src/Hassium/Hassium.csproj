@@ -43,6 +43,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\Constructors.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Parser\Ast\DoNode.cs" />
     <Compile Include="Parser\Ast\LabelNode.cs" />
     <Compile Include="Parser\Ast\GotoNode.cs" />
+    <Compile Include="Lexer\Checker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

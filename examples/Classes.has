@@ -18,9 +18,6 @@ class Dog {
 
 # You can extend classes with class <newClassName> : <otherClassName>
 class BigDog : Dog {
-	func new() {
-	}
-
 	func growl(this) {
 		println("GRRRR");
 	}
@@ -30,7 +27,8 @@ func main() {
 	fiddo = new Dog("Fiddo");
 	fiddo.showName();
 	fiddo.bark();
-	bigDog = new BigDog();
+	bigDog = new BigDog("Charlie");
+	bigDog.showName();
 	bigDog.bark();
 	bigDog.growl();
 }
