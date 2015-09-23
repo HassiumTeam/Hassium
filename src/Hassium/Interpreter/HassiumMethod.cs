@@ -49,6 +49,7 @@ namespace Hassium.Interpreter
         public bool IsStatic
         {
             get { return !FuncNode.Parameters.Contains("this"); }
+            set { throw new NotImplementedException(); }
         }
 
         public bool IsConstructor
@@ -88,7 +89,7 @@ namespace Hassium.Interpreter
                 stackFrame.Locals["this"] = SelfReference;
 
             Interpreter.isInFunction++;
-            var parms = FuncNode.Parameters;
+            var parms = FuncNode.Parameters.Select(x => x).ToList();
 
 
             if (parms.Contains("this")) parms.Remove("this");

@@ -112,25 +112,29 @@ namespace Hassium
 
         public HassiumClass Instanciate(HassiumObject[] args, int pos)
         {
+            var self = this;
+
+            if ((!HasConstructor && Extends != null && Extends.HasConstructor) || Constructor.FuncNode.CallConstructor != null)
+            {
+                var ctor = Extends.Constructor;
+                ctor.SelfReference = self;
+                ctor.Invoke(args);
+                var attr = (KeyValuePair<string, HassiumObject>[])(ctor.SelfReference.Attributes.ToArray().Clone());
+                for (int i = 0; i < attr.Length; i++)
+                {
+                    var attrib = attr[i];
+
+                    if (Attributes.ContainsKey(attrib.Key))
+                        Attributes.Remove(attrib.Key);
+
+                    SetAttribute(attrib.Key, attrib.Value);
+                }
+                self = (HassiumClass) ctor.SelfReference;
+                if (!HasConstructor) return self;
+            }
             if (HasConstructor)
             {
-                if (Extends != null && Extends.HasConstructor && Constructor.FuncNode.CallConstructor != null)
-                {
-                    var ctor = Extends.Constructor;
-                    ctor.SelfReference = this;
-                    ctor.Invoke(args);
-                    var attr = (KeyValuePair<string, HassiumObject>[])(ctor.SelfReference.Attributes.ToArray().Clone());
-                    for(int i = 0; i < attr.Length; i++)
-                    {
-                        var attrib = attr[i];
-
-                        if (Attributes.ContainsKey(attrib.Key))
-                            Attributes.Remove(attrib.Key);
-
-                        SetAttribute(attrib.Key, attrib.Value);
-                    }
-                }
-
+                Constructor.SelfReference = self;
                 Constructor.Invoke(args);
                 Constructor.SelfReference.IsInstance = true;
                 return (HassiumClass)Constructor.SelfReference;

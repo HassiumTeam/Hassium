@@ -212,10 +212,6 @@ func closureTest() {
 
 func recursionTest()
 {
-
-    
-
-
     println("Recursion tests");
     println();
     recursion(5);

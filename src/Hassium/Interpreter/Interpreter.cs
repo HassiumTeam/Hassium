@@ -986,7 +986,7 @@ namespace Hassium.Interpreter
             }
             else if (theVar is HassiumClass)
             {
-                var iCl = ((HassiumClass) theVar);
+                var iCl = ((HassiumClass) theVar).Clone();
                 /*if (iCl.Attributes.ContainsKey("new"))
                 {
                     var ctor = iCl.GetAttribute("new", fcall.Position);

@@ -69,10 +69,20 @@ namespace Hassium.HassiumObjects
 
         public HassiumObject GetAttribute(string name, int pos)
         {
+            /*if(name.StartsWith("__prop__") && _attributes.ContainsKey(name.Substring(8)))
+            {
+                return ((HassiumProperty) (_attributes[name.Substring(8)])).GetValue(this);
+            }*/
             if (!_attributes.ContainsKey(name))
                 throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
             if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
                 return ((HassiumProperty) _attributes[name]).GetValue(this);
+            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumMethod)
+            {
+                HassiumMethod ret = (HassiumMethod)_attributes[name];
+                ret.SelfReference = this;
+                return ret;
+            }
             else return _attributes[name];
         }
 
