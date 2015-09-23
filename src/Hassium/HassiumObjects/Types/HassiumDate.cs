@@ -84,12 +84,12 @@ namespace Hassium.HassiumObjects.Types
 
         public override string ToString()
         {
-            return Value.ToString();
+            return toString(new HassiumObject[] {});
         }
 
         public HassiumObject toString(HassiumObject[] args)
         {
-            if (args.Length == 0) return ToString();
+            if (args.Length == 0) return Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss");
             else
             {
                 var final = new List<string>();
@@ -201,7 +201,10 @@ namespace Hassium.HassiumObjects.Types
                                 n.ToString("HH:mm:ss", CultureInfo.InvariantCulture), offstr);
                             break;
                         case 'r':
-                            ta = n.ToString("ddd, dd MMM yyyy hh:mm:ss ") + "GMT";
+                            ta = n.ToUniversalTime().ToString("ddd, dd MMM yyyy HH:mm:ss ") + "GMT";
+                            break;
+                        case 'x':
+                            ta = n.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss") + " GMT";
                             break;
                         case 'U':
                             ta = (int) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds + "";
