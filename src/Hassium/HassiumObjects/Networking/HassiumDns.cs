@@ -28,7 +28,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject getHostEntry(HassiumObject[] args)
         {
-            return new HassiumString(Dns.GetHostEntry(IPAddress.Parse(args[0].ToString())).ToString());
+            return new HassiumString(Dns.GetHostEntry(IPAddress.Parse(args[0].ToString())).HostName);
         }
 
         private HassiumObject getHostName(HassiumObject[] args)
@@ -38,7 +38,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject resolve(HassiumObject[] args)
         {
-            return new HassiumString(Dns.Resolve(args[0].ToString()).ToString());
+            return new HassiumString(Dns.Resolve(args[0].ToString()).HostName);
         }
     }
 }
