@@ -1209,6 +1209,7 @@ namespace Hassium.Interpreter
                                 true));
                         Constants.Add("HttpListener",
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
+                        Constants.Add("Dns", new HassiumDns());
                         break;
                     case "text":
                         Constants.Add("StringBuilder",
