@@ -41,8 +41,7 @@ namespace Hassium.HassiumObjects.Types
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((HassiumArray) obj);
+            return obj.GetType() == GetType() && Equals((HassiumArray) obj);
         }
 
         public override int GetHashCode()
@@ -117,9 +116,6 @@ namespace Hassium.HassiumObjects.Types
         {
         }
 
-        public HassiumArray(HassiumObject[] value) : this(value.ToList())
-        {
-        }
 
         public HassiumArray(IEnumerable value) : this(value.Cast<HassiumObject>().ToList())
         {

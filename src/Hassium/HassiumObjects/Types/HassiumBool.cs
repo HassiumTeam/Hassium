@@ -39,8 +39,7 @@ namespace Hassium.HassiumObjects.Types
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((HassiumBool) obj);
+            return obj.GetType() == GetType() && Equals((HassiumBool) obj);
         }
 
         public override int GetHashCode()
@@ -50,7 +49,7 @@ namespace Hassium.HassiumObjects.Types
 
         public bool Value { get; private set; }
 
-        public HassiumBool(Boolean value)
+        public HassiumBool(bool value)
         {
             Value = value;
             Attributes.Add("toString", new InternalFunction(tostring, 0));

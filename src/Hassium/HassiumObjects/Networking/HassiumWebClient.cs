@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System.Linq;
 using System.Net;
 using System.Text;
 using Hassium.Functions;
@@ -65,12 +66,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject downloadData(HassiumObject[] args)
         {
-            byte[] data = Value.DownloadData(args[0].ToString());
-            HassiumByte[] result = new HassiumByte[data.Length]; 
-            for (int x = 0; x < result.Length; x++)
-                result[x] = new HassiumByte(data[x]);
-
-            return new HassiumArray(result);       
+            return new HassiumArray(Value.DownloadData(args[0].ToString()).Select(x => new HassiumByte(x)));       
         }
 
         public override string ToString()

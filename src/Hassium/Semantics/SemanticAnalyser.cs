@@ -49,14 +49,13 @@ namespace Hassium.Semantics
             return result;
         }
 
-        private List<AstNode> flatten(List<AstNode> node)
+        private static IEnumerable<AstNode> flatten(List<AstNode> node)
         {
 
             List<AstNode> ch = new List<AstNode>();
             if (node.Count > 0 && node[0] is CodeBlock) node = ((CodeBlock) node[0]).Children;
-            foreach (AstNode cur in node)
+            foreach (AstNode cur in node.Where(cur => cur != null && cur.Children != null))
             {
-                if (cur == null || cur.Children == null) continue;
                 if (cur.Children.Count > 0)
                 {
                     ch.AddRange(flatten(cur.Children));
@@ -70,16 +69,12 @@ namespace Hassium.Semantics
         {
             if (theNode == null || theNode.Children == null) return;
 
-            foreach (AstNode node in flatten(theNode.Children))
+            foreach (LambdaFuncNode fnode in flatten(theNode.Children).OfType<LambdaFuncNode>().Select(node => (node)))
             {
-                if (node is LambdaFuncNode)
-                {
-                    LambdaFuncNode fnode = ((LambdaFuncNode) node);
-                    currentLocalScope = new LocalScope();
-                    result.ChildScopes["lambda_" + fnode.GetHashCode()] = currentLocalScope;
-                    currentLocalScope.Symbols.AddRange(fnode.Parameters);
-                    analyseLocalCode(fnode.Body);
-                }
+                currentLocalScope = new LocalScope();
+                result.ChildScopes["lambda_" + fnode.GetHashCode()] = currentLocalScope;
+                currentLocalScope.Symbols.AddRange(fnode.Parameters);
+                analyseLocalCode(fnode.Body);
             }
 
             foreach (AstNode node in theNode.Children)

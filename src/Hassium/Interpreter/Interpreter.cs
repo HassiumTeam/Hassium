@@ -32,7 +32,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Collections;
@@ -209,9 +209,8 @@ namespace Hassium.Interpreter
                 {
                     var fnode = ((FuncNode) node);
                     var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
-                    foreach (string symbol in scope.Symbols)
-                        if (symbol.StartsWith("label"))
-                            Labels.Add(symbol.Split(' ')[1], position);
+                    foreach (string symbol in scope.Symbols.Where(symbol => symbol.StartsWith("label")))
+                        Labels.Add(symbol.Split(' ')[1], position);
                     SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null),
                         node);
                 }
@@ -481,15 +480,13 @@ namespace Hassium.Interpreter
                         return new HassiumInt((int) Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
                     return new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
                 case BinaryOperation.Root:
-                    /*if (left is HassiumInt && right is HassiumInt)
-                        return new HassiumInt((int)Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));*/
                     return new HassiumDouble(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
 
                 case BinaryOperation.NullCoalescing:
                     return HassiumObject.ToHassiumObject(left) ?? HassiumObject.ToHassiumObject(right);
             }
             // Raise error
-            return new HassiumInt(-1);
+            throw new ParseException("The operation " + _op + " is not implemented yet.", pos);
         }
 
         /// <summary>
@@ -511,7 +508,7 @@ namespace Hassium.Interpreter
                     return ~(int) Convert.ToDouble(value);
             }
             //Raise error
-            return -1;
+            throw new ParseException("The operation " + node.UnOp + " is not implemented yet.", node.Position);
         }
 
         /// <summary>
@@ -678,7 +675,7 @@ namespace Hassium.Interpreter
             return null;
         }
 
-        private bool gotoposition = false;
+        private bool gotoposition;
         private int positiontogo = -1;
 
         public object Accept(GotoNode node)
@@ -997,13 +994,6 @@ namespace Hassium.Interpreter
             else if (theVar is HassiumClass)
             {
                 var iCl = ((HassiumClass) theVar).Clone();
-                /*if (iCl.Attributes.ContainsKey("new"))
-                {
-                    var ctor = iCl.GetAttribute("new", fcall.Position);
-                    ctor.Invoke(arguments);
-                    iCl.IsInstance = true;
-                    return iCl;
-                }*/
                 return iCl.Instanciate(arguments, fcall.Position);
             }
 
@@ -1045,20 +1035,14 @@ namespace Hassium.Interpreter
         {
             var mnode = node;
             var tg = (HassiumObject) mnode.Target.Visit(this);
-            /*if (!HasVariable(mnode.Name))
-                throw new ParseException(
-                    "The operand of an increment or decrement operator must be a variable, property or indexer", mnode);*/
-            var oldValue = tg;
             switch (mnode.OpType)
             {
                 case "++":
-                    //SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) + 1, mnode);
                     new BinOpNode(node.Position, BinaryOperation.Assignment, mnode.Target,
                         new BinOpNode(node.Position, BinaryOperation.Addition, mnode.Target,
                             new NumberNode(node.Position, 1, true))).Visit(this);
                     break;
                 case "--":
-                    //SetVariable(mnode.Name, Convert.ToInt32((object) GetVariable(mnode.Name, mnode)) - 1, mnode);
                     new BinOpNode(node.Position, BinaryOperation.Assignment, mnode.Target,
                        new BinOpNode(node.Position, BinaryOperation.Subtraction, mnode.Target,
                            new NumberNode(node.Position, 1, true))).Visit(this);
@@ -1149,7 +1133,7 @@ namespace Hassium.Interpreter
         public object Accept(ThreadNode node)
         {
             var threadStmt = node;
-            new System.Threading.Thread(() => threadStmt.Node.Visit(this)).Start();
+            new Thread(() => threadStmt.Node.Visit(this)).Start();
             return null;
         }
 

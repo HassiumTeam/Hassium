@@ -23,12 +23,8 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.Interpreter;
 using Hassium.Parser.Ast;
@@ -75,18 +71,6 @@ namespace Hassium
                     interpreter.SymbolTable.ChildScopes[value.Name + "." + fnode.Name], clone);
                 if (fnode.Name == "new")
                 {
-                    if(fnode.CallConstructor != null)
-                    {
-                        var cc = fnode.CallConstructor;
-                        if(cc.Target.ToString() == "this")
-                        {
-
-                        }
-                        else if(cc.Target.ToString() == "base")
-                        {
-                            
-                        }
-                    }
                     Constructor = method;
                 }
                 SetAttribute(fnode.Name, method);
@@ -118,12 +102,20 @@ namespace Hassium
             {
                 var ctor = Extends.Constructor;
                 ctor.SelfReference = self;
-                ctor.Invoke(args);
-                var attr = (KeyValuePair<string, HassiumObject>[])(ctor.SelfReference.Attributes.ToArray().Clone());
-                for (int i = 0; i < attr.Length; i++)
+                var arguments = new List<HassiumObject>();
+                for (int i = 0; i < ctor.FuncNode.Parameters.Count; i++)
                 {
-                    var attrib = attr[i];
-
+                    if (i >= args.Length) break;
+                    arguments.Add(args[i]);
+                }
+                if(arguments.Count != ctor.FuncNode.Parameters.Count)
+                {
+                    throw new ParseException("Incorrect arguments for base()", pos);
+                }
+                ctor.Invoke(arguments.ToArray());
+                var attr = (KeyValuePair<string, HassiumObject>[])(ctor.SelfReference.Attributes.ToArray().Clone());
+                foreach (var attrib in attr)
+                {
                     if (Attributes.ContainsKey(attrib.Key))
                         Attributes.Remove(attrib.Key);
 

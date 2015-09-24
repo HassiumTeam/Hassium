@@ -24,7 +24,6 @@
 // DAMAGE.
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using Hassium.Functions;
@@ -42,8 +41,7 @@ namespace Hassium.HassiumObjects.Types
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((HassiumDate) obj);
+            return obj.GetType() == GetType() && Equals((HassiumDate) obj);
         }
 
         public override int GetHashCode()

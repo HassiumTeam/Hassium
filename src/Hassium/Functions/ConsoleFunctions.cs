@@ -40,7 +40,7 @@ namespace Hassium.Functions
         [IntFunc("print", -1)]
         public static HassiumObject Print(HassiumObject[] args)
         {
-            Console.Write(String.Join("", args.Select(x => x.ToString())));
+            Console.Write(string.Join("", args.Select(x => x.ToString())));
             return null;
         }
 
@@ -52,7 +52,7 @@ namespace Hassium.Functions
         [IntFunc("println", -1)]
         public static HassiumObject PrintLn(HassiumObject[] args)
         {
-            Console.WriteLine(String.Join("", args.Select(x => x.ToString())));
+            Console.WriteLine(string.Join("", args.Select(x => x.ToString())));
             return null;
         }
 

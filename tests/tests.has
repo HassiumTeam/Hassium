@@ -293,6 +293,25 @@ class PersonClass
         return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old.";
     }
 }
+
+class Employee : PersonClass
+{
+	func new(name, age, location) : base(name, age)
+	{
+		this.Location = location;
+	}
+	
+	property Location
+	{
+		get;
+		set;
+	}
+	
+	func toString(this)
+	{
+		return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old and I live in " + this.Location + ".";
+	}
+}
     
 func instanceTest () {
     println("Class instance tests");
@@ -306,6 +325,11 @@ func instanceTest () {
 	assert (person.Name == "New Reagan", "person.name should equal New Reagan");
     assert (person.Age == 34, "person.age should equal 34");
     assert(person.toString() == "Hello my name is New Reagan and I'm 34 years old.", "person.toString()");
+	employee = new Employee("Mark", 38, "New York");
+	assert(employee.Name == "Mark", "employee.Name");
+	assert(employee.Age == 38, "employee.Age");
+	assert(employee.Location == "New York", "employee.Location");
+	assert(employee.toString() == "Hello my name is Mark and I'm 38 years old and I live in New York.", "employee.toString()");
     
     println();
     println("End of class instance tests");

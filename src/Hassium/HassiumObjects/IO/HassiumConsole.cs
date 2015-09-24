@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Windows.Forms;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -52,13 +53,13 @@ namespace Hassium.HassiumObjects.IO
         [STAThread]
         public HassiumObject GetClipboard(HassiumObject[] args)
         {
-            return new HassiumString(System.Windows.Forms.Clipboard.GetText());
+            return new HassiumString(Clipboard.GetText());
         }
 
         [STAThread]
         public HassiumObject SetClipboard(HassiumObject[] args)
         {
-            System.Windows.Forms.Clipboard.SetText(args[0].ToString());
+            Clipboard.SetText(args[0].ToString());
 
             return null;
         }

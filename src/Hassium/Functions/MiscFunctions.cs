@@ -48,7 +48,7 @@ namespace Hassium.Functions
         [IntFunc("throw", -1)]
         public static HassiumObject Throw(HassiumObject[] args)
         {
-            throw new Exception(String.Join("", args.Cast<object>()));
+            throw new Exception(string.Join("", args.Cast<object>()));
         }
 
         [IntFunc("fill", 2)]
