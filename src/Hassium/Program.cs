@@ -32,7 +32,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Hassium.HassiumObjects.Types;
-using Hassium.Interpreter;
 using Hassium.Lexer;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
@@ -101,14 +100,7 @@ namespace Hassium
                 catch (Exception e)
                 {
                     Console.WriteLine();
-                    if (e is ParseException)
-                    {
-                        printErr(options.Code, (ParseException) e);
-                    }
-                    else
-                    {
-                        Console.WriteLine("There has been an error. Message: " + e.Message);
-                    }
+                    Console.WriteLine("There has been an error. Message: " + e.Message);
                     Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
                     Environment.Exit(-1);
                 }
@@ -121,26 +113,7 @@ namespace Hassium
             Environment.Exit(CurrentInterpreter.exitcode);
         }
 
-        private static void printErr(string str, ParseException e)
-        {
-            var idx = e.Position;
-            if(idx == -1)
-            {
-                Console.WriteLine("Error at position <unknown>: " + e.Message);
-                return;
-            }
-            var line = str.Substring(0, idx).Split('\n').Length;
-            var _x = str.Split('\n').Take(line);
-            var res = _x.Last();
-            string trimd = res.Trim();
-            _x = _x.Take(line - 1);
-            var column = idx - (string.Join("\n", _x).Length + (_x.Any() ? 1 : 0)) + 1;
-            Console.WriteLine("Error at position " + idx + ", line " + line
-                              + " column " + column + ": " +
-                              e.Message);
-            Console.WriteLine("   " + trimd);
-            Console.WriteLine(new string(' ', 2 + (column - (res.Length - trimd.Length))) + '^');
-        }
+        
 
         public static string GetVersion()
         {

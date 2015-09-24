@@ -40,12 +40,15 @@ namespace Hassium.Interpreter
 
         public Dictionary<string, HassiumObject> Locals { get; private set; }
 
+        public Dictionary<string, int> Labels { get; private set; } 
+
         public HassiumObject ReturnValue { get; set; }
 
         public StackFrame(LocalScope scope, HassiumObject self = null)
         {
             Scope = scope;
             Locals = new Dictionary<string, HassiumObject>();
+            Labels = new Dictionary<string, int>();
             if (self != null)
                 Locals["this"] = self;
         }

@@ -30,7 +30,6 @@ using System.Linq;
 using System.Threading;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
-using Hassium.Semantics;
 
 namespace Hassium.Functions
 {
@@ -111,22 +110,6 @@ namespace Hassium.Functions
         public static HassiumObject Sleep(HassiumObject[] args)
         {
             Thread.Sleep(args[0].HInt().Value);
-            return null;
-        }
-
-        [IntFunc("eval", 1)]
-        public static HassiumObject Eval(HassiumObject[] args)
-        {
-            var code = args[0].ToString();
-            var tokens = new Lexer.Lexer(code).Tokenize();
-            var hassiumParser = new Parser.Parser(tokens, code);
-            var ast = hassiumParser.Parse();
-            var intp = new Interpreter.Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
-            {
-                Globals = Program.CurrentInterpreter.Globals,
-                CallStack = Program.CurrentInterpreter.CallStack
-            };
-            intp.Execute();
             return null;
         }
     }

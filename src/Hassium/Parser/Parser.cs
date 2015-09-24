@@ -1028,7 +1028,7 @@ namespace Hassium.Parser
                 if (parser.MatchToken(TokenType.LParen))
                 {
                     var parser1 = parser;
-                    left = new FunctionCallNode(parser1.PreviousToken(2).Position, left, ParseArgList(parser1));
+                    left = new FunctionCallNode(parser1.PreviousToken().Position, left, ParseArgList(parser1));
                 }
                 else if (parser.MatchToken(TokenType.LBracket))
                 {
