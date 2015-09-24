@@ -40,6 +40,7 @@ namespace Hassium.HassiumObjects.Networking
             Attributes.Add("downloadString", new InternalFunction(downstr, 1));
             Attributes.Add("downloadFile", new InternalFunction(downfile, 2));
             Attributes.Add("uploadFile", new InternalFunction(upfile, 2));
+            Attributes.Add("downloadData", new InternalFunction(downloadData, 1));
         }
 
         private HassiumObject downstr(HassiumObject[] args)
@@ -60,6 +61,16 @@ namespace Hassium.HassiumObjects.Networking
             return
                 new HassiumString(
                     Encoding.ASCII.GetString(Value.UploadFile(args[0].ToString(), "POST", args[1].ToString())));
+        }
+
+        private HassiumObject downloadData(HassiumObject[] args)
+        {
+            byte[] data = Value.DownloadData(args[0].ToString());
+            HassiumByte[] result = new HassiumByte[data.Length]; 
+            for (int x = 0; x < result.Length; x++)
+                result[x] = new HassiumByte(data[x]);
+
+            return new HassiumArray(result);       
         }
 
         public override string ToString()
