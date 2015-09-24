@@ -42,6 +42,8 @@ namespace Hassium.HassiumObjects.Networking
             Attributes.Add("downloadFile", new InternalFunction(downfile, 2));
             Attributes.Add("uploadFile", new InternalFunction(upfile, 2));
             Attributes.Add("downloadData", new InternalFunction(downloadData, 1));
+            Attributes.Add("uploadData", new InternalFunction(uploadData, 2));
+            Attributes.Add("uploadString", new InternalFunction(uploadString, 2));
         }
 
         private HassiumObject downstr(HassiumObject[] args)
@@ -67,6 +69,22 @@ namespace Hassium.HassiumObjects.Networking
         private HassiumObject downloadData(HassiumObject[] args)
         {
             return new HassiumArray(Value.DownloadData(args[0].ToString()).Select(x => new HassiumByte(x)));       
+        }
+
+        private HassiumObject uploadData(HassiumObject[] args)
+        {
+            HassiumObject[] array = ((HassiumArray)args[1]).Value;
+            byte[] data = new byte[array.Length];
+
+            for (int x = 0; x < array.Length; x++)
+                data[x] = ((HassiumByte)array[x]).Value;
+
+            return new HassiumString(Encoding.ASCII.GetString(Value.UploadData(args[0].ToString(), data)));
+        }
+
+        private HassiumObject uploadString(HassiumObject[] args)
+        {
+            return new HassiumString((Value.UploadString(args[0].ToString(), args[1].ToString())));
         }
 
         public override string ToString()
