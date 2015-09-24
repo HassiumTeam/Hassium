@@ -202,15 +202,20 @@ namespace Hassium.Interpreter
         public void Execute(bool repl = false)
         {
             isRepl = repl;
-            for (int position = 0; position < Code.Children.Count; position++)
+            foreach (var node in Code.Children)
             {
-                var node = Code.Children[position];
                 if (node is FuncNode && firstExecute)
                 {
                     var fnode = ((FuncNode) node);
                     var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
-                    foreach (string symbol in scope.Symbols.Where(symbol => symbol.StartsWith("label")))
-                        Labels.Add(symbol.Split(' ')[1], position);
+                    for (int i = 0; i < fnode.Body.Children.Count; i++)
+                    {
+                        var cn = fnode.Body.Children[i];
+                        if(cn is LabelNode)
+                        {
+                            Labels.Add(((LabelNode)cn).Name, i);
+                        }
+                    }
                     SetVariable(fnode.Name + "`" + fnode.Parameters.Count, new HassiumMethod(this, fnode, scope, null),
                         node);
                 }
