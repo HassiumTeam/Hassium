@@ -75,7 +75,6 @@ namespace Hassium.Interpreter
 
         private bool enforceMainEntryPoint;
         private bool isRepl;
-        private bool firstExecute = true;
 
         private int isInLoop;
         private bool continueLoop;
@@ -221,22 +220,10 @@ namespace Hassium.Interpreter
             isRepl = repl;
             try
             {
-                foreach (var node in Code.Children)
+                foreach(var node in Code.Children)
                 {
-                    if (node is FuncNode && firstExecute)
-                    {
-                        var fnode = ((FuncNode) node);
-                        var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
-                        SetVariable(fnode.Name + "`" + fnode.Parameters.Count,
-                            new HassiumMethod(this, fnode, scope, null),
-                            node);
-                    }
-                    else if (node is ClassNode)
-                    {
-                        var cnode = ((ClassNode) node);
-                        if (!Globals.ContainsKey(cnode.Name))
-                            Globals.Add(cnode.Name, new HassiumClass(cnode, this));
-                    }
+                    if (exit) return;
+                    node.Visit(this);
                 }
 
                 if (!Globals.ContainsKey("main`0") && enforceMainEntryPoint)
@@ -245,25 +232,8 @@ namespace Hassium.Interpreter
                     Environment.Exit(-1);
                 }
 
-                firstExecute = false;
-                foreach (var node in Code.Children)
-                {
-                    if (exit) return;
-                    if (node is FuncNode)
-                    {
-                        var fnode = ((FuncNode) node);
-                        var scope = SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count];
-                        //If there is a main, let it be the main entry point of the program
-                        if (fnode.Name == "main")
-                        {
-                            new HassiumMethod(this, fnode, scope, null).Invoke();
-                            return;
-                        }
-                    }
-                    else
-                        node.Visit(this);
-                }
-
+                if(enforceMainEntryPoint)
+                    Globals["main`0"].Invoke();
             }
             catch (Exception e)
             {
@@ -743,6 +713,9 @@ namespace Hassium.Interpreter
 
         public object Accept(ClassNode node)
         {
+            var cnode = node;
+            if (!Globals.ContainsKey(cnode.Name))
+                Globals.Add(cnode.Name, new HassiumClass(cnode, this));
             return null;
         }
 

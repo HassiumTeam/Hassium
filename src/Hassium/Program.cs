@@ -62,18 +62,18 @@ namespace Hassium
         {
             Initialize(args);
 
-
-            if (options.ShowTime)
-            {
-                st = new Stopwatch();
-                st.Start();
-            }
             if (options.Golf)
             {
                 Console.WriteLine(Lexer.Lexer.Minimize(options.Code));
                 Environment.Exit(0);
             }
-            if (disableTryCatch)
+            if (options.ShowTime)
+            {
+                st = new Stopwatch();
+                st.Start();
+            }
+
+            try
             {
                 List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
                 if (options.Debug)
@@ -82,29 +82,18 @@ namespace Hassium
                 AstNode ast = hassiumParser.Parse();
                 CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 CurrentInterpreter.Code = ast;
+                CurrentInterpreter.HandleErrors = !disableTryCatch;
                 CurrentInterpreter.Execute();
             }
-            else
+            catch (Exception e)
             {
-                try
-                {
-                    List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
-                    if (options.Debug)
-                        Debug.Debug.PrintTokens(tokens);
-                    Parser.Parser hassiumParser = new Parser.Parser(tokens, options.Code);
-                    AstNode ast = hassiumParser.Parse();
-                    CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
-                    CurrentInterpreter.Code = ast;
-                    CurrentInterpreter.Execute();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("There has been an error. Message: " + e.Message);
-                    Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
-                    Environment.Exit(-1);
-                }
+                if (disableTryCatch) throw;
+                Console.WriteLine();
+                Console.WriteLine("There has been an error. Message: " + e.Message);
+                Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
+                Environment.Exit(-1);
             }
+
             if (options.ShowTime)
             {
                 st.Stop();
@@ -113,7 +102,7 @@ namespace Hassium
             Environment.Exit(CurrentInterpreter.exitcode);
         }
 
-        
+
 
         public static string GetVersion()
         {
@@ -194,8 +183,8 @@ namespace Hassium
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
 
-            options.Code = File.ReadAllText(options.FilePath).Replace("\t", "    ");
-            options.Code = options.Code.Replace("\r\n", "\n").Replace("\r", "\n");
+            options.Code = File.ReadAllText(options.FilePath).Replace("\t", "    "); // replace tabs by 4 spaces
+            options.Code = options.Code.Replace("\r\n", "\n").Replace("\r", "\n"); // convert all newlines to linux style (\n)
         }
 
         private static void enterInteractive()
