@@ -478,7 +478,7 @@ namespace Hassium.Interpreter
                 case BinaryOperation.BitshiftRight:
                     return new HassiumInt(Convert.ToInt32(left) >> Convert.ToInt32(right));
                 case BinaryOperation.Modulus:
-                    return new HassiumInt(Convert.ToInt32(left) % Convert.ToInt32(right));
+                    return new HassiumDouble(Convert.ToDouble(left) % Convert.ToDouble(right));
 
                 case BinaryOperation.Pow:
                     if (left is HassiumInt && right is HassiumInt)
