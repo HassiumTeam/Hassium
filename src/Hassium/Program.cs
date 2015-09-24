@@ -99,7 +99,7 @@ namespace Hassium
                 st.Stop();
                 Console.WriteLine("\n" + st.Elapsed + " seconds");
             }
-            Environment.Exit(CurrentInterpreter.exitcode);
+            Environment.Exit(CurrentInterpreter.Exitcode);
         }
 
 

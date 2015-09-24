@@ -38,19 +38,18 @@ namespace Hassium.Parser
     public class Parser
     {
         private List<Token> tokens;
-        public int position;
+        private string code { get; set; }
+        private int position;
 
-        public int codePos
+        private int codePos
         {
             get { return CurrentToken().Position; }
         }
 
-        public bool EndOfStream
+        private bool endOfStream
         {
             get { return tokens.Count <= position; }
         }
-
-        private string code;
 
         public Parser(List<Token> tokens, string code)
         {
@@ -64,7 +63,7 @@ namespace Hassium.Parser
         public AstNode Parse()
         {
             CodeBlock block = new CodeBlock(0);
-            while (!EndOfStream)
+            while (!endOfStream)
             {
                 block.Children.Add(ParseStatement(this));
             }
@@ -342,7 +341,7 @@ namespace Hassium.Parser
             CodeBlock block = new CodeBlock(parser.codePos);
             Token opening = parser.ExpectToken(TokenType.LBrace);
 
-            while (!parser.EndOfStream && !parser.MatchToken(TokenType.RBrace))
+            while (!parser.endOfStream && !parser.MatchToken(TokenType.RBrace))
             {
                 block.Children.Add(ParseStatement(parser));
             }

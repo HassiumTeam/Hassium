@@ -54,13 +54,13 @@ namespace Hassium.HassiumObjects.Interpreter
 
         public HassiumObject globalVariables()
         {
-            var res = Program.CurrentInterpreter.Globals;
+            var result = Program.CurrentInterpreter.Globals;
             Program.CurrentInterpreter.Constants.All(x =>
             {
-                res.Add(x.Key, x.Value);
+                result.Add(x.Key, x.Value);
                 return true;
             });
-            return new HassiumDictionary(res.ToDictionary(x => new HassiumString(x.Key), x => x.Value));
+            return new HassiumDictionary(result.ToDictionary(x => new HassiumString(x.Key), x => x.Value));
         }
     }
 }
