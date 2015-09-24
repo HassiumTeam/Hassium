@@ -562,12 +562,7 @@ namespace Hassium.Interpreter
 
         public object Accept(ArgListNode node)
         {
-            var arguments = new HassiumObject[node.Children.Count];
-            for (var x = 0; x < node.Children.Count; x++)
-            {
-                arguments[x] = (HassiumObject) node.Children[x].Visit(this);
-            }
-            return arguments;
+            return node.Children.Select(x => (HassiumObject) x.Visit(this)).ToArray();
         }
 
         public object Accept(ArrayGetNode node)
@@ -754,8 +749,7 @@ namespace Hassium.Interpreter
                 }
                 if (keyvname != "") SetVariable(keyvname, null, forStmt);
                 SetVariable(valvname, null, forStmt);
-                foreach (var needle in (keyvname != "" ? theArray : (IEnumerable) (theArray.Value.Select(x => x.Value)))
-                    )
+                foreach (var needle in (keyvname == "" ? (IEnumerable) (theArray.Value.Select(x => x.Value)) : theArray))
                 {
                     if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair) needle).Key, forStmt);
                     SetVariable(valvname,
@@ -927,13 +921,9 @@ namespace Hassium.Interpreter
                 }
             }
 
-            var arguments = new HassiumObject[call.Arguments.Children.Count];
-            for (var x = 0; x < call.Arguments.Children.Count; x++)
-            {
-                arguments[x] = dontEval
-                    ? new HassiumString(call.Arguments.Children[x].ToString())
-                    : (HassiumObject) call.Arguments.Children[x].Visit(this);
-            }
+            var arguments =
+                call.Arguments.Children.Select(
+                    x => dontEval ? new HassiumString(x.ToString()) : (HassiumObject) x.Visit(this)).ToArray();
 
             switch (call.Target.ToString())
             {
@@ -1249,7 +1239,7 @@ namespace Hassium.Interpreter
             }
             else if (node.IsLibrary)
             {
-                foreach (KeyValuePair<string, InternalFunction> entry in GetFunctions(node.Path))
+                foreach (var entry in GetFunctions(node.Path))
                     Globals.Add(entry.Key, entry.Value);
             }
             else
@@ -1265,7 +1255,7 @@ namespace Hassium.Interpreter
 
                 if (node.Global)
                 {
-                    foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                    foreach (var entry in inter.Globals)
                     {
                         if (Globals.ContainsKey(entry.Key))
                             Globals.Remove(entry.Key);
@@ -1275,7 +1265,7 @@ namespace Hassium.Interpreter
                 else
                 {
                     var modu = new HassiumModule(node.Name);
-                    foreach (KeyValuePair<string, HassiumObject> entry in inter.Globals)
+                    foreach (var entry in inter.Globals)
                     {
                         modu.SetAttribute(entry.Key, entry.Value);
                     }
