@@ -64,9 +64,7 @@ namespace Hassium.Parser
         {
             CodeBlock block = new CodeBlock(0);
             while (!endOfStream)
-            {
                 block.Children.Add(ParseStatement(this));
-            }
             return block;
         }
 
@@ -236,14 +234,9 @@ namespace Hassium.Parser
                 int tempPosition = parser.codePosition;
                 var callee = parser.ExpectToken("Expected 'this' or 'base'", TokenType.Identifier);
                 if (callee.Value.ToString() == "base" || callee.Value.ToString() == "this")
-                {
-                    constr = new FunctionCallNode(tempPosition, new IdentifierNode(tempPosition, callee.Value.ToString()),
-                        parseArgList(parser));
-                }
+                    constr = new FunctionCallNode(tempPosition, new IdentifierNode(tempPosition, callee.Value.ToString()), parseArgList(parser));
                 else
-                {
                     throw new ParseException("Expected 'this' or 'base' in constructor", tempPosition);
-                }
             }
 
             AstNode body = ParseStatement(parser);
@@ -366,9 +359,7 @@ namespace Hassium.Parser
             {
                 ret.Children.Add(parseExpression(parser));
                 if (!parser.AcceptToken(TokenType.Comma))
-                {
                     break;
-                }
             }
             parser.ExpectToken("Unterminated argument list", TokenType.RParen);
 
@@ -657,9 +648,7 @@ namespace Hassium.Parser
                    parser.CurrentToken().TokenClass == TokenType.OpAssign)
             {
                 if (!left.CanBeModified)
-                {
                     throw new ParseException("Trying to assign a read-only expression (try using == instead of =)", parser.CurrentToken().Position);
-                }
                 if (parser.AcceptToken(TokenType.Assignment))
                 {
                     AstNode right = parseConditional(parser);
@@ -688,14 +677,10 @@ namespace Hassium.Parser
             {
                 AstNode ifbody = null;
                 if (!parser.MatchToken(TokenType.Identifier, ":"))
-                {
                     ifbody = parseConditional(parser);
-                }
                 AstNode elsebody = null;
                 if (parser.AcceptToken(TokenType.Identifier, ":"))
-                {
                     elsebody = parseConditional(parser);
-                }
                 left = new ConditionalOpNode(position, left, ifbody, elsebody);
             }
 
@@ -708,9 +693,7 @@ namespace Hassium.Parser
 
             AstNode left = parseLogicalAnd(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().TokenClass == TokenType.Operation)
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().TokenClass == TokenType.Operation)
                 if (parser.AcceptToken(TokenType.Comparison, "||"))
                 {
                     var right = parseLogicalAnd(parser);
@@ -723,7 +706,6 @@ namespace Hassium.Parser
                 }
                 else
                     break;
-            }
 
             return left;
         }
@@ -750,9 +732,7 @@ namespace Hassium.Parser
 
             AstNode left = ParseComparison(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().TokenClass == TokenType.Operation)
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().TokenClass == TokenType.Operation)
                 if (parser.AcceptToken(TokenType.Comparison, "=="))
                 {
                     var right = ParseComparison(parser);
@@ -765,7 +745,6 @@ namespace Hassium.Parser
                 }
                 else
                     break;
-            }
 
             return left;
         }
@@ -776,9 +755,7 @@ namespace Hassium.Parser
 
             AstNode left = parseOr(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().Value.ToString() == "is")
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().Value.ToString() == "is")
                 if (parser.AcceptToken(TokenType.Comparison, "<"))
                 {
                     var right = parseOr(parser);
@@ -811,7 +788,6 @@ namespace Hassium.Parser
                 }
                 else
                     break;
-            }
 
             return left;
         }
@@ -946,9 +922,7 @@ namespace Hassium.Parser
                 return new LambdaFuncNode(position, new List<string> {left.ToString()}, body);
             }
             else
-            {
                 return left;
-            }
         }
 
 
@@ -969,9 +943,7 @@ namespace Hassium.Parser
                 return new BinOpNode(position, BinaryOperation.Root, left, right);
             }
             else
-            {
                 return left;
-            }
         }
 
         private static AstNode ParseUnary(Parser parser)
@@ -998,17 +970,11 @@ namespace Hassium.Parser
 
             var left = ParseFunctionCall(parser);
             if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-            {
                 return new IncDecNode(position, "++", left, false);
-            }
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-            {
                 return new IncDecNode(position, "--", left, false);
-            }
             else
-            {
                 return left;
-            }
         }
 
         private static AstNode ParseFunctionCall(Parser parser)
@@ -1039,9 +1005,7 @@ namespace Hassium.Parser
                     left = new MemberAccessNode(position, left, ident.Value.ToString());
                 }
                 else
-                {
                     return left;
-                }
             }
         }
 
@@ -1132,13 +1096,10 @@ namespace Hassium.Parser
                     ret.AddItem(ct1, parseExpression(parser));
                 }
                 else
-                {
                     ret.AddItem(ct1);
-                }
+                
                 if (!parser.AcceptToken(TokenType.Comma))
-                {
                     break;
-                }
             }
             parser.ExpectToken("Unterminated array initializer", TokenType.RBracket);
 
