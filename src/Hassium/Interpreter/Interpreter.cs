@@ -74,19 +74,18 @@ namespace Hassium.Interpreter
         public SymbolTable SymbolTable { get; set; }
 
         public bool HandleErrors { get; set; }
-        public bool returnFunc;
+        public bool ReturnFunc { get; set; }
 
-        public int isInFunction;
-
-        public int exitcode = -1;
+        public int IsInFunction { get; set; }
+        public int Exitcode = -1;
 
         private bool enforceMainEntryPoint;
-        private bool isRepl;
-        private bool continueLoop;
-        private bool breakLoop;
-        private bool exit;
+        private bool isRepl { get; set; }
+        private bool continueLoop { get; set; }
+        private bool breakLoop { get; set; }
+        private bool exit { get; set; }
 
-        private int isInLoop;
+        private int isInLoop { get; set; }
         private Stack<int> position = new Stack<int>(); 
 
         /// <summary>
@@ -969,14 +968,14 @@ namespace Hassium.Interpreter
                     return null;
                 case "exit":
                     exit = true;
-                    exitcode = arguments.Length == 0 ? 0 : arguments[0].HInt().Value;
+                    Exitcode = arguments.Length == 0 ? 0 : arguments[0].HInt().Value;
                     return null;
                 case "eval":
                     var code = arguments[0].ToString();
                     var tokens = new Lexer.Lexer(code).Tokenize();
                     var hassiumParser = new Parser.Parser(tokens, code);
                     var ast = hassiumParser.Parse();
-                    var intp = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
+                    var interpret = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast, false)
                     {
                         Globals = Globals,
                         CallStack = CallStack,
@@ -984,7 +983,7 @@ namespace Hassium.Interpreter
                     };
                     try
                     {
-                        intp.Execute();
+                        interpret.Execute();
                     }
                     catch (Exception e)
                     {
@@ -1003,8 +1002,8 @@ namespace Hassium.Interpreter
 
 
             HassiumObject ret = target.Invoke(arguments);
-            if (returnFunc)
-                returnFunc = false;
+            if (ReturnFunc)
+                ReturnFunc = false;
             //if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
             return ret;
         }
@@ -1152,12 +1151,12 @@ namespace Hassium.Interpreter
 
         public object Accept(ReturnNode node)
         {
-            if (isInFunction == 0) throw new ParseException("'return' cannot be used outside a function", node);
+            if (IsInFunction == 0) throw new ParseException("'return' cannot be used outside a function", node);
             var returnStmt = node;
             if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue)
                 throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
             var ret = returnStmt.Value.Visit(this);
-            returnFunc = true;
+            ReturnFunc = true;
             CallStack.Peek().ReturnValue = (HassiumObject) ret;
             return ret;
         }
@@ -1436,7 +1435,7 @@ namespace Hassium.Interpreter
                     positiontogo = -1;
                     continue;
                 }
-                if (continueLoop || breakLoop || returnFunc || exit) break;
+                if (continueLoop || breakLoop || ReturnFunc || exit) break;
             }
             position.Pop();
         }

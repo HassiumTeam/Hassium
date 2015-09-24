@@ -88,7 +88,7 @@ namespace Hassium.Interpreter
             if (!IsStatic || IsConstructor)
                 stackFrame.Locals["this"] = SelfReference;
 
-            Interpreter.isInFunction++;
+            Interpreter.IsInFunction++;
             var parms = FuncNode.Parameters.Select(x => x).ToList();
 
 
@@ -113,8 +113,8 @@ namespace Hassium.Interpreter
                 ret = ((HassiumArray) ret).Cast<object>()
                     .Select((s, i) => new {s, i})
                     .ToDictionary(x => (object) x.i, x => (object) x.s);
-            Interpreter.isInFunction--;
-            Interpreter.returnFunc = false;
+            Interpreter.IsInFunction--;
+            Interpreter.ReturnFunc = false;
             return ret;
         }
 
