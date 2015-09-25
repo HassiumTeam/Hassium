@@ -59,7 +59,7 @@ namespace Hassium.Interpreter
     /// </summary>
     public class Interpreter : IVisitor
     {
-        public Stack<StackFrame> CallStack = new Stack<StackFrame>();
+        public CallStack CallStack = new CallStack();
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
@@ -88,6 +88,7 @@ namespace Hassium.Interpreter
 
         private int isInLoop { get; set; }
         private Stack<int> position = new Stack<int>(); 
+        private Stack<int> nodePos = new Stack<int>(); 
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Interpreter" /> class.
@@ -109,12 +110,47 @@ namespace Hassium.Interpreter
             HandleErrors = true;
         }
 
+         
+
         public void Execute(bool repl = false)
         {
             isRepl = repl;
-            try
+            if (HandleErrors)
             {
-                foreach(var node in Code.Children)
+                try
+                {
+                    foreach (var node in Code.Children)
+                    {
+                        if (exit) return;
+                        node.Visit(this);
+                    }
+
+                    if (!Globals.ContainsKey("main`0") && enforceMainEntryPoint)
+                    {
+                        Console.WriteLine("Could not execute, no main entry point of program!");
+                        Environment.Exit(-1);
+                    }
+
+                    if (enforceMainEntryPoint)
+                        Globals["main`0"].Invoke();
+                }
+                catch (Exception ex)
+                {
+                    if (!HandleErrors) throw;
+                    Console.WriteLine();
+                    if (ex is ParseException)
+                        printError(Program.options.Code, (ParseException) ex);
+                    else
+                        printError(Program.options.Code, new ParseException(ex.Message, nodePos.Peek()));
+                        //Console.WriteLine("There has been an error. Message: " + ex.Message);
+
+                    Console.WriteLine("\nStack Trace: \n" + ex.StackTrace);
+                    Environment.Exit(-1);
+                }
+            }
+            else
+            {
+                foreach (var node in Code.Children)
                 {
                     if (exit) return;
                     node.Visit(this);
@@ -126,34 +162,18 @@ namespace Hassium.Interpreter
                     Environment.Exit(-1);
                 }
 
-                if(enforceMainEntryPoint)
+                if (enforceMainEntryPoint)
                     Globals["main`0"].Invoke();
-            }
-            catch (Exception ex)
-            {
-                if (!HandleErrors) throw;
-                Console.WriteLine();
-                if (ex is ParseException)
-                    printError(Program.options.Code, (ParseException)ex);
-                else
-                    Console.WriteLine("There has been an error. Message: " + ex.Message);
-                
-                Console.WriteLine("\nStack Trace: \n" + ex.StackTrace);
-                Environment.Exit(-1);
             }
         }
 
-        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false, bool onlyexist = false)
+        public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false,
+            bool onlyexist = false)
         {
             validateVariableName(name, node);
 
-            if (!forceglobal && CallStack.Count > 0 &&
-                (!onlyexist ||
-                    (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name)))) &&
-                !Globals.ContainsKey(name))
-                if (CallStack.Any(x => x.Locals.ContainsKey(name)))
-                    CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name] = value;
-                else CallStack.Peek().Locals[name] = value;
+            if (!forceglobal && CallStack.Any() &&(!onlyexist || CallStack.HasVariable(name)) && !Globals.ContainsKey(name))
+                CallStack.SetVariable(name, value);
             else
                 Globals[name] = value;
         }
@@ -247,10 +267,8 @@ namespace Hassium.Interpreter
             else
             {
                 if (!hasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
-                if (CallStack.Count > 0 &&
-                    (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))))
-                    CallStack.First(x => x.Locals.ContainsKey(name) || x.Scope.Symbols.Contains(name))
-                        .Locals.Remove(name);
+                if (CallStack.HasVariable(name))
+                    CallStack.FreeVariable(name);
                 else
                     Globals.Remove(name);
             }
@@ -371,7 +389,7 @@ namespace Hassium.Interpreter
             return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
         }
 
-        private bool hasFunction(string name, int parm, AstNode node)
+        private bool hasFunction(string name, int parm)
         {
             return hasVariable(name + "`" + parm) || hasVariable(name + "`i") || hasVariable(name);
         }
@@ -524,17 +542,11 @@ namespace Hassium.Interpreter
         {
             if (Constants.ContainsKey(name))
                 return Constants[name];
-            if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.ContainsKey(name)))
-                return CallStack.First(x => x.Locals.ContainsKey(name)).Locals[name];
-            if (CallStack.Count > 0 && CallStack.Any(x => x.Locals.Any(y => y.Key.StartsWith(name))))
-                return
-                    CallStack.First(x => x.Locals.Any(y => y.Key.StartsWith(name)))
-                        .Locals.First(x => x.Key.StartsWith(name))
-                        .Value;
+            if (CallStack.HasVariable(name, true)) return CallStack.GetVariable(name, true);
             if (Globals.ContainsKey(name))
                 return Globals[name];
-            if (Globals.Any(x => x.Key.StartsWith(name)))
-                return Globals.First(x => x.Key.StartsWith(name)).Value;
+            if (Globals.Any(x => x.Key.StartsWith(name) && x.Key.Replace(name, "").StartsWith("`")))
+                return Globals.First(x => x.Key.StartsWith(name) && x.Key.Replace(name, "").StartsWith("`")).Value;
 
             else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
         }
@@ -544,8 +556,7 @@ namespace Hassium.Interpreter
             return onlyglobal
                 ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
                     : Globals.ContainsKey(name) || Constants.ContainsKey(name) ||
-                (CallStack.Count > 0 &&
-                    (CallStack.Peek().Scope.Symbols.Contains(name) || CallStack.Any(x => x.Locals.ContainsKey(name))));
+                (CallStack.HasVariable(name));
         }
 
         private void validateVariableName(string name, AstNode node)
@@ -684,7 +695,7 @@ namespace Hassium.Interpreter
 
         public object Accept(GotoNode node)
         {
-            if (CallStack.Count == 0)
+            if (!CallStack.Any())
                 throw new ParseException("'goto' cannot be used in global scope", node);
 
             if(!CallStack.Peek().Labels.ContainsKey(node.Name))
@@ -705,7 +716,7 @@ namespace Hassium.Interpreter
 
         public object Accept(LabelNode node)
         {
-            if (CallStack.Count == 0)
+            if (!CallStack.Any())
                 throw new ParseException("A label cannot be created in global scope.", node);
             CallStack.Peek().Labels.Add(node.Name, position.Peek());
             return null;
@@ -834,7 +845,7 @@ namespace Hassium.Interpreter
         {
             var fnode = node;
             var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count]);
-            if (CallStack.Count > 0)
+            if (CallStack.Any())
             {
                 stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
                 CallStack.Peek().Locals.All(x =>
@@ -869,7 +880,7 @@ namespace Hassium.Interpreter
                     break;
                 default:
                     if (((call.Target is IdentifierNode) &&
-                         !hasFunction(call.Target.ToString(), call.Arguments.Children.Count, node)))
+                         !hasFunction(call.Target.ToString(), call.Arguments.Children.Count)))
                         throw new ParseException("The function " + call.Target + " doesn't exist", node);
 
                     if (call.Target is MemberAccessNode)
@@ -1026,7 +1037,7 @@ namespace Hassium.Interpreter
         {
             var funcNode = node;
             var stackFrame = new StackFrame(SymbolTable.ChildScopes["lambda_" + funcNode.GetHashCode()]);
-            if (CallStack.Count > 0)
+            if (CallStack.Any())
             {
                 stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
                 CallStack.Peek().Locals.All(x =>
@@ -1369,11 +1380,15 @@ namespace Hassium.Interpreter
         private void visitSubnodes(AstNode node)
         {
             position.Push(-1);
+            nodePos.Push(-1);
             for (int index = 0; index < node.Children.Count; index++)
             {
                 position.Pop();
                 position.Push(index);
+                
                 var nd = node.Children[index];
+                nodePos.Pop();
+                nodePos.Push(nd.Position);
                 nd.Visit(this);
                 if(gotoposition)
                 {
@@ -1385,6 +1400,7 @@ namespace Hassium.Interpreter
                 if (continueLoop || breakLoop || ReturnFunc || exit) break;
             }
             position.Pop();
+            nodePos.Pop();
         }
     }
 }

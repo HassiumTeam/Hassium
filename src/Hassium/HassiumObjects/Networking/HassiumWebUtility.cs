@@ -24,8 +24,8 @@
 //   * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //   * DAMAGE.
 // **/
-using System.Linq;
-using System.Net;
+
+using System.Web;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -41,24 +41,24 @@ namespace Hassium.HassiumObjects.Networking
             Attributes.Add("urlEncode", new InternalFunction(urlEncode, 1));
         }
 
-        private HassiumObject htmlDecode(HassiumObject[] args)
+        public HassiumObject htmlDecode(HassiumObject[] args)
         {
-            return new HassiumString(WebUtility.HtmlDecode(args[0].ToString()));
+            return new HassiumString(HttpUtility.HtmlDecode(args[0].ToString()));
         }
 
-        private HassiumObject htmlEncode(HassiumObject[] args)
+        public HassiumObject htmlEncode(HassiumObject[] args)
         {
-            return new HassiumString(WebUtility.HtmlEncode(args[0].ToString()));
+            return new HassiumString(HttpUtility.HtmlEncode(args[0].ToString()));
         }
 
-        private HassiumObject urlDecode(HassiumObject[] args)
+        public HassiumObject urlDecode(HassiumObject[] args)
         {
-            return new HassiumString(WebUtility.UrlDecode(args[0].ToString()));
+            return new HassiumString(HttpUtility.UrlDecode(args[0].ToString()));
         }
 
-        private HassiumObject urlEncode(HassiumObject[] args)
+        public HassiumObject urlEncode(HassiumObject[] args)
         {
-            return new HassiumString(WebUtility.UrlEncode(args[0].ToString()));
+            return new HassiumString(HttpUtility.UrlEncode(args[0].ToString()));
         }
     }
 }

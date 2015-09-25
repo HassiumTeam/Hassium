@@ -87,7 +87,7 @@ namespace Hassium
             }
             catch (Exception e)
             {
-                if (disableTryCatch) throw;
+                //if (disableTryCatch) throw;
                 Console.WriteLine();
                 Console.WriteLine("There has been an error. Message: " + e.Message);
                 Console.WriteLine("\nStack Trace: \n" + e.StackTrace);

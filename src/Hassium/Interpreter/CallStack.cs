@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Hassium.HassiumObjects;
 
 namespace Hassium.Interpreter
@@ -9,20 +7,54 @@ namespace Hassium.Interpreter
     public class CallStack
     {
         private Stack<StackFrame> frames = new Stack<StackFrame>();
-        
-        public CallStack()
-        {
-
-        } 
 
         public StackFrame Peek()
         {
             return frames.Peek();
         }
 
-        public HassiumObject GetVariable(string name)
+        public void Push(StackFrame st)
         {
-            return frames.First(x => x.Locals.ContainsKey(name)).Locals[name];
+            frames.Push(st);
+        }
+
+        public bool Any()
+        {
+            return frames.Count > 0;
+        }
+
+        public StackFrame Pop()
+        {
+            return frames.Pop();
+        }
+
+
+        public HassiumObject ReturnValue
+        {
+            get { return frames.Peek().ReturnValue; }
+        }
+
+        public HassiumObject GetVariable(string name, bool st = false)
+        {
+            HassiumObject ret = null;
+            if (st)
+            {
+                if(frames.Any(
+                           x => x.Locals.Any(y => y.Key.Contains("`") && y.Key.Substring(0, y.Key.IndexOf("`")) == name)))
+                ret =
+                    frames.First(
+                        x =>
+                            x.Locals.Any(y => y.Key.Contains("`") && y.Key.Substring(0, y.Key.IndexOf("`")) == name))
+                        .Locals.First(y => y.Key.Contains("`") && y.Key.Substring(0, y.Key.IndexOf("`")) == name)
+                        .Value;
+            }
+            if (HasVariable(name) || ret == null) return frames.First(x => x.Locals.ContainsKey(name)).Locals[name];
+            return ret;
+        }
+
+        public Dictionary<string, HassiumObject> GetLocals(bool all = false)
+        {
+            return all ? frames.SelectMany(x => x.Locals).ToDictionary(x => x.Key, x => x.Value) : frames.Peek().Locals;
         }
 
         public void SetVariable(string name, HassiumObject value)
@@ -32,14 +64,25 @@ namespace Hassium.Interpreter
             else Peek().Locals[name] = value;
         }
 
-        public void FreeVariable(string name)
+        public void FreeVariable(string name, bool st = false)
         {
-            
+            if (frames.Any(x => x.Locals.ContainsKey(name)))
+                if (st)
+                    frames.First(x => x.Locals.Any(y => y.Key.StartsWith(name))).Locals.Remove(name);
+                else
+                    frames.First(x => x.Locals.ContainsKey(name)).Locals.Remove(name);
         }
 
-        public bool HasVariable(string name)
+        public bool HasVariable(string name, bool st = false)
         {
-            return Peek().Scope.Symbols.Contains(name) || frames.Any(x => x.Locals.ContainsKey(name));
+            if (frames.Count == 0) return false;
+            bool ret = false;
+            if (st)
+                ret = Peek().Scope.Symbols.Any(y => y.Contains("`") && y.Substring(0, y.IndexOf("`")) == name) ||
+                       frames.Any(
+                           x => x.Locals.Any(y => y.Key.Contains("`") && y.Key.Substring(0, y.Key.IndexOf("`")) == name));
+            if(ret == false) ret = Peek().Scope.Symbols.Contains(name) || frames.Any(x => x.Locals.ContainsKey(name));
+            return ret;
         }
     }
 }

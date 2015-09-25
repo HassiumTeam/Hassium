@@ -36,11 +36,13 @@ using Hassium.Lexer;
 
 namespace Hassium.HassiumObjects
 {
-    public class HassiumObject : object, IFunction
+    public class HassiumObject : IFunction
     {
         private readonly Dictionary<string, HassiumObject> _attributes;
 
         public bool IsInstance { get; set; }
+
+
 
         public Dictionary<string, HassiumObject> Attributes
         {

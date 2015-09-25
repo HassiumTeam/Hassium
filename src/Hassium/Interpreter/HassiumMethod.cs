@@ -105,7 +105,7 @@ namespace Hassium.Interpreter
             if (FuncNode.Body is FuncNode) ((FuncNode) FuncNode.Body).Body.Visit(Interpreter);
             else FuncNode.Body.Visit(Interpreter);
 
-            HassiumObject ret = Interpreter.CallStack.Peek().ReturnValue;
+            HassiumObject ret = Interpreter.CallStack.ReturnValue;
 
             Interpreter.CallStack.Pop();
 

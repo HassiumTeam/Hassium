@@ -47,9 +47,7 @@ namespace Hassium.HassiumObjects.Interpreter
         public HassiumObject localVariables()
         {
             return
-                new HassiumDictionary(
-                    Program.CurrentInterpreter.CallStack.SelectMany(x => x.Locals)
-                        .ToDictionary(x => new HassiumString(x.Key), x => x.Value));
+                new HassiumDictionary(Program.CurrentInterpreter.CallStack.GetLocals(true));
         }
 
         public HassiumObject globalVariables()

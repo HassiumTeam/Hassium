@@ -24,6 +24,7 @@
 //   * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 //   * DAMAGE.
 // **/
+
 using System;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
@@ -41,27 +42,27 @@ namespace Hassium.HassiumObjects.Interpreter
             Attributes.Add("machineName", new InternalFunction(machineName, 0));
         }
 
-        private HassiumObject osVersion(HassiumObject[] args)
+        public HassiumObject osVersion(HassiumObject[] args)
         {
             return new HassiumString(Environment.OSVersion.ToString());
         }
 
-        private HassiumObject processorCount(HassiumObject[] args)
+        public HassiumObject processorCount(HassiumObject[] args)
         {
             return new HassiumInt(Environment.ProcessorCount);
         }
 
-        private HassiumObject tickCount(HassiumObject[] args)
+        public HassiumObject tickCount(HassiumObject[] args)
         {
             return new HassiumInt(Environment.TickCount);
         }
 
-        private HassiumObject userName(HassiumObject[] args)
+        public HassiumObject userName(HassiumObject[] args)
         {
             return new HassiumString(Environment.UserName);
         }
 
-        private HassiumObject machineName(HassiumObject[] args)
+        public HassiumObject machineName(HassiumObject[] args)
         {
             return new HassiumString(Environment.MachineName);
         }
