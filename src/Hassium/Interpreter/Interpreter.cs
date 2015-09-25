@@ -1217,11 +1217,12 @@ namespace Hassium.Interpreter
                             new InternalFunction(x => new HassiumTcpClient(new TcpClient()), 0, false, true));
                         Constants.Add("NetworkStream",
                             new InternalFunction(
-                                x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket) x[0]).Value)), 1, false,
+                                x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket)x[0]).Value)), 1, false,
                                 true));
                         Constants.Add("HttpListener",
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
                         Constants.Add("Dns", new HassiumDns());
+                        Constants.Add("WebUtility", new HassiumWebUtility());
                         break;
                     case "text":
                         Constants.Add("StringBuilder",
