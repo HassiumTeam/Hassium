@@ -47,12 +47,12 @@ namespace Hassium
 
         public static class options
         {
-            public static bool Debug;
-            public static string FilePath = "";
-            public static bool ShowTime;
-            public static string Code = "";
-            public static bool Golf;
-            public static bool Secure;
+            public static bool Debug { get; set; }
+            public static string FilePath { get; set; }
+            public static bool ShowTime { get; set; }
+            public static string Code { get; set; }
+            public static bool Golf { get; set; }
+            public static bool Secure { get; set; }
         }
 
         public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
@@ -99,7 +99,7 @@ namespace Hassium
                 st.Stop();
                 Console.WriteLine("\n" + st.Elapsed + " seconds");
             }
-            Environment.Exit(CurrentInterpreter.exitcode);
+            Environment.Exit(CurrentInterpreter.Exitcode);
         }
 
 

@@ -46,11 +46,6 @@ namespace Hassium.Lexer
             this.code = code;
         }
 
-        private void Add(Token token)
-        {
-            result.Add(new Token(token.TokenClass, token.Value, position - token.Value.ToString().Length));
-        }
-
         public static string Minimize(string code)
         {
             string result = "";
@@ -121,15 +116,15 @@ namespace Hassium.Lexer
 
             if ("0123456789".Contains(current))
             {
-                Add(ScanNumber());
+                add(ScanNumber());
             }
             else if (char.IsLetter(current) || "_".Contains(current))
             {
-                Add(ScanIdentifier());
+                add(ScanIdentifier());
             }
             else if ("\r\n".Contains(current))
             {
-                Add(new Token(TokenType.EndOfLine, ReadChar()));
+                add(new Token(TokenType.EndOfLine, ReadChar()));
             }
             else
             {
@@ -152,117 +147,117 @@ namespace Hassium.Lexer
                     case '+':
                     case '-':
                         if (next1 == current)
-                            Add(new Token(TokenType.MentalOperation, "" + ReadChar() + ReadChar()));
+                            add(new Token(TokenType.MentalOperation, "" + ReadChar() + ReadChar()));
                         else
                             switch (next1)
                             {
                                 case '=':
-                                    Add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                                    add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
                                     break;
                                 default:
-                                    Add(new Token(TokenType.Operation, ReadChar()));
+                                    add(new Token(TokenType.Operation, ReadChar()));
                                     break;
                             }
                         break;
                     case '%':
-                        Add(new Token(TokenType.Operation, ReadChar()));
+                        add(new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '*':
                     case '/':
                         if (next1 == current)
-                            Add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
+                            add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
                         else
                             switch (next1)
                             {
                                 case '=':
-                                    Add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                                    add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
                                     break;
                                 default:
-                                    Add(new Token(TokenType.Operation, ReadChar()));
+                                    add(new Token(TokenType.Operation, ReadChar()));
                                     break;
                             }
                         break;
                     case '.':
-                        Add(new Token(TokenType.Dot, ReadChar()));
+                        add(new Token(TokenType.Dot, ReadChar()));
                         break;
                     case ';':
                     case '\n':
-                        Add(new Token(TokenType.EndOfLine, ReadChar()));
+                        add(new Token(TokenType.EndOfLine, ReadChar()));
                         break;
                     case ',':
-                        Add(new Token(TokenType.Comma, ReadChar()));
+                        add(new Token(TokenType.Comma, ReadChar()));
                         break;
                     case '(':
-                        Add(new Token(TokenType.LParen, ReadChar()));
+                        add(new Token(TokenType.LParen, ReadChar()));
                         break;
                     case ')':
-                        Add(new Token(TokenType.RParen, ReadChar()));
+                        add(new Token(TokenType.RParen, ReadChar()));
                         break;
                     case '[':
-                        Add(new Token(TokenType.LBracket, ReadChar()));
+                        add(new Token(TokenType.LBracket, ReadChar()));
                         break;
                     case ']':
-                        Add(new Token(TokenType.RBracket, ReadChar()));
+                        add(new Token(TokenType.RBracket, ReadChar()));
                         break;
                     case '{':
-                        Add(new Token(TokenType.LBrace, ReadChar()));
+                        add(new Token(TokenType.LBrace, ReadChar()));
                         break;
                     case '}':
-                        Add(new Token(TokenType.RBrace, ReadChar()));
+                        add(new Token(TokenType.RBrace, ReadChar()));
                         break;
                     case ':':
-                        Add(new Token(TokenType.Identifier, ReadChar()));
+                        add(new Token(TokenType.Identifier, ReadChar()));
                         break;
                     case '=':
                         switch (next1)
                         {
                             case '>':
-                                Add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
+                                add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
                                 break;
                             case '=':
-                                Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                                add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
                                 break;
                             default:
-                                Add(new Token(TokenType.Assignment, "" + ReadChar()));
+                                add(new Token(TokenType.Assignment, "" + ReadChar()));
                                 break;
                         }
                         break;
                     case '!':
-                        Add(next1 == '='
+                        add(next1 == '='
                             ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
                             : new Token(TokenType.UnaryOperation, ReadChar()));
                         break;
                     case '~':
-                        Add(new Token(TokenType.UnaryOperation, ReadChar()));
+                        add(new Token(TokenType.UnaryOperation, ReadChar()));
                         break;
                     case '&':
                     case '|':
-                        Add(next1 == current
+                        add(next1 == current
                             ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
                             : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '^':
-                        Add(new Token(TokenType.Operation, ReadChar()));
+                        add(new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '?':
-                        Add(next1 == '?'
+                        add(next1 == '?'
                             ? new Token(TokenType.Operation, "" + ReadChar() + ReadChar())
                             : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '<':
                     case '>':
                         if (next1 == current)
-                            Add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                            add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                         else if (next1 == '=')
                         {
                             if (current == '<' && next2 == '>')
-                                Add(new Token(TokenType.Comparison,
+                                add(new Token(TokenType.Comparison,
                                     "" + ReadChar() + ReadChar() + ReadChar()));
                             else
-                                Add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                                add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
                         }
                         else
-                            Add(new Token(TokenType.Comparison, ReadChar()));
+                            add(new Token(TokenType.Comparison, ReadChar()));
                         break;
                     default:
                         result.Add(new Token(TokenType.Exception,
@@ -312,18 +307,18 @@ namespace Hassium.Lexer
                         ReadChar();
                         continue;
                     }
-                    Add(new Token(TokenType.String, stringBuilder.ToString()));
+                    add(new Token(TokenType.String, stringBuilder.ToString()));
                     stringBuilder.Clear();
                     isEscaping = false;
                     isUnicode = false;
                     currentUnicodeChar = "";
-                    Add(new Token(TokenType.Operation, '+'));
-                    Add(new Token(TokenType.LParen, '('));
+                    add(new Token(TokenType.Operation, '+'));
+                    add(new Token(TokenType.LParen, '('));
                     while (HasChar() && PeekChar() != '}')
                         ReadToken();
                     ReadChar();
-                    Add(new Token(TokenType.RParen, ')'));
-                    Add(new Token(TokenType.Operation, '+'));
+                    add(new Token(TokenType.RParen, ')'));
+                    add(new Token(TokenType.Operation, '+'));
                     continue;
                 }
                 if (isUnicode)
@@ -378,7 +373,7 @@ namespace Hassium.Lexer
             if (HasChar()) ReadChar();
             else throw new ParseException("Unfinished string", position);
 
-            Add(new Token(TokenType.String, stringBuilder));
+            add(new Token(TokenType.String, stringBuilder));
         }
 
         private static bool IsHexChar(char c)
@@ -495,6 +490,11 @@ namespace Hassium.Lexer
         private char ReadChar()
         {
             return code[position++];
+        }
+
+        private void add(Token token)
+        {
+            result.Add(new Token(token.TokenClass, token.Value, position - token.Value.ToString().Length));
         }
     }
 }

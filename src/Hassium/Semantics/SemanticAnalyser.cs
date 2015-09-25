@@ -57,9 +57,7 @@ namespace Hassium.Semantics
             foreach (AstNode cur in node.Where(cur => cur != null && cur.Children != null))
             {
                 if (cur.Children.Count > 0)
-                {
                     ch.AddRange(flatten(cur.Children));
-                }
                 ch.Add(cur);
             }
             return ch;
@@ -85,9 +83,7 @@ namespace Hassium.Semantics
                     if (((BinOpNode) node).BinOp == BinaryOperation.Assignment)
                     {
                         if (!result.Symbols.Contains(bnode.Left.ToString()))
-                        {
                             result.Symbols.Add(bnode.Left.ToString());
-                        }
                         checkout(node);
                     }
                 }
@@ -125,19 +121,15 @@ namespace Hassium.Semantics
         private void analyseLocalCode(AstNode theNode)
         {
             if (theNode == null || theNode.Children == null) return;
+
             foreach (AstNode node in theNode.Children)
             {
                 if (node is BinOpNode)
                 {
                     BinOpNode bnode = ((BinOpNode)node);
                     if (bnode.BinOp == BinaryOperation.Assignment)
-                    {
-                        if (!result.Symbols.Contains(bnode.Left.ToString()) &&
-                            !currentLocalScope.Symbols.Contains(bnode.Left.ToString()))
-                        {
+                        if (!result.Symbols.Contains(bnode.Left.ToString()) && !currentLocalScope.Symbols.Contains(bnode.Left.ToString()))
                             currentLocalScope.Symbols.Add(bnode.Left.ToString());
-                        }
-                    }
                 }
                 else if (node is LabelNode)
                     currentLocalScope.Symbols.Add("label " + ((LabelNode)node).Name);

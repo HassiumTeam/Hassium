@@ -38,19 +38,18 @@ namespace Hassium.Parser
     public class Parser
     {
         private List<Token> tokens;
-        public int position;
+        private string code { get; set; }
+        private int position;
 
-        public int codePos
+        private int codePosition
         {
             get { return CurrentToken().Position; }
         }
 
-        public bool EndOfStream
+        private bool endOfStream
         {
             get { return tokens.Count <= position; }
         }
-
-        private string code;
 
         public Parser(List<Token> tokens, string code)
         {
@@ -64,10 +63,8 @@ namespace Hassium.Parser
         public AstNode Parse()
         {
             CodeBlock block = new CodeBlock(0);
-            while (!EndOfStream)
-            {
+            while (!endOfStream)
                 block.Children.Add(ParseStatement(this));
-            }
             return block;
         }
 
@@ -122,64 +119,64 @@ namespace Hassium.Parser
         public Token ExpectToken(string msg, TokenType clazz, string value = "")
         {
             if (value == "" ? MatchToken(clazz) : MatchToken(clazz, value)) return tokens[position++];
-            else throw new ParseException(msg, code[codePos - 1] == '\n' ? codePos - 1 : codePos);
+            else throw new ParseException(msg, code[codePosition - 1] == '\n' ? codePosition - 1 : codePosition);
         }
 
-        public static AstNode ParseStatement(Parser parser)
+        private static AstNode ParseStatement(Parser parser)
         {
             if (parser.MatchToken(TokenType.Identifier))
             {
                 switch (parser.CurrentToken().Value.ToString().ToLower())
                 {
                     case "if":
-                        return ParseIf(parser);
+                        return parseIf(parser);
                     case "while":
-                        return ParseWhile(parser);
+                        return parseWhile(parser);
                     case "for":
-                        return ParseFor(parser);
+                        return parseFor(parser);
                     case "foreach":
-                        return ParseForEach(parser);
+                        return parseForEach(parser);
                     case "try":
-                        return ParseTryCatch(parser);
+                        return parseTryCatch(parser);
                     case "class":
-                        return ParseClass(parser);
+                        return parseClass(parser);
                     case "func":
-                        return ParseFunc(parser);
+                        return parseFunc(parser);
                     case "property":
-                        return ParseProperty(parser);
+                        return parseProperty(parser);
                     case "lambda":
-                        return ParseLambda(parser);
+                        return parseLambda(parser);
                     case "thread":
-                        return ParseThread(parser);
+                        return parseThread(parser);
                     case "unchecked":
-                        return ParseUnchecked(parser);
+                        return parseUnchecked(parser);
                     case "switch":
-                        return ParseSwitch(parser);
+                        return parseSwitch(parser);
                     case "return":
-                        return ParseReturn(parser);
+                        return parseReturn(parser);
                     case "continue":
-                        return ParseContinue(parser);
+                        return parseContinue(parser);
                     case "break":
-                        return ParseBreak(parser);
+                        return parseBreak(parser);
                     case "use":
-                        return ParseUse(parser);
+                        return parseUse(parser);
                     case "do":
-                        return ParseDo(parser);
+                        return parseDo(parser);
                     case "goto":
-                        return ParseGoto(parser);
+                        return parseGoto(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.LBrace))
             {
-                return ParseCodeBlock(parser);
+                return parseCodeBlock(parser);
             }
-            if(parser.MatchToken(TokenType.RBrace) || parser.MatchToken(TokenType.RBracket) || parser.MatchToken(TokenType.RParen))
+            if (parser.MatchToken(TokenType.RBrace) || parser.MatchToken(TokenType.RBracket) || parser.MatchToken(TokenType.RParen))
             {
                 throw new ParseException(
                         "Unexpected closing " + parser.CurrentToken().Value + " [" + parser.CurrentToken().TokenClass +
-                        "]", parser.codePos);
+                        "]", parser.codePosition);
             }
-            AstNode expr = ParseExpression(parser);
+            AstNode expr = parseExpression(parser);
             if(parser.MatchToken(TokenType.EndOfLine))
             parser.ExpectToken(TokenType.EndOfLine);
             return expr;
@@ -187,33 +184,33 @@ namespace Hassium.Parser
 
         #region Blocks
 
-        public static AstNode ParseClass(Parser parser)
+        private static AstNode parseClass(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "class");
             string name = parser.ExpectToken("Expected class name", TokenType.Identifier).Value.ToString();
             string extends = "";
             if (parser.AcceptToken(TokenType.Identifier, ":"))
                 extends = parser.ExpectToken("Expected base class name", TokenType.Identifier).Value.ToString();
-            AstNode body = ParseCodeBlock(parser);
+            AstNode body = parseCodeBlock(parser);
 
-            return new ClassNode(pos, name, body, extends);
+            return new ClassNode(position, name, body, extends);
         }
 
-        public static AstNode ParseGoto(Parser parser)
+        private static AstNode parseGoto(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "goto");
             string name = parser.ExpectToken("Expected label name", TokenType.Identifier).Value.ToString();
             parser.ExpectToken(TokenType.EndOfLine);
-            return new GotoNode(pos, name);
+            return new GotoNode(position, name);
         }
 
-        public static AstNode ParseFunc(Parser parser)
+        private static AstNode parseFunc(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "func");
             string name = parser.ExpectToken("Expected function name", TokenType.Identifier).Value.ToString();
@@ -234,27 +231,22 @@ namespace Hassium.Parser
 
             if (name == "new" && parser.AcceptToken(TokenType.Identifier, ":"))
             {
-                int tmppos = parser.codePos;
+                int tempPosition = parser.codePosition;
                 var callee = parser.ExpectToken("Expected 'this' or 'base'", TokenType.Identifier);
                 if (callee.Value.ToString() == "base" || callee.Value.ToString() == "this")
-                {
-                    constr = new FunctionCallNode(tmppos, new IdentifierNode(tmppos, callee.Value.ToString()),
-                        ParseArgList(parser));
-                }
+                    constr = new FunctionCallNode(tempPosition, new IdentifierNode(tempPosition, callee.Value.ToString()), parseArgList(parser));
                 else
-                {
-                    throw new ParseException("Expected 'this' or 'base' in constructor", tmppos);
-                }
+                    throw new ParseException("Expected 'this' or 'base' in constructor", tempPosition);
             }
 
             AstNode body = ParseStatement(parser);
 
-            return new FuncNode(pos, name, result, body, constr);
+            return new FuncNode(position, name, result, body, constr);
         }
 
-        public static AstNode ParseProperty(Parser parser)
+        private static AstNode parseProperty(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "property");
             string name = parser.ExpectToken("Expected property name", TokenType.Identifier).Value.ToString();
@@ -267,22 +259,22 @@ namespace Hassium.Parser
 
             if (parser.AcceptToken(TokenType.EndOfLine))
             {
-                getBody = new CodeBlock(parser.codePos);
-                getBody.Children.Add(new ReturnNode(parser.codePos,
-                    new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name)));
-                setBody = new CodeBlock(parser.codePos);
-                setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
-                    new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"), "__prop__" + name),
-                    new IdentifierNode(parser.codePos, "value")));
+                getBody = new CodeBlock(parser.codePosition);
+                getBody.Children.Add(new ReturnNode(parser.codePosition,
+                    new MemberAccessNode(parser.codePosition, new IdentifierNode(parser.codePosition, "this"), "__prop__" + name)));
+                setBody = new CodeBlock(parser.codePosition);
+                setBody.Children.Add(new BinOpNode(parser.codePosition, BinaryOperation.Assignment,
+                    new MemberAccessNode(parser.codePosition, new IdentifierNode(parser.codePosition, "this"), "__prop__" + name),
+                    new IdentifierNode(parser.codePosition, "value")));
             }
             else if (parser.AcceptToken(TokenType.Lambda, "=>"))
             {
-                getBody = new CodeBlock(parser.codePos);
-                getBody.Children.Add(new ReturnNode(parser.codePos, ParseExpression(parser)));
+                getBody = new CodeBlock(parser.codePosition);
+                getBody.Children.Add(new ReturnNode(parser.codePosition, parseExpression(parser)));
 
-                setBody = new CodeBlock(parser.codePos);
-                setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment, ParseExpression(parser),
-                    new IdentifierNode(parser.codePos, "value")));
+                setBody = new CodeBlock(parser.codePosition);
+                setBody.Children.Add(new BinOpNode(parser.codePosition, BinaryOperation.Assignment, parseExpression(parser),
+                    new IdentifierNode(parser.codePosition, "value")));
                 parser.ExpectToken(TokenType.EndOfLine);
             }
             else
@@ -294,58 +286,56 @@ namespace Hassium.Parser
                 if (parser.AcceptToken(TokenType.EndOfLine, ";"))
                 {
                     autoProp = true;
-                    getBody = new CodeBlock(parser.codePos);
-                    getBody.Children.Add(new ReturnNode(parser.codePos,
-                        new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"),
+                    getBody = new CodeBlock(parser.codePosition);
+                    getBody.Children.Add(new ReturnNode(parser.codePosition,
+                        new MemberAccessNode(parser.codePosition, new IdentifierNode(parser.codePosition, "this"),
                             "__prop__" + name)));
                 }
                 else
-                    getBody = ParseCodeBlock(parser);
+                    getBody = parseCodeBlock(parser);
 
 
                 if (parser.AcceptToken(TokenType.Identifier, "set"))
                 {
                     if (parser.AcceptToken(TokenType.EndOfLine, ";"))
                     {
-                        setBody = new CodeBlock(parser.codePos);
-                        setBody.Children.Add(new BinOpNode(parser.codePos, BinaryOperation.Assignment,
-                            new MemberAccessNode(parser.codePos, new IdentifierNode(parser.codePos, "this"),
+                        setBody = new CodeBlock(parser.codePosition);
+                        setBody.Children.Add(new BinOpNode(parser.codePosition, BinaryOperation.Assignment,
+                            new MemberAccessNode(parser.codePosition, new IdentifierNode(parser.codePosition, "this"),
                                 "__prop__" + name),
-                            new IdentifierNode(parser.codePos, "value")));
+                            new IdentifierNode(parser.codePosition, "value")));
                     }
                     else
                     {
                         if (autoProp)
-                            throw new ParseException("An auto-property cannot declare a set body", pos);
-                        setBody = ParseCodeBlock(parser);
+                            throw new ParseException("An auto-property cannot declare a set body", position);
+                        setBody = parseCodeBlock(parser);
                     }
                 }
                 else
                 {
                     if (autoProp)
-                        throw new ParseException("An auto-property must contain a set statement", pos);
+                        throw new ParseException("An auto-property must contain a set statement", position);
                 }
 
                 parser.ExpectToken(TokenType.RBrace);
             }
 
-            getnode = new FuncNode(parser.codePos, "__getprop__" + name, new List<string> {"this"}, getBody);
+            getnode = new FuncNode(parser.codePosition, "__getprop__" + name, new List<string> {"this"}, getBody);
             setnode = setBody == null
                 ? null
-                : new FuncNode(parser.codePos, "__setprop__" + name, new List<string> {"this", "value"}, setBody);
+                : new FuncNode(parser.codePosition, "__setprop__" + name, new List<string> {"this", "value"}, setBody);
 
-            return new PropertyNode(pos, name, getnode, setnode);
+            return new PropertyNode(position, name, getnode, setnode);
         }
 
-        public static AstNode ParseCodeBlock(Parser parser)
+        private static AstNode parseCodeBlock(Parser parser)
         {
-            CodeBlock block = new CodeBlock(parser.codePos);
+            CodeBlock block = new CodeBlock(parser.codePosition);
             Token opening = parser.ExpectToken(TokenType.LBrace);
 
-            while (!parser.EndOfStream && !parser.MatchToken(TokenType.RBrace))
-            {
+            while (!parser.endOfStream && !parser.MatchToken(TokenType.RBrace))
                 block.Children.Add(ParseStatement(parser));
-            }
 
             try
             {
@@ -360,27 +350,25 @@ namespace Hassium.Parser
 
         #endregion
 
-        public static ArgListNode ParseArgList(Parser parser)
+        private static ArgListNode parseArgList(Parser parser)
         {
-            ArgListNode ret = new ArgListNode(parser.codePos);
+            ArgListNode ret = new ArgListNode(parser.codePosition);
             parser.ExpectToken(TokenType.LParen);
 
             while (!parser.MatchToken(TokenType.RParen))
             {
-                ret.Children.Add(ParseExpression(parser));
+                ret.Children.Add(parseExpression(parser));
                 if (!parser.AcceptToken(TokenType.Comma))
-                {
                     break;
-                }
             }
             parser.ExpectToken("Unterminated argument list", TokenType.RParen);
 
             return ret;
         }
 
-        public static AstNode ParseUse(Parser parser)
+        private static AstNode parseUse(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "use");
             string path = "";
@@ -388,7 +376,7 @@ namespace Hassium.Parser
             if (parser.MatchToken(TokenType.Identifier))
             {
                 path = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-                ret = new UseNode(pos, path, "", true, true);
+                ret = new UseNode(position, path, "", true, true);
             }
             else
             {
@@ -402,17 +390,17 @@ namespace Hassium.Parser
                 }
 
                 ret = path.EndsWith(".dll")
-                    ? new UseNode(pos, path, name, global, false, true)
-                    : new UseNode(pos, path, name, global, false);
+                    ? new UseNode(position, path, name, global, false, true)
+                    : new UseNode(position, path, name, global, false);
             }
             parser.ExpectToken(TokenType.EndOfLine);
             return ret;
         }
 
 
-        public static AstNode ParseTryCatch(Parser parser)
+        private static AstNode parseTryCatch(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "try");
             AstNode tryBody = ParseStatement(parser);
@@ -422,54 +410,54 @@ namespace Hassium.Parser
             if (parser.AcceptToken(TokenType.Identifier, "finally"))
             {
                 AstNode finallyBody = ParseStatement(parser);
-                return new TryNode(pos, tryBody, catchBody, finallyBody);
+                return new TryNode(position, tryBody, catchBody, finallyBody);
             }
 
-            return new TryNode(pos, tryBody, catchBody);
+            return new TryNode(position, tryBody, catchBody);
         }
 
         #region Conditions
 
-        public static AstNode ParseIf(Parser parser)
+        private static AstNode parseIf(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "if");
             parser.ExpectToken(TokenType.LParen);
-            AstNode predicate = ParseExpression(parser);
+            AstNode predicate = parseExpression(parser);
             parser.ExpectToken(TokenType.RParen);
             AstNode ifBody = ParseStatement(parser);
             if (parser.AcceptToken(TokenType.Identifier, "else"))
             {
-                int epos = parser.codePos;
+                int elsePosition = parser.codePosition;
                 AstNode elseBody = ParseStatement(parser);
-                return new IfNode(epos, predicate, ifBody, elseBody);
+                return new IfNode(elsePosition, predicate, ifBody, elseBody);
             }
 
-            return new IfNode(pos, predicate, ifBody);
+            return new IfNode(position, predicate, ifBody);
         }
 
-        public static AstNode ParseSwitch(Parser parser)
+        private static AstNode parseSwitch(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "switch");
             parser.ExpectToken(TokenType.LParen);
-            AstNode predicate = ParseExpression(parser);
+            AstNode predicate = parseExpression(parser);
             parser.ExpectToken(TokenType.RParen);
             parser.ExpectToken(TokenType.LBrace);
             var cases = new List<CaseNode>();
             CaseNode defn = null;
             while (parser.MatchToken(TokenType.Identifier, "case"))
             {
-                int cpos = parser.codePos;
+                int cpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "case");
-                var pred = new List<AstNode> {ParseExpression(parser)};
+                var pred = new List<AstNode> {parseExpression(parser)};
                 parser.ExpectToken("Expected case value", TokenType.Identifier, ":");
                 while (parser.MatchToken(TokenType.Identifier, "case"))
                 {
                     parser.ExpectToken(TokenType.Identifier, "case");
-                    var pred2 = ParseExpression(parser);
+                    var pred2 = parseExpression(parser);
                     parser.ExpectToken(TokenType.Identifier, ":");
                     pred.Add(pred2);
                 }
@@ -478,29 +466,29 @@ namespace Hassium.Parser
             }
             if (parser.MatchToken(TokenType.Identifier, "default"))
             {
-                int dpos = parser.codePos;
+                int dpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "default");
                 parser.ExpectToken(TokenType.Identifier, ":");
                 var dbody = ParseStatement(parser);
                 defn = new CaseNode(dpos, null, dbody);
             }
             parser.ExpectToken(TokenType.RBrace);
-            return new SwitchNode(pos, predicate, cases, defn);
+            return new SwitchNode(position, predicate, cases, defn);
         }
 
         #endregion
 
         #region Loops
 
-        public static AstNode ParseFor(Parser parser)
+        private static AstNode parseFor(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "for");
             parser.ExpectToken(TokenType.LParen);
-            AstNode left = new CodeBlock(parser.codePos);
-            AstNode predicate = new CodeBlock(parser.codePos);
-            AstNode right = new CodeBlock(parser.codePos);
+            AstNode left = new CodeBlock(parser.codePosition);
+            AstNode predicate = new CodeBlock(parser.codePosition);
+            AstNode right = new CodeBlock(parser.codePosition);
             if (!parser.AcceptToken(TokenType.EndOfLine, ";"))
                 left = ParseStatement(parser);
             if (!parser.AcceptToken(TokenType.EndOfLine, ";"))
@@ -510,12 +498,12 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.RParen);
             AstNode forBody = ParseStatement(parser);
 
-            return new ForNode(pos, left, predicate, right, forBody);
+            return new ForNode(position, left, predicate, right, forBody);
         }
 
-        public static AstNode ParseForEach(Parser parser)
+        private static AstNode parseForEach(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "foreach");
             parser.ExpectToken(TokenType.LParen);
@@ -528,50 +516,50 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.RParen);
             AstNode forBody = ParseStatement(parser);
 
-            return new ForEachNode(pos, needle, haystack, forBody);
+            return new ForEachNode(position, needle, haystack, forBody);
         }
 
-        public static AstNode ParseDo(Parser parser)
+        private static AstNode parseDo(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "do");
             AstNode doBody = ParseStatement(parser);
             parser.ExpectToken(TokenType.Identifier, "while");
             parser.ExpectToken(TokenType.LParen);
-            AstNode predicate = ParseExpression(parser);
+            AstNode predicate = parseExpression(parser);
             parser.ExpectToken(TokenType.RParen);
             parser.ExpectToken(TokenType.EndOfLine);
 
-            return new DoNode(pos, predicate, doBody);
+            return new DoNode(position, predicate, doBody);
         }
 
-        public static AstNode ParseWhile(Parser parser)
+        private static AstNode parseWhile(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "while");
             parser.ExpectToken(TokenType.LParen);
-            AstNode predicate = ParseExpression(parser);
+            AstNode predicate = parseExpression(parser);
             parser.ExpectToken(TokenType.RParen);
             AstNode whileBody = ParseStatement(parser);
             if (parser.AcceptToken(TokenType.Identifier, "else"))
             {
                 AstNode elseBody = ParseStatement(parser);
-                return new WhileNode(pos, predicate, whileBody, elseBody);
+                return new WhileNode(position, predicate, whileBody, elseBody);
             }
 
-            return new WhileNode(pos, predicate, whileBody);
+            return new WhileNode(position, predicate, whileBody);
         }
 
         #endregion
 
-        public static AstNode ParseReturn(Parser parser)
+        private static AstNode parseReturn(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "return");
-            return parser.AcceptToken(TokenType.EndOfLine) ? new ReturnNode(pos, null) : new ReturnNode(pos, ParseStatement(parser));
+            return parser.AcceptToken(TokenType.EndOfLine) ? new ReturnNode(position, null) : new ReturnNode(position, ParseStatement(parser));
         }
 
         #region Expression
@@ -645,34 +633,32 @@ namespace Hassium.Parser
             }
         }
 
-        public static AstNode ParseExpression(Parser parser)
+        private static AstNode parseExpression(Parser parser)
         {
-            return ParseAssignment(parser);
+            return parseAssignment(parser);
         }
 
-        private static AstNode ParseAssignment(Parser parser)
+        private static AstNode parseAssignment(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseConditional(parser);
+            AstNode left = parseConditional(parser);
 
             while (parser.CurrentToken().TokenClass == TokenType.Assignment ||
                    parser.CurrentToken().TokenClass == TokenType.OpAssign)
             {
                 if (!left.CanBeModified)
-                {
                     throw new ParseException("Trying to assign a read-only expression (try using == instead of =)", parser.CurrentToken().Position);
-                }
                 if (parser.AcceptToken(TokenType.Assignment))
                 {
-                    AstNode right = ParseConditional(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Assignment, left, right);
+                    AstNode right = parseConditional(parser);
+                    left = new BinOpNode(position, BinaryOperation.Assignment, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.OpAssign))
                 {
                     var assigntype = GetBinaryOp(parser.PreviousToken().Value.ToString());
-                    var right = ParseConditional(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Assignment, assigntype, left, right);
+                    var right = parseConditional(parser);
+                    left = new BinOpNode(position, BinaryOperation.Assignment, assigntype, left, right);
                 }
                 else
                     break;
@@ -681,192 +667,179 @@ namespace Hassium.Parser
             return left;
         }
 
-        private static AstNode ParseConditional(Parser parser)
+        private static AstNode parseConditional(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseLogicalOr(parser);
+            AstNode left = parseLogicalOr(parser);
 
             while (parser.AcceptToken(TokenType.Operation, "?"))
             {
                 AstNode ifbody = null;
                 if (!parser.MatchToken(TokenType.Identifier, ":"))
-                {
-                    ifbody = ParseConditional(parser);
-                }
+                    ifbody = parseConditional(parser);
                 AstNode elsebody = null;
                 if (parser.AcceptToken(TokenType.Identifier, ":"))
-                {
-                    elsebody = ParseConditional(parser);
-                }
-                left = new ConditionalOpNode(pos, left, ifbody, elsebody);
+                    elsebody = parseConditional(parser);
+                left = new ConditionalOpNode(position, left, ifbody, elsebody);
             }
 
             return left;
         }
 
-        private static AstNode ParseLogicalOr(Parser parser)
+        private static AstNode parseLogicalOr(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseLogicalAnd(parser);
+            AstNode left = parseLogicalAnd(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().TokenClass == TokenType.Operation)
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().TokenClass == TokenType.Operation)
                 if (parser.AcceptToken(TokenType.Comparison, "||"))
                 {
-                    var right = ParseLogicalAnd(parser);
-                    left = new BinOpNode(pos, BinaryOperation.LogicalOr, left, right);
+                    var right = parseLogicalAnd(parser);
+                    left = new BinOpNode(position, BinaryOperation.LogicalOr, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Operation, "??"))
                 {
-                    var right = ParseLogicalAnd(parser);
-                    left = new BinOpNode(pos, BinaryOperation.NullCoalescing, left, right);
+                    var right = parseLogicalAnd(parser);
+                    left = new BinOpNode(position, BinaryOperation.NullCoalescing, left, right);
                 }
                 else
                     break;
-            }
 
             return left;
         }
 
-        private static AstNode ParseLogicalAnd(Parser parser)
+        private static AstNode parseLogicalAnd(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseEquality(parser);
+            AstNode left = parseEquality(parser);
 
             while (parser.AcceptToken(TokenType.Comparison, "&&"))
             {
-                var right = ParseEquality(parser);
-                left = new BinOpNode(pos, BinaryOperation.LogicalAnd, left, right);
+                var right = parseEquality(parser);
+                left = new BinOpNode(position, BinaryOperation.LogicalAnd, left, right);
             }
 
             return left;
         }
 
 
-        private static AstNode ParseEquality(Parser parser)
+        private static AstNode parseEquality(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             AstNode left = ParseComparison(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().TokenClass == TokenType.Operation)
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().TokenClass == TokenType.Operation)
                 if (parser.AcceptToken(TokenType.Comparison, "=="))
                 {
                     var right = ParseComparison(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Equals, left, right);
+                    left = new BinOpNode(position, BinaryOperation.Equals, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, "!="))
                 {
                     var right = ParseComparison(parser);
-                    left = new BinOpNode(pos, BinaryOperation.NotEqualTo, left, right);
+                    left = new BinOpNode(position, BinaryOperation.NotEqualTo, left, right);
                 }
                 else
                     break;
-            }
 
             return left;
         }
 
         private static AstNode ParseComparison(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseOr(parser);
+            AstNode left = parseOr(parser);
 
-            while (parser.CurrentToken().TokenClass == TokenType.Comparison ||
-                   parser.CurrentToken().Value.ToString() == "is")
-            {
+            while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().Value.ToString() == "is")
                 if (parser.AcceptToken(TokenType.Comparison, "<"))
                 {
-                    var right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.LessThan, left, right);
+                    var right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.LessThan, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, ">"))
                 {
-                    var right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.GreaterThan, left, right);
+                    var right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.GreaterThan, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, "<="))
                 {
-                    var right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.LesserOrEqual, left, right);
+                    var right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.LesserOrEqual, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, ">="))
                 {
-                    var right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.GreaterOrEqual, left, right);
+                    var right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.GreaterOrEqual, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, "<=>"))
                 {
-                    var right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.CombinedComparison, left, right);
+                    var right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.CombinedComparison, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Identifier, "is"))
                 {
-                    AstNode right = ParseOr(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Is, left, right);
+                    AstNode right = parseOr(parser);
+                    left = new BinOpNode(position, BinaryOperation.Is, left, right);
                 }
                 else
                     break;
-            }
 
             return left;
         }
 
-        private static AstNode ParseOr(Parser parser)
+        private static AstNode parseOr(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseXor(parser);
+            AstNode left = parseXor(parser);
 
             while (parser.AcceptToken(TokenType.Operation, "|"))
             {
-                var right = ParseXor(parser);
-                left = new BinOpNode(pos, BinaryOperation.BitwiseOr, left, right);
+                var right = parseXor(parser);
+                left = new BinOpNode(position, BinaryOperation.BitwiseOr, left, right);
             }
 
             return left;
         }
 
-        private static AstNode ParseXor(Parser parser)
+        private static AstNode parseXor(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseAnd(parser);
+            AstNode left = parseAnd(parser);
 
             while (parser.AcceptToken(TokenType.Operation, "^"))
             {
-                var right = ParseAnd(parser);
-                left = new BinOpNode(pos, BinaryOperation.Xor, left, right);
+                var right = parseAnd(parser);
+                left = new BinOpNode(position, BinaryOperation.Xor, left, right);
             }
 
             return left;
         }
 
-        private static AstNode ParseAnd(Parser parser)
+        private static AstNode parseAnd(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseBitshift(parser);
+            AstNode left = parseBitShift(parser);
 
             while (parser.AcceptToken(TokenType.Operation, "&"))
             {
-                var right = ParseBitshift(parser);
-                left = new BinOpNode(pos, BinaryOperation.BitwiseAnd, left, right);
+                var right = parseBitShift(parser);
+                left = new BinOpNode(position, BinaryOperation.BitwiseAnd, left, right);
             }
 
             return left;
         }
 
-        private static AstNode ParseBitshift(Parser parser)
+        private static AstNode parseBitShift(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             AstNode left = ParseAdditive(parser);
 
@@ -875,12 +848,12 @@ namespace Hassium.Parser
                 if (parser.AcceptToken(TokenType.Operation, "<<"))
                 {
                     var right = ParseAdditive(parser);
-                    left = new BinOpNode(pos, BinaryOperation.BitshiftLeft, left, right);
+                    left = new BinOpNode(position, BinaryOperation.BitshiftLeft, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Operation, ">>"))
                 {
                     var right = ParseAdditive(parser);
-                    left = new BinOpNode(pos, BinaryOperation.BitshiftRight, left, right);
+                    left = new BinOpNode(position, BinaryOperation.BitshiftRight, left, right);
                 }
                 else
                     break;
@@ -891,21 +864,21 @@ namespace Hassium.Parser
 
         private static AstNode ParseAdditive(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
-            AstNode left = ParseMultiplicative(parser);
+            AstNode left = parseMultiplicative(parser);
 
             while (parser.CurrentToken().TokenClass == TokenType.Operation)
             {
                 if (parser.AcceptToken(TokenType.Operation, "+"))
                 {
-                    AstNode right = ParseMultiplicative(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Addition, left, right);
+                    AstNode right = parseMultiplicative(parser);
+                    left = new BinOpNode(position, BinaryOperation.Addition, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Operation, "-"))
                 {
-                    AstNode right = ParseMultiplicative(parser);
-                    left = new BinOpNode(pos, BinaryOperation.Subtraction, left, right);
+                    AstNode right = parseMultiplicative(parser);
+                    left = new BinOpNode(position, BinaryOperation.Subtraction, left, right);
                 }
                 else
                     break;
@@ -913,26 +886,26 @@ namespace Hassium.Parser
             return left;
         }
 
-        private static AstNode ParseMultiplicative(Parser parser)
+        private static AstNode parseMultiplicative(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             AstNode left = ParseExponent(parser);
 
             if (parser.AcceptToken(TokenType.Operation, "*"))
             {
-                AstNode right = ParseMultiplicative(parser);
-                return new BinOpNode(pos, BinaryOperation.Multiplication, left, right);
+                AstNode right = parseMultiplicative(parser);
+                return new BinOpNode(position, BinaryOperation.Multiplication, left, right);
             }
             else if (parser.AcceptToken(TokenType.Operation, "/"))
             {
-                AstNode right = ParseMultiplicative(parser);
-                return new BinOpNode(pos, BinaryOperation.Division, left, right);
+                AstNode right = parseMultiplicative(parser);
+                return new BinOpNode(position, BinaryOperation.Division, left, right);
             }
             else if (parser.AcceptToken(TokenType.Operation, "%"))
             {
-                AstNode right = ParseMultiplicative(parser);
-                return new BinOpNode(pos, BinaryOperation.Modulus, left, right);
+                AstNode right = parseMultiplicative(parser);
+                return new BinOpNode(position, BinaryOperation.Modulus, left, right);
             }
             else if (parser.AcceptToken(TokenType.Lambda, "=>"))
             {
@@ -944,74 +917,64 @@ namespace Hassium.Parser
                     parser.ExpectToken(TokenType.EndOfLine);
 
                 if (left is ArrayInitializerNode)
-                    return new LambdaFuncNode(pos,
+                    return new LambdaFuncNode(position,
                         ((ArrayInitializerNode) left).Value.Values.Select(x => x.ToString()).ToList(), body);
-                return new LambdaFuncNode(pos, new List<string> {left.ToString()}, body);
+                return new LambdaFuncNode(position, new List<string> {left.ToString()}, body);
             }
             else
-            {
                 return left;
-            }
         }
 
 
         private static AstNode ParseExponent(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             AstNode left = ParseUnary(parser);
 
             if (parser.AcceptToken(TokenType.Operation, "**"))
             {
                 AstNode right = ParseExponent(parser);
-                return new BinOpNode(pos, BinaryOperation.Pow, left, right);
+                return new BinOpNode(position, BinaryOperation.Pow, left, right);
             }
             else if (parser.AcceptToken(TokenType.Operation, "//"))
             {
                 AstNode right = ParseExponent(parser);
-                return new BinOpNode(pos, BinaryOperation.Root, left, right);
+                return new BinOpNode(position, BinaryOperation.Root, left, right);
             }
             else
-            {
                 return left;
-            }
         }
 
         private static AstNode ParseUnary(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             if (parser.AcceptToken(TokenType.UnaryOperation, "!"))
-                return new UnaryOpNode(pos, UnaryOperation.Not, ParseUnary(parser));
+                return new UnaryOpNode(position, UnaryOperation.Not, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-                return new IncDecNode(pos, "++", ParseFunctionCall(parser), true);
+                return new IncDecNode(position, "++", ParseFunctionCall(parser), true);
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-                return new IncDecNode(pos, "--", ParseFunctionCall(parser), true);
+                return new IncDecNode(position, "--", ParseFunctionCall(parser), true);
             else if (parser.AcceptToken(TokenType.Operation, "-"))
-                return new UnaryOpNode(pos, UnaryOperation.Negate, ParseUnary(parser));
+                return new UnaryOpNode(position, UnaryOperation.Negate, ParseUnary(parser));
             else if (parser.AcceptToken(TokenType.UnaryOperation, "~"))
-                return new UnaryOpNode(pos, UnaryOperation.Complement, ParseUnary(parser));
+                return new UnaryOpNode(position, UnaryOperation.Complement, ParseUnary(parser));
             else
                 return ParsePostfixIncDec(parser);
         }
 
         private static AstNode ParsePostfixIncDec(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             var left = ParseFunctionCall(parser);
             if (parser.AcceptToken(TokenType.MentalOperation, "++"))
-            {
-                return new IncDecNode(pos, "++", left, false);
-            }
+                return new IncDecNode(position, "++", left, false);
             else if (parser.AcceptToken(TokenType.MentalOperation, "--"))
-            {
-                return new IncDecNode(pos, "--", left, false);
-            }
+                return new IncDecNode(position, "--", left, false);
             else
-            {
                 return left;
-            }
         }
 
         private static AstNode ParseFunctionCall(Parser parser)
@@ -1023,44 +986,42 @@ namespace Hassium.Parser
         {
             while (true)
             {
-                int pos = parser.codePos;
+                int position = parser.codePosition;
 
                 if (parser.MatchToken(TokenType.LParen))
                 {
                     var parser1 = parser;
-                    left = new FunctionCallNode(parser1.PreviousToken().Position, left, ParseArgList(parser1));
+                    left = new FunctionCallNode(parser1.PreviousToken().Position, left, parseArgList(parser1));
                 }
                 else if (parser.MatchToken(TokenType.LBracket))
                 {
                     var parser1 = parser;
-                    left = new ArrayGetNode(pos, left, ParseArrayIndexer(parser1));
+                    left = new ArrayGetNode(position, left, ParseArrayIndexer(parser1));
                 }
                 else if (parser.AcceptToken(TokenType.Dot, "."))
                 {
                     Token ident = parser.ExpectToken("Expected member name", TokenType.Identifier);
 
-                    left = new MemberAccessNode(pos, left, ident.Value.ToString());
+                    left = new MemberAccessNode(position, left, ident.Value.ToString());
                 }
                 else
-                {
                     return left;
-                }
             }
         }
 
         private static AstNode ParseTerm(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
             var curt = parser.CurrentToken();
             switch (curt.TokenClass)
             {
                 case TokenType.Number:
-                    return new NumberNode(pos, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value),
+                    return new NumberNode(position, Convert.ToDouble(parser.ExpectToken(TokenType.Number).Value),
                         parser.PreviousToken().Value is int);
                 case TokenType.LParen:
                 {
                     parser.ExpectToken(TokenType.LParen);
-                    AstNode statement = ParseExpression(parser);
+                    AstNode statement = parseExpression(parser);
                     parser.ExpectToken(TokenType.RParen);
                     return statement;
                 }
@@ -1070,32 +1031,32 @@ namespace Hassium.Parser
                     return statement;
                 }
                 case TokenType.String:
-                    return new StringNode(pos, parser.ExpectToken(TokenType.String).Value.ToString());
+                    return new StringNode(position, parser.ExpectToken(TokenType.String).Value.ToString());
                 case TokenType.Identifier:
                     if (parser.PreviousToken(-1).Value.ToString() == ":")
                     {
-                        var t = new LabelNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString(),
-                            parser.codePos);
+                        var t = new LabelNode(parser.codePosition, parser.ExpectToken(TokenType.Identifier).Value.ToString(),
+                            parser.codePosition);
                         parser.ExpectToken(TokenType.Identifier, ":");
                         return t;
                     }
                     switch (curt.Value.ToString())
                     {
                         case "lambda":
-                            return ParseLambda(parser);
+                            return parseLambda(parser);
                         case "new":
                             return ParseInstance(parser);
                     }
-                    return new IdentifierNode(pos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+                    return new IdentifierNode(position, parser.ExpectToken(TokenType.Identifier).Value.ToString());
                 case TokenType.RBrace:
                 case TokenType.RBracket:
                 case TokenType.RParen:
                     throw new ParseException(
                         "Unexpected closing " + parser.CurrentToken().Value + " [" + parser.CurrentToken().TokenClass +
-                        "]", parser.codePos);
+                        "]", parser.codePosition);
 
                 default:
-                    throw new ParseException("Unexpected " + curt.Value + " [" + curt.TokenClass + "]", pos);
+                    throw new ParseException("Unexpected " + curt.Value + " [" + curt.TokenClass + "]", position);
             }
         }
 
@@ -1105,16 +1066,16 @@ namespace Hassium.Parser
 
         public static ArrayIndexerNode ParseArrayIndexer(Parser parser)
         {
-            var ret = new ArrayIndexerNode(parser.codePos);
+            var ret = new ArrayIndexerNode(parser.codePosition);
             parser.ExpectToken(TokenType.LBracket);
 
             while (!parser.MatchToken(TokenType.RBracket))
             {
                 if (!parser.AcceptToken(TokenType.Identifier, ":"))
-                    ret.Children.Add(ParseExpression(parser));
+                    ret.Children.Add(parseExpression(parser));
             }
             if (ret.Children.Count == 2 && ret.Children[1].ToString() == ":")
-                throw new ParseException("Expected slice number", parser.codePos);
+                throw new ParseException("Expected slice number", parser.codePosition);
             parser.ExpectToken("Unterminated array indexer", TokenType.RBracket);
 
             return ret;
@@ -1122,26 +1083,23 @@ namespace Hassium.Parser
 
         public static ArrayInitializerNode ParseArrayInitializer(Parser parser)
         {
-            var ret = new ArrayInitializerNode(parser.codePos);
+            var ret = new ArrayInitializerNode(parser.codePosition);
             parser.ExpectToken(TokenType.LBracket);
             ret.IsDictionary = false;
 
             while (!parser.MatchToken(TokenType.RBracket))
             {
-                var ct1 = ParseExpression(parser);
+                var ct1 = parseExpression(parser);
                 if (parser.AcceptToken(TokenType.Identifier, ":"))
                 {
                     ret.IsDictionary = true;
-                    ret.AddItem(ct1, ParseExpression(parser));
+                    ret.AddItem(ct1, parseExpression(parser));
                 }
                 else
-                {
                     ret.AddItem(ct1);
-                }
+                
                 if (!parser.AcceptToken(TokenType.Comma))
-                {
                     break;
-                }
             }
             parser.ExpectToken("Unterminated array initializer", TokenType.RBracket);
 
@@ -1152,48 +1110,48 @@ namespace Hassium.Parser
 
         #region Keywords
 
-        public static AstNode ParseBreak(Parser parser)
+        private static AstNode parseBreak(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
             parser.ExpectToken(TokenType.Identifier, "break");
             parser.ExpectToken(TokenType.EndOfLine);
-            return new BreakNode(pos);
+            return new BreakNode(position);
         }
 
-        public static AstNode ParseContinue(Parser parser)
+        private static AstNode parseContinue(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
             parser.ExpectToken(TokenType.Identifier, "continue");
             parser.ExpectToken(TokenType.EndOfLine);
-            return new ContinueNode(pos);
+            return new ContinueNode(position);
         }
 
         #endregion
 
-        public static AstNode ParseIdentifier(Parser parser)
+        private static AstNode ParseIdentifier(Parser parser)
         {
-            return new IdentifierNode(parser.codePos, parser.ExpectToken(TokenType.Identifier).Value.ToString());
+            return new IdentifierNode(parser.codePosition, parser.ExpectToken(TokenType.Identifier).Value.ToString());
         }
 
-        public static AstNode ParseInstance(Parser parser)
+        private static AstNode ParseInstance(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "new");
             var target = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            AstNode res = new IdentifierNode(parser.codePos, target);
+            AstNode result = new IdentifierNode(parser.codePosition, target);
             while (parser.AcceptToken(TokenType.Dot, "."))
             {
-                res = new MemberAccessNode(parser.codePos, res,
-                    parser.ExpectToken(TokenType.Identifier).Value.ToString());
+                result = new MemberAccessNode(parser.codePosition, result,
+                parser.ExpectToken(TokenType.Identifier).Value.ToString());
             }
 
-            return new InstanceNode(pos, new FunctionCallNode(parser.codePos, res, ParseArgList(parser)));
+            return new InstanceNode(position, new FunctionCallNode(parser.codePosition, result, parseArgList(parser)));
         }
 
-        public static AstNode ParseLambda(Parser parser)
+        private static AstNode parseLambda(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "lambda");
             parser.ExpectToken(TokenType.LParen);
@@ -1212,27 +1170,27 @@ namespace Hassium.Parser
             if (parser.MatchToken(TokenType.EndOfLine))
                 parser.ExpectToken(TokenType.EndOfLine);
 
-            return new LambdaFuncNode(pos, result, body);
+            return new LambdaFuncNode(position, result, body);
         }
 
-        public static ThreadNode ParseThread(Parser parser)
+        public static ThreadNode parseThread(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "thread");
             AstNode node = ParseStatement(parser);
 
-            return new ThreadNode(pos, node);
+            return new ThreadNode(position, node);
         }
 
-        public static UncheckedNode ParseUnchecked(Parser parser)
+        public static UncheckedNode parseUnchecked(Parser parser)
         {
-            int pos = parser.codePos;
+            int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "unchecked");
             AstNode node = ParseStatement(parser);
 
-            return new UncheckedNode(pos, node);
+            return new UncheckedNode(position, node);
         }
     }
 }
