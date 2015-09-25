@@ -67,6 +67,7 @@ namespace Hassium.Interpreter
             {"false", new HassiumBool(false)},
             {"Convert", new HassiumConvert()},
             {"Console", new HassiumConsole()},
+            {"Information", new HassiumInformation()},
             {"null", null}
         };
 
