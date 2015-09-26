@@ -414,6 +414,14 @@ func arrayTests()
 	println("Array tests");
 	println();
 	
+	theStr = "abcdef";
+	theStrArr = [];
+	foreach(c in theStr)
+	{
+		theStrArr[] = c;
+	}
+	assert(theStrArr == ["a","b","c","d","e","f"], "string to char array");
+	
 	theArr = ["abc", "def", 123, 456, runtimecall("System.Math.PI")];	
 	assert(theArr.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string");
 	theArr2 = [];

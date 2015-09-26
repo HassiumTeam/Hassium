@@ -732,8 +732,13 @@ namespace Hassium.Interpreter
         {
             var ifStmt = node;
             if ((HassiumBool) (ifStmt.Predicate.Visit(this)))
-                if(ifStmt.Body != null) return ifStmt.Body.Visit(this);
-            else if(ifStmt.ElseBody != null) return ifStmt.ElseBody.Visit(this);
+            { // Don't remove these braces, otherwise the universe will explode
+                if (ifStmt.Body != null) return ifStmt.Body.Visit(this);
+            }
+            else
+            {
+                if (ifStmt.ElseBody != null) return ifStmt.ElseBody.Visit(this);
+            }
 
             return null;
         }
