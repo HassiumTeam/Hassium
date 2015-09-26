@@ -915,10 +915,6 @@ namespace Hassium.Parser
 
                 if (parser.MatchToken(TokenType.EndOfLine))
                     parser.ExpectToken(TokenType.EndOfLine);
-
-                if (left is ArrayInitializerNode)
-                    return new LambdaFuncNode(position,
-                        ((ArrayInitializerNode) left).Value.Values.Select(x => x.ToString()).ToList(), body);
                 return new LambdaFuncNode(position, new List<string> {left.ToString()}, body);
             }
             else
@@ -1020,10 +1016,29 @@ namespace Hassium.Parser
                         parser.PreviousToken().Value is int);
                 case TokenType.LParen:
                 {
-                    parser.ExpectToken(TokenType.LParen);
+                    /*parser.ExpectToken(TokenType.LParen);
                     AstNode statement = parseExpression(parser);
-                    parser.ExpectToken(TokenType.RParen);
-                    return statement;
+                    parser.ExpectToken(TokenType.RParen);*/
+                    AstNode statement = parseArgList(parser);
+                    if(parser.AcceptToken(TokenType.Lambda))
+                        {
+                            AstNode body = ParseStatement(parser);
+                            if (!(body is CodeBlock))
+                                body = new ReturnNode(body.Position, body);
+
+                            if (parser.MatchToken(TokenType.EndOfLine))
+                                parser.ExpectToken(TokenType.EndOfLine);
+
+                            return new LambdaFuncNode(statement.Position, statement.Children.Select(x => ((IdentifierNode)x).Identifier).ToList(), body);
+                        }
+                        else
+                        {
+                            if(statement.Children.Count > 1)
+                            {
+                                throw new ParseException("Expected ) [RParen]", statement.Children[1].Position);
+                            }
+                        }
+                    return statement.Children[0];
                 }
                 case TokenType.LBracket:
                 {

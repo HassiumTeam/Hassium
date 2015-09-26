@@ -56,12 +56,6 @@ namespace Hassium.HassiumObjects.Types
         public HassiumChar(char value)
         {
             Value = value;
-            Attributes.Add("toString", new InternalFunction(toString, 0));
-        }
-
-        private HassiumObject toString(HassiumObject[] args)
-        {
-            return ToString();
         }
 
         public static bool operator ==(HassiumChar a, HassiumChar b)

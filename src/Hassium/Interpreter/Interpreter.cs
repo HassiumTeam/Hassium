@@ -896,6 +896,8 @@ namespace Hassium.Interpreter
                             target = targ.GetAttribute(man.Member + "`" + call.Arguments.Children.Count, node.Position);
                         else if (targ.Attributes.ContainsKey(man.Member))
                             target = targ.GetAttribute(man.Member, node.Position);
+                        else if(man.Member == "toString")
+                            target = new InternalFunction(x => targ.ToString(), 0);
                         else
                             throw new ParseException(
                                 "The function " + man.Member + " doesn't exist for the object " + man.Left, node);

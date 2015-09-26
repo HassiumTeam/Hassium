@@ -69,7 +69,6 @@ namespace Hassium.HassiumObjects.Types
         public HassiumArray(IEnumerable<object> value)
         {
             Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
-            Attributes.Add("toString", new InternalFunction(toString, 0));
 
             Attributes.Add("add", new InternalFunction(Add, 1));
             Attributes.Add("remove", new InternalFunction(Remove, 1));
@@ -81,6 +80,7 @@ namespace Hassium.HassiumObjects.Types
 
             Attributes.Add("op", new InternalFunction(ArrayOp, 1));
             Attributes.Add("select", new InternalFunction(ArraySelect, 1));
+            Attributes.Add("all", new InternalFunction(ArrayAll, 1));
             Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
             Attributes.Add("any", new InternalFunction(ArrayAny, 1));
             Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
@@ -132,11 +132,6 @@ namespace Hassium.HassiumObjects.Types
         }
 
 
-        private HassiumObject toString(HassiumObject[] args)
-        {
-            return ToString();
-        }
-
         public HassiumObject ResizeArr(HassiumObject[] args)
         {
             HassiumObject[] objarr = Value;
@@ -158,15 +153,6 @@ namespace Hassium.HassiumObjects.Types
             return string.Join(separator, objarr.Select(x => x.ToString()));
         }
 
-        /* TODO: Implement static methods
-        public static HassiumObject ArrayFill(HassiumObject[] args)
-        {
-            int num = args[0].HDouble().ValueInt;
-            HassiumObject thing = args[1];
-            return Enumerable.Repeat(thing, num).ToArray();
-        }
-        */
-
         public HassiumObject ArrayReverse(HassiumObject[] args)
         {
             return Value.ToArray().Reverse().ToArray();
@@ -178,6 +164,11 @@ namespace Hassium.HassiumObjects.Types
         }
 
         #region LINQ-like functions
+
+        public HassiumObject ArrayAll(HassiumObject[] args)
+        {
+            return Value.All(x => args[0].Invoke(x));
+        }
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {

@@ -438,6 +438,8 @@ func arrayTests()
 	assert(theDict[123] == "mno", "check dictionary value after setting with []");
 	assert(theDict.toString() == "Dictionary { [abc] => 123, [456] => ghi, [jkl] => 789, [123] => mno, [4] => 456 }", "dictionary to string");
 	
+	assert(theDict.all((key, value) => theDict[key] == value), "check key and value in dictionary");
+	
 	foreach([key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
 	{
 		assert(theDict[key] == value, "check key and value, foreach in a dictionary");

@@ -52,7 +52,6 @@ namespace Hassium.HassiumObjects.Types
         public HassiumBool(bool value)
         {
             Value = value;
-            Attributes.Add("toString", new InternalFunction(tostring, 0));
         }
 
         public static bool operator ==(HassiumBool a, HassiumBool b)
@@ -68,11 +67,6 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return Convert.ToString(Value).ToLower();
-        }
-
-        private HassiumObject tostring(HassiumObject[] args)
-        {
-            return ToString();
         }
 
         #region IConvertible stuff

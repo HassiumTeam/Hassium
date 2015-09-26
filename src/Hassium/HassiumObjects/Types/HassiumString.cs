@@ -76,7 +76,6 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("trim", new InternalFunction(trim, 0));
             Attributes.Add("trimLeft", new InternalFunction(trimleft, 0));
             Attributes.Add("trimRight", new InternalFunction(trimright, 0));
-            Attributes.Add("toString", new InternalFunction(tostring, 0));
             Attributes.Add("urlEncode", new InternalFunction(urlEncode, 0));
             Attributes.Add("urlDecode", new InternalFunction(urlDecode, 0));
             Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
@@ -182,11 +181,6 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject trimright(HassiumObject[] args)
         {
             return Value.TrimEnd();
-        }
-
-        private HassiumObject tostring(HassiumObject[] args)
-        {
-            return Value;
         }
 
         private HassiumObject isWhiteSpace(HassiumObject[] args)

@@ -75,6 +75,7 @@ namespace Hassium.HassiumObjects
             {
                 return ((HassiumProperty) (_attributes[name.Substring(8)])).GetValue(this);
             }*/
+            if ((name == "toString" || name == "toString`0") & !_attributes.ContainsKey(name)) return new InternalFunction(x => ToString(), 0);
             if (!_attributes.ContainsKey(name))
                 throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
             if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)

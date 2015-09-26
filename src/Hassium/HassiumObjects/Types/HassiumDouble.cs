@@ -57,7 +57,6 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumDouble(double value)
         {
-            Attributes.Add("toString", new InternalFunction(tostring, 0));
             Attributes.Add("compare", new InternalFunction(compare, 1));
             Attributes.Add("isBetween", new InternalFunction(isBetween, new[] {2, 3}));
             Value = System.Math.Round(value, 14);
@@ -76,11 +75,6 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return Convert.ToString(Value);
-        }
-
-        public HassiumObject tostring(HassiumObject[] args)
-        {
-            return new HassiumString(ToString());
         }
 
         public HassiumObject isBetween(HassiumObject[] args)

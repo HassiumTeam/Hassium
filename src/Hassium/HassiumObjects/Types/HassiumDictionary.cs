@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hassium.Functions;
+using Hassium.Interpreter;
 
 namespace Hassium.HassiumObjects.Types
 {
@@ -56,7 +57,6 @@ namespace Hassium.HassiumObjects.Types
             : this(value.Select(x => (HassiumKeyValuePair) x).ToList())
         {
             Attributes.Add("length", new InternalFunction(x => Value.Count, 0, true));
-            Attributes.Add("toString", new InternalFunction(tostring, 0));
 
             Attributes.Add("keys",
                 new HassiumProperty("keys",
@@ -72,6 +72,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("containsValue", new InternalFunction(ContainsValue, 1));
 
             Attributes.Add("op", new InternalFunction(ArrayOp, 1));
+            Attributes.Add("all", new InternalFunction(ArrayAll, 1));
             Attributes.Add("select", new InternalFunction(ArraySelect, 1));
             Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
             Attributes.Add("any", new InternalFunction(ArrayAny, 1));
@@ -158,11 +159,6 @@ namespace Hassium.HassiumObjects.Types
             return Value.ToDictionary(x => x.Key, x => x.Value);
         }
 
-        private HassiumObject tostring(HassiumObject[] args)
-        {
-            return ToString();
-        }
-
         public HassiumObject ArrayReverse(HassiumObject[] args)
         {
             Value.Reverse();
@@ -176,29 +172,50 @@ namespace Hassium.HassiumObjects.Types
 
         #region LINQ-like functions
 
+        public HassiumObject ArrayAll(HassiumObject[] args)
+        {
+            if (((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2)
+                return Value.All(x => args[0].Invoke(x.Key, x.Value));
+            return Value.All(x => args[0].Invoke(x));
+        }
+
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
+            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
+                return Value.Select(x => args[0].Invoke(x.Key, x.Value)).ToArray();
             return Value.Select(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)
         {
+            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
+                return Value.Where(x => args[0].Invoke(x.Key, x.Value)).ToArray();
             return Value.Where(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayAny(HassiumObject[] args)
         {
+            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
+                return Value.Any(x => args[0].Invoke(x.Key, x.Value));
             return Value.Any(x => args[0].Invoke(x));
         }
 
         public HassiumObject ArrayFirst(HassiumObject[] args)
         {
-            return args.Length == 1 ? Value.First(x => args[0].Invoke(x)) : Value.First();
+            return args.Length == 1
+                ? ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                    ? Value.First(x => args[0].Invoke(x.Key, x.Value))
+                    : Value.First(x => args[0].Invoke(x))
+                : Value.First();
         }
 
         public HassiumObject ArrayLast(HassiumObject[] args)
         {
-            return args.Length == 1 ? Value.Last(x => args[0].Invoke(x)) : Value.Last();
+            return args.Length == 1
+                ? ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                    ? Value.Last(x => args[0].Invoke(x.Key, x.Value))
+                    : Value.Last(x => args[0].Invoke(x))
+                : Value.Last();
         }
 
         public HassiumObject ArrayContains(HassiumObject[] args)
