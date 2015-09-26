@@ -74,6 +74,17 @@ namespace Hassium.Functions
         [IntFunc("fillzero", 1)]
         public static HassiumObject FillZero(HassiumObject[] args)
         {
+            /*int[] array = new int[args[0].HInt().Value];
+
+            Array.Clear(array, 0, array.Length);
+
+            var tmp = new HassiumInt(-1);
+
+            return array.Select(x =>
+            {
+                tmp.Value = x;
+                return tmp;
+            }).ToArray();*/
             var zero = new HassiumInt(0);
 
             return Enumerable.Repeat(zero, args[0].HInt().Value).ToArray();

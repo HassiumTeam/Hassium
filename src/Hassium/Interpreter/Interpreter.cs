@@ -920,12 +920,10 @@ namespace Hassium.Interpreter
             if (target is InternalFunction && (target as InternalFunction).IsConstructor)
                 throw new ParseException("Attempt to run a constructor without the 'new' operator", node);
 
-            if (target is HassiumMethod || target is InternalFunction)
+            if (target is HassiumMethod)
             {
-                bool stati = false;
-                if (target is HassiumMethod) stati = (target as HassiumMethod).IsStatic;
-                if (target is InternalFunction) stati = (target as InternalFunction).IsStatic;
-                if (!stati)
+                var th = target as HassiumMethod;
+                if (!th.IsStatic)
                 if (call.Target is MemberAccessNode)
                 {
                     var man = (MemberAccessNode)call.Target;
