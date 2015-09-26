@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -56,6 +57,35 @@ namespace Hassium.HassiumObjects.Types
         public HassiumChar(char value)
         {
             Value = value;
+            Attributes.Add("toInt", new InternalFunction(toInt, 0));
+            Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
+            Attributes.Add("toByte", new InternalFunction(toByte, 0));
+            Attributes.Add("toBool", new InternalFunction(toBool, 0));
+        }
+
+        private HassiumObject toInt(HassiumObject[] args)
+        {
+            return new HassiumInt(Convert.ToInt32(Value));
+        }
+
+        private HassiumObject toDouble(HassiumObject[] args)
+        {
+            return new HassiumDouble(Convert.ToDouble(Value));
+        }
+
+        private HassiumObject toBool(HassiumObject[] args)
+        {
+            return new HassiumBool(Convert.ToBoolean(Value));
+        }
+
+        private HassiumObject toByte(HassiumObject[] args)
+        {
+            byte[] text = BitConverter.GetBytes(Value);
+            HassiumByte[] bytes = new HassiumByte[text.Length];
+            for (int x = 0; x < text.Length; x++)
+                bytes[x] = new HassiumByte(text[x]);
+
+            return new HassiumArray(bytes);
         }
 
         public static bool operator ==(HassiumChar a, HassiumChar b)
