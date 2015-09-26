@@ -35,21 +35,25 @@ namespace Hassium.Functions
     {
         private HassiumFunctionDelegate target;
 
-        public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false)
+        public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false, bool isStatic = false)
         {
             this.target = target;
             IsProperty = prop;
             IsConstructor = constr;
             Arguments = new[] {args};
+            IsStatic = isStatic;
         }
 
-        public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false)
+        public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false, bool isStatic = false)
         {
             this.target = target;
             IsProperty = prop;
             IsConstructor = constr;
             Arguments = args;
+            IsStatic = isStatic;
         }
+
+        public bool IsStatic { get; set; }
 
         public bool IsProperty { get; set; }
 
