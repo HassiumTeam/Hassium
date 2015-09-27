@@ -401,6 +401,8 @@ namespace Hassium.Interpreter
                     if (left == null) return (HassiumObject)right;
                     if (left is HassiumString || right is HassiumString)
                         return new HassiumString(left + right.ToString());
+                    if (left is HassiumChar || right is HassiumChar)
+                        return left.ToString() + right.ToString();
                     if (left is HassiumDate || right is HassiumDate)
                         return (HassiumDate) left + (HassiumDate) right;
                     if (left is HassiumKeyValuePair || right is HassiumKeyValuePair)
