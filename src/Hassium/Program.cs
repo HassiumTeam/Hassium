@@ -72,8 +72,7 @@ namespace Hassium
                 st = new Stopwatch();
                 st.Start();
             }
-
-            try
+            if (disableTryCatch)
             {
                 List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
                 if (options.Debug)
@@ -82,16 +81,29 @@ namespace Hassium
                 AstNode ast = hassiumParser.Parse();
                 CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 CurrentInterpreter.Code = ast;
-                CurrentInterpreter.HandleErrors = !disableTryCatch;
+                CurrentInterpreter.HandleErrors = false;
                 CurrentInterpreter.Execute();
             }
-            catch (Exception e)
+            else
             {
-                //if (disableTryCatch) throw;
-                Console.WriteLine();
-                Console.WriteLine("There has been an error. Message: " + e.Message);
-                Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
-                Environment.Exit(-1);
+                try
+                {
+                    List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
+                    if (options.Debug)
+                        Debug.Debug.PrintTokens(tokens);
+                    Parser.Parser hassiumParser = new Parser.Parser(tokens, options.Code);
+                    AstNode ast = hassiumParser.Parse();
+                    CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
+                    CurrentInterpreter.Code = ast;
+                    CurrentInterpreter.Execute();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There has been an error. Message: " + e.Message);
+                    Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
+                    Environment.Exit(-1);
+                }
             }
 
             if (options.ShowTime)

@@ -102,6 +102,7 @@ namespace Hassium
             {
                 var ctor = Extends.Constructor;
                 ctor.SelfReference = self;
+                ctor.SelfReference.IsInstance = true;
                 var arguments = new List<HassiumObject>();
                 for (int i = 0; i < ctor.FuncNode.Parameters.Count; i++)
                 {
@@ -127,8 +128,9 @@ namespace Hassium
             if (HasConstructor)
             {
                 Constructor.SelfReference = self;
-                Constructor.Invoke(args);
                 Constructor.SelfReference.IsInstance = true;
+                Constructor.Invoke(args);
+               
                 return (HassiumClass)Constructor.SelfReference;
             }
             else

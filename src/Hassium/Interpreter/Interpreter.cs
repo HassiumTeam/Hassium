@@ -1134,15 +1134,17 @@ namespace Hassium.Interpreter
             if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue)
                 throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
             
-            ReturnFunc = true;
+            
             if (returnStmt.Value == null)
             {
                 CallStack.Peek().ReturnValue = null;
+                ReturnFunc = true;
                 return null;
             }
             else
             {
                 var ret = returnStmt.Value.Visit(this);
+                ReturnFunc = true;
                 CallStack.Peek().ReturnValue = (HassiumObject) ret;
                 return ret;
             }
@@ -1254,17 +1256,11 @@ namespace Hassium.Interpreter
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
                         Constants.Add("Dns", new HassiumDns());
                         Constants.Add("WebUtility", new HassiumWebUtility());
-                        Constants.Add("Socket", new InternalFunction(x =>
-                        {
-                            ProtocolType protocolType = ProtocolType.IPv4;
-                            if(x.Length == 1)
-                            {
-                                /*if(x[0].ToString().ToUpper() == "TCP") protocolType = ProtocolType.Tcp;
-                                else if (x[0].ToString().ToUpper() == "UDP") protocolType = ProtocolType.Udp;*/
-                            }
-                            return
-                                new HassiumSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
-                        }, new []{0,1}, false, true));
+                        Constants.Add("Socket",
+                            new InternalFunction(
+                                x =>
+                                    new HassiumSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream,
+                                        ProtocolType.Tcp)), 0, false, true));
                         break;
                     case "text":
                         Constants.Add("StringBuilder",
