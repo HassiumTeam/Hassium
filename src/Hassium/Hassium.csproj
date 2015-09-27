@@ -51,6 +51,8 @@
     <Compile Include="HassiumObjects\Drawing\HassiumBitmap.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumColor.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumImage.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumPoint.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumSize.cs" />
     <Compile Include="HassiumObjects\HassiumModule.cs" />
     <Compile Include="HassiumObjects\Interpreter\HassiumInterpreter.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />

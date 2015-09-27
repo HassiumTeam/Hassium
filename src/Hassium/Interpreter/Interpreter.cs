@@ -139,9 +139,9 @@ namespace Hassium.Interpreter
                     if (!HandleErrors) throw;
                     Console.WriteLine();
                     if (ex is ParseException)
-                        printError(Program.options.Code, (ParseException) ex);
+                        Program.printError(Program.options.Code, (ParseException) ex);
                     else
-                        printError(Program.options.Code, new ParseException(ex.Message, nodePos.Peek()));
+                        Program.printError(Program.options.Code, new ParseException(ex.Message, nodePos.Any() ? nodePos.Peek() : -1));
                         //Console.WriteLine("There has been an error. Message: " + ex.Message);
 
                     Console.WriteLine("\nStack Trace: \n" + ex.StackTrace);
@@ -229,26 +229,7 @@ namespace Hassium.Interpreter
             throw new ParseException("The function " + name + " doesn't exist", node);
         }
 
-        private static void printError(string str, ParseException e)
-        {
-            var idx = e.Position;
-            if (idx == -1)
-            {
-                Console.WriteLine("Error at position <unknown>: " + e.Message);
-                return;
-            }
-            var line = str.Substring(0, idx).Split('\n').Length;
-            var _x = str.Split('\n').Take(line);
-            var res = _x.Last();
-            string trimd = res.Trim();
-            _x = _x.Take(line - 1);
-            var column = idx - (string.Join("\n", _x).Length + (_x.Any() ? 1 : 0)) + 1;
-            Console.WriteLine("Error at position " + idx + ", line " + line
-                              + " column " + column + ": " +
-                              e.Message);
-            Console.WriteLine("   " + trimd);
-            Console.WriteLine(new string(' ', 2 + (column - (res.Length - trimd.Length))) + '^');
-        }
+        
 
         private void loadInternalFunctions()
         {
@@ -1284,6 +1265,12 @@ namespace Hassium.Interpreter
                             new InternalFunction(x => new HassiumBitmap(x), new[] {1, 2}, false, true));
                         Constants.Add("Image",
                             new InternalFunction(x => new HassiumImage(x[0].HString()), 1, false, true));
+                        Constants.Add("Size",
+                            new InternalFunction(args => new HassiumSize(args[0].HInt().Value, args[1].HInt().Value), 2,
+                                false, true));
+                        Constants.Add("Point",
+                            new InternalFunction(args => new HassiumPoint(args[0].HInt().Value, args[1].HInt().Value), 2,
+                                false, true));
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);
