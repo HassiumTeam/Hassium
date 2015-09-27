@@ -381,8 +381,9 @@ namespace Hassium.Lexer
         private void ScanChar()
         {
             ReadChar();
-            if (ReadChar() == '\\')
+            if (PeekChar() == '\\')
             {
+                ReadChar();
                 char escapeChar = ReadChar();
                 switch (escapeChar)
                 {
