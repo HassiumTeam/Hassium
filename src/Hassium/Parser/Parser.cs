@@ -1047,6 +1047,8 @@ namespace Hassium.Parser
                 }
                 case TokenType.String:
                     return new StringNode(position, parser.ExpectToken(TokenType.String).Value.ToString());
+                case TokenType.Char:
+                    return new CharNode(position, Convert.ToChar(parser.ExpectToken(TokenType.Char).Value));
                 case TokenType.Identifier:
                     if (parser.PreviousToken(-1).Value.ToString() == ":")
                     {

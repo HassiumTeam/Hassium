@@ -1,4 +1,4 @@
-// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
+﻿// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
 // 
@@ -23,44 +23,22 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-namespace Hassium.Lexer
+using Hassium.Interpreter;
+
+namespace Hassium.Parser.Ast
 {
-    public enum TokenType
+    public class CharNode: AstNode
     {
-        LBrace,
-        RBrace,
-        LBracket,
-        RBracket,
-        Identifier,
-        String,
-        Number,
-        LParen,
-        RParen,
-        Comma,
-        Operation,
-        OpAssign,
-        Comparison,
-        Assignment,
-        Exception,
-        EndOfLine,
-        UnaryOperation,
-        MentalOperation,
-        Lambda,
-        Dot,
-        Char
-    }
+        public char Value { get; private set; }
 
-    public class Token
-    {
-        public TokenType TokenClass { get; private set; }
-        public object Value { get; private set; }
-        public int Position { get; private set; }
-
-        public Token(TokenType type, object value, int pos = -1)
+        public CharNode(int position, char value) : base(position)
         {
-            TokenClass = type;
             Value = value;
-            Position = pos;
+        }
+
+        public override object Visit(IVisitor visitor)
+        {
+            return visitor.Accept(this);
         }
     }
 }

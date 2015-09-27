@@ -135,8 +135,10 @@ namespace Hassium.Lexer
                             ScanString(true);
                         break;
                     case '"':
-                    case '\'':
                         ScanString();
+                        break;
+                    case '\'':
+                        ScanChar();
                         break;
                     case '$':
                         ScanComment(false);
@@ -374,6 +376,43 @@ namespace Hassium.Lexer
             else throw new ParseException("Unfinished string", position);
 
             add(new Token(TokenType.String, stringBuilder));
+        }
+
+        private void ScanChar()
+        {
+            ReadChar();
+            if (ReadChar() == '\\')
+            {
+                char escapeChar = ReadChar();
+                switch (escapeChar)
+                {
+                    case 'n':
+                        add(new Token(TokenType.Char, '\n'));
+                        break;
+                    case '\\':
+                        add(new Token(TokenType.Char, '\\'));
+                        break;
+                    case 'r':
+                        add(new Token(TokenType.Char, 'r'));
+                        break;
+                    case 't':
+                        add(new Token(TokenType.Char, '\t'));
+                        break;
+                    case 'x':
+                        add(new Token(TokenType.Char, 'x'));
+                        break;
+                    case '"':
+                        add(new Token(TokenType.Char, '"'));
+                        break;
+                    default:
+                        throw new ParseException("Unknown escape code " + escapeChar.ToString(), position);
+                }
+                
+            }
+            else
+                add(new Token(TokenType.Char, ReadChar()));
+
+            ReadChar();
         }
 
         private static bool IsHexChar(char c)

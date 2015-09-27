@@ -1160,6 +1160,11 @@ namespace Hassium.Interpreter
             return new HassiumString(node.Value);
         }
 
+        public object Accept(CharNode node)
+        {
+            return new HassiumChar(node.Value);
+        }
+
         public object Accept(SwitchNode node)
         {
             var pred = node.Predicate.Visit(this);
