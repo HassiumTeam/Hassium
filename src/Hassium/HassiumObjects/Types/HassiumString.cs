@@ -60,8 +60,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toArray", new InternalFunction(toArray, 0));
             Attributes.Add("toLower", new InternalFunction(tolower, 0));
             Attributes.Add("toUpper", new InternalFunction(toupper, 0));
-            Attributes.Add("begins", new InternalFunction(begins, 1));
-            Attributes.Add("ends", new InternalFunction(ends, 1));
+            Attributes.Add("startsWith", new InternalFunction(begins, 1));
+            Attributes.Add("endsWith", new InternalFunction(ends, 1));
             Attributes.Add("getAt", new InternalFunction(getat, 1));
             Attributes.Add("substring", new InternalFunction(substr, new[] {1, 2}));
             Attributes.Add("concat", new InternalFunction(concat, 1));
@@ -79,6 +79,10 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("urlEncode", new InternalFunction(urlEncode, 0));
             Attributes.Add("urlDecode", new InternalFunction(urlDecode, 0));
             Attributes.Add("length", new InternalFunction(x => Value.Length, 0, true));
+            Attributes.Add("toInt", new InternalFunction(toInt, 0));
+            Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
+            Attributes.Add("toByte", new InternalFunction(toByte, 0));
+            Attributes.Add("toBool", new InternalFunction(toBool, 0));
         }
 
         public static implicit operator HassiumArray(HassiumString s)
@@ -94,6 +98,31 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject toArray(HassiumObject[] args)
         {
             return Value.ToCharArray().Select(x => new HassiumChar(x)).ToArray();
+        }
+
+        private HassiumObject toInt(HassiumObject[] args)
+        {
+            return new HassiumInt(Convert.ToInt32(Value));
+        }
+
+        private HassiumObject toDouble(HassiumObject[] args)
+        {
+            return new HassiumDouble(Convert.ToDouble(Value));
+        }
+
+        private HassiumObject toBool(HassiumObject[] args)
+        {
+            return new HassiumBool(Convert.ToBoolean(Value));
+        }
+
+        private HassiumObject toByte(HassiumObject[] args)
+        {
+            byte[] text = System.Text.Encoding.ASCII.GetBytes(Value);
+            HassiumByte[] bytes = new HassiumByte[text.Length];
+            for (int x = 0; x < text.Length; x++)
+                bytes[x] = new HassiumByte(text[x]);
+
+            return new HassiumArray(bytes);
         }
 
         private HassiumObject tolower(HassiumObject[] args)
