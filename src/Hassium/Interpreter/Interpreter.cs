@@ -223,6 +223,9 @@ namespace Hassium.Interpreter
             if (hasVariable(name))
                 return getVariable(name, node);
 
+            if(Globals.Any(x => x.Key.StartsWith(name) && x.Key.Contains("`")) || CallStack.HasVariable(name, true))
+                throw new ParseException("Incorrect arguments for function " + name, node);
+
             throw new ParseException("The function " + name + " doesn't exist", node);
         }
 
@@ -884,9 +887,9 @@ namespace Hassium.Interpreter
                     // internal interpreter functions
                     break;
                 default:
-                    if (((call.Target is IdentifierNode) &&
+                    /*if (((call.Target is IdentifierNode) &&
                          !hasFunction(call.Target.ToString(), call.Arguments.Children.Count)))
-                        throw new ParseException("The function " + call.Target + " doesn't exist", node);
+                        throw new ParseException("The function " + call.Target + " doesn't exist", node);*/
 
                     if (call.Target is MemberAccessNode)
                     {
@@ -1130,10 +1133,19 @@ namespace Hassium.Interpreter
             var returnStmt = node;
             if (returnStmt.Value != null && !returnStmt.Value.ReturnsValue)
                 throw new ParseException("This node type doesn't return a value.", returnStmt.Value);
-            var ret = returnStmt.Value.Visit(this);
+            
             ReturnFunc = true;
-            CallStack.Peek().ReturnValue = (HassiumObject) ret;
-            return ret;
+            if (returnStmt.Value == null)
+            {
+                CallStack.Peek().ReturnValue = null;
+                return null;
+            }
+            else
+            {
+                var ret = returnStmt.Value.Visit(this);
+                CallStack.Peek().ReturnValue = (HassiumObject) ret;
+                return ret;
+            }
         }
 
         public object Accept(StatementNode node)
@@ -1242,6 +1254,17 @@ namespace Hassium.Interpreter
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
                         Constants.Add("Dns", new HassiumDns());
                         Constants.Add("WebUtility", new HassiumWebUtility());
+                        Constants.Add("Socket", new InternalFunction(x =>
+                        {
+                            ProtocolType protocolType = ProtocolType.IPv4;
+                            if(x.Length == 1)
+                            {
+                                /*if(x[0].ToString().ToUpper() == "TCP") protocolType = ProtocolType.Tcp;
+                                else if (x[0].ToString().ToUpper() == "UDP") protocolType = ProtocolType.Udp;*/
+                            }
+                            return
+                                new HassiumSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+                        }, new []{0,1}, false, true));
                         break;
                     case "text":
                         Constants.Add("StringBuilder",

@@ -64,17 +64,16 @@ namespace Hassium.HassiumObjects
             {
                 var prop = ((HassiumProperty) _attributes[name]);
                 if (prop.ReadOnly) throw new ParseException("The property " + prop.Name + " is read-only", -1);
-                prop.SetValue(this, value);
+                if (IsInstance)
+                    prop.SetValue(this, value);
+                else
+                    prop.SetValue(value);
             }
             else _attributes[name] = value;
         }
 
         public HassiumObject GetAttribute(string name, int pos)
         {
-            /*if(name.StartsWith("__prop__") && _attributes.ContainsKey(name.Substring(8)))
-            {
-                return ((HassiumProperty) (_attributes[name.Substring(8)])).GetValue(this);
-            }*/
             if ((name == "toString" || name == "toString`0") & !_attributes.ContainsKey(name)) return new InternalFunction(x => ToString(), 0);
             if (!_attributes.ContainsKey(name))
                 throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
