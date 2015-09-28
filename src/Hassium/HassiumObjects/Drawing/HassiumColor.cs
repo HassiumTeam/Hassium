@@ -37,6 +37,11 @@ namespace Hassium.HassiumObjects.Drawing
     {
         public Color Value { get; private set; }
 
+        public HassiumColor(Color value)
+        {
+            Value = value;
+        }
+
         public HassiumColor(IList<HassiumObject> args)
         {
             switch (args.Count)
