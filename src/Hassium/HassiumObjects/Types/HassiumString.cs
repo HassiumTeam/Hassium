@@ -52,7 +52,7 @@ namespace Hassium.HassiumObjects.Types
             return a.Value != b.Value;
         }
 
-        public string Value { get; private set; }
+        public string Value { get; set; }
 
         public HassiumString(string value)
         {

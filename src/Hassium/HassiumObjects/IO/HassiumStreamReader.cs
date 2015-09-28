@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.IO
 {
     public class HassiumStreamReader : HassiumObject
     {
-        public StreamReader Value { get; private set; }
+        public StreamReader Value { get; set; }
 
         public HassiumStreamReader(StreamReader value)
         {

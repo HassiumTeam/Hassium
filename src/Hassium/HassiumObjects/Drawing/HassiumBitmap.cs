@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Drawing
 {
     public class HassiumBitmap : HassiumObject
     {
-        public Bitmap Value { get; private set; }
+        public Bitmap Value { get; set; }
 
         public HassiumBitmap(HassiumObject[] cctr)
         {

@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumTcpClient : HassiumObject
     {
-        public TcpClient Value { get; private set; }
+        public TcpClient Value { get; set; }
 
         public HassiumTcpClient(TcpClient value)
         {

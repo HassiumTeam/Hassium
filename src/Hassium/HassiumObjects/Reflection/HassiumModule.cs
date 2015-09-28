@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Reflection
 {
     public class HassiumModule : HassiumObject
     {
-        public Module Value { get; private set; }
+        public Module Value { get; set; }
 
         public HassiumModule(Module module)
         {

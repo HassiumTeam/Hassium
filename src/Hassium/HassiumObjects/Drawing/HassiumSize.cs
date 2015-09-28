@@ -8,7 +8,7 @@ namespace Hassium.HassiumObjects.Drawing
 {
     public class HassiumSize : HassiumObject
     {
-        public Size Value { get; private set; }
+        public Size Value { get; set; }
 
         public HassiumSize(int w, int h)
         {

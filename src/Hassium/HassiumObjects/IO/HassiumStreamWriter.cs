@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.IO
 {
     public class HassiumStreamWriter : HassiumObject
     {
-        public StreamWriter Value { get; private set; }
+        public StreamWriter Value { get; set; }
 
         public HassiumStreamWriter(StreamWriter value)
         {

@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 {
     public class HassiumHttpListenerRequest : HassiumObject
     {
-        public HttpListenerRequest Value { get; private set; }
+        public HttpListenerRequest Value { get; set; }
 
         public HassiumHttpListenerRequest(HttpListenerRequest value)
         {

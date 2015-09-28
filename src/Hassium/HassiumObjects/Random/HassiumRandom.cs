@@ -29,7 +29,7 @@ namespace Hassium.HassiumObjects.Random
 {
     public class HassiumRandom : HassiumObject
     {
-        public System.Random Value { get; private set; }
+        public System.Random Value { get; set; }
 
         public HassiumRandom(System.Random value)
         {

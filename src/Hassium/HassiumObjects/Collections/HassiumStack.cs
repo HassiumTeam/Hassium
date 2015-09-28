@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.Collections
 {
     public class HassiumStack : HassiumObject
     {
-        public Stack<HassiumObject> Value { get; private set; }
+        public Stack<HassiumObject> Value { get; set; }
 
         public HassiumStack(Stack<HassiumObject> value)
         {

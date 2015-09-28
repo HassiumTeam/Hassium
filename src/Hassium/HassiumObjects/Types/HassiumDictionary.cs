@@ -51,7 +51,7 @@ namespace Hassium.HassiumObjects.Types
             return (Value != null ? Value.GetHashCode() : 0);
         }
 
-        public List<HassiumKeyValuePair> Value { get; private set; }
+        public List<HassiumKeyValuePair> Value { get; set; }
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value)
             : this(value.Select(x => (HassiumKeyValuePair) x).ToList())

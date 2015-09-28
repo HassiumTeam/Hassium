@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Text
 {
     public class HassiumEncoding : HassiumObject
     {
-        public Encoding Value { get; private set; }
+        public Encoding Value { get; set; }
 
         public HassiumEncoding(HassiumString type)
         {

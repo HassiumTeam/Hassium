@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumSocket : HassiumObject
     {
-        public Socket Value { get; private set; }
+        public Socket Value { get; set; }
 
         public HassiumSocket(Socket value)
         {
