@@ -33,7 +33,7 @@ namespace Hassium.HassiumObjects.Networking
 {
     public class HassiumWebClient : HassiumObject
     {
-        public WebClient Value { get; private set; }
+        public WebClient Value { get; set; }
 
         public HassiumWebClient(WebClient value)
         {

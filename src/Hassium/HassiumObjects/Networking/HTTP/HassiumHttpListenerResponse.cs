@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Networking.HTTP
 {
     public class HassiumHttpListenerResponse : HassiumObject
     {
-        public HttpListenerResponse Value { get; private set; }
+        public HttpListenerResponse Value { get; set; }
 
         public HassiumHttpListenerResponse(HttpListenerResponse value)
         {

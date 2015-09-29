@@ -35,7 +35,12 @@ namespace Hassium.HassiumObjects.Drawing
 {
     public class HassiumColor : HassiumObject
     {
-        public Color Value { get; private set; }
+        public Color Value { get; set; }
+
+        public HassiumColor(Color value)
+        {
+            Value = value;
+        }
 
         public HassiumColor(IList<HassiumObject> args)
         {

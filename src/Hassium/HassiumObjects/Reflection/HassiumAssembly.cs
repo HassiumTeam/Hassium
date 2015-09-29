@@ -33,7 +33,7 @@ namespace Hassium.HassiumObjects.Reflection
 {
     public class HassiumAssembly : HassiumObject
     {
-        public Assembly Value { get; private set; }
+        public Assembly Value { get; set; }
 
         public HassiumAssembly(Assembly ass)
         {

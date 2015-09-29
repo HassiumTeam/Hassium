@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Drawing
 {
     public class HassiumImage : HassiumObject
     {
-        public Image Value { get; private set; }
+        public Image Value { get; set; }
 
         public HassiumImage(HassiumString path)
         {

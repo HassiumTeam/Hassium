@@ -9,7 +9,7 @@ namespace Hassium.HassiumObjects.Drawing
 {
     public class HassiumPoint : HassiumObject
     {
-        public Point Value { get; private set; }
+        public Point Value { get; set; }
 
         public HassiumPoint(int x, int y)
         {

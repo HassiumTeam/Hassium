@@ -52,7 +52,7 @@ namespace Hassium.HassiumObjects.Types
             return Value.GetHashCode();
         }
 
-        public char Value { get; private set; }
+        public char Value { get; set; }
 
         public HassiumChar(char value)
         {

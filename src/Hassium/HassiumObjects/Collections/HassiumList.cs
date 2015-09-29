@@ -8,7 +8,7 @@ using Hassium.HassiumObjects;
 namespace Hassium.HassiumObjects.Types
 {
     public class HassiumList: HassiumObject
-    public List<HassiumObject> Value { get; private set; }
+    public List<HassiumObject> Value { get; set; }
     {
 
         public HassiumList()

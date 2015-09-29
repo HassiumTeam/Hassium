@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.Text
 {
     public class HassiumBinaryWriter : HassiumObject
     {
-        public BinaryWriter Value { get; private set; }
+        public BinaryWriter Value { get; set; }
 
         public HassiumBinaryWriter(BinaryWriter value)
         {

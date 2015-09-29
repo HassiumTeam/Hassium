@@ -49,7 +49,7 @@ namespace Hassium.HassiumObjects.Types
             return Value.GetHashCode();
         }
 
-        public DateTime Value { get; private set; }
+        public DateTime Value { get; set; }
 
         public HassiumDate(DateTime value)
         {

@@ -47,7 +47,7 @@ namespace Hassium.HassiumObjects.Types
             return Value.GetHashCode();
         }
 
-        public bool Value { get; private set; }
+        public bool Value { get; set; }
 
         public HassiumBool(bool value)
         {

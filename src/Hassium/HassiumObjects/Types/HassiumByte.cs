@@ -47,7 +47,7 @@ namespace Hassium.HassiumObjects.Types
             return Value.GetHashCode();
         }
 
-        public byte Value { get; private set; }
+        public byte Value { get; set; }
 
         public HassiumByte(byte value)
         {

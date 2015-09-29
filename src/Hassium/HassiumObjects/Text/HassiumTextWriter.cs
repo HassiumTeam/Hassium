@@ -31,7 +31,7 @@ namespace Hassium.HassiumObjects.Text
 {
     public class HassiumTextWriter : HassiumObject
     {
-        public TextWriter Value { get; private set; }
+        public TextWriter Value { get; set; }
 
         public HassiumTextWriter(TextWriter value)
         {

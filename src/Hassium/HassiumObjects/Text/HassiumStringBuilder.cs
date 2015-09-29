@@ -30,7 +30,7 @@ namespace Hassium.HassiumObjects.Text
 {
     public class HassiumStringBuilder : HassiumObject
     {
-        public StringBuilder Value { get; private set; }
+        public StringBuilder Value { get; set; }
 
         public HassiumStringBuilder(StringBuilder value)
         {

@@ -32,7 +32,7 @@ namespace Hassium.HassiumObjects.Text
 {
     public class HassiumTextReader : HassiumObject
     {
-        public TextReader Value { get; private set; }
+        public TextReader Value { get; set; }
 
         public HassiumTextReader(TextReader value)
         {
