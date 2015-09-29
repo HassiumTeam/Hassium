@@ -12,7 +12,7 @@ class Menu {
             this.choose();
         }
         
-        return this.Options[choice - 1];
+        return choice;
     }
 }
 
