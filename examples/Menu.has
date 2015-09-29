@@ -3,20 +3,23 @@ class Menu {
         this.Options = options;
     }
     
-    func choose (this) {
+    func choose (this, number) {
         for (x = 0; x < this.Options.length; x++)
             println((x + 1) + ". " + this.Options[x]);
-        choice = Console.getKey().toInt();
+        choice = input().toInt();
         if (choice < 1 || choice > this.Options.length) {
             println("Invalid choice!");
             this.choose();
         }
         
-        return choice;
+        if (number == true)
+            return choice;
+            
+        return this.Options[choice - 1];
     }
 }
 
 func main () {
     m = new Menu(["Option 1", "Option 2"]);
-    println(m.choose());
+    println(m.choose(false));
 }
