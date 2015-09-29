@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System.CodeDom;
 using System.Drawing;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
@@ -33,11 +34,16 @@ namespace Hassium.HassiumObjects.Drawing
     {
         public Image Value { get; set; }
 
-        public HassiumImage(HassiumString path)
+        public HassiumImage(Image img)
         {
-            Value = Image.FromFile(path);
+            Value = img;
             Attributes.Add("dispose", new InternalFunction(dispose, 0));
             Attributes.Add("save", new InternalFunction(save, 1));
+            Attributes.Add("size", new HassiumProperty("size", x => new HassiumSize(Value.Size.Width, Value.Size.Height), null, true));
+        }
+
+        public HassiumImage(HassiumString path) : this(Image.FromFile(path))
+        {
         }
 
         private HassiumObject dispose(HassiumObject[] args)

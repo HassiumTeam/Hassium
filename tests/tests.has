@@ -463,6 +463,14 @@ func drawingTests()
 	assert(clr.green == 225, "color.green");
 	assert(clr.blue == 206, "color.blue");
 	
+	assert(clr.complementary == new Color(225, 43, 62), "complementary color");
+	assert(clr.complementary.complementary == clr, "complementary color back");
+	
+	assert(clr.triadic == [new Color(225, 206, 43), new Color(206, 43, 225)], "triadic color");
+	assert(clr.tetradic == [new Color(62, 225, 43), new Color(206, 43, 225), new Color(225, 43, 62)], "tetradic color");
+	assert(clr.splitCompl == [new Color(225, 115, 43), new Color(206, 43, 153)], "split complementary color");
+	assert(clr.analogous == [new Color(43, 225, 115), new Color(43, 153, 225)], "analogous color");
+	
 	assert(clr.toHsl().values.select(x => Math.round(x, 1)) == [173.7, 75.2, 52.5], "color to HSL conversion");
 	assert(clr.toHsv().values.select(x => Math.round(x, 1)) == [173.7, 80.9, 88.2], "color to HSV conversion");
 	assert(clr.toCmyk().values.select(x => Math.round(x, 2)) == [80.89, 0, 8.44, 11.76], "color to CMYK conversion");
