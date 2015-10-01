@@ -54,15 +54,31 @@ namespace Hassium
             public static string Code { get; set; }
             public static bool Golf { get; set; }
             public static bool Secure { get; set; }
+            public static bool Compile { get; set; }
+            public static bool CompileRead { get; set; }
         }
 
         public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
         private static Stopwatch st;
 
+        public static T ParseEnum<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
+        }
+
         public static void Main(string[] args)
         {
             Initialize(args);
 
+            if (options.Compile)
+            {
+                string fileContents = "";
+                List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
+                foreach (Token token in tokens)
+                    fileContents += token.TokenClass + " " + token.Value + "\n";
+
+                File.WriteAllBytes("a.out", System.Text.Encoding.ASCII.GetBytes(fileContents));
+            }
             if (options.Golf)
             {
                 Console.WriteLine(Lexer.Lexer.Minimize(options.Code));
@@ -85,7 +101,7 @@ namespace Hassium
                 CurrentInterpreter.HandleErrors = false;
                 CurrentInterpreter.Execute();
             }
-            else
+            else if (!options.CompileRead && !disableTryCatch)
             {
                 try
                 {
@@ -113,6 +129,20 @@ namespace Hassium
                     Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
                     Environment.Exit(-1);
                 }
+            }
+            if (options.CompileRead)
+            {
+                List<Token> tokens = new List<Token>();
+                string[] strTokens = System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(options.FilePath)).Split('\n');
+                for (int x = 0; x < strTokens.Length - 1; x++)
+                {
+                    string token = strTokens[x];
+                    tokens.Add(new Token(ParseEnum<TokenType>(token.Split(' ')[0]), token.Substring(token.IndexOf(" ") + 1), -1));
+                }
+
+                AstNode node = new Parser.Parser(tokens, strTokens.ToString()).Parse();
+                new Interpreter.Interpreter(new SemanticAnalyser(node).Analyse(), node).Execute();
+                return;
             }
 
             if (options.ShowTime)
@@ -179,6 +209,8 @@ namespace Hassium
                             "-g    --golf\tShrinks the code down as best it can\n" +
                             "-t    --time\tShow the running time of the program\n" +
                             "-v    --version\tShows the version and info of the Interpreter\n" +
+                            "-c    --compile\tCompiles the tokens and saves them in a.out\n" +
+                            "-cr   --compileRead\tReads compiled tokens and executes them\n " +
                             "-s    --safe\tEnables the secure mode (disable dangerous functions)");
                         Environment.Exit(0);
                         break;
@@ -205,6 +237,14 @@ namespace Hassium
                     case "-v":
                     case "--version":
                         displayInfo();
+                        break;
+                    case "-c":
+                    case "--compile":
+                        options.Compile = true;
+                        break;
+                    case "-cr":
+                    case "--compileRead":
+                        options.CompileRead = true;
                         break;
                     default:
                         if (File.Exists(args[i]))
