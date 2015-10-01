@@ -1217,6 +1217,7 @@ namespace Hassium.Interpreter
                     case "debug":
                         Constants.Add("Debug", new HassiumDebug());
                         Constants.Add("Interpreter", new HassiumInterpreter());
+                        Constants.Add("GC", new HassiumGC());
                         break;
                     case "collections":
                         Constants.Add("Stack",
