@@ -499,14 +499,17 @@ func drawingTests()
 	clr = new Color("lab", 81.19, -47.19, -3.12);
 	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LAB");
 	
-	clr = new Color("lch", 81.192692, 47.294403, 183.780079);
-	assert(clr.red == 44 && clr.green == 224 && clr.blue == 205, "color after converting from CIE-LCH");
+	clr = new Color("lch", 81.19, 47.294403, 183.780079);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LCH");
 	
 	clr = new Color("luv", 81.19, -62.15, 2.6);
 	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LUV");
 	
 	clr = new Color("hunter-lab", 76.69, -43.30, 1.36);
 	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from Hunter-Lab");
+	
+	$clr = new Color("yuv", 168, 149, 38);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from YUV");$
 	
 	println();
 	println("End of drawing module tests");

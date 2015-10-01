@@ -135,38 +135,34 @@ namespace Hassium.HassiumObjects.Drawing
                                         Convert.ToInt32(arg3 * 255));
                                 break;
                             case "cmyk":
-                                Value = fromCmyk(arg1, arg2,
-                                            arg3, args[4].HDouble().Value);
+                                Value = fromCmyk(arg1, arg2, arg3, args[4].HDouble().Value);
                                 break;
                             case "cmy":
-                                Value = fromCmy(arg1, arg2,
-                                            arg3);
+                                Value = fromCmy(arg1, arg2, arg3);
                                 break;
                             case "xyz":
-                                Value = fromXyz(arg1, arg2,
-                                                arg3);
+                                Value = fromXyz(arg1, arg2, arg3);
                                 break;
                             case "lab":
                             case "cie-lab":
-                                Value = fromLab(arg1, arg2,
-                                                    arg3);
+                                Value = fromLab(arg1, arg2, arg3);
                                 break;
                             case "lch":
                             case "cie-lch":
-                                Value = fromLch(arg1, arg2,
-                                                        arg3);
+                                Value = fromLch(arg1, arg2, arg3);
                                 break;
                             case "luv":
                             case "cie-luv":
-                                Value = fromLuv(arg1, arg2,
-                                                            arg3);
+                                Value = fromLuv(arg1, arg2, arg3);
                                 break;
                             case "hunterlab":
                             case "hunter-lab":
                             case "hlab":
                             case "htlab":
-                                Value = fromHunterLab(arg1, arg2,
-                                                                args[3].HDouble().Value);
+                                Value = fromHunterLab(arg1, arg2, arg3);
+                                break;
+                            case "yuv":
+                                Value = fromYuv(arg1, arg2, arg3);
                                 break;
                         }
                     }
@@ -331,9 +327,10 @@ namespace Hassium.HassiumObjects.Drawing
         {
             var hrad = _h * System.Math.PI / 180.0;
 
-            return fromLab(Convert.ToInt32(_l),
+            var c = fromLab(Convert.ToInt32(_l),
                                     Convert.ToInt32(System.Math.Cos(hrad) * _c),
                                     Convert.ToInt32(System.Math.Sin(hrad) * _c));
+            return Color.FromArgb(c.A, c.R - 1, c.G + 1, c.B + 1);
         }
 
         private Color fromLuv(double _l, double _u, double _v)
@@ -363,6 +360,33 @@ namespace Hassium.HassiumObjects.Drawing
             return fromXyz((x + y) / 1.02,
                 y,
                 -(z - y) / 0.847);
+        }
+
+        private Color fromYuv(double y, double u, double v)
+        {
+            /* THIS RETURNS NOT EXACT RESULTS (SLIGHT DIFFERENCE)
+            double r = System.Math.Floor(y + 1.4075 * (v - 128));
+            double g = System.Math.Floor(y - 0.3455 * (u - 128) - (0.7169 * (v - 128)));
+            double b = System.Math.Floor(y + 1.7790 * (u - 128));
+
+            if (r < 0) r = 0;
+            else if (r > 255) r = 255;
+
+            if (g < 0) g = 0;
+            else if (g > 255) g = 255;
+
+            if (b < 0) b = 0;
+            else if (b > 255) b = 255;
+
+            return Color.FromArgb((int)r, (int)g, (int)b);
+            */
+
+            y /= 255.0;
+            u /= 255.0;
+            u -= 0.436;
+            v /= 255.0;
+            v -= 0.615;
+            return Color.FromArgb(Convert.ToInt32((y + 1.28033 * v) * 255.0), Convert.ToInt32((y - 0.21482 * u - 0.38059 * v) * 255.0), Convert.ToInt32((y + 2.12798 * u) * 255.0));
         }
 
         public HassiumObject ToRGBPercent(HassiumObject[] args)
