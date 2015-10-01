@@ -55,7 +55,6 @@
     <Compile Include="HassiumObjects\Drawing\HassiumSize.cs" />
     <Compile Include="HassiumObjects\HassiumModule.cs" />
     <Compile Include="HassiumObjects\Interpreter\HassiumGC.cs" />
-    <Compile Include="HassiumObjects\Interpreter\HassiumInterpreter.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />
     <Compile Include="Interpreter\CallStack.cs" />
     <Compile Include="Interpreter\HassiumProperty.cs" />

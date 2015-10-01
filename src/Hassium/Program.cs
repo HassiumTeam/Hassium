@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -37,6 +38,7 @@ using Hassium.Lexer;
 using Hassium.Parser;
 using Hassium.Parser.Ast;
 using Hassium.Semantics;
+using Microsoft.CSharp;
 
 namespace Hassium
 {
@@ -54,30 +56,94 @@ namespace Hassium
             public static string Code { get; set; }
             public static bool Golf { get; set; }
             public static bool Secure { get; set; }
-            public static bool Compile { get; set; }
-            public static bool CompileRead { get; set; }
+            public static Tuple<bool, string> Compile  = new Tuple<bool, string>(false, "");
         }
 
         public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
         private static Stopwatch st;
 
-        public static T ParseEnum<T>(string value)
-        {
-            return (T)Enum.Parse(typeof(T), value, true);
-        }
-
         public static void Main(string[] args)
         {
             Initialize(args);
 
-            if (options.Compile)
+            if (options.Compile.Item1)
             {
-                string fileContents = "";
-                List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
-                foreach (Token token in tokens)
-                    fileContents += token.TokenClass + " " + token.Value + "\n";
+                Console.WriteLine(options.FilePath + " --> " + options.Compile.Item2);
 
-                File.WriteAllBytes("a.out", System.Text.Encoding.ASCII.GetBytes(fileContents));
+                string output = Path.GetFullPath(options.Compile.Item2);
+                string pname =
+                    new string(Path.GetFileNameWithoutExtension(output)
+                        .Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
+                if (!char.IsLetter(pname[0])) pname = '_' + pname;
+                string resultcode = @"
+using System.Collections.Generic;
+using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
+using Hassium.Lexer;
+using Hassium.Parser;
+using System.Diagnostics;
+using Hassium.Semantics;
+
+namespace " + pname + @"
+{
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+                string code = " + '"' + options.Code.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r") + '"' + @";
+                System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+"
+                + (options.ShowTime ? @"
+Stopwatch st = new Stopwatch();
+st.Start();
+" : "") + @"
+                List<Token> tokens = new Lexer(code).Tokenize();
+                Parser hassiumParser = new Parser(tokens, code);
+                AstNode ast = hassiumParser.Parse();
+                Interpreter it = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast) { HandleErrors = false, BuildDate = new System.IO.FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).LastWriteTime };
+                it.SetVariable(" + "\"args\"" + @", new HassiumArray(args), null, true);
+                it.Execute();"
++ (options.ShowTime ? "st.Stop();\nSystem.Console.WriteLine(\"\\n\" + st.Elapsed + \" seconds\");" : "") + @"
+                System.Console.ReadLine();
+                System.Environment.Exit(it.Exitcode);
+            }
+        }
+    }
+";
+
+                string hassiumLocation = Assembly.GetEntryAssembly().Location;
+
+                if (File.Exists(output))
+                {
+                    Console.Write("WARNING: Output file already exists, overwrite [Y/n]? ");
+                    if (Console.ReadLine().ToUpper() != "Y")
+                    {
+                        Console.WriteLine("Operation cancelled");
+                        Console.ReadLine();
+                        return;
+                    }
+                    else File.Delete(output);
+                }
+
+                CSharpCodeProvider provider = new CSharpCodeProvider();
+                CompilerParameters parameters = new CompilerParameters();
+                parameters.ReferencedAssemblies.Add(hassiumLocation);
+                parameters.ReferencedAssemblies.Add(typeof(Stopwatch).Assembly.ManifestModule.FullyQualifiedName);
+                parameters.GenerateInMemory = true;
+                parameters.GenerateExecutable = true;
+                parameters.OutputAssembly = output;
+                Console.WriteLine("Build started");
+                CompilerResults results = provider.CompileAssemblyFromSource(parameters, resultcode);
+                Console.WriteLine("Build finished");
+
+                Console.WriteLine("Merging assemblies...");
+                var proc = Process.Start(
+                    Path.Combine(Path.GetDirectoryName(hassiumLocation),
+                        "libz.exe"), " inject-dll --assembly \"" + output + "\" --include \"" + hassiumLocation + "\"");
+                proc.WaitForExit();
+                Console.WriteLine("Done!");
+
+                Environment.Exit(0);
             }
             if (options.Golf)
             {
@@ -98,10 +164,11 @@ namespace Hassium
                 AstNode ast = hassiumParser.Parse();
                 CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                 CurrentInterpreter.Code = ast;
+                CurrentInterpreter.BuildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
                 CurrentInterpreter.HandleErrors = false;
                 CurrentInterpreter.Execute();
             }
-            else if (!options.CompileRead && !disableTryCatch)
+            else
             {
                 try
                 {
@@ -112,9 +179,10 @@ namespace Hassium
                     AstNode ast = hassiumParser.Parse();
                     CurrentInterpreter.SymbolTable = new SemanticAnalyser(ast).Analyse();
                     CurrentInterpreter.Code = ast;
+                    CurrentInterpreter.BuildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
                     CurrentInterpreter.Execute();
                 }
-                catch(ParseException e)
+                catch (ParseException e)
                 {
                     Console.WriteLine();
                     printError(Program.options.Code, e);
@@ -129,20 +197,6 @@ namespace Hassium
                     Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
                     Environment.Exit(-1);
                 }
-            }
-            if (options.CompileRead)
-            {
-                List<Token> tokens = new List<Token>();
-                string[] strTokens = System.Text.Encoding.ASCII.GetString(File.ReadAllBytes(options.FilePath)).Split('\n');
-                for (int x = 0; x < strTokens.Length - 1; x++)
-                {
-                    string token = strTokens[x];
-                    tokens.Add(new Token(ParseEnum<TokenType>(token.Split(' ')[0]), token.Substring(token.IndexOf(" ") + 1), -1));
-                }
-
-                AstNode node = new Parser.Parser(tokens, strTokens.ToString()).Parse();
-                new Interpreter.Interpreter(new SemanticAnalyser(node).Analyse(), node).Execute();
-                return;
             }
 
             if (options.ShowTime)
@@ -209,8 +263,7 @@ namespace Hassium
                             "-g    --golf\tShrinks the code down as best it can\n" +
                             "-t    --time\tShow the running time of the program\n" +
                             "-v    --version\tShows the version and info of the Interpreter\n" +
-                            "-c    --compile\tCompiles the tokens and saves them in a.out\n" +
-                            "-cr   --compileRead\tReads compiled tokens and executes them\n " +
+                            "-c    --compile\tCompiles a file to a binary\n" +
                             "-s    --safe\tEnables the secure mode (disable dangerous functions)");
                         Environment.Exit(0);
                         break;
@@ -240,11 +293,7 @@ namespace Hassium
                         break;
                     case "-c":
                     case "--compile":
-                        options.Compile = true;
-                        break;
-                    case "-cr":
-                    case "--compileRead":
-                        options.CompileRead = true;
+                        options.Compile = new Tuple<bool, string>(true, args[++i]);
                         break;
                     default:
                         if (File.Exists(args[i]))

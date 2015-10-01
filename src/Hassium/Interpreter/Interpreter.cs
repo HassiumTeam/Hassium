@@ -110,6 +110,8 @@ namespace Hassium.Interpreter
             HandleErrors = true;
         }
 
+        public DateTime BuildDate { get; set; }
+
          
 
         public void Execute(bool repl = false)
@@ -1216,7 +1218,12 @@ namespace Hassium.Interpreter
                         break;
                     case "debug":
                         Constants.Add("Debug", new HassiumDebug());
-                        Constants.Add("Interpreter", new HassiumInterpreter());
+                        var interpreter = new HassiumObject();
+                        interpreter.Attributes.Add("version",
+                            new HassiumProperty("version", x => Program.GetVersion(), null, true));
+                        interpreter.Attributes.Add("buildDate",
+                            new HassiumProperty("buildDate", x => new HassiumDate(BuildDate), null, true));
+                        Constants.Add("Interpreter", interpreter);
                         Constants.Add("GC", new HassiumGC());
                         break;
                     case "collections":
