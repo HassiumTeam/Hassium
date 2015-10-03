@@ -36,10 +36,10 @@ namespace Hassium.HassiumObjects.IO
         {
             Attributes.Add("beep", new InternalFunction(Beep, new[] {0, 2}));
             Attributes.Add("backgroundColor",
-                new HassiumProperty("backgroundColor", x => GetBackground(new HassiumObject[] {}), SetBackground));
+                new HassiumProperty("backgroundColor", x => GetBackground(new HassiumObject[] {}), (self, x) => SetBackground(x)));
             Attributes.Add("foregroundColor",
-                new HassiumProperty("foregroundColor", x => GetForeground(new HassiumObject[] {}), SetForeground));
-            Attributes.Add("title", new HassiumProperty("title", x => Console.Title, x =>
+                new HassiumProperty("foregroundColor", x => GetForeground(new HassiumObject[] {}), (self, x) => SetForeground(x)));
+            Attributes.Add("title", new HassiumProperty("title", x => Console.Title, (self, x) =>
             {
                 Console.Title = x[0].ToString();
                 return null;
@@ -446,9 +446,9 @@ namespace Hassium.HassiumObjects.IO
         {
             var ret = new HassiumObject();
             ret.SetAttribute("left",
-                new HassiumProperty("left", x => Console.CursorLeft, x => Console.CursorLeft = x[1].HInt().Value));
+                new HassiumProperty("left", x => Console.CursorLeft, (self, x) => Console.CursorLeft = x[0].HInt().Value));
             ret.SetAttribute("top",
-                new HassiumProperty("top", x => Console.CursorTop, x => Console.CursorTop = x[1].HInt().Value));
+                new HassiumProperty("top", x => Console.CursorTop, (self, x) => Console.CursorTop = x[0].HInt().Value));
             ret.SetAttribute("toString",
                 new InternalFunction(x => "{" + Console.CursorLeft + ", " + Console.CursorTop + "}", 0));
             return ret;

@@ -60,10 +60,10 @@ namespace Hassium.HassiumObjects.Types
 
             Attributes.Add("keys",
                 new HassiumProperty("keys",
-                    x => new HassiumArray(Value.Select(y => y.Key)), x => null, true));
+                    x => new HassiumArray(Value.Select(y => y.Key)), null, true));
             Attributes.Add("values",
                 new HassiumProperty("values",
-                    x => new HassiumArray(Value.Select(y => y.Value)), x => null, true));
+                    x => new HassiumArray(Value.Select(y => y.Value)), null, true));
 
             Attributes.Add("resize", new InternalFunction(ResizeArr, 1));
             Attributes.Add("reverse", new InternalFunction(ArrayReverse, 0));

@@ -27,14 +27,16 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects
 {
+    public delegate HassiumObject HassiumInstanceFunctionDelegate(HassiumObject self, params HassiumObject[] arguments);
+
     public class HassiumProperty : HassiumObject
     {
-        public HassiumFunctionDelegate SetValue;
+        public HassiumInstanceFunctionDelegate SetValue;
         public HassiumFunctionDelegate GetValue;
         public string Name;
         public bool ReadOnly;
 
-        public HassiumProperty(string name, HassiumFunctionDelegate get, HassiumFunctionDelegate set, bool ro = false)
+        public HassiumProperty(string name, HassiumFunctionDelegate get, HassiumInstanceFunctionDelegate set, bool ro = false)
         {
             Name = name;
             GetValue = get;

@@ -78,7 +78,7 @@ func main()
     println("--- END TESTS FOR HASSIUM ---");
 	println();
 	println("Current version: Hassium ", Interpreter.version);
-	println("Build date: " + Interpreter.buildDate);
+	println("Build date: " + Interpreter.buildDate.toString("x"));
 	
 
     exit(exitcode);
@@ -329,7 +329,9 @@ func instanceTest () {
 	assert(employee.Name == "Mark", "employee.Name");
 	assert(employee.Age == 38, "employee.Age");
 	assert(employee.Location == "New York", "employee.Location");
-	assert(employee.toString() == "Hello my name is Mark and I'm 38 years old and I live in New York.", "employee.toString()");
+	employee.Location = "Paris";
+	assert(employee.Location == "Paris", "employee.Location after setting property");
+	assert(employee.toString() == "Hello my name is Mark and I'm 38 years old and I live in Paris.", "employee.toString()");
     
     println();
     println("End of class instance tests");
@@ -480,6 +482,7 @@ func drawingTests()
 	assert(clr.toLch().values.select(x => Math.round(x, 2)) == [81.19, 47.29, 183.78], "color to CIE-LCH conversion");
 	assert(clr.toLuv().values.select(x => Math.round(x, 2)) == [81.19, -62.15, 2.6], "color to CIE-LUV conversion");
 	assert(clr.toHunterLab().values.select(x => Math.round(x, 2)) == [76.69, -43.30, 1.36], "color to Hunter-Lab conversion");
+	assert(clr.toYuv().values.select(x => Math.round(x, 2)) == [168, 149, 38], "color to YUV conversion");
 	
 	clr = new Color("hsl", 173.7, 75.2, 52.5);
 	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from HSL");

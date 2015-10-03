@@ -87,7 +87,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject toString(HassiumObject[] args)
         {
-            if (args.Length == 0) return Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss");
+            if (args.Length == 0) return Value.ToString("yyyy-MM-dd HH:mm:ss");
             else
             {
                 var final = new List<string>();

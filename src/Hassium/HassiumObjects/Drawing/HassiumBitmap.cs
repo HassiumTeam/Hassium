@@ -47,8 +47,8 @@ namespace Hassium.HassiumObjects.Drawing
             else
                 throw new Exception("Unknown type " + cctr[0].GetType() + " in HassiumBitmap constructor");
 
-            Attributes.Add("height", new HassiumProperty("height", x => Value.Height, x => null, true));
-            Attributes.Add("width", new HassiumProperty("width", x => Value.Width, x => null, true));
+            Attributes.Add("height", new HassiumProperty("height", x => Value.Height, null, true));
+            Attributes.Add("width", new HassiumProperty("width", x => Value.Width, null, true));
             Attributes.Add("dispose", new InternalFunction(dispose, 0));
             Attributes.Add("makeTransparent", new InternalFunction(makeTransparent, 0));
             Attributes.Add("save", new InternalFunction(save, 1));

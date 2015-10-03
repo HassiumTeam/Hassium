@@ -37,6 +37,242 @@ namespace Hassium.HassiumObjects.Drawing
     {
         public Color Value { get; set; }
 
+        #region ARGB
+        public int alpha
+        {
+            get { return Value.A; }
+            set { Value = Color.FromArgb(value, Value.R, Value.G, Value.B); }
+        }
+
+        public int red
+        {
+            get { return Value.R; }
+            set { Value = Color.FromArgb(Value.A, value, Value.G, Value.B); }
+        }
+
+        public int green
+        {
+            get { return Value.G; }
+            set { Value = Color.FromArgb(Value.A, Value.R, value, Value.B); }
+        }
+
+        public int blue
+        {
+            get { return Value.B; }
+            set { Value = Color.FromArgb(Value.A, Value.R, Value.G, value); }
+        }
+        #endregion
+        #region HSL / HSV
+        public double hue
+        {
+            get { return ToHSL(new HassiumObject[] {}).HDict()["h"]; }
+            set
+            {
+                Value = fromHsl(value, saturationL, luminosity);
+            }
+        }
+
+        public double saturationL
+        {
+            get { return ToHSL(new HassiumObject[] {}).HDict()["s"]; }
+            set
+            {
+                Value = fromHsl(hue, value, luminosity);
+            }
+        }
+
+        public double saturationV
+        {
+            get { return ToHSV(new HassiumObject[] { }).HDict()["s"]; }
+            set
+            {
+                Value = fromHsv(hue, value, this.value);
+            }
+        }
+
+        public double luminosity
+        {
+            get { return ToHSL(new HassiumObject[] { }).HDict()["l"]; }
+            set
+            {
+                Value = fromHsl(hue, saturationL, value);
+            }
+        }
+
+        public double value
+        {
+            get { return ToHSV(new HassiumObject[] { }).HDict()["v"]; }
+            set
+            {
+                Value = fromHsv(hue, saturationV, value);
+            }
+        }
+        #endregion
+        #region CMY
+        public double cyan
+        {
+            get { return ToCMY(new HassiumObject[] { }).HDict()["c"]; }
+            set
+            {
+                Value = fromCmy(value, magenta, yellow);
+            }
+        }
+
+        public double magenta
+        {
+            get { return ToCMY(new HassiumObject[] { }).HDict()["m"]; }
+            set
+            {
+                Value = fromCmy(cyan, value, yellow);
+            }
+        }
+
+        public double yellow
+        {
+            get { return ToCMY(new HassiumObject[] { }).HDict()["y"]; }
+            set
+            {
+                Value = fromCmy(cyan, magenta, value);
+            }
+        }
+        #endregion
+        #region CMYK
+        public double cyanK
+        {
+            get { return ToCMYK(new HassiumObject[] { }).HDict()["c"]; }
+            set
+            {
+                Value = fromCmyk(value, magentaK, yellowK, key);
+            }
+        }
+
+        public double magentaK
+        {
+            get { return ToCMYK(new HassiumObject[] { }).HDict()["m"]; }
+            set
+            {
+                Value = fromCmyk(cyanK, value, yellowK, key);
+            }
+        }
+
+        public double yellowK
+        {
+            get { return ToCMYK(new HassiumObject[] { }).HDict()["y"]; }
+            set
+            {
+                Value = fromCmyk(cyanK, magentaK, value, key);
+            }
+        }
+
+        public double key
+        {
+            get { return ToCMYK(new HassiumObject[] { }).HDict()["k"]; }
+            set
+            {
+                Value = fromCmyk(cyanK, magentaK, yellowK, value);
+            }
+        }
+        #endregion
+        #region CIE
+        #region CIE-XYZ
+        public double cieX
+        {
+            get { return ToXYZ(new HassiumObject[] { }).HDict()["x"]; }
+            set
+            {
+                Value = fromXyz(value, cieY, cieZ);
+            }
+        }
+
+        public double cieY
+        {
+            get { return ToXYZ(new HassiumObject[] { }).HDict()["y"]; }
+            set
+            {
+                Value = fromXyz(cieX, value, cieZ);
+            }
+        }
+
+        public double cieZ
+        {
+            get { return ToXYZ(new HassiumObject[] { }).HDict()["z"]; }
+            set
+            {
+                Value = fromXyz(cieX, cieY, value);
+            }
+        }
+        #endregion
+        public double cieL
+        {
+            get { return ToLAB(new HassiumObject[] { }).HDict()["l"]; }
+            set
+            {
+                Value = fromLab(value, cieA, cieB);
+            }
+        }
+        #region CIE-LAB
+        public double cieA
+        {
+            get { return ToLAB(new HassiumObject[] { }).HDict()["a"]; }
+            set
+            {
+                Value = fromLab(cieL, value, cieB);
+            }
+        }
+        public double cieB
+        {
+            get { return ToLAB(new HassiumObject[] { }).HDict()["b"]; }
+            set
+            {
+                Value = fromLab(cieL, cieA, value);
+            }
+        }
+        #endregion
+        #region CIE-LCH
+        public double cieC
+        {
+            get { return ToLCH(new HassiumObject[] { }).HDict()["c"]; }
+            set
+            {
+                Value = fromLch(cieL, value, cieH);
+            }
+        }
+        public double cieH
+        {
+            get { return ToLCH(new HassiumObject[] { }).HDict()["h"]; }
+            set
+            {
+                Value = fromLab(cieL, cieC, value);
+            }
+        }
+        #endregion
+        #region CIE-LUV
+        public double cieU
+        {
+            get { return ToLUV(new HassiumObject[] { }).HDict()["u"]; }
+            set
+            {
+                Value = fromLuv(cieL, value, cieV);
+            }
+        }
+        public double cieV
+        {
+            get { return ToLUV(new HassiumObject[] { }).HDict()["v"]; }
+            set
+            {
+                Value = fromLuv(cieL, cieU, value);
+            }
+        }
+        #endregion
+        #endregion
+
+        public int argb
+        {
+            get { return Value.ToArgb(); }
+            set { Value = Color.FromArgb(value); }
+        }
+
+
         public HassiumColor(Color value) : this()
         {
             Value = value;
@@ -45,31 +281,51 @@ namespace Hassium.HassiumObjects.Drawing
         private HassiumColor()
         {
             Value = Color.White;
-            Attributes.Add("alpha", new HassiumProperty("alpha", x => Value.A, x =>
-            {
-                Value = Color.FromArgb(x[0].HInt().Value, Value.R, Value.G, Value.B);
-                return null;
-            }));
-            Attributes.Add("red", new HassiumProperty("red", x => Value.R, x =>
-            {
-                Value = Color.FromArgb(Value.A, x[0].HInt().Value, Value.G, Value.B);
-                return null;
-            }));
-            Attributes.Add("green", new HassiumProperty("green", x => Value.G, x =>
-            {
-                Value = Color.FromArgb(Value.A, Value.R, x[0].HInt().Value, Value.B);
-                return null;
-            }));
-            Attributes.Add("blue", new HassiumProperty("blue", x => Value.B, x =>
-            {
-                Value = Color.FromArgb(Value.A, Value.R, Value.G, x[0].HInt().Value);
-                return null;
-            }));
-            Attributes.Add("argb", new HassiumProperty("argb", x => Value.ToArgb(), x =>
-            {
-                Value = Color.FromArgb(x[0].HInt().Value);
-                return null;
-            }));
+
+            // ARGB
+            Attributes.Add("alpha", new HassiumProperty("alpha", x => alpha, (self, x) => alpha = x[0].HInt().Value));
+            Attributes.Add("red", new HassiumProperty("red", x => red, (self, x) => red = x[0].HInt().Value));
+            Attributes.Add("green", new HassiumProperty("green", x => green, (self, x) => green = x[0].HInt().Value));
+            Attributes.Add("blue", new HassiumProperty("blue", x => blue, (self, x) => blue = x[0].HInt().Value));
+            Attributes.Add("argb", new HassiumProperty("argb", x => argb, (self, x) => argb = x[0].HInt().Value));
+
+            // HSL HSV
+            Attributes.Add("hue", new HassiumProperty("hue", x => hue, (self, x) => hue = x[0].HDouble().Value));
+            Attributes.Add("saturationL", new HassiumProperty("saturationL", x => saturationL, (self, x) => saturationL = x[0].HDouble().Value));
+            Attributes.Add("saturationV", new HassiumProperty("saturationV", x => saturationV, (self, x) => saturationV = x[0].HDouble().Value));
+            Attributes.Add("luminosity", new HassiumProperty("luminosity", x => luminosity, (self, x) => luminosity = x[0].HDouble().Value));
+            Attributes.Add("value", new HassiumProperty("value", x => value, (self, x) => value = x[0].HDouble().Value));
+
+            // CMY
+            Attributes.Add("cyan", new HassiumProperty("cyan", x => cyan, (self, x) => cyan = x[0].HDouble().Value));
+            Attributes.Add("magenta", new HassiumProperty("magenta", x => magenta, (self, x) => magenta = x[0].HDouble().Value));
+            Attributes.Add("yellow", new HassiumProperty("yellow", x => yellow, (self, x) => yellow = x[0].HDouble().Value));
+
+            // CMYK
+            Attributes.Add("cyanK", new HassiumProperty("cyanK", x => cyanK, (self, x) => cyanK = x[0].HDouble().Value));
+            Attributes.Add("magentaK", new HassiumProperty("magentaK", x => magentaK, (self, x) => magentaK = x[0].HDouble().Value));
+            Attributes.Add("yellowK", new HassiumProperty("yellowK", x => yellowK, (self, x) => yellowK = x[0].HDouble().Value));
+            Attributes.Add("key", new HassiumProperty("key", x => key, (self, x) => key = x[0].HDouble().Value));
+
+            // CIE-XYZ
+            Attributes.Add("cieX", new HassiumProperty("cieX", x => cieX, (self, x) => cieX = x[0].HDouble().Value));
+            Attributes.Add("cieY", new HassiumProperty("cieY", x => cieY, (self, x) => cieY = x[0].HDouble().Value));
+            Attributes.Add("cieZ", new HassiumProperty("cieZ", x => cieZ, (self, x) => cieZ = x[0].HDouble().Value));
+
+            // CIE-L*
+            Attributes.Add("cieL", new HassiumProperty("cieL", x => cieL, (self, x) => cieL = x[0].HDouble().Value));
+
+            // CIE-LAB
+            Attributes.Add("cieA", new HassiumProperty("cieA", x => cieA, (self, x) => cieA = x[0].HDouble().Value));
+            Attributes.Add("cieB", new HassiumProperty("cieB", x => cieB, (self, x) => cieB = x[0].HDouble().Value));
+
+            // CIE-LCH
+            Attributes.Add("cieC", new HassiumProperty("cieC", x => cieC, (self, x) => cieC = x[0].HDouble().Value));
+            Attributes.Add("cieH", new HassiumProperty("cieH", x => cieH, (self, x) => cieH = x[0].HDouble().Value));
+
+            // CIE-LUV
+            Attributes.Add("cieU", new HassiumProperty("cieU", x => cieU, (self, x) => cieU = x[0].HDouble().Value));
+            Attributes.Add("cieV", new HassiumProperty("cieV", x => cieV, (self, x) => cieV = x[0].HDouble().Value));
 
             Attributes.Add("toRgbPercent", new InternalFunction(ToRGBPercent, 0));
             Attributes.Add("toHsl", new InternalFunction(ToHSL, 0));
@@ -86,7 +342,7 @@ namespace Hassium.HassiumObjects.Drawing
             Attributes.Add("splitCompl", new HassiumProperty("splitCompl", x => moveColorWheel(150), null, true));
             Attributes.Add("analogous", new HassiumProperty("analogous", x => moveColorWheel(30), null, true));
             Attributes.Add("tetradic", new HassiumProperty("tetradic", _prop_Tetradic, null, true));
-            //Attributes.Add("toYuv", new InternalFunction(ToYUV, 0));
+            Attributes.Add("toYuv", new InternalFunction(ToYUV, 0));
         }
 
         public HassiumColor(IList<HassiumObject> args) : this()
@@ -597,6 +853,31 @@ namespace Hassium.HassiumObjects.Drawing
                     {"l", 10.0 * System.Math.Sqrt(xyz[1])},
                     {"a", xyz[1] != 0 ? 17.5 * (((1.02 * xyz[0]) - xyz[1]) / System.Math.Sqrt(xyz[1])) : 0},
                     {"b", xyz[1] != 0 ? 7.0 * ((xyz[1] - (0.847 * xyz[2])) / System.Math.Sqrt(xyz[1])) : 0}
+                });
+        }
+
+        public HassiumObject ToYUV(HassiumObject[] args)
+        {
+            var c = Console.ForegroundColor;
+            Console.Write("[");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("warning");
+            Console.ForegroundColor = c;
+            Console.WriteLine("] The toYuv() function doesn't return the expected results.");
+            var r = Value.R;
+            var g = Value.G;
+            var b = Value.B;
+
+            var y = 0.299 * r + 0.587 * g + 0.114 * b;
+            var u = -0.1681 * r - 0.3313 * g + 0.5 * b + 128;
+            var v = 0.5 * r - 0.4187 * g - 0.813 * b + 128 + 150;
+
+            return
+                new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>
+                {
+                    {"y", System.Math.Round(y)},
+                    {"u", System.Math.Round(u)},
+                    {"v", System.Math.Round(v)}
                 });
         }
 

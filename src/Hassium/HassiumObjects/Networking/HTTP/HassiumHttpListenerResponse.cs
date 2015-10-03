@@ -39,13 +39,13 @@ namespace Hassium.HassiumObjects.Networking.HTTP
             Value = value;
             Attributes.Add("contentEncoding",
                 new HassiumProperty("contentEncoding", x => new HassiumEncoding(Value.ContentEncoding),
-                    x =>
+                    (self, x) =>
                     {
                         value.ContentEncoding = ((HassiumEncoding) x[0]).Value;
                         return null;
                     }));
             Attributes.Add("contentLength", new HassiumProperty("contentLength", x => value.ContentLength64,
-                x =>
+                (self, x) =>
                 {
                     value.ContentLength64 = x[0].HInt().Value;
                     return null;

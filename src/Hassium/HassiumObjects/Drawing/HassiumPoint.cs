@@ -15,13 +15,13 @@ namespace Hassium.HassiumObjects.Drawing
         {
             Value = new Point(x, y);
 
-            Attributes.Add("x", new HassiumProperty("x", a => Value.X, a =>
+            Attributes.Add("x", new HassiumProperty("x", a => Value.X, (self, a) =>
             {
                 Value = new Point(a[0].HInt().Value, Value.Y);
                 return true;
             }));
 
-            Attributes.Add("y", new HassiumProperty("y", a => Value.Y, a =>
+            Attributes.Add("y", new HassiumProperty("y", a => Value.Y, (self, a) =>
             {
                 Value = new Point(Value.X, a[0].HInt().Value);
                 return true;
