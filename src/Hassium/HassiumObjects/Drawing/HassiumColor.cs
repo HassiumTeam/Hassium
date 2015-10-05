@@ -265,6 +265,32 @@ namespace Hassium.HassiumObjects.Drawing
         }
         #endregion
         #endregion
+        #region Hunter-Lab
+        public double hunterL
+        {
+            get { return ToHunterLab(new HassiumObject[] { }).HDict()["l"]; }
+            set
+            {
+                Value = fromHunterLab(value, cieA, cieB);
+            }
+        }
+        public double hunterA
+        {
+            get { return ToHunterLab(new HassiumObject[] { }).HDict()["a"]; }
+            set
+            {
+                Value = fromHunterLab(hunterL, value, hunterB);
+            }
+        }
+        public double hunterB
+        {
+            get { return ToHunterLab(new HassiumObject[] { }).HDict()["b"]; }
+            set
+            {
+                Value = fromHunterLab(hunterL, hunterA, value);
+            }
+        }
+        #endregion
 
         public int argb
         {
@@ -327,6 +353,11 @@ namespace Hassium.HassiumObjects.Drawing
             Attributes.Add("cieU", new HassiumProperty("cieU", x => cieU, (self, x) => cieU = x[0].HDouble().Value));
             Attributes.Add("cieV", new HassiumProperty("cieV", x => cieV, (self, x) => cieV = x[0].HDouble().Value));
 
+            // Hunter-Lab
+            Attributes.Add("hunterL", new HassiumProperty("hunterL", x => hunterL, (self, x) => hunterL = x[0].HDouble().Value));
+            Attributes.Add("hunterA", new HassiumProperty("hunterA", x => hunterA, (self, x) => hunterA = x[0].HDouble().Value));
+            Attributes.Add("hunterB", new HassiumProperty("hunterB", x => hunterB, (self, x) => hunterB = x[0].HDouble().Value));
+
             Attributes.Add("toRgbPercent", new InternalFunction(ToRGBPercent, 0));
             Attributes.Add("toHsl", new InternalFunction(ToHSL, 0));
             Attributes.Add("toHsv", new InternalFunction(ToHSV, 0));
@@ -337,7 +368,7 @@ namespace Hassium.HassiumObjects.Drawing
             Attributes.Add("toLch", new InternalFunction(ToLCH, 0));
             Attributes.Add("toLuv", new InternalFunction(ToLUV, 0));
             Attributes.Add("toHunterLab", new InternalFunction(ToHunterLab, 0));
-            Attributes.Add("complementary", new HassiumProperty("complementary", _prop_Complementary, null, true));
+            Attributes.Add("complementary", new HassiumProperty("complementary", x => moveColorWheel(180, false), null, true));
             Attributes.Add("triadic", new HassiumProperty("triadic", x => moveColorWheel(120), null, true));
             Attributes.Add("splitCompl", new HassiumProperty("splitCompl", x => moveColorWheel(150), null, true));
             Attributes.Add("analogous", new HassiumProperty("analogous", x => moveColorWheel(30), null, true));
@@ -881,29 +912,26 @@ namespace Hassium.HassiumObjects.Drawing
                 });
         }
 
-        public HassiumObject _prop_Complementary(HassiumObject[] args)
-        {
-            var hsl = ((HassiumDictionary) ToHSL(new HassiumObject[] {}));
-
-            var hue = (hsl["h"].HDouble().Value + 180) % 360;
-
-            return new HassiumColor(fromHsl(hue, hsl["s"], hsl["l"]));
-        }
-
-        private HassiumObject moveColorWheel(double degree)
+        private HassiumObject moveColorWheel(double degree, bool two = true)
         {
             var hsl = ((HassiumDictionary)ToHSL(new HassiumObject[] { }));
 
             var hue = hsl["h"].HDouble().Value;
             var hue1 = (hue + degree) % 360;
-            var hue2 = (hue + 2 * degree) % 360;
 
-            return
-                new HassiumArray(new HassiumObject[]
-                {
-                    new HassiumColor(fromHsl(hue1, hsl["s"], hsl["l"])),
-                    new HassiumColor(fromHsl(hue2, hsl["s"], hsl["l"]))
-                });
+            if (two)
+            {
+                var hue2 = (hue + 2 * degree) % 360;
+
+                return
+                    new HassiumArray(new HassiumObject[]
+                    {
+                        new HassiumColor(fromHsl(hue1, hsl["s"], hsl["l"])),
+                        new HassiumColor(fromHsl(hue2, hsl["s"], hsl["l"]))
+                    });
+            }
+
+            return new HassiumColor(fromHsl(hue1, hsl["s"], hsl["l"]));
         }
 
         private HassiumObject _prop_Tetradic(HassiumObject[] args)

@@ -245,6 +245,11 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("value", new InternalFunction(x => Value, 0, true));
         }
 
+        public static implicit operator HassiumKeyValuePair(HassiumArray arr)
+        {
+            return new HassiumKeyValuePair(arr[0], arr[1]);
+        }
+
         public static implicit operator KeyValuePair<HassiumObject, HassiumObject>(HassiumKeyValuePair kvp)
         {
             return new KeyValuePair<HassiumObject, HassiumObject>(kvp.Key, kvp.Value);

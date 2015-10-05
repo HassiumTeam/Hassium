@@ -290,7 +290,10 @@ namespace Hassium.Interpreter
                             : right;
 
                         if (arid == null)
-                            theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
+                        {
+                            if (theValue is HassiumKeyValuePair) theArray.Value.Add((HassiumKeyValuePair) theValue);
+                            else theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
+                        }
                         else
                         {
                             if (theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()))
@@ -303,6 +306,7 @@ namespace Hassium.Interpreter
                             }
                             else
                             {
+
                                 theArray[arid] = theValue;
                             }
                         }
@@ -750,21 +754,31 @@ namespace Hassium.Interpreter
             {
                 var theArray = ((HassiumDictionary) haystackstmt);
 
+                var indexvname = "";
                 var keyvname = "";
                 var valvname = "";
                 if (needlestmt is ArrayInitializerNode)
                 {
-                    keyvname = ((ArrayInitializerNode) needlestmt).Value[0].ToString();
-                    valvname = ((ArrayInitializerNode) needlestmt).Value[1].ToString();
+                    int i = 0;
+                    var arr = ((ArrayInitializerNode) needlestmt).Value;
+                    if (arr.Count == 3)
+                    {
+                        indexvname = arr[i++].ToString();
+                    }
+                    keyvname = ((ArrayInitializerNode) needlestmt).Value[i++].ToString();
+                    valvname = ((ArrayInitializerNode) needlestmt).Value[i].ToString();
                 }
                 else
                 {
                     valvname = needlestmt.ToString();
                 }
                 if (keyvname != "") SetVariable(keyvname, null, forStmt);
+                if(indexvname != "") SetVariable(indexvname, null, forStmt);
                 SetVariable(valvname, null, forStmt);
+                int currentIndex = 0;
                 foreach (var needle in (keyvname == "" ? (IEnumerable) (theArray.Value.Select(x => x.Value)) : theArray))
                 {
+                    if(indexvname != "") SetVariable(indexvname, new HassiumInt(currentIndex), forStmt);
                     if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair) needle).Key, forStmt);
                     SetVariable(valvname,
                         keyvname != "" ? ((HassiumKeyValuePair) needle).Value : HassiumObject.ToHassiumObject(needle),
@@ -776,6 +790,7 @@ namespace Hassium.Interpreter
                         breakLoop = false;
                         break;
                     }
+                    currentIndex++;
                 }
                 if (keyvname != "") freeVariable(keyvname, forStmt);
                 freeVariable(valvname, forStmt);
@@ -788,11 +803,29 @@ namespace Hassium.Interpreter
                     theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
                 else theArray = ((HassiumArray) haystackstmt);
 
-                var valvname = needlestmt.ToString();
+                var indexvname = "";
+                var valvname = "";
+                if (needlestmt is ArrayInitializerNode)
+                {
+                    int i = 0;
+                    var arr = ((ArrayInitializerNode)needlestmt).Value;
+                    if (arr.Count == 2)
+                    {
+                        indexvname = arr[i++].ToString();
+                    }
+                    valvname = ((ArrayInitializerNode)needlestmt).Value[i].ToString();
+                }
+                else
+                {
+                    valvname = needlestmt.ToString();
+                }
+                if (indexvname != "") SetVariable(indexvname, null, forStmt);
 
                 SetVariable(valvname, null, forStmt);
+                int currentIndex = 0;
                 foreach (var needle in theArray.Value)
                 {
+                    if (indexvname != "") SetVariable(indexvname, new HassiumInt(currentIndex), forStmt);
                     SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
@@ -801,6 +834,7 @@ namespace Hassium.Interpreter
                         breakLoop = false;
                         break;
                     }
+                    currentIndex++;
                 }
                 freeVariable(valvname, forStmt);
                 isInLoop--;
@@ -1048,7 +1082,14 @@ namespace Hassium.Interpreter
         {
             var accessor = node;
             var target = (HassiumObject) accessor.Left.Visit(this);
-            var attr = target.GetAttribute(accessor.Member, node.Position + 1);
+            var name = accessor.Member;
+            if (name.StartsWith("&"))
+            {
+                if(name.Length == 1) throw new ParseException("Expected item key after '&'", node);
+                if(!(target is HassiumDictionary)) throw new ParseException("The target must be a dictionary", node);
+                return ((HassiumDictionary) target)[name.Substring(1)];
+            }
+            var attr = target.GetAttribute(name, node.Position + 1);
             if (attr is InternalFunction && ((InternalFunction) attr).IsProperty)
                 return ((InternalFunction) attr).Invoke();
             else
@@ -1237,6 +1278,10 @@ namespace Hassium.Interpreter
                             new InternalFunction(
                                 x => new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>()), 0, false,
                                 true));
+                        Constants.Add("KeyValuePair",
+                          new InternalFunction(
+                              x => new HassiumKeyValuePair(x[0], x[1]), 2, false,
+                              true));
                         break;
                     case "net":
                     case "network":

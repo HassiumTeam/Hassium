@@ -152,6 +152,8 @@ func opTests()
 	boolean = true;
 	assert((boolean ? "ab" : "cd") == "ab", "should pass if ?: (ternary operator) result is correct");
 	assert((boolean ? "cd") == "cd", "should pass if ? (ternary operator) result is correct");
+	
+	assert("abc #{++cd}" == "abc 6", "string interpolation");
 
 
     println();
@@ -208,25 +210,25 @@ func closureTest() {
     println();
 }
 
-    func recursion (c) {
-        if (c == 5) {
-            assert(c == 5, "c be 5");
-            recursion (c + 1);
-            assert(c == 5, "c should remain 5");
-            recursion (c + 1);
-            assert(c == 5, "c should still remain 5");
-            }
-        return 0;
-    }
-    
-    func fib (n) {
-        if (n == 0) {
-            return 0;
-        } else if (n == 1) {
-            return 1;
+func recursion (c) {
+    if (c == 5) {
+        assert(c == 5, "c be 5");
+        recursion (c + 1);
+        assert(c == 5, "c should remain 5");
+        recursion (c + 1);
+        assert(c == 5, "c should still remain 5");
         }
-        return fib (n - 1) + fib (n - 2);
+    return 0;
+}
+
+func fib (n) {
+    if (n == 0) {
+        return 0;
+    } else if (n == 1) {
+        return 1;
     }
+    return fib (n - 1) + fib (n - 2);
+}
 
 func recursionTest()
 {
@@ -426,25 +428,29 @@ func arrayTests()
 	
 	theArr = ["abc", "def", 123, 456, runtimecall("System.Math.PI")];	
 	assert(theArr.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string");
-	theArr2 = [];
-	foreach(x in theArr)
+	use collections;
+	theArr2 = new Dictionary();
+	
+	foreach([index, x] in theArr)
 	{
-		theArr2[] = x;
+		theArr2[] = new KeyValuePair(index, x);
 	}	
 	assert(theArr[1 : 3] == ["def", 123, 456], "array slice");
-	assert(theArr2.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string after foreach");
+	assert(theArr2.toString() == "Dictionary { [0] => abc, [1] => def, [2] => 123, [3] => 456, [4] => 3.14159265358979 }", "array to string after foreach");
 
 	theDict = ["abc" : 123, 456 : "ghi", "jkl" : 789];
 	theDict[123] = "mno";
 	theDict[] = 456; # if you use the [] operator with nothing inside, it appends at the end of the array
 	assert(theDict[123] == "mno", "check dictionary value after setting with []");
 	assert(theDict.toString() == "Dictionary { [abc] => 123, [456] => ghi, [jkl] => 789, [123] => mno, [4] => 456 }", "dictionary to string");
-	
+	assert(theDict.&abc == 123, "dictionary.&key access");
 	assert(theDict.all((key, value) => theDict[key] == value), "check key and value in dictionary");
 	
-	foreach([key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
+	tmpIndex = 0;
+	foreach([index, key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
 	{
-		assert(theDict[key] == value, "check key and value, foreach in a dictionary");
+		assert(theDict[key] == value && tmpIndex == index, "check index, key and value, foreach in a dictionary");
+		tmpIndex++;
 	}
 	
 	println();

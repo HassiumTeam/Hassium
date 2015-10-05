@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Random;
@@ -49,7 +50,9 @@ namespace Hassium.Functions
         [IntFunc("Array", true, 1)]
         public static HassiumObject Array(HassiumObject[] args)
         {
-            return new HassiumArray(new HassiumObject[args[0].HInt().Value]);
+            return args.Length == 0
+                ? new HassiumArray(new List<HassiumObject>())
+                : new HassiumArray(new HassiumObject[args[0].HInt().Value]);
         }
 
         [IntFunc("Random", true, new[] {0, 1})]

@@ -996,9 +996,10 @@ namespace Hassium.Parser
                 }
                 else if (parser.AcceptToken(TokenType.Dot, "."))
                 {
+                    bool dictaccess = parser.AcceptToken(TokenType.Operation, "&");
                     Token ident = parser.ExpectToken("Expected member name", TokenType.Identifier);
 
-                    left = new MemberAccessNode(position, left, ident.Value.ToString());
+                    left = new MemberAccessNode(position, left, (dictaccess ? "&" : "") + ident.Value);
                 }
                 else
                     return left;

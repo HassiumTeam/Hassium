@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Security.Cryptography.X509Certificates;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
@@ -57,7 +58,19 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
             Attributes.Add("toByte", new InternalFunction(toByte, 0));
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
+            Attributes.Add("max", new InternalFunction(max, 1));
+            Attributes.Add("min", new InternalFunction(min, 1));
             Value = value;
+        }
+
+        public HassiumObject max(HassiumObject[] args)
+        {
+            return System.Math.Min(Value, args[0].HInt().Value);
+        }
+
+        public HassiumObject min(HassiumObject[] args)
+        {
+            return System.Math.Max(Value, args[0].HInt().Value);
         }
 
         public static bool operator ==(HassiumInt a, HassiumInt b)
