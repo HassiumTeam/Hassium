@@ -573,9 +573,17 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.LBrace, "{");
 
             CodeBlock body = new CodeBlock(position);
-            while (!parser.MatchToken(TokenType.RBrace))
+           for (int x = 0; !parser.MatchToken(TokenType.RBrace); x++)
             {
-                body.Children.Add(parseExpression(parser));
+                string entry = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                int entryNumber = 0;
+
+                if (parser.AcceptToken(TokenType.Assignment))
+                    entryNumber = Convert.ToInt32(parser.ExpectToken(TokenType.Number).Value);
+                else
+                    entryNumber = x;
+
+                body.Children.Add(new BinOpNode(position, BinaryOperation.Assignment, new IdentifierNode(position, entry), new NumberNode(position, entryNumber, true)));
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }

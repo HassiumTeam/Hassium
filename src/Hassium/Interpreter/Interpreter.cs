@@ -260,7 +260,7 @@ namespace Hassium.Interpreter
             }
         }
 
-        private HassiumObject interpretBinaryOp(BinOpNode node)
+        private HassiumObject InterpretBinaryOp(BinOpNode node)
         {
             var right = (HassiumObject) node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
@@ -286,7 +286,7 @@ namespace Hassium.Interpreter
                             arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
 
                         var theValue = (node.IsOpAssign && arid != null)
-                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            ? InterpretBinaryOp(theArray[arid], right, node.AssignOperation)
                             : right;
 
                         if (arid == null)
@@ -330,7 +330,7 @@ namespace Hassium.Interpreter
                             append = true;
 
                         var theValue = node.IsOpAssign
-                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            ? InterpretBinaryOp(theArray[arid], right, node.AssignOperation)
                             : right;
 
                         if (append)
@@ -363,7 +363,7 @@ namespace Hassium.Interpreter
                         throw new ParseException("Not a valid identifier", node);
                     SetVariable(node.Left.ToString(),
                         node.IsOpAssign
-                            ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
+                            ? InterpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
                             : right, node);
                 }
                 return right;
@@ -376,7 +376,7 @@ namespace Hassium.Interpreter
                 if (target is HassiumClass) ttype = target.GetType();
                 return left.GetType() == ttype;
             }
-            return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
+            return InterpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
         }
 
         private bool hasFunction(string name, int parm)
@@ -392,7 +392,7 @@ namespace Hassium.Interpreter
         /// <param name="_op">The operation type</param>
         /// <param name="pos">position</param>
         /// <returns>The result of the operation</returns>
-        private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
+        public HassiumObject InterpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
             if (left == null && (_op != BinaryOperation.NullCoalescing && _op != BinaryOperation.Equals && _op != BinaryOperation.NotEqualTo))
                 throw new ParseException("Left operand can't be null", pos);
@@ -476,9 +476,9 @@ namespace Hassium.Interpreter
                 case BinaryOperation.LesserOrEqual:
                     return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
-                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan)))
+                    if (new HassiumBool(InterpretBinaryOp(left, right, BinaryOperation.GreaterThan)))
                         return new HassiumInt(1);
-                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan))
+                    return new HassiumBool(InterpretBinaryOp(left, right, BinaryOperation.LessThan))
                         ? new HassiumInt(-1)
                         : new HassiumInt(0);
                 case BinaryOperation.Xor:
@@ -668,7 +668,7 @@ namespace Hassium.Interpreter
         public object Accept(BinOpNode node)
         {
             var bnode = node;
-            var res = interpretBinaryOp(bnode);
+            var res = InterpretBinaryOp(bnode);
             if (isRepl) ConsoleFunctions.PrintLn(new[] {res});
             return res;
         }

@@ -65,10 +65,12 @@ namespace Hassium.HassiumObjects
         public HassiumEnum(EnumNode value, Hassium.Interpreter.Interpreter interpreter)
         {
             EnumNode = value;
-            foreach (var inode in value.Children[0].Children.OfType<IdentifierNode>().Select(node => node))
+            foreach (var bnode in value.Children[0].Children.OfType<BinOpNode>().Select(node => node))
             {
-                var identifier = new HassiumString(inode.Identifier);
-                SetAttribute(identifier.Value, identifier);
+                if (!(bnode.BinOp == BinaryOperation.Assignment))
+                    throw new Exception("Unknown binary opteration " + bnode.BinOp + " in " + value.Name + ". Must be type assignment!");
+
+                Attributes.Add(((IdentifierNode)bnode.Left).Identifier, ((NumberNode)bnode.Right).Value);
             }
         }
     }
