@@ -191,7 +191,7 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.Identifier, "class");
             string name = parser.ExpectToken("Expected class name", TokenType.Identifier).Value.ToString();
             string extends = "";
-            if (parser.AcceptToken(TokenType.Identifier, ":"))
+            if (parser.AcceptToken(TokenType.Colon))
                 extends = parser.ExpectToken("Expected base class name", TokenType.Identifier).Value.ToString();
             AstNode body = parseCodeBlock(parser);
 
@@ -229,7 +229,7 @@ namespace Hassium.Parser
 
             FunctionCallNode constr = null;
 
-            if (name == "new" && parser.AcceptToken(TokenType.Identifier, ":"))
+            if (name == "new" && parser.AcceptToken(TokenType.Colon))
             {
                 int tempPosition = parser.codePosition;
                 var callee = parser.ExpectToken("Expected 'this' or 'base'", TokenType.Identifier);
@@ -453,12 +453,12 @@ namespace Hassium.Parser
                 int cpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "case");
                 var pred = new List<AstNode> {parseExpression(parser)};
-                parser.ExpectToken("Expected case value", TokenType.Identifier, ":");
+                parser.ExpectToken("Expected case value", TokenType.Colon);
                 while (parser.MatchToken(TokenType.Identifier, "case"))
                 {
                     parser.ExpectToken(TokenType.Identifier, "case");
                     var pred2 = parseExpression(parser);
-                    parser.ExpectToken(TokenType.Identifier, ":");
+                    parser.ExpectToken(TokenType.Colon);
                     pred.Add(pred2);
                 }
                 var cbody = ParseStatement(parser);
@@ -468,7 +468,7 @@ namespace Hassium.Parser
             {
                 int dpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "default");
-                parser.ExpectToken(TokenType.Identifier, ":");
+                parser.ExpectToken(TokenType.Colon);
                 var dbody = ParseStatement(parser);
                 defn = new CaseNode(dpos, null, dbody);
             }
@@ -676,10 +676,10 @@ namespace Hassium.Parser
             while (parser.AcceptToken(TokenType.Operation, "?"))
             {
                 AstNode ifbody = null;
-                if (!parser.MatchToken(TokenType.Identifier, ":"))
+                if (!parser.MatchToken(TokenType.Colon))
                     ifbody = parseConditional(parser);
                 AstNode elsebody = null;
-                if (parser.AcceptToken(TokenType.Identifier, ":"))
+                if (parser.AcceptToken(TokenType.Colon))
                     elsebody = parseConditional(parser);
                 left = new ConditionalOpNode(position, left, ifbody, elsebody);
             }
@@ -1055,7 +1055,7 @@ namespace Hassium.Parser
                     {
                         var t = new LabelNode(parser.codePosition, parser.ExpectToken(TokenType.Identifier).Value.ToString(),
                             parser.codePosition);
-                        parser.ExpectToken(TokenType.Identifier, ":");
+                        parser.ExpectToken(TokenType.Colon);
                         return t;
                     }
                     switch (curt.Value.ToString())
@@ -1089,7 +1089,7 @@ namespace Hassium.Parser
 
             while (!parser.MatchToken(TokenType.RBracket))
             {
-                if (!parser.AcceptToken(TokenType.Identifier, ":"))
+                if (!parser.AcceptToken(TokenType.Colon))
                     ret.Children.Add(parseExpression(parser));
             }
             if (ret.Children.Count == 2 && ret.Children[1].ToString() == ":")
@@ -1108,7 +1108,7 @@ namespace Hassium.Parser
             while (!parser.MatchToken(TokenType.RBracket))
             {
                 var ct1 = parseExpression(parser);
-                if (parser.AcceptToken(TokenType.Identifier, ":"))
+                if (parser.AcceptToken(TokenType.Colon))
                 {
                     ret.IsDictionary = true;
                     ret.AddItem(ct1, parseExpression(parser));

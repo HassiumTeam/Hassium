@@ -47,7 +47,8 @@ namespace Hassium.Lexer
         MentalOperation,
         Lambda,
         Dot,
-        Char
+        Char,
+        Colon
     }
 
     public class Token

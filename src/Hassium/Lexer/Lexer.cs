@@ -208,7 +208,7 @@ namespace Hassium.Lexer
                         add(new Token(TokenType.RBrace, ReadChar()));
                         break;
                     case ':':
-                        add(new Token(TokenType.Identifier, ReadChar()));
+                        add(new Token(TokenType.Colon, ReadChar()));
                         break;
                     case '=':
                         switch (next1)
