@@ -67,5 +67,6 @@ namespace Hassium.Interpreter
         object Accept(LabelNode node);
         object Accept(GotoNode node);
         object Accept(CharNode node);
+        object Accept(EnumNode node);
     }
 }

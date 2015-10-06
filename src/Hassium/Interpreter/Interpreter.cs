@@ -710,6 +710,14 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(EnumNode node)
+        {
+            var enode = node;
+            if (!Globals.ContainsKey(enode.Name))
+                Globals.Add(enode.Name, new HassiumEnum(enode, this));
+            return null;
+        }
+
         public object Accept(LabelNode node)
         {
             if (!CallStack.Any())

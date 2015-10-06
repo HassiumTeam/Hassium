@@ -103,7 +103,7 @@ namespace Hassium.Semantics
                 }
                 else if (node is ClassNode)
                 {
-                    var cnode = ((ClassNode) node);
+                    var cnode = ((ClassNode)node);
 
                     foreach (var fnode in cnode.Children[0].Children.OfType<FuncNode>().Select(pnode => pnode))
                     {
@@ -111,6 +111,16 @@ namespace Hassium.Semantics
                         result.ChildScopes[cnode.Name + "." + fnode.Name] = currentLocalScope;
                         currentLocalScope.Symbols.AddRange(fnode.Parameters);
                         analyseLocalCode(fnode.Body);
+                    }
+                }
+                else if (node is EnumNode)
+                {
+                    var enode = ((EnumNode)node);
+
+                    foreach (var inode in enode.Children[0].Children.OfType<IdentifierNode>().Select(pnode => pnode))
+                    {
+                        currentLocalScope = new LocalScope();
+                        result.ChildScopes[enode.Name + "." + inode.Identifier] = currentLocalScope;
                     }
                 }
             }

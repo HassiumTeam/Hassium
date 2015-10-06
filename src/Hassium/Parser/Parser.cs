@@ -164,6 +164,8 @@ namespace Hassium.Parser
                         return parseDo(parser);
                     case "goto":
                         return parseGoto(parser);
+                    case "enum":
+                        return parseEnum(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.LBrace))
@@ -560,6 +562,27 @@ namespace Hassium.Parser
 
             parser.ExpectToken(TokenType.Identifier, "return");
             return parser.AcceptToken(TokenType.EndOfLine) ? new ReturnNode(position, null) : new ReturnNode(position, ParseStatement(parser));
+        }
+
+        private static AstNode parseEnum(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            parser.ExpectToken(TokenType.Identifier, "enum");
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            parser.ExpectToken(TokenType.LBrace, "{");
+
+            CodeBlock body = new CodeBlock(position);
+            while (!parser.MatchToken(TokenType.RBrace))
+            {
+                body.Children.Add(parseExpression(parser));
+                if (!parser.AcceptToken(TokenType.Comma))
+                    break;
+            }
+
+            parser.ExpectToken(TokenType.RBrace, "}");
+
+            return new EnumNode(position, name, body);
         }
 
         #region Expression
