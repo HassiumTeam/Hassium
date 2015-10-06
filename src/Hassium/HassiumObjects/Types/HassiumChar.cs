@@ -57,10 +57,22 @@ namespace Hassium.HassiumObjects.Types
         public HassiumChar(char value)
         {
             Value = value;
+            Attributes.Add("isLetterOrDigit", new InternalFunction(isLetterOrDigit, 0));
+            Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace, 0));
             Attributes.Add("toInt", new InternalFunction(toInt, 0));
             Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
             Attributes.Add("toByte", new InternalFunction(toByte, 0));
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
+        }
+
+        private HassiumObject isLetterOrDigit(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsLetterOrDigit(Value));
+        }
+
+        private HassiumObject isWhiteSpace(HassiumObject[] args)
+        {
+            return new HassiumBool(char.IsWhiteSpace(Value));
         }
 
         private HassiumObject toInt(HassiumObject[] args)
