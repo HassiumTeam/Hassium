@@ -87,6 +87,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("last", new InternalFunction(ArrayLast, 1));
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
 
+            Attributes.Add("arrayToString", new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
+
             _value = value.Select(ToHassiumObject).ToList();
         }
 

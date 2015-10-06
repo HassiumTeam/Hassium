@@ -495,6 +495,10 @@ namespace Hassium.Interpreter
                     return new HassiumDouble(Convert.ToDouble(left) % Convert.ToDouble(right));
 
                 case BinaryOperation.Pow:
+                    if (left is HassiumString && right is HassiumInt)
+                    {
+                        return new HassiumString(string.Concat(Enumerable.Repeat(left, (int)Math.Pow(left.ToString().Length, Convert.ToInt32(right)) / left.ToString().Length)));
+                    }
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt((int) Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
                     return new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));

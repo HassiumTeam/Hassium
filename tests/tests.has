@@ -97,6 +97,7 @@ func opTests()
     assert(36 / 3 == 12, "should pass if division result is correct");
     assertfail("38 / 0 == 1", "should fail (division by zero)");
     assert(41 * 3 == 123, "should pass if multiplication result is correct");
+	assert("ab" * 4 == "abababab", "string multiplication (repeat)");
     assert(117 % 17 == 15, "should pass if modulo result is correct");
 
 	# equals
@@ -128,6 +129,7 @@ func opTests()
 
     # other
     assert(12 ** 3 == 1728, "should pass if ** (power) result is correct");
+	assert("abc" ** 3 == "abcabcabcabcabcabcabcabcabc", "should pass if ** (power) result is correct too");
     assert(512 // 3 == 8, "should pass if // (root) result is correct");
 	
 	# ++ and --
@@ -210,30 +212,33 @@ func closureTest() {
     println();
 }
 
-func recursion (c) {
-    if (c == 5) {
-        assert(c == 5, "c be 5");
-        recursion (c + 1);
-        assert(c == 5, "c should remain 5");
-        recursion (c + 1);
-        assert(c == 5, "c should still remain 5");
-        }
-    return 0;
-}
 
-func fib (n) {
-    if (n == 0) {
-        return 0;
-    } else if (n == 1) {
-        return 1;
-    }
-    return fib (n - 1) + fib (n - 2);
-}
 
 func recursionTest()
 {
     println("Recursion tests");
     println();
+	
+	func recursion (c) {
+		if (c == 5) {
+			assert(c == 5, "c be 5");
+			recursion (c + 1);
+			assert(c == 5, "c should remain 5");
+			recursion (c + 1);
+			assert(c == 5, "c should still remain 5");
+		}
+		return 0;
+	}
+	
+	func fib (n) {
+		if (n == 0) {
+			return 0;
+		} else if (n == 1) {
+			return 1;
+		}
+		return fib (n - 1) + fib (n - 2);
+	}
+	
     recursion(5);
     assert(fib(6) == 8, "fib(6) should equals 8");
     println();
