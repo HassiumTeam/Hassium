@@ -25,65 +25,71 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Interpreter;
-using Hassium.HassiumObjects.Random;
+using System.Text;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
-using Hassium.Interpreter;
 
-namespace Hassium.Functions
+namespace Hassium.HassiumObjects.Interpreter
 {
-    public class Constructors : ILibrary
+    public class HassiumStopWatch: HassiumObject
     {
-        [IntFunc("Object", true, 0)]
-        public static HassiumObject Object(HassiumObject[] args)
+        public Stopwatch Value { get; private set; }
+
+        public HassiumStopWatch()
         {
-            return new HassiumObject();
+            Value = new Stopwatch();
+            Attributes.Add("elapsedMilliseconds", new InternalFunction(elapsedMilliseconds, 0));
+            Attributes.Add("elapsedTicks", new InternalFunction(elapsedTicks, 0));
+            Attributes.Add("isRunning", new InternalFunction(isRunning, 0));
+            Attributes.Add("start", new InternalFunction(start, 0));
+            Attributes.Add("reset", new InternalFunction(reset, 0));
+            Attributes.Add("restart", new InternalFunction(restart, 0));
+            Attributes.Add("stop", new InternalFunction(stop, 0));
         }
 
-        [IntFunc("Date", true, 0)]
-        public static HassiumObject Date(HassiumObject[] args)
+        private HassiumObject elapsedMilliseconds(HassiumObject[] args)
         {
-            return new HassiumDate(DateTime.Now);
+            return new HassiumDouble(Convert.ToDouble(Value.ElapsedMilliseconds));
         }
 
-        [IntFunc("Array", true, 1)]
-        public static HassiumObject Array(HassiumObject[] args)
+        private HassiumObject elapsedTicks(HassiumObject[] args)
         {
-            return args.Length == 0
-                ? new HassiumArray(new List<HassiumObject>())
-                : new HassiumArray(new HassiumObject[args[0].HInt().Value]);
+            return new HassiumDouble(Convert.ToDouble(Value.ElapsedTicks));
         }
 
-        [IntFunc("Random", true, new[] {0, 1})]
-        public static HassiumObject Random(HassiumObject[] args)
+        private HassiumObject isRunning(HassiumObject[] args)
         {
-            return args.Length > 0
-                ? new HassiumRandom(new Random(args[0].HInt().Value))
-                : new HassiumRandom(new Random());
+            return new HassiumBool(Value.IsRunning);
         }
 
-
-        [IntFunc("Event", true, -1)]
-        public static HassiumObject Event(HassiumObject[] args)
+        private HassiumObject start(HassiumObject[] args)
         {
-            var ret = new HassiumEvent();
-            if (args.Length > 0)
-            {
-                args.All(x =>
-                {
-                    if (x is HassiumMethod) ret.AddHandler((HassiumMethod) x);
-                    return true;
-                });
-            }
-            return ret;
+            Value.Start();
+
+            return null;
         }
 
-        [IntFunc("StopWatch", true, -1)]
-        public static HassiumObject StopWatch(HassiumObject[] args)
+        private HassiumObject reset(HassiumObject[] args)
         {
-            return new HassiumStopWatch();
+            Value.Reset();
+
+            return null;
+        }
+
+        private HassiumObject restart(HassiumObject[] args)
+        {
+            Value.Restart();
+            
+            return null;
+        }
+
+        private HassiumObject stop(HassiumObject[] args)
+        {
+            Value.Stop();
+
+            return null;
         }
     }
 }
