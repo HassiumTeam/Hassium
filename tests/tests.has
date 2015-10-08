@@ -247,9 +247,13 @@ func recursionTest()
 }
 
 func objectTest () {
-    println("Prototyping tests");
+    println("Object tests");
     println();
     
+	assert("abc" is String, "'is' operator for string");
+	assert(2 is int, "'is' operator for int");
+	assert(Math.pi is double, "'is' operator for double");
+	
     func Person (name, age)
     {
         ret = new Object();
@@ -262,6 +266,7 @@ func objectTest () {
     }
     
     person = Person ("Reagan", 16);
+	assert (person is Object, "person should be of type Object");
     assert (person.name == "Reagan", "person.name should equal Reagan");
     assert (person.age == 16, "person.age should equal 16");
     assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
@@ -269,7 +274,7 @@ func objectTest () {
     assert (person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
     
     println();
-    println("End of prototyping tests");
+    println("Object tests");
     println();
 }
     
@@ -325,6 +330,7 @@ func instanceTest () {
     println();
 
     person = new PersonClass ("Reagan", 16);
+	assert (person is PersonClass, "person should be of type PersonClass");
     assert (person.Name == "Reagan", "person.name should equal Reagan");
     assert (person.Age == 16, "person.age should equal 16");
 	person.Name = "New Reagan";
@@ -333,6 +339,8 @@ func instanceTest () {
     assert (person.Age == 34, "person.age should equal 34");
     assert(person.toString() == "Hello my name is New Reagan and I'm 34 years old.", "person.toString()");
 	employee = new Employee("Mark", 38, "New York");
+	assert (employee is PersonClass, "employee should be of type PersonClass as it extends it");
+	assert(employee is Employee, "employee should be of type Employee too");
 	assert(employee.Name == "Mark", "employee.Name");
 	assert(employee.Age == 38, "employee.Age");
 	assert(employee.Location == "New York", "employee.Location");

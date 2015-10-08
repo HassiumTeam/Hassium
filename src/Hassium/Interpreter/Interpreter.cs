@@ -260,8 +260,50 @@ namespace Hassium.Interpreter
             }
         }
 
-        private HassiumObject InterpretBinaryOp(BinOpNode node)
+        private HassiumObject interpretBinaryOp(BinOpNode node)
         {
+            if (node.BinOp == BinaryOperation.Is)
+            {
+                var target = (HassiumObject) node.Left.Visit(this);
+                if(node.Right is IdentifierNode)
+                {
+                    var name = node.Right.ToString().ToLower();
+                    switch (name)
+                    {
+                        case "string":
+                            return target is HassiumString;
+                        case "int":
+                            return target is HassiumInt;
+                        case "double":
+                            return target is HassiumDouble;
+                        case "array":
+                            return target is HassiumArray;
+                        case "enumerable":
+                            return target is HassiumArray || target is HassiumString || target is HassiumDictionary;
+                        case "dictionary":
+                            return target is HassiumDictionary;
+                        case "bool":
+                        case "boolean":
+                            return target is HassiumBool;
+                        case "byte":
+                            return target is HassiumByte;
+                        case "char":
+                            return target is HassiumChar;
+                        case "date":
+                        case "datetime":
+                        case "time":
+                            return target is HassiumDate;
+                        case "event":
+                            return target is HassiumEvent;
+                        case "object":
+                            return true;
+                    }
+                }
+                else
+                {
+                    throw new ParseException("Expected type name", node.Right);
+                }
+            }
             var right = (HassiumObject) node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
             {
@@ -286,7 +328,7 @@ namespace Hassium.Interpreter
                             arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
 
                         var theValue = (node.IsOpAssign && arid != null)
-                            ? InterpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
                             : right;
 
                         if (arid == null)
@@ -330,7 +372,7 @@ namespace Hassium.Interpreter
                             append = true;
 
                         var theValue = node.IsOpAssign
-                            ? InterpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
                             : right;
 
                         if (append)
@@ -363,7 +405,7 @@ namespace Hassium.Interpreter
                         throw new ParseException("Not a valid identifier", node);
                     SetVariable(node.Left.ToString(),
                         node.IsOpAssign
-                            ? InterpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
+                            ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
                             : right, node);
                 }
                 return right;
@@ -371,17 +413,11 @@ namespace Hassium.Interpreter
             var left = node.Left.Visit(this);
             if (node.BinOp == BinaryOperation.Is)
             {
-                var target = right;
-                Type ttype = null;
-                if (target is HassiumClass) ttype = target.GetType();
+                Type ttype = right.GetType();
+                if (right is HassiumClass && ((HassiumClass)right).Extends != null && ((HassiumClass)right).Extends.GetType() == ttype) return true;
                 return left.GetType() == ttype;
             }
-            return InterpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
-        }
-
-        private bool hasFunction(string name, int parm)
-        {
-            return hasVariable(name + "`" + parm) || hasVariable(name + "`i") || hasVariable(name);
+            return interpretBinaryOp(left, right, node.IsOpAssign ? node.AssignOperation : node.BinOp, node.Position);
         }
 
         /// <summary>
@@ -392,7 +428,7 @@ namespace Hassium.Interpreter
         /// <param name="_op">The operation type</param>
         /// <param name="pos">position</param>
         /// <returns>The result of the operation</returns>
-        public HassiumObject InterpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
+        private HassiumObject interpretBinaryOp(object left, object right, BinaryOperation _op, int pos = -1)
         {
             if (left == null && (_op != BinaryOperation.NullCoalescing && _op != BinaryOperation.Equals && _op != BinaryOperation.NotEqualTo))
                 throw new ParseException("Left operand can't be null", pos);
@@ -476,9 +512,9 @@ namespace Hassium.Interpreter
                 case BinaryOperation.LesserOrEqual:
                     return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
-                    if (new HassiumBool(InterpretBinaryOp(left, right, BinaryOperation.GreaterThan)))
+                    if (new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.GreaterThan)))
                         return new HassiumInt(1);
-                    return new HassiumBool(InterpretBinaryOp(left, right, BinaryOperation.LessThan))
+                    return new HassiumBool(interpretBinaryOp(left, right, BinaryOperation.LessThan))
                         ? new HassiumInt(-1)
                         : new HassiumInt(0);
                 case BinaryOperation.Xor:
@@ -668,7 +704,7 @@ namespace Hassium.Interpreter
         public object Accept(BinOpNode node)
         {
             var bnode = node;
-            var res = InterpretBinaryOp(bnode);
+            var res = interpretBinaryOp(bnode);
             if (isRepl) ConsoleFunctions.PrintLn(new[] {res});
             return res;
         }
