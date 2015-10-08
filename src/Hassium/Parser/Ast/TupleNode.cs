@@ -36,6 +36,7 @@ namespace Hassium.Parser.Ast
         public string Name { get; private set; }
         public int Length { get { return Children[0].Children.Count; } }
         public AstNode Body { get { return Children[0]; } }
+        public bool IsInline { get { return Name == ""; } }
 
         public TupleNode(int position, string name, AstNode body) : base(position)
         {

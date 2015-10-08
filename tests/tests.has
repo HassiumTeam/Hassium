@@ -69,6 +69,7 @@ func main()
 	eventTests();
 	arrayTests();
 	drawingTests();
+	tupleTests();
     println();
     if(failed == 0) println("Everything went good");
     else println("Some tests failed.");
@@ -536,4 +537,18 @@ func drawingTests()
 	println();
 	println("End of drawing module tests");
 	println();
+}
+
+func tupleTests()
+{
+	tuple myTuple ("abc", 123, [1, 3.14]);
+	assert(myTuple.Item0 == "abc" && myTuple.Item1 == 123 && myTuple.Item2 == [1, 3.14] && myTuple is tuple, "accessing tuple items");
+	
+	func someFunction(x, y)
+	{	
+		return tuple (x, y);
+	}
+	
+	a = someFunction(5, 6);
+	assert(a.Item0 == 5 && a.Item1 == 6 && a is tuple, "accessing inline tuple items");
 }

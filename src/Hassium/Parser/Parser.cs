@@ -572,7 +572,7 @@ namespace Hassium.Parser
             int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "enum");
-            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            string name = parser.ExpectToken("Expected enum name", TokenType.Identifier).Value.ToString();
             parser.ExpectToken(TokenType.LBrace, "{");
 
             CodeBlock body = new CodeBlock(position);
@@ -601,7 +601,11 @@ namespace Hassium.Parser
             int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "tuple");
-            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            string name = "";
+            if(parser.MatchToken(TokenType.Identifier))
+            {
+                name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            }
             parser.AcceptToken(TokenType.LParen, "(");
 
             AstNode body = new CodeBlock(position);

@@ -55,7 +55,7 @@ namespace Hassium.Parser
                        this is StringNode ||
                        this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode || this is BinOpNode ||
                        this is ConditionalOpNode || this is LambdaFuncNode || this is NumberNode || this is UnaryOpNode ||
-                       (this is CodeBlock && Children.Any(x => x.ReturnsValue));
+                       (this is CodeBlock && Children.Any(x => x.ReturnsValue)) || (this is TupleNode && ((TupleNode)this).IsInline);
             }
         }
 

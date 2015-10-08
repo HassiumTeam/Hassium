@@ -297,6 +297,8 @@ namespace Hassium.Interpreter
                             return target is HassiumEvent;
                         case "object":
                             return true;
+                        case "tuple":
+                            return target is HassiumTuple;
                     }
                 }
                 else
@@ -757,10 +759,12 @@ namespace Hassium.Interpreter
         public object Accept(TupleNode node)
         {
             var tnode = node;
-            if (!Globals.ContainsKey(tnode.Name))
-            {
-                Globals.Add(tnode.Name, new HassiumTuple(tnode, this));
-            }
+            if(hasVariable(tnode.Name)) throw new ParseException("A variable with the name '" + tnode.Name + "' already exists", tnode);
+            var tuple = new HassiumTuple(tnode, this);
+            if (tnode.IsInline) return tuple;
+
+            SetVariable(tnode.Name, tuple, tnode);
+            
             return null;
         }
 
