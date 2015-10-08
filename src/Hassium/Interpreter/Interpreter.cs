@@ -1355,11 +1355,10 @@ namespace Hassium.Interpreter
                             new InternalFunction(
                                 x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket)x[0]).Value)), 1, false,
                                 true));
-                        Constants.Add("WebUtility", new HassiumWebUtility());
+                        Constants.Add("HttpUtility", new HassiumHttpUtility());
                         Constants.Add("HttpListener",
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
                         Constants.Add("Dns", new HassiumDns());
-                        Constants.Add("WebUtility", new HassiumWebUtility());
                         Constants.Add("Socket",
                             new InternalFunction(
                                 x =>

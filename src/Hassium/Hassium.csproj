@@ -163,7 +163,6 @@
     <Compile Include="Parser\Ast\DoNode.cs" />
     <Compile Include="Parser\Ast\LabelNode.cs" />
     <Compile Include="Parser\Ast\GotoNode.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumWebUtility.cs" />
     <Compile Include="HassiumObjects\Interpreter\HassiumInformation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
