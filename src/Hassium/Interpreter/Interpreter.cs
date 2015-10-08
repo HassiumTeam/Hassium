@@ -754,6 +754,16 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(TupleNode node)
+        {
+            var tnode = node;
+            if (!Globals.ContainsKey(tnode.Name))
+            {
+                Globals.Add(tnode.Name, new HassiumTuple(tnode, this));
+            }
+            return null;
+        }
+
         public object Accept(LabelNode node)
         {
             if (!CallStack.Any())

@@ -166,6 +166,8 @@ namespace Hassium.Parser
                         return parseGoto(parser);
                     case "enum":
                         return parseEnum(parser);
+                    case "tuple":
+                        return parseTuple(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.LBrace))
@@ -363,6 +365,7 @@ namespace Hassium.Parser
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }
+
             parser.ExpectToken("Unterminated argument list", TokenType.RParen);
 
             return ret;
@@ -591,6 +594,27 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.RBrace, "}");
 
             return new EnumNode(position, name, body);
+        }
+
+        private static AstNode parseTuple(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            parser.ExpectToken(TokenType.Identifier, "tuple");
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            parser.AcceptToken(TokenType.LParen, "(");
+
+            AstNode body = new CodeBlock(position);
+            while (!parser.AcceptToken(TokenType.RParen) && !parser.MatchToken(TokenType.EndOfLine))
+            {
+                body.Children.Add(parseExpression(parser));
+                if (!parser.AcceptToken(TokenType.Comma))
+                    break;
+            }
+
+            parser.AcceptToken(TokenType.RParen);
+            parser.ExpectToken(TokenType.EndOfLine);
+            return new TupleNode(position, name, body);
         }
 
         #region Expression
