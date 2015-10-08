@@ -166,8 +166,6 @@ namespace Hassium.Parser
                         return parseGoto(parser);
                     case "enum":
                         return parseEnum(parser);
-                    case "tuple":
-                        return parseTuple(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.LBrace))
@@ -617,7 +615,6 @@ namespace Hassium.Parser
             }
 
             parser.AcceptToken(TokenType.RParen);
-            parser.ExpectToken(TokenType.EndOfLine);
             return new TupleNode(position, name, body);
         }
 
@@ -1123,6 +1120,10 @@ namespace Hassium.Parser
                             return parseLambda(parser);
                         case "new":
                             return ParseInstance(parser);
+                        case "tuple":
+                            if(parser.PreviousToken(-1).TokenClass == TokenType.LParen
+                                || (parser.PreviousToken(-1).TokenClass == TokenType.Identifier && parser.PreviousToken(-2).TokenClass == TokenType.LParen)) return parseTuple(parser);
+                            break;
                     }
                     return new IdentifierNode(position, parser.ExpectToken(TokenType.Identifier).Value.ToString());
                 case TokenType.RBrace:
