@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
+using Hassium.Functions;
 using Hassium.Interpreter;
 using Hassium.Parser.Ast;
 
@@ -38,11 +39,32 @@ namespace Hassium.HassiumObjects
     {
         public TupleNode TupleNode { get; private set; }
 
+        private int position { get; set; }
+
         public HassiumTuple(TupleNode value, Hassium.Interpreter.Interpreter interpreter)
         {
             TupleNode = value;
-            for (int x = 0; x < value.Children[0].Children.Count; x++)
-                Attributes.Add("Item" + x, ((HassiumObject)value.Children[0].Children[x].Visit(interpreter)));
+            for (position = 0; position < value.Children[0].Children.Count; position++)
+                Attributes.Add("Item" + position, ((HassiumObject)value.Children[0].Children[position].Visit(interpreter)));
+            
+            Attributes.Add("add", new InternalFunction(add, -1));
+            Attributes.Add("remove", new InternalFunction(remove, -1));
+        }
+
+        private HassiumObject add(HassiumObject[] args)
+        {
+            foreach (HassiumObject arg in args)
+                Attributes.Add("Item" + position++, arg);
+
+            return null;
+        }
+
+        private HassiumObject remove(HassiumObject[] args)
+        {
+            foreach (HassiumObject arg in args)
+                Attributes.Remove("Item" + ((HassiumInt)arg).Value);
+
+            return null;
         }
     }
 }
