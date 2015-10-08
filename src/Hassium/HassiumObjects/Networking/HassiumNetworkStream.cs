@@ -39,6 +39,7 @@ namespace Hassium.HassiumObjects.Networking
 
         public HassiumNetworkStream(Stream s) : base(s)
         {
+            
         }
     }
 }

@@ -59,6 +59,7 @@
     <Compile Include="HassiumObjects\Interpreter\HassiumGC.cs" />
     <Compile Include="HassiumObjects\Interpreter\HassiumStopWatch.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />
+    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpUtility.cs" />
     <Compile Include="Interpreter\CallStack.cs" />
     <Compile Include="Interpreter\HassiumProperty.cs" />
     <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />
