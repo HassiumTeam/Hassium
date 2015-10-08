@@ -166,6 +166,8 @@ namespace Hassium.Parser
                         return parseGoto(parser);
                     case "enum":
                         return parseEnum(parser);
+                    case "tuple":
+                        return parseTuple(parser);
                 }
             }
             else if (parser.MatchToken(TokenType.LBrace))
@@ -591,6 +593,17 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.RBrace, "}");
 
             return new EnumNode(position, name, body);
+        }
+
+        private static AstNode parseTuple(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            parser.ExpectToken(TokenType.Identifier, "tuple");
+            string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+            AstNode body = parseArgList(parser);
+            parser.ExpectToken(TokenType.EndOfLine);
+            return new TupleNode(position, name, body);
         }
 
         #region Expression
