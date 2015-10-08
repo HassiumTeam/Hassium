@@ -62,7 +62,7 @@ namespace Hassium.HassiumObjects
         private HassiumObject remove(HassiumObject[] args)
         {
             foreach (HassiumObject arg in args)
-                Attributes.Remove("Item" + ((HassiumInt)arg).Value);
+                Attributes.Remove(((HassiumString)arg).Value);
 
             return null;
         }

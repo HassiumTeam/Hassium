@@ -365,6 +365,7 @@ namespace Hassium.Parser
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }
+
             parser.ExpectToken("Unterminated argument list", TokenType.RParen);
 
             return ret;
@@ -601,7 +602,17 @@ namespace Hassium.Parser
 
             parser.ExpectToken(TokenType.Identifier, "tuple");
             string name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            AstNode body = parseArgList(parser);
+            parser.AcceptToken(TokenType.LParen, "(");
+
+            AstNode body = new CodeBlock(position);
+            while (!parser.AcceptToken(TokenType.RParen) && !parser.MatchToken(TokenType.EndOfLine))
+            {
+                body.Children.Add(parseExpression(parser));
+                if (!parser.AcceptToken(TokenType.Comma))
+                    break;
+            }
+
+            parser.AcceptToken(TokenType.RParen);
             parser.ExpectToken(TokenType.EndOfLine);
             return new TupleNode(position, name, body);
         }
