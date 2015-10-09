@@ -26,6 +26,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -389,6 +390,39 @@ namespace Hassium.Interpreter
 
                         SetVariable(call.Target.ToString(), theArray, call);
                     }
+                    else if (evaluated is HassiumTuple)
+                    {
+                        throw new ParseException("Tuples are immutables (read-only)", node);
+
+                        /* Seems that tuples should be immutable
+                        HassiumArray theArray = null;
+                        var tuple = (HassiumTuple)evaluated;
+                        theArray = new HassiumArray(tuple.Attributes.Where(x => x.Key.StartsWith("item", true, CultureInfo.InvariantCulture)).Select(x => x.Value));
+
+                        int arid = -1;
+                        bool append = false;
+
+                        if (call.Arguments.Children.Count > 0)
+                            arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
+                        else
+                            append = true;
+
+                        var theValue = node.IsOpAssign
+                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
+                            : right;
+
+                        if (append)
+                            theArray.Add(new[] { theValue });
+                        else
+                        {
+                            if (arid >= theArray.Value.Length)
+                                throw new ParseException("The index is out of the bounds of the array", call);
+
+                            theArray[arid] = theValue;
+                        }
+                        var resultingTuple = new HassiumTuple(theArray.Value.ToList(), this);
+                        SetVariable(call.Target.ToString(), resultingTuple, call);*/
+                    }
                     else
                     {
                         throw new ParseException(
@@ -670,6 +704,33 @@ namespace Hassium.Interpreter
                     return r.Length == 1 ? r[0] : r.ToArray();
                 }
             }
+            else if (evaluated is HassiumTuple)
+            {
+                HassiumArray theArray = null;
+                var tuple = (HassiumTuple)evaluated;
+                theArray = new HassiumArray(tuple.Attributes.Where(x => x.Key.StartsWith("item", true, CultureInfo.InvariantCulture)).Select(x => x.Value));
+
+                int arid = -1;
+                bool append = false;
+
+                if (call.Arguments.Children.Count > 0)
+                    arid = ((HassiumObject)call.Arguments.Children[0].Visit(this)).HDouble().ValueInt;
+                else
+                    append = true;
+
+                int count = (HassiumObject)call.Count.Visit(this);
+
+                if (append)
+                    return theArray.Value.Last();
+                else
+                {
+                    if (arid >= theArray.Value.Length || arid + count > theArray.Value.Length)
+                        throw new ParseException("The index is out of the bounds of the array", call);
+
+                    var r = theArray.Value.Skip(arid).Take(count).ToArray();
+                    return r.Length == 1 ? r[0] : r.ToArray();
+                }
+            }
             else
             {
                 throw new ParseException(
@@ -816,34 +877,34 @@ namespace Hassium.Interpreter
             {
                 var theArray = ((HassiumDictionary) haystackstmt);
 
-                var indexvname = "";
-                var keyvname = "";
-                var valvname = "";
+                var indexName = "";
+                var keyName = "";
+                var valueName = "";
                 if (needlestmt is ArrayInitializerNode)
                 {
                     int i = 0;
                     var arr = ((ArrayInitializerNode) needlestmt).Value;
                     if (arr.Count == 3)
                     {
-                        indexvname = arr[i++].ToString();
+                        indexName = arr[i++].ToString();
                     }
-                    keyvname = ((ArrayInitializerNode) needlestmt).Value[i++].ToString();
-                    valvname = ((ArrayInitializerNode) needlestmt).Value[i].ToString();
+                    keyName = ((ArrayInitializerNode) needlestmt).Value[i++].ToString();
+                    valueName = ((ArrayInitializerNode) needlestmt).Value[i].ToString();
                 }
                 else
                 {
-                    valvname = needlestmt.ToString();
+                    valueName = needlestmt.ToString();
                 }
-                if (keyvname != "") SetVariable(keyvname, null, forStmt);
-                if(indexvname != "") SetVariable(indexvname, null, forStmt);
-                SetVariable(valvname, null, forStmt);
+                if (keyName != "") SetVariable(keyName, null, forStmt);
+                if(indexName != "") SetVariable(indexName, null, forStmt);
+                SetVariable(valueName, null, forStmt);
                 int currentIndex = 0;
-                foreach (var needle in (keyvname == "" ? (IEnumerable) (theArray.Value.Select(x => x.Value)) : theArray))
+                foreach (var needle in (keyName == "" ? (IEnumerable) (theArray.Value.Select(x => x.Value)) : theArray))
                 {
-                    if(indexvname != "") SetVariable(indexvname, new HassiumInt(currentIndex), forStmt);
-                    if (keyvname != "") SetVariable(keyvname, ((HassiumKeyValuePair) needle).Key, forStmt);
-                    SetVariable(valvname,
-                        keyvname != "" ? ((HassiumKeyValuePair) needle).Value : HassiumObject.ToHassiumObject(needle),
+                    if(indexName != "") SetVariable(indexName, new HassiumInt(currentIndex), forStmt);
+                    if (keyName != "") SetVariable(keyName, ((HassiumKeyValuePair) needle).Key, forStmt);
+                    SetVariable(valueName,
+                        keyName != "" ? ((HassiumKeyValuePair) needle).Value : HassiumObject.ToHassiumObject(needle),
                         forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
@@ -854,8 +915,8 @@ namespace Hassium.Interpreter
                     }
                     currentIndex++;
                 }
-                if (keyvname != "") freeVariable(keyvname, forStmt);
-                freeVariable(valvname, forStmt);
+                if (keyName != "") freeVariable(keyName, forStmt);
+                freeVariable(valueName, forStmt);
                 isInLoop--;
             }
             else if (haystackstmt is HassiumArray || haystackstmt is HassiumString)
@@ -865,30 +926,30 @@ namespace Hassium.Interpreter
                     theArray = new HassiumArray(haystackstmt.ToString().ToCharArray().Cast<object>());
                 else theArray = ((HassiumArray) haystackstmt);
 
-                var indexvname = "";
-                var valvname = "";
+                var indexName = "";
+                var valueName = "";
                 if (needlestmt is ArrayInitializerNode)
                 {
                     int i = 0;
                     var arr = ((ArrayInitializerNode)needlestmt).Value;
                     if (arr.Count == 2)
                     {
-                        indexvname = arr[i++].ToString();
+                        indexName = arr[i++].ToString();
                     }
-                    valvname = ((ArrayInitializerNode)needlestmt).Value[i].ToString();
+                    valueName = ((ArrayInitializerNode)needlestmt).Value[i].ToString();
                 }
                 else
                 {
-                    valvname = needlestmt.ToString();
+                    valueName = needlestmt.ToString();
                 }
-                if (indexvname != "") SetVariable(indexvname, null, forStmt);
+                if (indexName != "") SetVariable(indexName, null, forStmt);
 
-                SetVariable(valvname, null, forStmt);
+                SetVariable(valueName, null, forStmt);
                 int currentIndex = 0;
                 foreach (var needle in theArray.Value)
                 {
-                    if (indexvname != "") SetVariable(indexvname, new HassiumInt(currentIndex), forStmt);
-                    SetVariable(valvname, HassiumObject.ToHassiumObject(needle), forStmt);
+                    if (indexName != "") SetVariable(indexName, new HassiumInt(currentIndex), forStmt);
+                    SetVariable(valueName, HassiumObject.ToHassiumObject(needle), forStmt);
                     forStmt.Body.Visit(this);
                     if (continueLoop) continueLoop = false;
                     if (breakLoop)
@@ -898,7 +959,49 @@ namespace Hassium.Interpreter
                     }
                     currentIndex++;
                 }
-                freeVariable(valvname, forStmt);
+                freeVariable(valueName, forStmt);
+                isInLoop--;
+            }
+            else if (haystackstmt is HassiumTuple)
+            {
+                HassiumArray theArray = null;
+                var tuple = (HassiumTuple) haystackstmt;
+                theArray = new HassiumArray(tuple.Attributes.Where(x => x.Key.StartsWith("item", true, CultureInfo.InvariantCulture)).Select(x => x.Value));
+
+                var indexName = "";
+                var valueName = "";
+                if (needlestmt is ArrayInitializerNode)
+                {
+                    int i = 0;
+                    var arr = ((ArrayInitializerNode)needlestmt).Value;
+                    if (arr.Count == 2)
+                    {
+                        indexName = arr[i++].ToString();
+                    }
+                    valueName = ((ArrayInitializerNode)needlestmt).Value[i].ToString();
+                }
+                else
+                {
+                    valueName = needlestmt.ToString();
+                }
+                if (indexName != "") SetVariable(indexName, null, forStmt);
+
+                SetVariable(valueName, null, forStmt);
+                int currentIndex = 0;
+                foreach (var needle in theArray.Value)
+                {
+                    if (indexName != "") SetVariable(indexName, new HassiumInt(currentIndex), forStmt);
+                    SetVariable(valueName, HassiumObject.ToHassiumObject(needle), forStmt);
+                    forStmt.Body.Visit(this);
+                    if (continueLoop) continueLoop = false;
+                    if (breakLoop)
+                    {
+                        breakLoop = false;
+                        break;
+                    }
+                    currentIndex++;
+                }
+                freeVariable(valueName, forStmt);
                 isInLoop--;
             }
             else

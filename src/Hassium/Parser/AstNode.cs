@@ -43,7 +43,7 @@ namespace Hassium.Parser
             {
                 return this is IdentifierNode || this is MemberAccessNode || this is FunctionCallNode ||
                        this is StringNode ||
-                       this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode;
+                       this is InstanceNode || this is ArrayInitializerNode || this is ArrayGetNode || this is TupleNode;
             }
         }
 

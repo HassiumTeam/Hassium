@@ -604,17 +604,17 @@ namespace Hassium.Parser
             {
                 name = parser.ExpectToken(TokenType.Identifier).Value.ToString();
             }
-            parser.AcceptToken(TokenType.LParen, "(");
+            bool useParen = parser.AcceptToken(TokenType.LParen, "(");
 
             AstNode body = new CodeBlock(position);
-            while (!parser.AcceptToken(TokenType.RParen) && !parser.MatchToken(TokenType.EndOfLine))
+            while (useParen ? !parser.MatchToken(TokenType.RParen) : !parser.MatchToken(TokenType.EndOfLine))
             {
                 body.Children.Add(parseExpression(parser));
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }
 
-            parser.AcceptToken(TokenType.RParen);
+            if(useParen) parser.ExpectToken(TokenType.RParen);
             return new TupleNode(position, name, body);
         }
 

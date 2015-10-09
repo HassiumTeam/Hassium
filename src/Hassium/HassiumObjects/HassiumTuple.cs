@@ -41,16 +41,22 @@ namespace Hassium.HassiumObjects
 
         private int position { get; set; }
 
-        public HassiumTuple(TupleNode value, Hassium.Interpreter.Interpreter interpreter)
+        
+
+        public HassiumTuple(TupleNode value, Hassium.Interpreter.Interpreter interpreter) : this(value.Children[0].Children.Select((v, i) => (HassiumObject)v.Visit(interpreter)).ToList(), interpreter)
         {
             TupleNode = value;
-            for (position = 0; position < value.Children[0].Children.Count; position++)
-                Attributes.Add("Item" + position, ((HassiumObject)value.Children[0].Children[position].Visit(interpreter)));
-            
+        }
+
+
+        public HassiumTuple(IList<HassiumObject> value, Hassium.Interpreter.Interpreter interpreter)
+        {
+            for (position = 0; position < value.Count; position++)
+                Attributes.Add("Item" + position, value[position]);
+
             Attributes.Add("add", new InternalFunction(add, -1));
             Attributes.Add("remove", new InternalFunction(remove, -1));
         }
-
         private HassiumObject add(HassiumObject[] args)
         {
             foreach (HassiumObject arg in args)
