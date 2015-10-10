@@ -40,6 +40,7 @@ namespace Hassium.HassiumObjects.Interpreter
             Attributes.Add("tickCount", new InternalFunction(tickCount, 0));
             Attributes.Add("userName", new InternalFunction(userName, 0));
             Attributes.Add("machineName", new InternalFunction(machineName, 0));
+	    Attributes.Add("getEnvironmentVariable", new InternalFunction(getEnvironmentVariable, 1));
         }
 
         public HassiumObject osVersion(HassiumObject[] args)
@@ -66,5 +67,10 @@ namespace Hassium.HassiumObjects.Interpreter
         {
             return new HassiumString(Environment.MachineName);
         }
+
+	public HassiumObject getEnvironmentVariable(HassiumObject[] args)
+	{
+	    return new HassiumString(Environment.GetEnvironmentVariable(args[0].ToString()));
+	}
     }
 }
