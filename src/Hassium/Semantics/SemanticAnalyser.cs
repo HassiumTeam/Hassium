@@ -97,7 +97,7 @@ namespace Hassium.Semantics
                 {
                     FuncNode fnode = ((FuncNode) node);
                     currentLocalScope = new LocalScope();
-                    result.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count] = currentLocalScope;
+                    result.ChildScopes[fnode.Name + "`" + (fnode.InfParams ? "i" : fnode.Parameters.Count.ToString())] = currentLocalScope;
                     currentLocalScope.Symbols.AddRange(fnode.Parameters);
                     analyseLocalCode(fnode.Body);
                 }

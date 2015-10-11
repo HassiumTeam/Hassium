@@ -218,11 +218,14 @@ namespace Hassium.Parser
             string name = parser.ExpectToken("Expected function name", TokenType.Identifier).Value.ToString();
 
             parser.ExpectToken(TokenType.LParen);
-
+            bool parms = false;
             List<string> result = new List<string>();
             while (!parser.MatchToken(TokenType.RParen))
             {
-                result.Add(parser.ExpectToken("Expected argument name", TokenType.Identifier).Value.ToString());
+                string pname = parser.ExpectToken("Expected argument name", TokenType.Identifier).Value.ToString();
+                if (parser.PreviousToken(-1).TokenClass == TokenType.RParen && parser.AcceptToken(TokenType.Operation, "*"))
+                    parms = true;
+                result.Add(pname);
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }
@@ -243,7 +246,7 @@ namespace Hassium.Parser
 
             AstNode body = ParseStatement(parser);
 
-            return new FuncNode(position, name, result, body, constr);
+            return new FuncNode(position, name, result, body, constr, parms);
         }
 
         private static AstNode parseProperty(Parser parser)
@@ -786,21 +789,36 @@ namespace Hassium.Parser
         {
             int position = parser.codePosition;
 
-            AstNode left = ParseComparison(parser);
+            AstNode left = parseIn(parser);
 
             while (parser.CurrentToken().TokenClass == TokenType.Comparison || parser.CurrentToken().TokenClass == TokenType.Operation)
                 if (parser.AcceptToken(TokenType.Comparison, "=="))
                 {
-                    var right = ParseComparison(parser);
+                    var right = parseIn(parser);
                     left = new BinOpNode(position, BinaryOperation.Equals, left, right);
                 }
                 else if (parser.AcceptToken(TokenType.Comparison, "!="))
                 {
-                    var right = ParseComparison(parser);
+                    var right = parseIn(parser);
                     left = new BinOpNode(position, BinaryOperation.NotEqualTo, left, right);
                 }
                 else
                     break;
+
+            return left;
+        }
+
+        private static AstNode parseIn(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            AstNode left = ParseComparison(parser);
+
+            while (parser.AcceptToken(TokenType.Identifier, "in"))
+            {
+                var right = ParseComparison(parser);
+                left = new BinOpNode(position, BinaryOperation.In, left, right);
+            }
 
             return left;
         }
@@ -1107,7 +1125,7 @@ namespace Hassium.Parser
                 case TokenType.Char:
                     return new CharNode(position, Convert.ToChar(parser.ExpectToken(TokenType.Char).Value));
                 case TokenType.Identifier:
-                    if (parser.PreviousToken(-1).Value.ToString() == ":")
+                    if (parser.PreviousToken(-1).Value.ToString() == ":" && parser.PreviousToken().TokenClass == TokenType.EndOfLine)
                     {
                         var t = new LabelNode(parser.codePosition, parser.ExpectToken(TokenType.Identifier).Value.ToString(),
                             parser.codePosition);

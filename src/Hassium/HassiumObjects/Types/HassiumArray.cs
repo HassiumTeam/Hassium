@@ -81,11 +81,14 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("op", new InternalFunction(ArrayOp, 1));
             Attributes.Add("select", new InternalFunction(ArraySelect, 1));
             Attributes.Add("all", new InternalFunction(ArrayAll, 1));
+            Attributes.Add("each", new InternalFunction(ArrayEach, 1));
             Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
             Attributes.Add("any", new InternalFunction(ArrayAny, 1));
             Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
             Attributes.Add("last", new InternalFunction(ArrayLast, 1));
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
+
+            Attributes.Add("sum", new InternalFunction(ArraySum, 0));
 
             Attributes.Add("arrayToString", new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
 
@@ -172,9 +175,23 @@ namespace Hassium.HassiumObjects.Types
             return Value.All(x => args[0].Invoke(x));
         }
 
+        public HassiumObject ArrayEach(HassiumObject[] args)
+        {
+            return Value.All(x =>
+            {
+                args[0].Invoke(x);
+                return true;
+            });
+        }
+
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
             return Value.Select(v => (args[0].Invoke(v))).ToArray();
+        }
+
+        public HassiumObject ArraySum(HassiumObject[] args)
+        {
+            return Value.Sum(x => x.HDouble().Value);
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)

@@ -32,6 +32,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using Hassium.Functions;
@@ -435,6 +436,14 @@ namespace Hassium.Interpreter
                     var target = (HassiumObject) accessor.Left.Visit(this);
                     target.SetAttribute(accessor.Member, right);
                 }
+                else if(node.Left is ConditionalOpNode)
+                {
+                    var conditional = (ConditionalOpNode) node.Left;
+                    var condition = conditional.Predicate.Visit(this) as HassiumBool;
+                    AstNode target = null;
+                    target = condition == true ? conditional.Body : conditional.ElseBody;
+                    return interpretBinaryOp(new BinOpNode(node.Position, BinaryOperation.Assignment, node.AssignOperation, target, node.Right));
+                }
                 else
                 {
                     if (!(node.Left is IdentifierNode))
@@ -475,8 +484,8 @@ namespace Hassium.Interpreter
             switch (_op)
             {
                 case BinaryOperation.Addition:
-                    if (right == null) return (HassiumObject)left;
-                    if (left == null) return (HassiumObject)right;
+                    if (right == null) return (HassiumObject) left;
+                    if (left == null) return (HassiumObject) right;
                     if (left is HassiumString || right is HassiumString)
                         return new HassiumString(left + right.ToString());
                     if (left is HassiumChar || right is HassiumChar)
@@ -529,15 +538,19 @@ namespace Hassium.Interpreter
                     if (left == null) return right == null;
                     if (right == null) return left == null;
                     if ((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
-                        return new HassiumBool(((HassiumObject)left).HDouble().Value == ((HassiumObject)right).HDouble().Value);
+                        return
+                            new HassiumBool(((HassiumObject) left).HDouble().Value ==
+                                            ((HassiumObject) right).HDouble().Value);
                     return new HassiumBool(left.ToString() == right.ToString());
                 case BinaryOperation.LogicalAnd:
                     return new HassiumBool(Convert.ToBoolean(left) && Convert.ToBoolean(right));
                 case BinaryOperation.LogicalOr:
                     return new HassiumBool(Convert.ToBoolean(left) || Convert.ToBoolean(right));
                 case BinaryOperation.NotEqualTo:
-                    if((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
-                        return new HassiumBool(((HassiumObject)left).HDouble().Value != ((HassiumObject)right).HDouble().Value);
+                    if ((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
+                        return
+                            new HassiumBool(((HassiumObject) left).HDouble().Value !=
+                                            ((HassiumObject) right).HDouble().Value);
                     return new HassiumBool(left.ToString() != right.ToString());
                 case BinaryOperation.LessThan:
                     return new HassiumBool(Convert.ToDouble(left) < Convert.ToDouble(right));
@@ -569,7 +582,11 @@ namespace Hassium.Interpreter
                 case BinaryOperation.Pow:
                     if (left is HassiumString && right is HassiumInt)
                     {
-                        return new HassiumString(string.Concat(Enumerable.Repeat(left, (int)Math.Pow(left.ToString().Length, Convert.ToInt32(right)) / left.ToString().Length)));
+                        return
+                            new HassiumString(
+                                string.Concat(Enumerable.Repeat(left,
+                                    (int) Math.Pow(left.ToString().Length, Convert.ToInt32(right)) /
+                                    left.ToString().Length)));
                     }
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt((int) Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
@@ -579,6 +596,22 @@ namespace Hassium.Interpreter
 
                 case BinaryOperation.NullCoalescing:
                     return HassiumObject.ToHassiumObject(left) ?? HassiumObject.ToHassiumObject(right);
+
+                case BinaryOperation.In:
+                    if (right is HassiumArray)
+                    {
+                        return ((HassiumArray) right).ArrayContains(new[] {HassiumObject.ToHassiumObject(left)});
+                    }
+                    else if (right is HassiumDictionary)
+                    {
+                        return ((HassiumDictionary) right).ContainsKey(new[] {HassiumObject.ToHassiumObject(left)})
+                               || ((HassiumDictionary) right).ContainsValue(new[] {HassiumObject.ToHassiumObject(left)});
+                    }
+                    else if (right is HassiumString)
+                    {
+                        return right.ToString().Contains(left.ToString());
+                    }
+                    throw new ParseException("The 'in' operator only applies on Arrays, Dictionaries and Strings", pos);
             }
             // Raise error
             throw new ParseException("The operation " + _op + " is not implemented yet.", pos);
@@ -1036,7 +1069,7 @@ namespace Hassium.Interpreter
         public object Accept(FuncNode node)
         {
             var fnode = node;
-            var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name + "`" + fnode.Parameters.Count]);
+            var stackFrame = new StackFrame(SymbolTable.ChildScopes[fnode.Name + "`" + (fnode.InfParams ? "i" : fnode.Parameters.Count.ToString())]);
             if (CallStack.Any())
             {
                 stackFrame.Scope.Symbols.AddRange(CallStack.Peek().Scope.Symbols);
@@ -1047,7 +1080,7 @@ namespace Hassium.Interpreter
                 });
             }
             var hfunc = new HassiumMethod(this, fnode, stackFrame, null);
-            SetVariable(fnode.Name + "`" + fnode.Parameters.Count, hfunc, fnode);
+            SetVariable(fnode.Name + "`" + (fnode.InfParams ? "i" : fnode.Parameters.Count.ToString()), hfunc, fnode);
             return hfunc;
         }
 
@@ -1175,7 +1208,10 @@ namespace Hassium.Interpreter
             }
 
 
-            HassiumObject ret = target.Invoke(arguments);
+            HassiumObject ret = null;
+            if (hasVariable(call.Target + "`i") && !(target is InternalFunction))
+                ret = target.Invoke(new HassiumObject[] { new HassiumArray(arguments) });
+            else ret = target.Invoke(arguments);
             if (ReturnFunc)
                 ReturnFunc = false;
             //if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));

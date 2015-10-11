@@ -33,6 +33,7 @@ namespace Hassium.Parser.Ast
         public string Name { get; private set; }
         public List<string> Parameters { get; private set; }
         public FunctionCallNode CallConstructor { get; private set; }
+        public bool InfParams { get; private set; }
 
         public AstNode Body
         {
@@ -40,12 +41,13 @@ namespace Hassium.Parser.Ast
         }
 
         public FuncNode(int position, string name, List<string> parameters, AstNode body,
-            FunctionCallNode constructor = null) : base(position)
+            FunctionCallNode constructor = null, bool parms = false) : base(position)
         {
             Parameters = parameters;
             Name = name;
             CallConstructor = constructor;
             Children.Add(body);
+            InfParams = parms;
         }
 
         public static explicit operator LambdaFuncNode(FuncNode funcNode)

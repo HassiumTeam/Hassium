@@ -150,6 +150,12 @@ func opTests()
     ab = null;
     cd = 5;
     assert((ab ?? cd) == 5, "should pass if ?? (null-coalescing) result is correct");
+	
+	a1 = null;
+	b1 = null;
+	c1 = null;
+	d1 = "ok";
+	assert(a1 ?? b1 ?? c1 ?? d1 == "ok", "should pass if chaining ?? (null-coalescing) is correct");
 
     assert(1 <=> 2 == -1, "should pass if <=> result is correct");
 	
@@ -157,7 +163,19 @@ func opTests()
 	assert((boolean ? "ab" : "cd") == "ab", "should pass if ?: (ternary operator) result is correct");
 	assert((boolean ? "cd") == "cd", "should pass if ? (ternary operator) result is correct");
 	
+	a = 0;
+	b = 0;
+	c = 5;
+	(c > 3 ? a : b) = 2;
+	assert(a == 2, "should pass if ternary operator assignment works");
+	
 	assert("abc #{++cd}" == "abc 6", "string interpolation");
+	
+	a = 5;
+label1:
+	a--;
+	if(a > 0) goto label1;
+	assert(a == 0, "labels");
 
 
     println();
@@ -176,6 +194,14 @@ func functionTests()
     assert(test(4) == 16, "should pass if Function test(4) is correct");
     println();
     assert(TestClass.testFunc(4, 5) == 9, "should pass if Function TestClass.testFunc(4, 5) is correct");
+	
+	func add(args*) {
+		return args.sum();
+	}
+	assert(add(1, 8, -5, 3) == 7, "function with unlimited args");
+	
+	
+	
     println("End of function tests");
     println();
 }
@@ -442,6 +468,7 @@ func arrayTests()
 	assert(theStrArr == ["a","b","c","d","e","f"], "string to char array");
 	
 	theArr = ["abc", "def", 123, 456, runtimecall("System.Math.PI")];	
+	assert(123 in theArr, "'in' operator for arrays");
 	assert(theArr.toString() == "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string");
 	use collections;
 	theArr2 = new Dictionary();
@@ -454,6 +481,8 @@ func arrayTests()
 	assert(theArr2.toString() == "Dictionary { [0] => abc, [1] => def, [2] => 123, [3] => 456, [4] => 3.14159265358979 }", "array to string after foreach");
 
 	theDict = ["abc" : 123, 456 : "ghi", "jkl" : 789];
+	assert("ghi" in theDict, "'in' operator on Dictionary");
+	assert("ab" in "alphabet", "'in' operator on String");
 	theDict[123] = "mno";
 	theDict[] = 456; # if you use the [] operator with nothing inside, it appends at the end of the array
 	assert(theDict[123] == "mno", "check dictionary value after setting with []");

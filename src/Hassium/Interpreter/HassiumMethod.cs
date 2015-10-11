@@ -120,7 +120,7 @@ namespace Hassium.Interpreter
 
         public override string ToString()
         {
-            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2}]", Name, FuncNode.Parameters.Count,
+            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2}]", Name, (FuncNode.InfParams ? "i" : FuncNode.Parameters.Count.ToString()),
                 SelfReference ?? "null");
         }
 
