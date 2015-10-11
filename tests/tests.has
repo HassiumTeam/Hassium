@@ -4,6 +4,7 @@ use Math;
 use io;
 use drawing;
 use debug;
+use net;
 
 exitcode = 0;
 failed = 0;

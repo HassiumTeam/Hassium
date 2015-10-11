@@ -81,7 +81,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
         }
 
-        public static bool operator ==(HassiumDictionary a, HassiumDictionary b)
+        /*public static bool operator ==(HassiumDictionary a, HassiumDictionary b)
         {
             return a.Value.SequenceEqual(b.Value);
         }
@@ -89,7 +89,7 @@ namespace Hassium.HassiumObjects.Types
         public static bool operator !=(HassiumDictionary a, HassiumDictionary b)
         {
             return !(a == b);
-        }
+        }*/
 
         public HassiumDictionary(List<HassiumKeyValuePair> ls)
         {

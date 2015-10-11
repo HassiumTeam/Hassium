@@ -1467,6 +1467,7 @@ namespace Hassium.Interpreter
                                 x =>
                                     new HassiumSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream,
                                         ProtocolType.Tcp)), 0, false, true));
+                        Constants.Add("cgi", new CGI());
                         break;
                     case "text":
                         Constants.Add("StringBuilder",
