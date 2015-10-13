@@ -20,6 +20,19 @@ namespace Hassium.HassiumObjects.Networking.HTTP
             Attributes.Add("javaScriptStringEncode", new InternalFunction(javaScriptStringEncode, 1));
             Attributes.Add("urlDecode", new InternalFunction(urlDecode, 1));
             Attributes.Add("urlEncode", new InternalFunction(urlEncode, 1));
+            Attributes.Add("addUriProtocol", new InternalFunction(addUriProtocol, 1));
+        }
+
+        public HassiumObject addUriProtocol(HassiumObject[] args)
+        {
+            try
+            {
+                return new UriBuilder(args[0].ToString()).Uri.ToString();
+            }
+            catch
+            {
+                throw new Exception("Invalid Uri");
+            }
         }
 
         private HassiumObject htmlAttributeEncode(HassiumObject[] args)

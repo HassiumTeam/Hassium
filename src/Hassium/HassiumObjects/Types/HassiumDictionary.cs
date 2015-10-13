@@ -54,8 +54,8 @@ namespace Hassium.HassiumObjects.Types
         public List<HassiumKeyValuePair> Value { get; set; }
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value)
-            : this(value.Select(x => (HassiumKeyValuePair) x).ToList())
         {
+            Value = value.Select(x => new HassiumKeyValuePair(x.Key, x.Value)).ToList();
             Attributes.Add("length", new InternalFunction(x => Value.Count, 0, true));
 
             Attributes.Add("keys",
@@ -90,11 +90,6 @@ namespace Hassium.HassiumObjects.Types
         {
             return !(a == b);
         }*/
-
-        public HassiumDictionary(List<HassiumKeyValuePair> ls)
-        {
-            Value = ls;
-        }
 
         public HassiumObject ContainsKey(HassiumObject[] args)
         {
@@ -139,13 +134,13 @@ namespace Hassium.HassiumObjects.Types
         }
 
         public HassiumDictionary(Dictionary<object, object> value)
-            : this(value.Select(x => new HassiumKeyValuePair(ToHassiumObject(x.Key), ToHassiumObject(x.Value))).ToList())
+            : this(value.ToDictionary(x => ToHassiumObject(x.Key), x => ToHassiumObject(x.Value)))
         {
         }
 
         public HassiumDictionary(IDictionary value) : this(value.Keys.Cast<object>()
             .Zip(value.Values.Cast<object>(), (a, b) => new KeyValuePair<object, object>(a, b))
-            .Select(x => new HassiumKeyValuePair(ToHassiumObject(x.Key), ToHassiumObject(x.Value))).ToList())
+            .ToDictionary(x => ToHassiumObject(x.Key), x => ToHassiumObject(x.Value)))
         {
         }
 

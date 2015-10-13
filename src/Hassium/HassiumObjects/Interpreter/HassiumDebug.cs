@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System.Linq;
+using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Interpreter
@@ -42,6 +43,7 @@ namespace Hassium.HassiumObjects.Interpreter
                 new HassiumProperty("secureMode", x => Program.options.Secure, null, true));
             Attributes.Add("sourceCode",
                 new HassiumProperty("sourceCode", x => Program.options.Code, null, true));
+            Attributes.Add("getAttributes", new InternalFunction(x => new HassiumDictionary(x[0].Attributes.Select(y => new HassiumKeyValuePair(y.Key.ToString(), y.Value)).ToDictionary(y => y.Key, y => y.Value)), 1));
         }
 
         public HassiumObject localVariables()
