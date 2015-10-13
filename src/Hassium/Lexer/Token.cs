@@ -63,5 +63,10 @@ namespace Hassium.Lexer
             Value = value;
             Position = pos;
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
 }

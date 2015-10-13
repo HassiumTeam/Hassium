@@ -458,7 +458,24 @@ namespace Hassium.Parser
             {
                 int cpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "case");
-                var pred = new List<AstNode> {parseExpression(parser)};
+                List<AstNode> pred = new List<AstNode>();
+                if (parser.MatchToken(TokenType.Comparison) || parser.MatchToken(TokenType.Identifier, "in") ||
+                    parser.MatchToken(TokenType.Identifier, "is"))
+                {
+                    parser.tokens.Insert(parser.position,
+                        new Token(TokenType.Identifier, "__caseval", parser.codePosition));
+                    pred.Add((BinOpNode) parseExpression(parser));
+                }
+                else if ((parser.MatchToken(TokenType.Identifier) || parser.MatchToken(TokenType.Number)) && parser.PreviousToken(-1).ToString() == "to")
+                {
+                    var lower = parseExpression(parser);
+                    parser.ExpectToken(TokenType.Identifier, "to");
+                    if (parser.MatchToken(TokenType.Colon))
+                        throw new ParseException("Expected upper range value", parser.codePosition);
+                    var upper = parseExpression(parser);
+                    pred.Add(new BinOpNode(cpos, BinaryOperation.Range, lower, upper));
+                }
+                else pred = new List<AstNode> {parseExpression(parser)};
                 parser.ExpectToken("Expected case value", TokenType.Colon);
                 while (parser.MatchToken(TokenType.Identifier, "case"))
                 {

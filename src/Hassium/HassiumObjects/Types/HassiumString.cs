@@ -83,6 +83,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
             Attributes.Add("toByte", new InternalFunction(toByte, 0));
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
+            Attributes.Add("addSlashes", new InternalFunction(addSlashes, 0));
         }
 
         public static implicit operator HassiumArray(HassiumString s)
@@ -93,6 +94,15 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        public HassiumObject addSlashes(HassiumObject[] args)
+        {
+            return Value.Replace("\n", "\\n")
+                .Replace("\r", "\\r")
+                .Replace("\t", "\\t")
+                .Replace("'", "\\'")
+                .Replace("\"", "\\\"");
         }
 
         private HassiumObject toArray(HassiumObject[] args)

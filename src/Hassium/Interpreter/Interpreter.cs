@@ -1395,13 +1395,31 @@ namespace Hassium.Interpreter
         public object Accept(SwitchNode node)
         {
             var pred = node.Predicate.Visit(this);
-            if (node.Body.Any(x => x.Values.Any(y => y.Visit(this).ToString() == pred.ToString())))
+            
+            var cnode = node.Body.First(x => x.Values.Any(y =>
             {
-                var cnode = node.Body.First(x => x.Values.Any(y => y.Visit(this).ToString() == pred.ToString()));
-                cnode.Visit(this);
-            }
+                if (y is BinOpNode)
+                {
+                    SetVariable("__caseval", (HassiumObject)pred, node);
+                    var bop = (BinOpNode) y;
+                    if(bop.BinOp == BinaryOperation.Range)
+                    {
+                        var lower = new BinOpNode(node.Position, BinaryOperation.GreaterOrEqual,
+                            new IdentifierNode(node.Position, "__caseval"), bop.Left).Visit(this);
+                        var upper = new BinOpNode(node.Position, BinaryOperation.LesserOrEqual,
+                            new IdentifierNode(node.Position, "__caseval"), bop.Right).Visit(this);
+                        return ((HassiumObject) lower).HBool().Value && ((HassiumObject) upper).HBool().Value;
+                    }
+                    var ret = interpretBinaryOp(bop).HBool().Value;
+                    freeVariable("__caseval", node);
+                    return ret;
+                }
+                return y.Visit(this).ToString() == pred.ToString();
+            }));
+            if (cnode != null) cnode.Visit(this);
             else if (node.DefaultBody != null)
-                    node.DefaultBody.Visit(this);
+                node.DefaultBody.Visit(this);
+            
             return null;
         }
 

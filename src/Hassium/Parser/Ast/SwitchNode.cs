@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using Hassium.Interpreter;
 
@@ -56,6 +57,7 @@ namespace Hassium.Parser.Ast
     {
         public List<AstNode> Values { get; set; }
         public AstNode Body { get; set; }
+
 
         public CaseNode(int position, List<AstNode> predicate, AstNode body) : base(position)
         {

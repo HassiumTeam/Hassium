@@ -54,7 +54,8 @@ namespace Hassium.Parser.Ast
         CombinedComparison,
         Dot,
         Is,
-        In
+        In,
+        Range
     }
 
     public class BinOpNode : AstNode
