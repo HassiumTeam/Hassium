@@ -139,13 +139,13 @@ namespace Hassium.HassiumObjects.Types
         }
 
         public HassiumDictionary(Dictionary<object, object> value)
-            : this(value.Select(x => new HassiumKeyValuePair((HassiumObject) x.Key, (HassiumObject) x.Value)).ToList())
+            : this(value.Select(x => new HassiumKeyValuePair(ToHassiumObject(x.Key), ToHassiumObject(x.Value))).ToList())
         {
         }
 
         public HassiumDictionary(IDictionary value) : this(value.Keys.Cast<object>()
             .Zip(value.Values.Cast<object>(), (a, b) => new KeyValuePair<object, object>(a, b))
-            .Select(x => new HassiumKeyValuePair((HassiumObject) x.Key, (HassiumObject) x.Value)).ToList())
+            .Select(x => new HassiumKeyValuePair(ToHassiumObject(x.Key), ToHassiumObject(x.Value))).ToList())
         {
         }
 
