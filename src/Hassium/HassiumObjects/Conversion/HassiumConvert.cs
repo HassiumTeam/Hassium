@@ -38,6 +38,7 @@ namespace Hassium.HassiumObjects.Conversion
             Attributes.Add("toInt", new InternalFunction(toInt, 1));
             Attributes.Add("toString", new InternalFunction(toString, 1));
             Attributes.Add("toBool", new InternalFunction(toBool, 1));
+            Attributes.Add("toChar", new InternalFunction(toChar, 1));
         }
 
         public static HassiumObject toDouble(HassiumObject[] args)
@@ -53,6 +54,8 @@ namespace Hassium.HassiumObjects.Conversion
                 return args[0];
             else if (args[0] is HassiumByte)
                 return new HassiumDouble(Convert.ToDouble(((HassiumByte)args[0]).Value));
+            else if (args[0] is HassiumChar)
+                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
             else
                 throw new Exception("Unknown format for Convert.toDouble()");
         }
@@ -67,6 +70,8 @@ namespace Hassium.HassiumObjects.Conversion
                 return args[0];
             else if (args[0] is HassiumByte)
                 return new HassiumInt(Convert.ToInt32(((HassiumByte)args[0]).Value));
+            else if (args[0] is HassiumChar)
+                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
             else
                 throw new Exception("Unknown format for Convert.toInt()");
         }
@@ -84,6 +89,22 @@ namespace Hassium.HassiumObjects.Conversion
                 return new HassiumBool(Convert.ToBoolean(((HassiumDouble) args[0]).ValueInt));
             else if (args[0] is HassiumInt)
                 return new HassiumBool(Convert.ToBoolean(((HassiumInt) args[0]).Value));
+            else if (args[0] is HassiumChar)
+                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
+            else
+                throw new Exception("Unknown format for Convert.toBool");
+        }
+
+        public static HassiumObject toChar(HassiumObject[] args)
+        {
+            if (args[0] is HassiumString)
+                return new HassiumChar(Convert.ToChar(((HassiumString)args[0]).Value));
+            else if (args[0] is HassiumDouble)
+                return new HassiumChar(Convert.ToChar(((HassiumDouble)args[0]).ValueInt));
+            else if (args[0] is HassiumInt)
+                return new HassiumChar(Convert.ToChar(((HassiumInt)args[0]).Value));
+            else if (args[0] is HassiumChar)
+                return args[0];
             else
                 throw new Exception("Unknown format for Convert.toBool");
         }
