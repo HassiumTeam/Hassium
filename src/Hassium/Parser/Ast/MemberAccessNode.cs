@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -36,10 +37,22 @@ namespace Hassium.Parser.Ast
 
         public string Member { private set; get; }
 
-        public MemberAccessNode(int position, AstNode left, string identifier) : base(position)
+        private bool _checknull = false;
+
+        public bool CheckForNull
+        {
+            get
+            {
+                return (_checknull || (Left is MemberAccessNode && ((MemberAccessNode) Left).CheckForNull)
+                        || (Left is FunctionCallNode && ((FunctionCallNode) Left).CheckForNull));
+            }
+        }
+
+        public MemberAccessNode(int position, AstNode left, string identifier, bool checknull = false) : base(position)
         {
             Children.Add(left);
             Member = identifier;
+            _checknull = checknull;
         }
 
         public override string ToString()
@@ -49,7 +62,20 @@ namespace Hassium.Parser.Ast
 
         public override object Visit(IVisitor visitor)
         {
-            return visitor.Accept(this);
+            try
+            {
+                return visitor.Accept(this);
+            }
+            catch (Exception e)
+            {
+                if (e is NullReferenceException &&
+                    (CheckForNull || (Left is MemberAccessNode && ((MemberAccessNode) Left).CheckForNull)
+                     || (Left is FunctionCallNode && ((FunctionCallNode) Left).CheckForNull)))
+                {
+                    return null;
+                }
+                else throw;
+            }
         }
     }
 }

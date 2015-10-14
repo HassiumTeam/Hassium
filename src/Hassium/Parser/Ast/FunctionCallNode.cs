@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -39,6 +40,12 @@ namespace Hassium.Parser.Ast
             get { return Children[1]; }
         }
 
+        public bool CheckForNull
+        {
+            get { return Target is MemberAccessNode && ((MemberAccessNode) Target).CheckForNull ;
+            }
+        }
+
         public FunctionCallNode(int position, AstNode target, AstNode arguments) : base(position)
         {
             Children.Add(target);
@@ -47,7 +54,19 @@ namespace Hassium.Parser.Ast
 
         public override object Visit(IVisitor visitor)
         {
-            return visitor.Accept(this);
+            try
+            {
+                return visitor.Accept(this);
+            }
+            catch(Exception e)
+            {
+                if (e is NullReferenceException && (CheckForNull || (Target is MemberAccessNode && ((MemberAccessNode)Target).CheckForNull)
+                     || (Target is FunctionCallNode && ((FunctionCallNode)Target).CheckForNull)))
+                {
+                    return null;
+                }
+                else throw;
+            }
         }
     }
 }

@@ -156,6 +156,25 @@ func opTests()
 	c1 = null;
 	d1 = "ok";
 	assert(a1 ?? b1 ?? c1 ?? d1 == "ok", "should pass if chaining ?? (null-coalescing) is correct");
+	
+	
+	func test()
+	{
+		a = null;
+		b = "abc";
+		c = 38;
+		d = "test";
+		return a;
+	}
+	
+	a = test();
+    b = "abc";
+    c = 38;
+    d = "test";
+    a?.b = b;
+    a?.b?.c = c;
+    a?.b?.c?.d = d;
+	assert(Convert.toString(test()?.b?.c?.d) == "null", "should pass if left?.right (null-check) is correct");
 
     assert(1 <=> 2 == -1, "should pass if <=> result is correct");
 	

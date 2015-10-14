@@ -75,7 +75,7 @@ namespace Hassium.Parser
 
         public Token PreviousToken(int delay = 1)
         {
-            return tokens[position - delay];
+            return position - delay >= tokens.Count ? new Token(TokenType.Identifier, null) : tokens[position - delay];
         }
 
         public bool MatchToken(TokenType clazz)
@@ -244,7 +244,18 @@ namespace Hassium.Parser
                     throw new ParseException("Expected 'this' or 'base' in constructor", tempPosition);
             }
 
-            AstNode body = ParseStatement(parser);
+            AstNode body = null;
+
+            if (parser.AcceptToken(TokenType.Lambda))
+            {
+                body = ParseStatement(parser);
+                if (!(body is CodeBlock))
+                    body = new ReturnNode(body.Position, body);
+
+                if (parser.MatchToken(TokenType.EndOfLine))
+                    parser.ExpectToken(TokenType.EndOfLine);
+            }
+            else body = ParseStatement(parser);
 
             return new FuncNode(position, name, result, body, constr, parms);
         }
@@ -749,7 +760,7 @@ namespace Hassium.Parser
 
             AstNode left = parseLogicalOr(parser);
 
-            while (parser.AcceptToken(TokenType.Operation, "?"))
+            while (parser.PreviousToken(-1).TokenClass != TokenType.Dot && parser.AcceptToken(TokenType.Operation, "?"))
             {
                 AstNode ifbody = null;
                 if (!parser.MatchToken(TokenType.Colon))
@@ -1085,12 +1096,19 @@ namespace Hassium.Parser
                     var parser1 = parser;
                     left = new ArrayGetNode(position, left, ParseArrayIndexer(parser1));
                 }
-                else if (parser.AcceptToken(TokenType.Dot, "."))
+                else if (parser.AcceptToken(TokenType.Dot, ".") || (parser.MatchToken(TokenType.Operation, "?") && parser.PreviousToken(-1).TokenClass == TokenType.Dot))
                 {
+                    bool checknull = false;
+                    if(parser.AcceptToken(TokenType.Operation, "?"))
+                    {
+                        checknull = true;
+                        parser.AcceptToken(TokenType.Dot, ".");
+                    }
                     bool dictaccess = parser.AcceptToken(TokenType.Operation, "&");
                     Token ident = parser.ExpectToken("Expected member name", TokenType.Identifier);
+                    if(!checknull) checknull = parser.AcceptToken(TokenType.Operation, "?");
 
-                    left = new MemberAccessNode(position, left, (dictaccess ? "&" : "") + ident.Value);
+                    left = new MemberAccessNode(position, left, (dictaccess ? "&" : "") + ident.Value, checknull);
                 }
                 else
                     return left;
@@ -1108,9 +1126,6 @@ namespace Hassium.Parser
                         parser.PreviousToken().Value is int);
                 case TokenType.LParen:
                 {
-                    /*parser.ExpectToken(TokenType.LParen);
-                    AstNode statement = parseExpression(parser);
-                    parser.ExpectToken(TokenType.RParen);*/
                     AstNode statement = parseArgList(parser);
                     if(parser.AcceptToken(TokenType.Lambda))
                         {

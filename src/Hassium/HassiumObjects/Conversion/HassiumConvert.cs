@@ -78,7 +78,7 @@ namespace Hassium.HassiumObjects.Conversion
 
         public static HassiumObject toString(HassiumObject[] args)
         {
-            return string.Join("", args.Select(x => x.ToString()));
+            return string.Join("", args.Select(x => x == null ? "null" : x.ToString()));
         }
 
         public static HassiumObject toBool(HassiumObject[] args)

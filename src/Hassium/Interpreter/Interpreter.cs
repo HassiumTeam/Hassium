@@ -434,6 +434,7 @@ namespace Hassium.Interpreter
                 {
                     var accessor = (MemberAccessNode) node.Left;
                     var target = (HassiumObject) accessor.Left.Visit(this);
+                    if (target == null && accessor.CheckForNull) return null;
                     target.SetAttribute(accessor.Member, right);
                 }
                 else if(node.Left is ConditionalOpNode)
@@ -1290,6 +1291,7 @@ namespace Hassium.Interpreter
                 if(!(target is HassiumDictionary)) throw new ParseException("The target must be a dictionary", node);
                 return ((HassiumDictionary) target)[name.Substring(1)];
             }
+            if (target == null && node.CheckForNull) return null;
             var attr = target.GetAttribute(name, node.Position + 1);
             if (attr is InternalFunction && ((InternalFunction) attr).IsProperty)
                 return ((InternalFunction) attr).Invoke();
