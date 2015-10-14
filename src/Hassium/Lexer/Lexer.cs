@@ -296,7 +296,6 @@ namespace Hassium.Lexer
             ReadChar();
             ReadChar();
             ReadChar();
-            EatWhiteSpaces();
             StringBuilder builder = new StringBuilder();
 
             while(HasChar())
