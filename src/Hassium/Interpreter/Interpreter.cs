@@ -863,6 +863,12 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(EchoNode expr)
+        {
+            Console.Write(expr.Content);
+            return expr.Content;
+        }
+
         public object Accept(LabelNode node)
         {
             if (!CallStack.Any())

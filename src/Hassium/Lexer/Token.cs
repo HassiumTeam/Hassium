@@ -48,7 +48,8 @@ namespace Hassium.Lexer
         Lambda,
         Dot,
         Char,
-        Colon
+        Colon,
+        Echo
     }
 
     public class Token

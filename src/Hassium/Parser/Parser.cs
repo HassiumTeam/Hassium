@@ -168,6 +168,10 @@ namespace Hassium.Parser
                         return parseEnum(parser);
                 }
             }
+            else if(parser.MatchToken(TokenType.Echo))
+            {
+                return new EchoNode(parser.codePosition, parser.ExpectToken(TokenType.Echo).ToString());
+            }
             else if (parser.MatchToken(TokenType.LBrace))
             {
                 return parseCodeBlock(parser);

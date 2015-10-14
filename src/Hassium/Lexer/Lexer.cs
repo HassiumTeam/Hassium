@@ -146,6 +146,7 @@ namespace Hassium.Lexer
                     case '#':
                         ScanComment(true);
                         break;
+
                     case '+':
                     case '-':
                         if (next1 == current)
@@ -248,6 +249,12 @@ namespace Hassium.Lexer
                         break;
                     case '<':
                     case '>':
+                        if(current == '>' && next1 == '>' && next2 == '>')
+                        {
+                            ScanEcho();
+                            break;
+                        }
+
                         if (next1 == current)
                             add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                         else if (next1 == '=')
@@ -282,6 +289,29 @@ namespace Hassium.Lexer
                 ReadChar();
 
             if (!oneLine && HasChar()) ReadChar();
+        }
+
+        private void ScanEcho()
+        {
+            ReadChar();
+            ReadChar();
+            ReadChar();
+            EatWhiteSpaces();
+            StringBuilder builder = new StringBuilder();
+
+            while(HasChar())
+            {
+                var current = ReadChar();
+                if(current == '<' && PeekChar() == '<' && PeekChar(1) == '<')
+                {
+                    ReadChar();
+                    ReadChar();
+                    break;
+                }
+                builder.Append(current);
+            }
+
+            add(new Token(TokenType.Echo, builder.ToString()));
         }
 
         /// <summary>
