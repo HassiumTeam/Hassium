@@ -305,6 +305,7 @@ namespace Hassium.Lexer
                 {
                     ReadChar();
                     ReadChar();
+
                     break;
                 }
                 builder.Append(current);
@@ -320,6 +321,7 @@ namespace Hassium.Lexer
         /// <param name="isVerbatim">If set to <c>true</c> the string is verbatim (no escape sequences).</param>
         private void ScanString(bool isVerbatim = false)
         {
+            int pos = position;
             var quote = ReadChar();
             if (isVerbatim) quote = ReadChar();
             StringBuilder stringBuilder = new StringBuilder();
@@ -402,7 +404,7 @@ namespace Hassium.Lexer
             }
 
             if (HasChar()) ReadChar();
-            else throw new ParseException("Unfinished string", position);
+            else throw new ParseException("Unfinished string", pos);
 
             add(new Token(TokenType.String, stringBuilder));
         }
