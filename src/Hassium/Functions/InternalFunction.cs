@@ -35,20 +35,19 @@ namespace Hassium.Functions
     {
         private HassiumFunctionDelegate target;
 
-        public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false)
+        public bool IsStatic { get; set; }
+
+        public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false, bool stati = false) : this(target, new []{args}, prop, constr, stati)
         {
-            this.target = target;
-            IsProperty = prop;
-            IsConstructor = constr;
-            Arguments = new[] {args};
         }
 
-        public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false)
+        public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false, bool stati = false)
         {
             this.target = target;
             IsProperty = prop;
             IsConstructor = constr;
             Arguments = args;
+            IsStatic = stati;
         }
 
         public bool IsProperty { get; set; }
@@ -60,8 +59,8 @@ namespace Hassium.Functions
 
         public override string ToString()
         {
-            return string.Format("[InternalFunction: {0}`{1}]", target.Method.Name,
-                target.Method.GetParameters().Count());
+            return string.Format("[InternalFunction: {0}`{1}{2}]", target.Method.Name,
+                target.Method.GetParameters().Length, IsStatic ? " Static" : "");
         }
 
         public override HassiumObject Invoke(params HassiumObject[] args)

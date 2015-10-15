@@ -1111,14 +1111,14 @@ namespace Hassium.Interpreter
                     // internal interpreter functions
                     break;
                 default:
-                    /*if (((call.Target is IdentifierNode) &&
-                         !hasFunction(call.Target.ToString(), call.Arguments.Children.Count)))
-                        throw new ParseException("The function " + call.Target + " doesn't exist", node);*/
-
                     if (call.Target is MemberAccessNode)
                     {
                         var man = (MemberAccessNode) call.Target;
                         var targ = (HassiumObject) man.Left.Visit(this);
+                        if (targ is InternalFunction && ((InternalFunction)targ).IsConstructor)
+                        {
+                            throw new ParseException("Trying to access member without instanciating", node);
+                        }
                         if (targ.Attributes.ContainsKey(man.Member + "`" + call.Arguments.Children.Count))
                             target = targ.GetAttribute(man.Member + "`" + call.Arguments.Children.Count, node.Position);
                         else if (targ.Attributes.ContainsKey(man.Member))
@@ -1290,6 +1290,10 @@ namespace Hassium.Interpreter
         {
             var accessor = node;
             var target = (HassiumObject) accessor.Left.Visit(this);
+            if(target is InternalFunction && ((InternalFunction)target).IsConstructor)
+            {
+                throw new ParseException("Trying to access member without instanciating", node);
+            }
             var name = accessor.Member;
             if (name.StartsWith("&"))
             {
@@ -1559,6 +1563,7 @@ namespace Hassium.Interpreter
                         Constants.Add("Point",
                             new InternalFunction(args => new HassiumPoint(args[0].HInt().Value, args[1].HInt().Value), 2,
                                 false, true));
+                        Constants.Add("Gradient", new InternalFunction(x => new HassiumGradient(x), -1, false, true));
                         break;
                     default:
                         throw new Exception("Unknown Module: " + node.Path);

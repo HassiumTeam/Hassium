@@ -50,6 +50,7 @@
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumBitmap.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumColor.cs" />
+    <Compile Include="HassiumObjects\Drawing\HassiumGradient.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumImage.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumPoint.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumSize.cs" />

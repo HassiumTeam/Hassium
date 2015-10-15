@@ -308,6 +308,8 @@ namespace Hassium.HassiumObjects.Drawing
         {
             Value = Color.White;
 
+            Attributes.Add("makeGradient", new InternalFunction(x => "ok", 2, stati: true));
+
             // ARGB
             Attributes.Add("alpha", new HassiumProperty("alpha", x => alpha, (self, x) => alpha = x[0].HInt().Value));
             Attributes.Add("red", new HassiumProperty("red", x => red, (self, x) => red = x[0].HInt().Value));
@@ -376,9 +378,9 @@ namespace Hassium.HassiumObjects.Drawing
             Attributes.Add("toYuv", new InternalFunction(ToYUV, 0));
         }
 
-        public HassiumColor(IList<HassiumObject> args) : this()
+        public HassiumColor(params HassiumObject[] args) : this()
         {
-            switch (args.Count)
+            switch (args.Length)
             {
                 case 0:
                     throw new ParseException("Not enough arguments for HassiumColor constructor", -1);
@@ -412,7 +414,7 @@ namespace Hassium.HassiumObjects.Drawing
                                 break;
                             case "rgbp":
                             case "rgbpercent":
-                                Value = args.Count == 5
+                                Value = args.Length == 5
                                     ? Color.FromArgb(Convert.ToInt32(arg1 * 255),
                                         Convert.ToInt32(arg2 * 255),
                                         Convert.ToInt32(arg3 * 255),
