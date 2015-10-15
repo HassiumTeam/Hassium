@@ -28,6 +28,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
@@ -124,6 +126,15 @@ namespace Hassium.Functions
                 ret[x] = ((HassiumMethod) args[1]).Invoke(array._value[x]);
 
             return ret;
+        }
+
+        [IntFunc("threadRun", 1)]
+        public static HassiumObject threadRun(HassiumObject[] args)
+        {
+            HassiumMethod method = ((HassiumMethod)args[0]);
+            new Thread(() => method.Invoke()).Start();
+
+            return null;
         }
 
         [IntFunc("runtimecall", -1)]
