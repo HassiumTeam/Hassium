@@ -629,7 +629,7 @@ namespace Hassium.Interpreter
                 case UnaryOperation.Not:
                     return !Convert.ToBoolean(value);
                 case UnaryOperation.Negate:
-                    if (value is int) return -(int) value;
+                    if (value is HassiumInt) return -(HassiumInt) value;
                     return -Convert.ToDouble(value);
                 case UnaryOperation.Complement:
                     return ~(int) Convert.ToDouble(value);
@@ -1214,12 +1214,19 @@ namespace Hassium.Interpreter
 
 
             HassiumObject ret = null;
-            if (hasVariable(call.Target + "`i") && !(target is InternalFunction))
-                ret = target.Invoke(new HassiumObject[] { new HassiumArray(arguments) });
-            else ret = target.Invoke(arguments);
+            try
+            {
+                if (hasVariable(call.Target + "`i") && !(target is InternalFunction))
+                    ret = target.Invoke(new HassiumObject[] {new HassiumArray(arguments)});
+                else ret = target.Invoke(arguments);
+            }
+            catch (Exception e)
+            {
+                if (e is ParseException && ((ParseException) e).Position != -1) throw;
+                throw new ParseException(e.Message, node);
+            }
             if (ReturnFunc)
                 ReturnFunc = false;
-            //if (ret is HassiumArray) ret = ((Array)ret).Cast<HassiumObject>().Select((s, i) => new { s, i }).ToDictionary(x => HassiumObject.ToHassiumObject(x.i), x => HassiumObject.ToHassiumObject(x.s));
             return ret;
         }
 

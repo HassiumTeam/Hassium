@@ -23,10 +23,12 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hassium.Functions;
+using Hassium.Interpreter;
 
 namespace Hassium.HassiumObjects.Types
 {
@@ -92,6 +94,8 @@ namespace Hassium.HassiumObjects.Types
 
             Attributes.Add("arrayToString", new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
 
+            Attributes.Add("sort", new InternalFunction(Sort, new []{0,1}));
+
             _value = value.Select(ToHassiumObject).ToList();
         }
 
@@ -104,6 +108,17 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return "Array { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
+        }
+
+        public HassiumObject Sort(HassiumObject[] args)
+        {
+            if (args.Length == 0) return new HassiumArray(Value.OrderBy(x => x).ToList());
+            else
+            {
+                var l = Value.ToList();
+                l.Sort((x, y) => HassiumMethod.GetFunc2(args[0])(x, y).HInt().Value);
+                return new HassiumArray(l);
+            }
         }
 
         public HassiumObject Add(HassiumObject[] args)

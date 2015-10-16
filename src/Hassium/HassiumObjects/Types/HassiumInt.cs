@@ -30,7 +30,7 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Types
 {
-    public class HassiumInt : HassiumObject, IConvertible
+    public class HassiumInt : HassiumObject, IConvertible, IComparable
     {
         protected bool Equals(HassiumInt other)
         {
@@ -47,6 +47,11 @@ namespace Hassium.HassiumObjects.Types
         public override int GetHashCode()
         {
             return Value;
+        }
+
+        public int CompareTo(object obj)
+        {
+            return Value.CompareTo(((HassiumInt)obj).Value);
         }
 
         public int Value { get; set; }

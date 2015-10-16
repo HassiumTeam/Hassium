@@ -26,7 +26,9 @@
 // **/
 
 using System;
+using System.IO;
 using Hassium.Functions;
+using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Interpreter
@@ -41,6 +43,10 @@ namespace Hassium.HassiumObjects.Interpreter
             Attributes.Add("userName", new InternalFunction(userName, 0));
             Attributes.Add("machineName", new InternalFunction(machineName, 0));
 	        Attributes.Add("getEnvironmentVariable", new InternalFunction(getEnvironmentVariable, 1));
+
+            Attributes.Add("lineNumber", new HassiumProperty("lineNumber", x => Program.CurrentInterpreter.NodePos.Peek(), null, true));
+            Attributes.Add("filePath", new HassiumProperty("filePath", x => Program.options.FilePath, null, true));
+            Attributes.Add("directoryPath", new HassiumProperty("directoryPath", x => Path.GetDirectoryName(Program.options.FilePath), null, true));
         }
 
         public HassiumObject osVersion(HassiumObject[] args)
