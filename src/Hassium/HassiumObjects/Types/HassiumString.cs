@@ -179,7 +179,7 @@ namespace Hassium.HassiumObjects.Types
                     {
                         int k = 0;
                         var words =
-                            word.ToLookup(c => (int)System.Math.Floor(k++ / (double)(length - 1))).Select(e => new string(e.ToArray()) + "-");
+                            word.ToLookup(c => + (int)System.Math.Floor(k++ / (double)(length - 1))).Select(e => new string(e.ToArray()) + "-");
                         k = 0;
                         foreach (string cword in words)
                         {
@@ -190,9 +190,9 @@ namespace Hassium.HassiumObjects.Types
                     }
                     else currentLine += word + " ";
 
-                    if (currentLine.EndsWith(" ")) currentLine = currentLine.Substring(0, currentLine.Length - 1);
+                    
                 }
-
+                if (currentLine.EndsWith(" ")) currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 if (currentLine.Length > 0)
                     result.Add(currentLine);
             }

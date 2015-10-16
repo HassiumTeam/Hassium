@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,6 +96,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("arrayToString", new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
 
             Attributes.Add("sort", new InternalFunction(Sort, new []{0,1}));
+            Attributes.Add("unique", new InternalFunction(Unique, 0));
+            Attributes.Add("toDictionary", new InternalFunction(ToDictionary, 1));
 
             _value = value.Select(ToHassiumObject).ToList();
         }
@@ -110,6 +113,11 @@ namespace Hassium.HassiumObjects.Types
             return "Array { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
         }
 
+        public HassiumObject ToDictionary(HassiumObject[] args)
+        {
+            return new HassiumDictionary(Value.Zip(args[0].HArray().Value, (k, v) => new {k, v}).ToDictionary(x => x.k, x => x.v));
+        }
+
         public HassiumObject Sort(HassiumObject[] args)
         {
             if (args.Length == 0) return new HassiumArray(Value.OrderBy(x => x).ToList());
@@ -119,6 +127,11 @@ namespace Hassium.HassiumObjects.Types
                 l.Sort((x, y) => HassiumMethod.GetFunc2(args[0])(x, y).HInt().Value);
                 return new HassiumArray(l);
             }
+        }
+
+        public HassiumObject Unique(HassiumObject[] args)
+        {
+            return new HassiumArray(Value.Distinct());
         }
 
         public HassiumObject Add(HassiumObject[] args)
