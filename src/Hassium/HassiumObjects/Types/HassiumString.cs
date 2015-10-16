@@ -25,6 +25,7 @@
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using Hassium.Functions;
 using Hassium.Interpreter;
@@ -100,21 +101,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject occurences(HassiumObject[] args)
         {
-            char letter;
-            int counter = 0;
-
-            if (args[0] is HassiumString)
-                letter = Convert.ToChar(((HassiumString)args[0]).Value);
-            else if (args[0] is HassiumChar)
-                letter = ((HassiumChar)args[0]).Value;
-            else
-                throw new ParseException("Unknown format for string.occurences().", Program.CurrentInterpreter.NodePos.Peek());
-
-            foreach (char c in Value)
-                if (c == letter)
-                    counter++;
-
-            return new HassiumInt(counter);
+            return Regex.Matches(Value, args[0].ToString()).Count;
         }
 
         public HassiumObject addSlashes(HassiumObject[] args)
