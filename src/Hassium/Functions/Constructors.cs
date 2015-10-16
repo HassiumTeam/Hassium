@@ -85,5 +85,49 @@ namespace Hassium.Functions
         {
             return new HassiumStopWatch();
         }
+
+        [IntFunc("String", true, -1)]
+        public static HassiumObject String(HassiumObject[] args)
+        {
+            string initialValue = "";
+
+            if (args.Length >= 1)
+                initialValue = args[0].ToString();
+
+            return new HassiumString(initialValue);
+        }
+
+        [IntFunc("Char", true, -1)]
+        public static HassiumObject Char(HassiumObject[] args)
+        {
+            char initialValue = ' ';
+
+            if (args.Length >= 1)
+                initialValue = args[0].HChar();
+
+            return new HassiumChar(initialValue);
+        }
+
+        [IntFunc("Int", true, -1)]
+        public static HassiumObject Int(HassiumObject[] args)
+        {
+            int initialValue = 0;
+
+            if (args.Length >= 1)
+                initialValue = args[0].HInt();
+
+            return new HassiumInt(initialValue);
+        }
+
+        [IntFunc("Double", true, -1)]
+        public static HassiumObject Double(HassiumObject[] args)
+        {
+            double initialValue = 0;
+
+            if (args.Length >= 1)
+                initialValue = args[0].HDouble();
+
+            return new HassiumDouble(initialValue);
+        }
     }
 }

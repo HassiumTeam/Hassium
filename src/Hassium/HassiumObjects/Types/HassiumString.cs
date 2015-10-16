@@ -75,6 +75,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("fill", new InternalFunction(fill, -1));
             Attributes.Add("split", new InternalFunction(split, 1));
             Attributes.Add("replace", new InternalFunction(replace, 2));
+            Attributes.Add("reverse", new InternalFunction(reverse, 1));
             Attributes.Add("index", new InternalFunction(index, 1));
             Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace, 0));
             Attributes.Add("lastIndex", new InternalFunction(lastindex, 1));
@@ -103,6 +104,15 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        public HassiumObject reverse(HassiumObject[] args)
+        {
+            string ret = "";
+            for (int x = Value.Length; x >= 0; x--)
+                ret += Value[x].ToString();
+
+            return new HassiumString(ret);
         }
 
         public HassiumObject map(HassiumObject[] args)
