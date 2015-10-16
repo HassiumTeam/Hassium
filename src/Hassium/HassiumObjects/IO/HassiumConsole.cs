@@ -26,6 +26,7 @@
 using System;
 using System.Windows.Forms;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Drawing;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
@@ -36,9 +37,11 @@ namespace Hassium.HassiumObjects.IO
         {
             Attributes.Add("beep", new InternalFunction(Beep, new[] {0, 2}));
             Attributes.Add("backgroundColor",
-                new HassiumProperty("backgroundColor", x => GetBackground(new HassiumObject[] {}), (self, x) => SetBackground(x)));
+                new HassiumProperty("backgroundColor", x => GetBackground(new HassiumObject[] {}),
+                    (self, x) => SetBackground(x)));
             Attributes.Add("foregroundColor",
-                new HassiumProperty("foregroundColor", x => GetForeground(new HassiumObject[] {}), (self, x) => SetForeground(x)));
+                new HassiumProperty("foregroundColor", x => GetForeground(new HassiumObject[] {}),
+                    (self, x) => SetForeground(x)));
             Attributes.Add("title", new HassiumProperty("title", x => Console.Title, (self, x) =>
             {
                 Console.Title = x[0].ToString();
@@ -46,7 +49,23 @@ namespace Hassium.HassiumObjects.IO
             }));
             Attributes.Add("capsLock", new InternalFunction(x => Console.CapsLock, 0, true));
             Attributes.Add("getKey", new InternalFunction(x => Console.ReadKey(true).KeyChar.ToString(), 0));
-            Attributes.Add("cursorPos", new InternalFunction(GetCursorPos, 0, true));
+            Attributes.Add("cursorPos", new HassiumProperty("cursorPos",
+                x =>
+                {
+                    var p = new HassiumPoint(Console.CursorLeft, Console.CursorTop);
+                    p.AttributeChanged += (attrname, value) =>
+                    {
+                        Console.CursorLeft = p.Value.X;
+                        Console.CursorTop = p.Value.Y;
+                    };
+                    return p;
+                }, (self, x) =>
+                {
+                    var p = (HassiumPoint) x[0];
+                    Console.CursorLeft = p.Value.X;
+                    Console.CursorTop = p.Value.Y;
+                    return p;
+                }));
             Attributes.Add("getClipboard", new InternalFunction(GetClipboard, 0));
         }
 
@@ -440,18 +459,6 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject GetBackground(HassiumObject[] args)
         {
             return Console.BackgroundColor.ToString();
-        }
-
-        public HassiumObject GetCursorPos(HassiumObject[] args)
-        {
-            var ret = new HassiumObject();
-            ret.SetAttribute("left",
-                new HassiumProperty("left", x => Console.CursorLeft, (self, x) => Console.CursorLeft = x[0].HInt().Value));
-            ret.SetAttribute("top",
-                new HassiumProperty("top", x => Console.CursorTop, (self, x) => Console.CursorTop = x[0].HInt().Value));
-            ret.SetAttribute("toString",
-                new InternalFunction(x => "{" + Console.CursorLeft + ", " + Console.CursorTop + "}", 0));
-            return ret;
         }
 
         public HassiumObject Beep(HassiumObject[] args)

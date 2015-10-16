@@ -36,13 +36,16 @@ using Hassium.Lexer;
 
 namespace Hassium.HassiumObjects
 {
+
     public class HassiumObject : IFunction
     {
         private readonly Dictionary<string, HassiumObject> _attributes;
 
         public bool IsInstance { get; set; }
 
+        public event AttributeChangedHandler AttributeChanged = (a, v) => { };
 
+        public delegate void AttributeChangedHandler(string attrname, HassiumObject value);
 
         public Dictionary<string, HassiumObject> Attributes
         {
@@ -52,6 +55,7 @@ namespace Hassium.HassiumObjects
         public HassiumObject()
         {
             _attributes = new Dictionary<string, HassiumObject>();
+            IsInstance = true;
         }
 
         public void SetAttribute(string name, HassiumObject value)
@@ -70,6 +74,7 @@ namespace Hassium.HassiumObjects
                     prop.SetValue(value);
             }
             else _attributes[name] = value;
+            AttributeChanged(name, value);
         }
 
         public HassiumObject GetAttribute(string name, int pos)
