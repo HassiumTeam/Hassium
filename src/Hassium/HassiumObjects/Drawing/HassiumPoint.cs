@@ -30,6 +30,11 @@ namespace Hassium.HassiumObjects.Drawing
             Attributes.Add("offset", new InternalFunction(Offset, new []{1,2}));
         }
 
+        public override string ToString()
+        {
+            return "{" + Value.X + ", " + Value.Y + "}";
+        }
+
         public HassiumObject Offset(HassiumObject[] args)
         {
             if(args.Length == 2)
