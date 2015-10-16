@@ -62,8 +62,10 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toLower", new InternalFunction(tolower, 0));
             Attributes.Add("toUpper", new InternalFunction(toupper, 0));
             Attributes.Add("startsWith", new InternalFunction(begins, 1));
+            Attributes.Add("compare", new InternalFunction(compare, 1));
             Attributes.Add("endsWith", new InternalFunction(ends, 1));
             Attributes.Add("getAt", new InternalFunction(getat, 1));
+            Attributes.Add("getCharArray", new InternalFunction(getCharArray, 0));
             Attributes.Add("substring", new InternalFunction(substr, new[] {1, 2}));
             Attributes.Add("concat", new InternalFunction(concat, 1));
             Attributes.Add("contains", new InternalFunction(contains, 1));
@@ -96,6 +98,20 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        public HassiumObject getCharArray(HassiumObject[] args)
+        {
+            HassiumChar[] ret = new HassiumChar[Value.Length];
+            for (int x = 0; x < Value.Length; x++)
+                ret[x] = new HassiumChar(Value[x]);
+
+            return new HassiumArray(ret);
+        }
+
+        public HassiumObject compare(HassiumObject[] args)
+        {
+            return new HassiumBool(Value == ((HassiumString)args[0]).Value);
         }
 
         public HassiumObject occurences(HassiumObject[] args)
