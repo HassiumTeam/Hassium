@@ -90,7 +90,7 @@ namespace Hassium.Interpreter
 
         private int isInLoop { get; set; }
         private Stack<int> position = new Stack<int>(); 
-        private Stack<int> nodePos = new Stack<int>(); 
+        public Stack<int> NodePos = new Stack<int>(); 
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Interpreter" /> class.
@@ -145,7 +145,7 @@ namespace Hassium.Interpreter
                     if (ex is ParseException)
                         Program.printError(Program.options.Code, (ParseException) ex);
                     else
-                        Program.printError(Program.options.Code, new ParseException(ex.Message, nodePos.Any() ? nodePos.Peek() : -1));
+                        Program.printError(Program.options.Code, new ParseException(ex.Message, NodePos.Any() ? NodePos.Peek() : -1));
                         //Console.WriteLine("There has been an error. Message: " + ex.Message);
 
                     Console.WriteLine("\nStack Trace: \n" + ex.StackTrace);
@@ -304,9 +304,7 @@ namespace Hassium.Interpreter
                     }
                 }
                 else
-                {
                     throw new ParseException("Expected type name", node.Right);
-                }
             }
             var right = (HassiumObject) node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
@@ -1686,15 +1684,15 @@ namespace Hassium.Interpreter
         private void visitSubnodes(AstNode node)
         {
             position.Push(-1);
-            nodePos.Push(-1);
+            NodePos.Push(-1);
             for (int index = 0; index < node.Children.Count; index++)
             {
                 position.Pop();
                 position.Push(index);
                 
                 var nd = node.Children[index];
-                nodePos.Pop();
-                nodePos.Push(nd.Position);
+                NodePos.Pop();
+                NodePos.Push(nd.Position);
                 nd.Visit(this);
                 if(gotoposition)
                 {
@@ -1706,7 +1704,7 @@ namespace Hassium.Interpreter
                 if (continueLoop || breakLoop || ReturnFunc || exit) break;
             }
             position.Pop();
-            nodePos.Pop();
+            NodePos.Pop();
         }
     }
 }

@@ -27,6 +27,7 @@ using System;
 using System.Linq;
 using System.Web;
 using Hassium.Functions;
+using Hassium.Interpreter;
 
 namespace Hassium.HassiumObjects.Types
 {
@@ -71,6 +72,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("index", new InternalFunction(index, 1));
             Attributes.Add("isWhiteSpace", new InternalFunction(isWhiteSpace, 0));
             Attributes.Add("lastIndex", new InternalFunction(lastindex, 1));
+            Attributes.Add("occurences", new InternalFunction(occurences, 1));
             Attributes.Add("padLeft", new InternalFunction(padleft, 1));
             Attributes.Add("padRight", new InternalFunction(padright, 1));
             Attributes.Add("trim", new InternalFunction(trim, 0));
@@ -94,6 +96,25 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        public HassiumObject occurences(HassiumObject[] args)
+        {
+            char letter;
+            int counter = 0;
+
+            if (args[0] is HassiumString)
+                letter = Convert.ToChar(((HassiumString)args[0]).Value);
+            else if (args[0] is HassiumChar)
+                letter = ((HassiumChar)args[0]).Value;
+            else
+                throw new ParseException("Unknown format for string.occurences().", Program.CurrentInterpreter.NodePos.Peek());
+
+            foreach (char c in Value)
+                if (c == letter)
+                    counter++;
+
+            return new HassiumInt(counter);
         }
 
         public HassiumObject addSlashes(HassiumObject[] args)
