@@ -70,6 +70,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("substring", new InternalFunction(substr, new[] {1, 2}));
             Attributes.Add("concat", new InternalFunction(concat, 1));
             Attributes.Add("contains", new InternalFunction(contains, 1));
+            Attributes.Add("map", new InternalFunction(map, 1));
+            Attributes.Add("fill", new InternalFunction(fill, -1));
             Attributes.Add("split", new InternalFunction(split, 1));
             Attributes.Add("replace", new InternalFunction(replace, 2));
             Attributes.Add("index", new InternalFunction(index, 1));
@@ -99,6 +101,32 @@ namespace Hassium.HassiumObjects.Types
         public static implicit operator HassiumString(HassiumChar c)
         {
             return new HassiumString(c.ToString());
+        }
+
+        public HassiumObject map(HassiumObject[] args)
+        {
+            string ret = "";
+            foreach (char c in Value)
+                ret += ((HassiumMethod)args[0]).Invoke(c.ToString()).ToString();
+
+            return new HassiumString(ret);
+        }
+
+        public HassiumObject fill(HassiumObject[] args)
+        {
+            string ret = "";
+            if (args.Length == 1)
+                foreach (char c in Value)
+                    ret += args[0].ToString();
+
+            else
+            {
+                ret = Value;
+                for (int x = Value.Length; x < args[1].HInt(); x++)
+                    ret += args[0].ToString();
+            }
+
+            return ret;
         }
 
         public HassiumObject getCharArray(HassiumObject[] args)
