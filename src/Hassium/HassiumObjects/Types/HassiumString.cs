@@ -65,11 +65,14 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toLower", new InternalFunction(tolower, 0));
             Attributes.Add("toUpper", new InternalFunction(toupper, 0));
             Attributes.Add("startsWith", new InternalFunction(begins, 1));
+            Attributes.Add("compare", new InternalFunction(compare, 1));
             Attributes.Add("endsWith", new InternalFunction(ends, 1));
             Attributes.Add("getAt", new InternalFunction(getat, 1));
-            Attributes.Add("substring", new InternalFunction(substring, new[] {1, 2}));
+            Attributes.Add("substring", new InternalFunction(substring, new[] { 1, 2 }));
             Attributes.Add("concat", new InternalFunction(concat, 1));
             Attributes.Add("contains", new InternalFunction(contains, 1));
+            Attributes.Add("map", new InternalFunction(map, 1));
+            Attributes.Add("fill", new InternalFunction(fill, -1));
             Attributes.Add("split", new InternalFunction(split, 1));
             Attributes.Add("replace", new InternalFunction(replace, 2));
             Attributes.Add("index", new InternalFunction(index, 1));
@@ -89,7 +92,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toByte", new InternalFunction(toByte, 0));
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
             Attributes.Add("addSlashes", new InternalFunction(addSlashes, 0));
-            Attributes.Add("wordWrap", new InternalFunction(wordWrap, new []{1,2}));
+            Attributes.Add("wordWrap", new InternalFunction(wordWrap, new[] { 1, 2 }));
         }
 
         public static implicit operator HassiumArray(HassiumString s)
@@ -102,6 +105,37 @@ namespace Hassium.HassiumObjects.Types
             return new HassiumString(c.ToString());
         }
 
+        public HassiumObject map(HassiumObject[] args)
+        {
+            string ret = "";
+            foreach (char c in Value)
+                ret += ((HassiumMethod)args[0]).Invoke(c.ToString()).ToString();
+
+            return new HassiumString(ret);
+        }
+
+        public HassiumObject fill(HassiumObject[] args)
+        {
+            string ret = "";
+            if (args.Length == 1)
+                foreach (char c in Value)
+                    ret += args[0].ToString();
+
+            else
+            {
+                ret = Value;
+                for (int x = Value.Length; x < args[1].HInt(); x++)
+                    ret += args[0].ToString();
+            }
+
+            return ret;
+        }
+
+        public HassiumObject compare(HassiumObject[] args)
+        {
+            return new HassiumBool(Value == ((HassiumString)args[0]).Value);
+        }
+
         public HassiumObject occurences(HassiumObject[] args)
         {
             return Regex.Matches(Value, args[0].ToString()).Count;
@@ -111,7 +145,7 @@ namespace Hassium.HassiumObjects.Types
         {
             bool cut = false;
             int length = args[0].HInt();
-            if(length < 1) throw new ParseException("The length of word-wrap must be greater than 0", -1);
+            if (length < 1) throw new ParseException("The length of word-wrap must be greater than 0", -1);
             if (args.Length == 2) cut = args[1].HBool();
 
             var result = new List<string>();
@@ -147,7 +181,7 @@ namespace Hassium.HassiumObjects.Types
                         var words =
                             word.ToLookup(c => (int)System.Math.Floor(k++ / (double)(length - 1))).Select(e => new string(e.ToArray()) + "-");
                         k = 0;
-                        foreach(string cword in words)
+                        foreach (string cword in words)
                         {
                             result.Add(k == words.Count() - 1 ? cword.Substring(0, cword.Length - 1) : cword);
                             k++;
@@ -159,7 +193,7 @@ namespace Hassium.HassiumObjects.Types
                     if (currentLine.EndsWith(" ")) currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
 
-                if(currentLine.Length > 0)
+                if (currentLine.Length > 0)
                     result.Add(currentLine);
             }
 
@@ -236,7 +270,7 @@ namespace Hassium.HassiumObjects.Types
             if (lower < 0) lower = Value.Length + lower;
             var upper = args.Length == 2 ? args[1].HInt().Value : Value.Length - lower;
             if (upper < 0) upper = Value.Length + upper - lower;
-            if(lower >= Value.Length || lower + upper >= Value.Length) throw new ParseException("Out of bounds", -1);
+            if (lower >= Value.Length || lower + upper >= Value.Length) throw new ParseException("Out of bounds", -1);
             return Value.Substring(lower, upper);
         }
 
