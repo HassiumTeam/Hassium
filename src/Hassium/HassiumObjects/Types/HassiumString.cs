@@ -108,11 +108,7 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject reverse(HassiumObject[] args)
         {
-            string ret = "";
-            for (int x = Value.Length; x >= 0; x--)
-                ret += Value[x].ToString();
-
-            return new HassiumString(ret);
+            return string.Concat(Value.Reverse());
         }
 
         public HassiumObject map(HassiumObject[] args)

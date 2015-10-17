@@ -80,13 +80,13 @@ namespace Hassium.Functions
             return ret;
         }
 
-        [IntFunc("StopWatch", true, -1)]
+        [IntFunc("StopWatch", true, 0)]
         public static HassiumObject StopWatch(HassiumObject[] args)
         {
             return new HassiumStopWatch();
         }
 
-        [IntFunc("String", true, -1)]
+        [IntFunc("String", true, new []{0,1})]
         public static HassiumObject String(HassiumObject[] args)
         {
             string initialValue = "";
@@ -97,7 +97,7 @@ namespace Hassium.Functions
             return new HassiumString(initialValue);
         }
 
-        [IntFunc("Char", true, -1)]
+        [IntFunc("Char", true, new[] { 0, 1 })]
         public static HassiumObject Char(HassiumObject[] args)
         {
             char initialValue = ' ';
@@ -108,7 +108,7 @@ namespace Hassium.Functions
             return new HassiumChar(initialValue);
         }
 
-        [IntFunc("Int", true, -1)]
+        [IntFunc("Int", true, new[] { 0, 1 })]
         public static HassiumObject Int(HassiumObject[] args)
         {
             int initialValue = 0;
@@ -119,7 +119,7 @@ namespace Hassium.Functions
             return new HassiumInt(initialValue);
         }
 
-        [IntFunc("Double", true, -1)]
+        [IntFunc("Double", true, new[] { 0, 1 })]
         public static HassiumObject Double(HassiumObject[] args)
         {
             double initialValue = 0;
