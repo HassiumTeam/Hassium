@@ -95,7 +95,7 @@ namespace Hassium.Interpreter
             if (parms.Contains("this")) parms.Remove("this");
 
             if (parms.Count != args.Length)
-                throw new Exception("Incorrect arguments for function " + Name);
+                throw new Exception("Incorrect arguments for function " + Name + ": Expected " + parms.Count + " args, got " + args.Length);
 
             for (int x = 0; x < parms.Count; x++)
                 stackFrame.Locals[parms[x]] = args[x];
@@ -142,7 +142,7 @@ namespace Hassium.Interpreter
         /// <returns>The resulting <see cref="Func{HassiumObject, HassiumObject}" /></returns>
         public static Func<HassiumObject, HassiumObject> GetFunc1(HassiumObject internalFunction)
         {
-            return arg1 => (internalFunction).Invoke();
+            return arg1 => internalFunction.Invoke(arg1);
         }
 
         /// <summary>
