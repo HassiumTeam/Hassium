@@ -45,6 +45,7 @@ using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Math;
 using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Networking.HTTP;
+using Hassium.HassiumObjects.Networking.Mail;
 using Hassium.HassiumObjects.Text;
 using Hassium.HassiumObjects.Types;
 using Hassium.Lexer;
@@ -412,38 +413,7 @@ namespace Hassium.Interpreter
                         SetVariable(call.Target.ToString(), theArray, call);
                     }
                     else if (evaluated is HassiumTuple)
-                    {
                         throw new ParseException("Tuples are immutables (read-only)", node);
-
-                        /* Seems that tuples should be immutable
-                        HassiumArray theArray = null;
-                        var tuple = (HassiumTuple)evaluated;
-                        theArray = new HassiumArray(tuple.Attributes.Where(x => x.Key.StartsWith("item", true, CultureInfo.InvariantCulture)).Select(x => x.Value));
-
-                        int arid = -1;
-                        bool append = false;
-
-                        if (call.Arguments.Children.Count > 0)
-                            arid = (HassiumObject)call.Arguments.Children[0].Visit(this);
-                        else
-                            append = true;
-
-                        var theValue = node.IsOpAssign
-                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                            : right;
-
-                        if (append)
-                            theArray.Add(new[] { theValue });
-                        else
-                        {
-                            if (arid >= theArray.Value.Length)
-                                throw new ParseException("The index is out of the bounds of the array", call);
-
-                            theArray[arid] = theValue;
-                        }
-                        var resultingTuple = new HassiumTuple(theArray.Value.ToList(), this);
-                        SetVariable(call.Target.ToString(), resultingTuple, call);*/
-                    }
                     else
                     {
                         throw new ParseException(
@@ -1648,6 +1618,7 @@ namespace Hassium.Interpreter
                                     new HassiumSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream,
                                         ProtocolType.Tcp)), 0, false, true));
                         Constants.Add("cgi", new CGI());
+                        Constants.Add("SmtpClient", new InternalFunction(x => new HassiumSmtpClient((HassiumString)x[0], (HassiumInt)x[1]), 2, false, true));
                         break;
                     case "text":
                         Constants.Add("StringBuilder",

@@ -62,6 +62,8 @@
     <Compile Include="HassiumObjects\Networking\CGI.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpUtility.cs" />
+    <Compile Include="HassiumObjects\Networking\Mail\HassiumMailMessage.cs" />
+    <Compile Include="HassiumObjects\Networking\Mail\HassiumSmtpClient.cs" />
     <Compile Include="Interpreter\CallStack.cs" />
     <Compile Include="Interpreter\HassiumProperty.cs" />
     <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />
