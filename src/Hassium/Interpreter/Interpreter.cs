@@ -1619,6 +1619,7 @@ namespace Hassium.Interpreter
                                         ProtocolType.Tcp)), 0, false, true));
                         Constants.Add("cgi", new CGI());
                         Constants.Add("SmtpClient", new InternalFunction(x => new HassiumSmtpClient((HassiumString)x[0], (HassiumInt)x[1]), 2, false, true));
+                        Constants.Add("MailMessage", new InternalFunction(x => new HassiumMailMessage(x[0].HString(), x[1].HString(), x[2].HString(), x[3].HString()), 4, false, true));
                         break;
                     case "text":
                         Constants.Add("StringBuilder",
