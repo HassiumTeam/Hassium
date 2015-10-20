@@ -144,29 +144,30 @@ namespace Hassium.Functions
             {
             }
             var test = t.GetMember(membername).First();
+            object result = null;
             switch (test.MemberType)
             {
                 case MemberTypes.Field:
-                    var fv = t.GetField(membername).GetValue(null);
-                    if (fv is double) return new HassiumDouble((double) fv);
-                    if (fv is int) return new HassiumInt((int) fv);
-                    if (fv is string) return new HassiumString((string) fv);
-                    if (fv is Array) return new HassiumArray((Array) fv);
-                    if (fv is IDictionary) return new HassiumDictionary((IDictionary) fv);
-                    if (fv is bool) return new HassiumBool((bool) fv);
-                    else return (HassiumObject) (object) fv;
+                    result = t.GetField(membername).GetValue(null);
+                    break;
                 case MemberTypes.Method:
                 case MemberTypes.Constructor:
-                    var result = t.InvokeMember(
+                    result = t.InvokeMember(
                         membername,
                         BindingFlags.InvokeMethod,
                         null,
                         instance,
                         margs
                         );
-                    return (HassiumObject) result;
+                    break;
             }
-            return null;
+            if (result is double) return new HassiumDouble((double)result);
+            if (result is int) return new HassiumInt((int)result);
+            if (result is string) return new HassiumString((string)result);
+            if (result is Array) return new HassiumArray((Array)result);
+            if (result is IDictionary) return new HassiumDictionary((IDictionary)result);
+            if (result is bool) return new HassiumBool((bool)result);
+            else return (HassiumObject)(object)result;
         }
     }
 }

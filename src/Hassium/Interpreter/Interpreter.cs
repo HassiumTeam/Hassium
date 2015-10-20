@@ -350,7 +350,7 @@ namespace Hassium.Interpreter
                         case "tuple":
                             return target is HassiumTuple;
                         case "func":
-                            return target is HassiumMethod && !((HassiumMethod)target).IsLambda;
+                            return target is HassiumMethod && !((HassiumMethod) target).IsLambda;
                         case "lambda":
                             return target is HassiumMethod && ((HassiumMethod) target).IsLambda;
                     }
