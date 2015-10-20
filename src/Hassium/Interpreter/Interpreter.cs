@@ -33,6 +33,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Hassium.Functions;
@@ -293,6 +294,30 @@ namespace Hassium.Interpreter
                 if(node.Right is IdentifierNode)
                 {
                     var name = node.Right.ToString().ToLower();
+                    if (name.Contains("`"))
+                    {
+                        var n = name.Split('`')[0];
+                        var pnums = name.Split('`')[1];
+                        if (pnums == "")
+                        {
+                            throw new ParseException("Expected argument number", node.Right.Position + n.Length + 1);
+                        }
+                        var pnum = -1;
+                        try
+                        {
+                            pnum = int.Parse(pnums);
+                        }
+                        catch
+                        {
+                            throw new ParseException("Invalid argument number: " + pnums,
+                                node.Right.Position + n.Length + 1);
+                        }
+                        return target is HassiumMethod &&
+                               (n == "lambda"
+                                   ? ((HassiumMethod) target).IsLambda
+                                   : n == "func" && !((HassiumMethod) target).IsLambda) &&
+                               ((HassiumMethod) target).FuncNode.Parameters.Count == pnum;
+                    }
                     switch (name)
                     {
                         case "string":
@@ -324,6 +349,10 @@ namespace Hassium.Interpreter
                             return true;
                         case "tuple":
                             return target is HassiumTuple;
+                        case "func":
+                            return target is HassiumMethod && !((HassiumMethod)target).IsLambda;
+                        case "lambda":
+                            return target is HassiumMethod && ((HassiumMethod) target).IsLambda;
                     }
                 }
                 else
@@ -1367,7 +1396,7 @@ namespace Hassium.Interpreter
                     return true;
                 });
             }
-            return new HassiumMethod(this, (FuncNode) funcNode, stackFrame, null);
+            return new HassiumMethod(this, (FuncNode) funcNode, stackFrame, null, true);
         }
 
         public object Accept(MemberAccessNode node)

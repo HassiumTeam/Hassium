@@ -1171,12 +1171,16 @@ namespace Hassium.Parser
                     switch (curt.Value.ToString())
                     {
                         case "lambda":
-                            return parseLambda(parser);
+                            return parser.PreviousToken(-1).TokenClass != TokenType.LParen
+                                ? new IdentifierNode(position, parser.ExpectToken(TokenType.Identifier).Value.ToString())
+                                : parseLambda(parser);
                         case "new":
                             return ParseInstance(parser);
                         case "tuple":
-                            if(parser.PreviousToken(-1).TokenClass == TokenType.LParen
-                                || (parser.PreviousToken(-1).TokenClass == TokenType.Identifier && parser.PreviousToken(-2).TokenClass == TokenType.LParen)) return parseTuple(parser);
+                            if (parser.PreviousToken(-1).TokenClass == TokenType.LParen
+                                ||
+                                (parser.PreviousToken(-1).TokenClass == TokenType.Identifier &&
+                                 parser.PreviousToken(-2).TokenClass == TokenType.LParen)) return parseTuple(parser);
                             break;
                     }
                     return new IdentifierNode(position, parser.ExpectToken(TokenType.Identifier).Value.ToString());

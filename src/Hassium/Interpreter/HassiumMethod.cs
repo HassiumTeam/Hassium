@@ -46,6 +46,8 @@ namespace Hassium.Interpreter
             get { return FuncNode.Name; }
         }
 
+        public bool IsLambda { get; private set; }
+
         public bool IsStatic
         {
             get { return !FuncNode.Parameters.Contains("this"); }
@@ -57,22 +59,25 @@ namespace Hassium.Interpreter
             get { return Name == "new"; }
         }
 
-        public HassiumMethod(Interpreter interpreter, FuncNode funcNode, LocalScope localScope, HassiumObject self)
+        public HassiumMethod(Interpreter interpreter, FuncNode funcNode, LocalScope localScope, HassiumObject self, bool lambda = false) : this(interpreter, funcNode, (StackFrame)null, self, lambda)
         {
-            SelfReference = self;
+            /*SelfReference = self;
             Interpreter = interpreter;
             FuncNode = funcNode;
             LocalScope = localScope;
             stackFrame = null;
+            IsLambda = lambda;*/
+            LocalScope = localScope;
         }
 
-        public HassiumMethod(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame, HassiumObject self)
+        public HassiumMethod(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame, HassiumObject self, bool lambda = false)
         {
             SelfReference = self;
             Interpreter = interpreter;
             FuncNode = funcNode;
             LocalScope = stackFrame == null ? null : stackFrame.Scope;
             this.stackFrame = stackFrame;
+            IsLambda = lambda;
         }
 
         public static implicit operator HassiumEventHandler(HassiumMethod mt)
@@ -95,7 +100,8 @@ namespace Hassium.Interpreter
             if (parms.Contains("this")) parms.Remove("this");
 
             if (parms.Count != args.Length)
-                throw new Exception("Incorrect arguments for function " + Name + ": Expected " + parms.Count + " args, got " + args.Length);
+                throw new Exception("Incorrect arguments for " +
+                    (IsLambda ? "lambda function" : "function " + Name ) + ": Expected " + parms.Count + " args, got " + args.Length);
 
             for (int x = 0; x < parms.Count; x++)
                 stackFrame.Locals[parms[x]] = args[x];
@@ -120,8 +126,8 @@ namespace Hassium.Interpreter
 
         public override string ToString()
         {
-            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2}]", Name, (FuncNode.InfParams ? "i" : FuncNode.Parameters.Count.ToString()),
-                SelfReference ?? "null");
+            return string.Format("[HassiumMethod: {0}`{1} SelfReference={2} {3}]", Name, (FuncNode.InfParams ? "i" : FuncNode.Parameters.Count.ToString()),
+                SelfReference ?? "null", IsLambda ? "Lambda" : "");
         }
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace Hassium.HassiumObjects
 
     public class HassiumObject : IFunction
     {
-        private readonly Dictionary<string, HassiumObject> _attributes;
+        private Dictionary<string, HassiumObject> _attributes;
 
         public bool IsInstance { get; set; }
 
@@ -50,6 +50,7 @@ namespace Hassium.HassiumObjects
         public Dictionary<string, HassiumObject> Attributes
         {
             get { return _attributes; }
+            protected set { _attributes = value; }
         }
 
         public HassiumObject()

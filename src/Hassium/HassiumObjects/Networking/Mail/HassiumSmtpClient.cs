@@ -27,6 +27,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using Hassium.Interpreter;
 using Hassium.Functions;
@@ -41,7 +43,46 @@ namespace Hassium.HassiumObjects.Networking.Mail
         public HassiumSmtpClient(HassiumString server, HassiumInt port)
         {
             Value = new SmtpClient(server.ToString(), port.Value);
-            Attributes.Add("send", new InternalFunction(send, new int[] { 1, 4 }));
+            Attributes.Add("send", new InternalFunction(send, new int[] {1, 4}));
+
+            Attributes.Add("credentials", new HassiumProperty("credentials",
+                x =>
+                {
+                    var cred = new HassiumObject();
+                    cred.Attributes.Add("username",
+                        new HassiumProperty("username", y => (Value.Credentials as NetworkCredential).UserName,
+                            (self, y) =>
+                            {
+                                Value.Credentials =
+                                    new NetworkCredential(y[0].ToString(),
+                                        (Value.Credentials as NetworkCredential).Password);
+                                return null;
+                            }));
+                    cred.Attributes.Add("password",
+                        new HassiumProperty("password", y => (Value.Credentials as NetworkCredential).Password,
+                            (self, y) =>
+                            {
+                                Value.Credentials =
+                                    new NetworkCredential((Value.Credentials as NetworkCredential).UserName,
+                                        y[0].ToString());
+                                return null;
+                            }));
+
+                    return cred;
+                },
+                (self, y) =>
+                {
+                    if(y[0] is HassiumTuple)
+                    {
+                        var tuple = (HassiumTuple) y[0];
+                        Value.Credentials = new NetworkCredential(tuple.Items[0].ToString(), tuple.Items[1].ToString());
+                    }
+                         
+                    return null;
+                }));
+
+            Attributes.Add("enableSsl",
+                new HassiumProperty("enableSsl", x => Value.EnableSsl, (self, x) => Value.EnableSsl = x[0].HBool()));
         }
 
         private HassiumObject send(HassiumObject[] args)
