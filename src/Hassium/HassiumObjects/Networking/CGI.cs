@@ -93,58 +93,92 @@ namespace Hassium.HassiumObjects.Networking
             }, null, true));
             Attributes.Add("request", new HassiumProperty("request", arg =>
             {
-                var remote = new HassiumObject();
-                remote.Attributes.Add("method",
+                var request = new HassiumObject();
+                request.Attributes.Add("method",
                     new HassiumProperty("method",
                         x => Environment.GetEnvironmentVariable("REQUEST_METHOD") ?? "undefined", null, true));
-                remote.Attributes.Add("uri",
+                request.Attributes.Add("uri",
                     new HassiumProperty("uri", x => Environment.GetEnvironmentVariable("REQUEST_URI") ?? "undefined",
                         null, true));
-                return remote;
+                request.Attributes.Add("scheme",
+                    new HassiumProperty("scheme",
+                        x => Environment.GetEnvironmentVariable("REQUEST_SCHEME") ?? "undefined", null, true));
+                return request;
             }, null, true));
             Attributes.Add("server", new HassiumProperty("server", arg =>
             {
-                var remote = new HassiumObject();
-                remote.Attributes.Add("admin",
+                var server = new HassiumObject();
+                server.Attributes.Add("admin",
                     new HassiumProperty("admin", x => Environment.GetEnvironmentVariable("SERVER_ADMIN") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("name",
+                server.Attributes.Add("address",
+                    new HassiumProperty("address", x => Environment.GetEnvironmentVariable("SERVER_ADDR") ?? "undefined",
+                        null, true));
+                server.Attributes.Add("name",
                     new HassiumProperty("name", x => Environment.GetEnvironmentVariable("SERVER_NAME") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("port",
+                server.Attributes.Add("port",
                     new HassiumProperty("port", x => Environment.GetEnvironmentVariable("SERVER_PORT") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("protocol",
+                server.Attributes.Add("protocol",
                     new HassiumProperty("protocol",
                         x => Environment.GetEnvironmentVariable("SERVER_PROTOCOL") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("software",
+                server.Attributes.Add("software",
                     new HassiumProperty("software",
                         x => Environment.GetEnvironmentVariable("SERVER_SOFTWARE") ?? "undefined", null, true));
-                return remote;
+                server.Attributes.Add("signature",
+                    new HassiumProperty("signature",
+                        x => Environment.GetEnvironmentVariable("SERVER_SIGNATURE") ?? "undefined",
+                        null, true));
+                return server;
             }, null, true));
             Attributes.Add("http", new HassiumProperty("http", arg =>
             {
-                var remote = new HassiumObject();
-                remote.Attributes.Add("accept",
-                    new HassiumProperty("accept", x => Environment.GetEnvironmentVariable("HTTP_ACCEPT") ?? "undefined",
+                var http = new HassiumObject();
+                http.Attributes.Add("accept", new HassiumProperty("accept", arg2 =>
+                {
+                    var accept = new HassiumObject();
+                    accept.Attributes.Add("mimeType",
+                        new HassiumProperty("mimeType",
+                            x => Environment.GetEnvironmentVariable("HTTP_ACCEPT") ?? "undefined", null, true));
+                    accept.Attributes.Add("encoding",
+                        new HassiumProperty("encoding",
+                            x => Environment.GetEnvironmentVariable("HTTP_ACCEPT_ENCODING") ?? "undefined", null, true));
+                    accept.Attributes.Add("language",
+                        new HassiumProperty("language",
+                            x => Environment.GetEnvironmentVariable("HTTP_ACCEPT_LANGUAGE") ?? "undefined", null, true));
+                    return accept;
+                }, null, true));
+                http.Attributes.Add("cacheControl",
+                  new HassiumProperty("cacheControl", x => Environment.GetEnvironmentVariable("HTTP_CACHE_CONTROL") ?? "undefined",
+                      null, true));
+                http.Attributes.Add("connection",
+                    new HassiumProperty("connection",
+                        x => Environment.GetEnvironmentVariable("HTTP_CONNECTION") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("cookie",
+                http.Attributes.Add("cookie",
                     new HassiumProperty("cookie", x => Environment.GetEnvironmentVariable("HTTP_COOKIE") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("userMail",
+                http.Attributes.Add("doNotTrack",
+               new HassiumProperty("doNotTrack", x => Environment.GetEnvironmentVariable("HTTP_DNT") == "1",
+                   null, true));
+                http.Attributes.Add("userMail",
                     new HassiumProperty("userMail", x => Environment.GetEnvironmentVariable("HTTP_FORM") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("host",
+                http.Attributes.Add("host",
                     new HassiumProperty("host", x => Environment.GetEnvironmentVariable("HTTP_HOST") ?? "undefined",
                         null, true));
-                remote.Attributes.Add("referer",
+                http.Attributes.Add("referer",
                     new HassiumProperty("referer",
                         x => Environment.GetEnvironmentVariable("HTTP_REFERER") ?? "undefined", null, true));
-                remote.Attributes.Add("userAgent",
+                http.Attributes.Add("userAgent",
                     new HassiumProperty("userAgent",
                         x => Environment.GetEnvironmentVariable("HTTP_USER_AGENT") ?? "undefined", null, true));
-                return remote;
+                http.Attributes.Add("upgradeInsecureRequests",
+              new HassiumProperty("upgradeInsecureRequests", x => Environment.GetEnvironmentVariable("HTTP_UPGRADE_INSECURE_REQUESTS") == "1",
+                  null, true));
+                return http;
             }, null, true));
             Attributes.Add("isHttps",
                 new HassiumProperty("isHttps", x => Environment.GetEnvironmentVariable("HTTP_COOKIE") == "on", null,
@@ -153,14 +187,14 @@ namespace Hassium.HassiumObjects.Networking
                 new HassiumProperty("path", x => Environment.GetEnvironmentVariable("PATH") ?? "undefined", null, true));
             Attributes.Add("script", new HassiumProperty("script", arg =>
             {
-                var remote = new HassiumObject();
-                remote.Attributes.Add("fileName",
+                var script = new HassiumObject();
+                script.Attributes.Add("fileName",
                     new HassiumProperty("fileName",
                         x => Environment.GetEnvironmentVariable("SCRIPT_FILENAME") ?? "undefined", null, true));
-                remote.Attributes.Add("name",
+                script.Attributes.Add("name",
                     new HassiumProperty("name", x => Environment.GetEnvironmentVariable("SCRIPT_NAME") ?? "undefined",
                         null, true));
-                return remote;
+                return script;
             }, null, true));
             Attributes.Add("gatewayInterface",
                 new HassiumProperty("gatewayInterface",
@@ -171,15 +205,33 @@ namespace Hassium.HassiumObjects.Networking
 
             Attributes.Add("content", new HassiumProperty("content", arg =>
             {
-                var remote = new HassiumObject();
-                remote.Attributes.Add("length",
+                var content = new HassiumObject();
+                content.Attributes.Add("length",
                     new HassiumProperty("length",
                         x => Environment.GetEnvironmentVariable("CONTENT_LENGTH") ?? "undefined", null, true));
-                remote.Attributes.Add("type",
+                content.Attributes.Add("type",
                     new HassiumProperty("type", x => Environment.GetEnvironmentVariable("CONTENT_TYPE") ?? "undefined",
                         null, true));
-                return remote;
+                return content;
             }, null, true));
+
+            Attributes.Add("context", new HassiumProperty("context", arg =>
+            {
+                var context = new HassiumObject();
+                context.Attributes.Add("documentRoot",
+                    new HassiumProperty("documentRoot",
+                        x => Environment.GetEnvironmentVariable("CONTEXT_DOCUMENT_ROOT") ?? "undefined", null, true));
+                context.Attributes.Add("prefix",
+                    new HassiumProperty("prefix", x => Environment.GetEnvironmentVariable("CONTEXT_PREFIX") ?? "undefined",
+                        null, true));
+                return context;
+            }, null, true));
+            Attributes.Add("uniqueId",
+             new HassiumProperty("uniqueId", x => Environment.GetEnvironmentVariable("UNIQUE_ID") ?? "undefined", null, true));
+            Attributes.Add("currentDirectory",
+          new HassiumProperty("currentDirectory", x => Environment.GetEnvironmentVariable("PWD") ?? "undefined", null, true));
+            Attributes.Add("shellLevel",
+          new HassiumProperty("shellLevel", x => Environment.GetEnvironmentVariable("SHLVL") ?? "undefined", null, true));
         }
     }
 }

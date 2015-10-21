@@ -79,6 +79,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
             Attributes.Add("last", new InternalFunction(ArrayLast, 1));
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
+
+            Attributes.Add("sort", new InternalFunction(Sort, new []{0,1}));
         }
 
         /*public static bool operator ==(HassiumDictionary a, HassiumDictionary b)
@@ -94,6 +96,17 @@ namespace Hassium.HassiumObjects.Types
         public HassiumObject ContainsKey(HassiumObject[] args)
         {
             return Value.Any(x => x.Key.ToString() == args[0].ToString());
+        }
+
+        public HassiumObject Sort(HassiumObject[] args)
+        {
+            if (args.Length == 0) return new HassiumDictionary(Value.OrderBy(x => x.Key.ToString()).ToDictionary(x => x.Key, x => x.Value));
+            else
+            {
+                var l = Value.ToList();
+                l.Sort((x, y) => HassiumMethod.GetFunc2(args[0])(x, y).HInt().Value);
+                return new HassiumDictionary(l.ToDictionary(x => x.Key, x => x.Value));
+            }
         }
 
         public HassiumObject ContainsValue(HassiumObject[] args)
