@@ -1225,6 +1225,15 @@ namespace Hassium.Parser
 
             while (!parser.MatchToken(TokenType.RBracket))
             {
+                if (parser.AcceptToken(TokenType.Colon))
+                {
+                    if(parser.MatchToken(TokenType.RBracket))
+                    {
+                        ret.IsDictionary = true;
+                        break;
+                    }
+                    else throw new ParseException("Expected ]", parser.codePosition);
+                }
                 var ct1 = parseExpression(parser);
                 if (parser.AcceptToken(TokenType.Colon))
                 {

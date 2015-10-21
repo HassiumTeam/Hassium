@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Hassium.Functions;
 using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
@@ -43,13 +44,23 @@ namespace Hassium.HassiumObjects.Networking
             {
                 if (_post == null)
                 {
-                    var stdin = new StreamReader(Console.OpenStandardInput());
-                    var query_string2 = stdin.ReadToEnd();
-                    if (!string.IsNullOrWhiteSpace(query_string2))
+                    var query_string = "";
+                    if (Environment.GetEnvironmentVariable("CONTENT_LENGTH") != null)
+                    {
+                        int PostedDataLength = Convert.ToInt32(Environment.GetEnvironmentVariable("CONTENT_LENGTH"));
+                        for (int i = 0; i < PostedDataLength; i++)
+                            query_string += Convert.ToChar(Console.Read()).ToString();
+                    }
+                    else
+                    {
+                        var stdin = new StreamReader(Console.OpenStandardInput());
+                        query_string = stdin.ReadToEnd();
+                    }
+                    if (!string.IsNullOrWhiteSpace(query_string))
                     {
                         var query_args = new Dictionary<string, string>();
 
-                        foreach (var currentArg in query_string2.Split('&'))
+                        foreach (var currentArg in query_string.Split('&'))
                         {
                             if (!currentArg.Contains('=')) query_args.Add(currentArg, "");
                             else
@@ -151,8 +162,9 @@ namespace Hassium.HassiumObjects.Networking
                     return accept;
                 }, null, true));
                 http.Attributes.Add("cacheControl",
-                  new HassiumProperty("cacheControl", x => Environment.GetEnvironmentVariable("HTTP_CACHE_CONTROL") ?? "undefined",
-                      null, true));
+                    new HassiumProperty("cacheControl",
+                        x => Environment.GetEnvironmentVariable("HTTP_CACHE_CONTROL") ?? "undefined",
+                        null, true));
                 http.Attributes.Add("connection",
                     new HassiumProperty("connection",
                         x => Environment.GetEnvironmentVariable("HTTP_CONNECTION") ?? "undefined",
@@ -161,8 +173,8 @@ namespace Hassium.HassiumObjects.Networking
                     new HassiumProperty("cookie", x => Environment.GetEnvironmentVariable("HTTP_COOKIE") ?? "undefined",
                         null, true));
                 http.Attributes.Add("doNotTrack",
-               new HassiumProperty("doNotTrack", x => Environment.GetEnvironmentVariable("HTTP_DNT") == "1",
-                   null, true));
+                    new HassiumProperty("doNotTrack", x => Environment.GetEnvironmentVariable("HTTP_DNT") == "1",
+                        null, true));
                 http.Attributes.Add("userMail",
                     new HassiumProperty("userMail", x => Environment.GetEnvironmentVariable("HTTP_FORM") ?? "undefined",
                         null, true));
@@ -176,8 +188,9 @@ namespace Hassium.HassiumObjects.Networking
                     new HassiumProperty("userAgent",
                         x => Environment.GetEnvironmentVariable("HTTP_USER_AGENT") ?? "undefined", null, true));
                 http.Attributes.Add("upgradeInsecureRequests",
-              new HassiumProperty("upgradeInsecureRequests", x => Environment.GetEnvironmentVariable("HTTP_UPGRADE_INSECURE_REQUESTS") == "1",
-                  null, true));
+                    new HassiumProperty("upgradeInsecureRequests",
+                        x => Environment.GetEnvironmentVariable("HTTP_UPGRADE_INSECURE_REQUESTS") == "1",
+                        null, true));
                 return http;
             }, null, true));
             Attributes.Add("isHttps",
@@ -222,16 +235,55 @@ namespace Hassium.HassiumObjects.Networking
                     new HassiumProperty("documentRoot",
                         x => Environment.GetEnvironmentVariable("CONTEXT_DOCUMENT_ROOT") ?? "undefined", null, true));
                 context.Attributes.Add("prefix",
-                    new HassiumProperty("prefix", x => Environment.GetEnvironmentVariable("CONTEXT_PREFIX") ?? "undefined",
+                    new HassiumProperty("prefix",
+                        x => Environment.GetEnvironmentVariable("CONTEXT_PREFIX") ?? "undefined",
                         null, true));
                 return context;
             }, null, true));
             Attributes.Add("uniqueId",
-             new HassiumProperty("uniqueId", x => Environment.GetEnvironmentVariable("UNIQUE_ID") ?? "undefined", null, true));
+                new HassiumProperty("uniqueId", x => Environment.GetEnvironmentVariable("UNIQUE_ID") ?? "undefined",
+                    null, true));
             Attributes.Add("currentDirectory",
-          new HassiumProperty("currentDirectory", x => Environment.GetEnvironmentVariable("PWD") ?? "undefined", null, true));
+                new HassiumProperty("currentDirectory", x => Environment.GetEnvironmentVariable("PWD") ?? "undefined",
+                    null, true));
             Attributes.Add("shellLevel",
-          new HassiumProperty("shellLevel", x => Environment.GetEnvironmentVariable("SHLVL") ?? "undefined", null, true));
+                new HassiumProperty("shellLevel", x => Environment.GetEnvironmentVariable("SHLVL") ?? "undefined", null,
+                    true));
+
+            /*Attributes.Add("session", new HassiumProperty("session", arg =>
+            {
+                var session = new HassiumDictionary(_sessionvalue.ToDictionary());
+                session.Attributes.Add("start", new InternalFunction(x =>
+                {
+                    Console.WriteLine("Set-Cookie");
+                    _sessionfolder = x[0].ToString();
+                    _sessionvalue = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
+                    session.Value = _sessionvalue.Value;
+                    _sessionstarted = true;
+                    return null;
+                }, 1));
+                session.Attributes.Add("stop", new InternalFunction(x =>
+                {
+                    _sessionstarted = false;
+                    _sessionfolder = "";
+                    _sessionvalue = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
+                    session.Value = _sessionvalue.Value;
+                    return null;
+                }, 0));
+
+                session.OnValueChanged +=
+                    delegate {
+                                 _sessionvalue = session;
+                    };
+
+
+
+                return session;
+            }, null, true));*/
         }
+
+        private static bool _sessionstarted = false;
+        private static HassiumDictionary _sessionvalue = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
+        private static string _sessionfolder = "";
     }
 }

@@ -81,7 +81,6 @@ func main()
 	println();
 	println("Current version: Hassium ", Interpreter.version);
 	println("Build date: " + Interpreter.buildDate.toString("x"));
-	
 
     exit(exitcode);
 	

@@ -51,6 +51,8 @@ namespace Hassium.HassiumObjects.Types
             return (Value != null ? Value.GetHashCode() : 0);
         }
 
+        public event EventHandler OnValueChanged = delegate {  };
+
         public List<HassiumKeyValuePair> Value { get; set; }
 
         public HassiumDictionary(Dictionary<HassiumObject, HassiumObject> value)
@@ -125,6 +127,7 @@ namespace Hassium.HassiumObjects.Types
                             .ToList();
                 else
                     Value.Add(new HassiumKeyValuePair(key, value));
+                OnValueChanged(this, null);
             }
         }
 
