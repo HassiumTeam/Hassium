@@ -115,10 +115,10 @@ namespace Hassium.Interpreter
 
             Interpreter.CallStack.Pop();
 
-            if (ret is HassiumArray)
+            /*if (ret is HassiumArray)
                 ret = ((HassiumArray) ret).Cast<object>()
                     .Select((s, i) => new {s, i})
-                    .ToDictionary(x => (object) x.i, x => (object) x.s);
+                    .ToDictionary(x => (object) x.i, x => (object) x.s);*/
             Interpreter.IsInFunction--;
             Interpreter.ReturnFunc = false;
             return ret;

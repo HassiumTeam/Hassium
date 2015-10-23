@@ -896,7 +896,7 @@ namespace Hassium.HassiumObjects.Drawing
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("warning");
             Console.ForegroundColor = c;
-            Console.WriteLine("] The toYuv() function doesn't return the expected results.");
+            Console.WriteLine("] The toYuv() function doesn't return the *exact* expected results.");
             var r = Value.R;
             var g = Value.G;
             var b = Value.B;

@@ -1457,9 +1457,22 @@ namespace Hassium.Interpreter
             }
             else
             {
-                var ret = returnStmt.Value.Visit(this);
-                ReturnFunc = true;
-                CallStack.Peek().ReturnValue = (HassiumObject) ret;
+                var ret = (HassiumObject) returnStmt.Value.Visit(this);
+                if (node.Yield)
+                {
+                    if (CallStack.Peek().ReturnValue == null)
+                    {
+                        CallStack.Peek().ReturnValue = new HassiumArray();
+                    }
+                    var r = CallStack.Peek().ReturnValue as HassiumArray;
+                    r.Add(new[] {ret});
+                    CallStack.Peek().ReturnValue = r;
+                }
+                else
+                {
+                    ReturnFunc = true;
+                    CallStack.Peek().ReturnValue = ret;
+                }
                 return ret;
             }
         }
