@@ -141,7 +141,7 @@ func opTests()
     println();
 
     # basic operators
-    asserteq(13 + 8, 22, "should pass if addition result is correct");
+    asserteq(13 + 8, 21, "should pass if addition result is correct");
     asserteq(29 - 56, -27, "should pass if substraction result is correct");
     asserteq(36 / 3, 12, "should pass if division result is correct");
     assertfail("38 / 0 == 1", "should fail (division by zero)");
