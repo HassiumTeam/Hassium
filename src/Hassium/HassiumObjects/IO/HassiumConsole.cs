@@ -518,7 +518,14 @@ namespace Hassium.HassiumObjects.IO
                     return ConsoleColor.White;
 
                 default:
-                    throw new Exception("Color is not valid!");
+                    try
+                    {
+                        return (ConsoleColor) Enum.Parse(typeof (ConsoleColor), color);
+                    }
+                    catch
+                    {
+                        throw new Exception("Color is not valid!");
+                    }
             }
         }
     }

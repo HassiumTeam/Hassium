@@ -7,7 +7,7 @@ use debug;
 use net;
 
 exitcode = 0;
-failed = 0;
+failed = [];
 passed = 0;
 
 
@@ -19,7 +19,20 @@ class TestClass {
 
 func assert(that, msg)
 {
-	println(msg + " [" + (that ? "✓" : "✗") + "]");
+	print(msg + " [");
+	f = Console.foregroundColor;
+	if(that)
+	{
+		Console.foregroundColor = "green";
+		print("✓");
+	}
+	else
+	{
+		Console.foregroundColor = "red";
+		print("✗");
+	}
+	Console.foregroundColor = f;
+	println("]");
 	
 	if(that)
 	{
@@ -27,7 +40,7 @@ func assert(that, msg)
 	}
 	else
 	{
-		failed++;
+		failed[] = msg;
 		exitcode = 1;
 	}
 }
@@ -43,17 +56,29 @@ func assertfail(that, msg)
 	{
 		isfailed = true;
 	}
-	theMsg = msg + " [" + (isfailed ? "✓" : "✗") + "]";
+	print(msg + " [");
+	f = Console.foregroundColor;
+	if(isfailed)
+	{
+		Console.foregroundColor = "green";
+		print("✓");
+	}
+	else
+	{
+		Console.foregroundColor = "red";
+		print("✗");
+	}
+	Console.foregroundColor = f;
+	println("]");
 	if(isfailed)
 	{
 		passed++;
 	}
 	else
 	{
-		failed++;
+		failed[] = msg;
 		exitcode = 1;
 	}
-	println(theMsg);
 }
 func main()
 {
@@ -72,11 +97,21 @@ func main()
 	drawingTests();
 	tupleTests();
     println();
-    if(failed == 0) println("Everything went good");
+    if(failed.length == 0) println("Everything went good");
     else println("Some tests failed.");
     println();
     println(passed + " test" + (passed == 1 ?: "s") + " passed");
-    println(failed + " test" + (failed == 1 ?: "s") + " failed");
+	println();
+    println(failed.length + " test" + (failed.length == 1 ?: "s") + " failed" + (failed.any() ? ":"));
+	if(failed.any())
+	{
+		foreach(m in failed)
+		{
+			println("\t" + m);
+		}
+	}
+	println();
+	
     println("--- END TESTS FOR HASSIUM ---");
 	println();
 	println("Current version: Hassium ", Interpreter.version);
@@ -286,6 +321,7 @@ func recursionTest()
 	}
 	
     recursion(5);
+	println(fib(6));
     assert(fib(6) == 8, "fib(6) should equals 8");
     println();
     println("End of recursion tests");

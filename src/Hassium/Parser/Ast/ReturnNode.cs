@@ -34,9 +34,12 @@ namespace Hassium.Parser.Ast
             get { return Children.Count == 0 ? null : Children[0]; }
         }
 
-        public ReturnNode(int position, AstNode value) : base(position)
+        public bool Yield { get; private set; }
+
+        public ReturnNode(int position, AstNode value, bool yield = false) : base(position)
         {
             if (value != null) Children.Add(value);
+            Yield = yield;
         }
 
         public override object Visit(IVisitor visitor)

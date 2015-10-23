@@ -86,16 +86,17 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("all", new InternalFunction(ArrayAll, 1));
             Attributes.Add("each", new InternalFunction(ArrayEach, 1));
             Attributes.Add("where", new InternalFunction(ArrayWhere, 1));
-            Attributes.Add("any", new InternalFunction(ArrayAny, 1));
+            Attributes.Add("any", new InternalFunction(ArrayAny, new []{0,1}));
             Attributes.Add("first", new InternalFunction(ArrayFirst, 1));
             Attributes.Add("last", new InternalFunction(ArrayLast, 1));
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
 
             Attributes.Add("sum", new InternalFunction(ArraySum, 0));
 
-            Attributes.Add("arrayToString", new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
+            Attributes.Add("arrayToString",
+                new InternalFunction(x => string.Join("", Value.Select(y => y.ToString())), 0));
 
-            Attributes.Add("sort", new InternalFunction(Sort, new []{0,1}));
+            Attributes.Add("sort", new InternalFunction(Sort, new[] {0, 1}));
             Attributes.Add("unique", new InternalFunction(Unique, 0));
             Attributes.Add("toDictionary", new InternalFunction(ToDictionary, 1));
 
@@ -115,7 +116,9 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ToDictionary(HassiumObject[] args)
         {
-            return new HassiumDictionary(Value.Zip(args[0].HArray().Value, (k, v) => new {k, v}).ToDictionary(x => x.k, x => x.v));
+            return
+                new HassiumDictionary(Value.Zip(args[0].HArray().Value, (k, v) => new {k, v})
+                    .ToDictionary(x => x.k, x => x.v));
         }
 
         public HassiumObject Sort(HassiumObject[] args)
@@ -229,8 +232,9 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayAny(HassiumObject[] args)
         {
-            return Value.Any(x => args[0].Invoke(x));
+            return args.Length == 0 ? Value.Any() : Value.Any(x => args[0].Invoke(x));
         }
+
 
         public HassiumObject ArrayFirst(HassiumObject[] args)
         {

@@ -154,6 +154,8 @@ namespace Hassium.Parser
                         return parseSwitch(parser);
                     case "return":
                         return parseReturn(parser);
+                    case "yield":
+                        return parseYield(parser);
                     case "continue":
                         return parseContinue(parser);
                     case "break":
@@ -600,6 +602,15 @@ namespace Hassium.Parser
             return parser.AcceptToken(TokenType.EndOfLine) ? new ReturnNode(position, null) : new ReturnNode(position, ParseStatement(parser));
         }
 
+        private static AstNode parseYield(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            parser.ExpectToken(TokenType.Identifier, "yield");
+            if(parser.MatchToken(TokenType.EndOfLine)) throw new ParseException("Expected yield value", parser.codePosition);
+            return new ReturnNode(position, ParseStatement(parser), true);
+        }
+
         private static AstNode parseEnum(Parser parser)
         {
             int position = parser.codePosition;
@@ -997,34 +1008,36 @@ namespace Hassium.Parser
             int position = parser.codePosition;
 
             AstNode left = ParseExponent(parser);
+            while(parser.CurrentToken().TokenClass == TokenType.Operation || parser.CurrentToken().TokenClass == TokenType.Lambda)
+            {
+                if (parser.AcceptToken(TokenType.Operation, "*"))
+                {
+                    AstNode right = ParseExponent(parser);
+                    left = new BinOpNode(position, BinaryOperation.Multiplication, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.Operation, "/"))
+                {
+                    AstNode right = ParseExponent(parser);
+                    left = new BinOpNode(position, BinaryOperation.Division, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.Operation, "%"))
+                {
+                    AstNode right = ParseExponent(parser);
+                    left = new BinOpNode(position, BinaryOperation.Modulus, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.Lambda, "=>"))
+                {
+                    AstNode body = ParseStatement(parser);
+                    if (!(body is CodeBlock))
+                        body = new ReturnNode(body.Position, body);
 
-            if (parser.AcceptToken(TokenType.Operation, "*"))
-            {
-                AstNode right = parseMultiplicative(parser);
-                return new BinOpNode(position, BinaryOperation.Multiplication, left, right);
+                    if (parser.MatchToken(TokenType.EndOfLine))
+                        parser.ExpectToken(TokenType.EndOfLine);
+                    return new LambdaFuncNode(position, new List<string> {left.ToString()}, body);
+                }
+                else break;
             }
-            else if (parser.AcceptToken(TokenType.Operation, "/"))
-            {
-                AstNode right = parseMultiplicative(parser);
-                return new BinOpNode(position, BinaryOperation.Division, left, right);
-            }
-            else if (parser.AcceptToken(TokenType.Operation, "%"))
-            {
-                AstNode right = parseMultiplicative(parser);
-                return new BinOpNode(position, BinaryOperation.Modulus, left, right);
-            }
-            else if (parser.AcceptToken(TokenType.Lambda, "=>"))
-            {
-                AstNode body = ParseStatement(parser);
-                if (!(body is CodeBlock))
-                    body = new ReturnNode(body.Position, body);
-
-                if (parser.MatchToken(TokenType.EndOfLine))
-                    parser.ExpectToken(TokenType.EndOfLine);
-                return new LambdaFuncNode(position, new List<string> {left.ToString()}, body);
-            }
-            else
-                return left;
+            return left;
         }
 
 
