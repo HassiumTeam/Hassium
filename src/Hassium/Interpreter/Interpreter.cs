@@ -967,6 +967,13 @@ namespace Hassium.Interpreter
             return expr.Content;
         }
 
+        public object Accept(ObjectInitializerNode expr)
+        {
+            var ret = new HassiumObject();
+            expr.Value.ToList().ForEach(x => ret.SetAttribute(x.Key, (HassiumObject)x.Value.Visit(this)));
+            return ret;
+        }
+
         public object Accept(LabelNode node)
         {
             if (!CallStack.Any())

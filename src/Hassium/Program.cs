@@ -132,6 +132,7 @@ st.Start();
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = true;
                 parameters.OutputAssembly = output;
+                
                 Console.WriteLine("Build started");
                 CompilerResults results = provider.CompileAssemblyFromSource(parameters, resultcode);
                 Console.WriteLine("Build finished");

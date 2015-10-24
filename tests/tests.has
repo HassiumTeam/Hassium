@@ -367,6 +367,10 @@ func objectTest () {
     assert (person.getAge () == 16, "person.getAge () should equal 16");
     assert (person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
     
+	
+	test = () => () => new { name: "Reagan", age: 16 };
+	asserteq(test()().age, 16, "object initializer");
+	
     println();
     println("Object tests");
     println();

@@ -91,6 +91,7 @@
     <Compile Include="Parser\Ast\Expression.cs" />
     <Compile Include="Parser\Ast\InstanceNode.cs" />
     <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
+    <Compile Include="Parser\Ast\ObjectInitializerNode.cs" />
     <Compile Include="Parser\Ast\PropertyNode.cs" />
     <Compile Include="Parser\Ast\SwitchNode.cs" />
     <Compile Include="Parser\Ast\TupleNode.cs" />

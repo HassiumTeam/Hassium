@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Hassium.Interpreter;
 using Hassium.Lexer;
@@ -113,7 +114,7 @@ namespace Hassium.Parser
 
         public Token ExpectToken(TokenType clazz, string value = "")
         {
-            return ExpectToken("Expected " + (value == "" ? clazz.ToString() : value) + ", got " + (position >= tokens.Count ? "EOF" : CurrentToken().Value), clazz, value);
+            return ExpectToken("Expected " + (value == "" ? clazz.ToString() : value) + ", got " + (position >= tokens.Count ? "EOF" : CurrentToken().Value + " [" + CurrentToken().TokenClass + "]"), clazz, value);
         }
 
         public Token ExpectToken(string msg, TokenType clazz, string value = "")
@@ -1296,15 +1297,34 @@ namespace Hassium.Parser
             int position = parser.codePosition;
 
             parser.ExpectToken(TokenType.Identifier, "new");
-            var target = parser.ExpectToken(TokenType.Identifier).Value.ToString();
-            AstNode result = new IdentifierNode(parser.codePosition, target);
-            while (parser.AcceptToken(TokenType.Dot, "."))
+            if (parser.AcceptToken(TokenType.LBrace))
             {
-                result = new MemberAccessNode(parser.codePosition, result,
-                parser.ExpectToken(TokenType.Identifier).Value.ToString());
+                var ret = new ObjectInitializerNode(position);
+                while (!parser.MatchToken(TokenType.RBrace))
+                {
+                    var k = ParseIdentifier(parser);
+                    parser.ExpectToken(TokenType.Colon);
+                    var v = parseExpression(parser);
+                    ret.AddItem((IdentifierNode)k, v);
+                    if (!parser.AcceptToken(TokenType.Comma))
+                        break;
+                }
+                parser.ExpectToken("Unterminated object initializer", TokenType.RBrace);
+                return ret;
             }
+            else
+            {
+                var target = parser.ExpectToken(TokenType.Identifier).Value.ToString();
+                AstNode result = new IdentifierNode(parser.codePosition, target);
+                while (parser.AcceptToken(TokenType.Dot, "."))
+                {
+                    result = new MemberAccessNode(parser.codePosition, result,
+                        parser.ExpectToken(TokenType.Identifier).Value.ToString());
+                }
 
-            return new InstanceNode(position, new FunctionCallNode(parser.codePosition, result, parseArgList(parser)));
+                return new InstanceNode(position,
+                    new FunctionCallNode(parser.codePosition, result, parseArgList(parser)));
+            }
         }
 
         private static AstNode parseLambda(Parser parser)

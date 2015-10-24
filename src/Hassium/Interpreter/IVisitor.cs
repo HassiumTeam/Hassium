@@ -70,5 +70,6 @@ namespace Hassium.Interpreter
         object Accept(EnumNode node);
         object Accept(TupleNode node);
         object Accept(EchoNode expr);
+        object Accept(ObjectInitializerNode expr);
     }
 }
