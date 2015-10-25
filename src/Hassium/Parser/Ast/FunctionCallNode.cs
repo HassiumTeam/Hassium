@@ -28,6 +28,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class FunctionCallNode : AstNode
     {
         public AstNode Target

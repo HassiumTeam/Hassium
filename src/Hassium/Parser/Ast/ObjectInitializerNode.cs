@@ -6,6 +6,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class ObjectInitializerNode : AstNode
     {
         private readonly Dictionary<string, AstNode> _value;

@@ -29,6 +29,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class SwitchNode : AstNode
     {
         public AstNode Predicate
@@ -53,6 +54,7 @@ namespace Hassium.Parser.Ast
         }
     }
 
+    [Serializable]
     public class CaseNode : AstNode
     {
         public List<AstNode> Values { get; set; }

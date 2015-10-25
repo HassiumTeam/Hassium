@@ -28,6 +28,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class MemberAccessNode : AstNode
     {
         public AstNode Left

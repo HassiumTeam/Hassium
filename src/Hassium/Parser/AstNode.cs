@@ -31,6 +31,7 @@ using Hassium.Parser.Ast;
 
 namespace Hassium.Parser
 {
+    [Serializable]
     public abstract class AstNode
     {
         public List<AstNode> Children { get; private set; }

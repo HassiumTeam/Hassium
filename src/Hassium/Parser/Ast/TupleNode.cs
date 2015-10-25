@@ -31,6 +31,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class TupleNode: AstNode
     {
         public string Name { get; private set; }

@@ -6,6 +6,7 @@ using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class EchoNode : AstNode
     {
         public string Content { get; private set; }

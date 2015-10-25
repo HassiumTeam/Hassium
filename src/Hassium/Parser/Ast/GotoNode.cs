@@ -25,10 +25,12 @@
 //   * DAMAGE.
 // **/
 
+using System;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
 {
+    [Serializable]
     public class GotoNode : AstNode
     {
         public string Name { get; private set; }

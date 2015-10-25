@@ -31,6 +31,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
@@ -56,7 +57,7 @@ namespace Hassium
             public static string Code { get; set; }
             public static bool Golf { get; set; }
             public static bool Secure { get; set; }
-            public static Tuple<bool, string> Compile  = new Tuple<bool, string>(false, "");
+            public static Tuple<bool, string, bool> Compile  = new Tuple<bool, string, bool>(false, "", false);
         }
 
         public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
@@ -71,48 +72,6 @@ namespace Hassium
                 Console.WriteLine(options.FilePath + " --> " + options.Compile.Item2);
 
                 string output = Path.GetFullPath(options.Compile.Item2);
-                string pname =
-                    new string(Path.GetFileNameWithoutExtension(output)
-                        .Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
-                if (!char.IsLetter(pname[0])) pname = '_' + pname;
-                string resultcode = @"
-using System.Collections.Generic;
-using Hassium.HassiumObjects.Types;
-using Hassium.Interpreter;
-using Hassium.Lexer;
-using Hassium.Parser;
-using System.Diagnostics;
-using Hassium.Semantics;
-
-namespace " + pname + @"
-{
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-                string code = " + '"' + options.Code.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r") + '"' + @";
-                System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-"
-                + (options.ShowTime ? @"
-Stopwatch st = new Stopwatch();
-st.Start();
-" : "") + @"
-                List<Token> tokens = new Lexer(code).Tokenize();
-                Parser hassiumParser = new Parser(tokens, code);
-                AstNode ast = hassiumParser.Parse();
-                Interpreter it = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast) { HandleErrors = false, BuildDate = new System.IO.FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).LastWriteTime };
-                it.SetVariable(" + "\"args\"" + @", new HassiumArray(args), null, true);
-                it.Execute();"
-+ (options.ShowTime ? "st.Stop();\nSystem.Console.WriteLine(\"\\n\" + st.Elapsed + \" seconds\");" : "") + @"
-                System.Console.ReadLine();
-                System.Environment.Exit(it.Exitcode);
-            }
-        }
-    }
-";
-
-                string hassiumLocation = Assembly.GetEntryAssembly().Location;
-
                 if (File.Exists(output))
                 {
                     Console.Write("WARNING: Output file already exists, overwrite [Y/n]? ");
@@ -125,6 +84,102 @@ st.Start();
                     else File.Delete(output);
                 }
 
+                var astf = "";
+                var symf = "";
+                if (options.Compile.Item3)
+                {
+                    astf = Path.GetTempFileName();
+                    symf = Path.GetTempFileName();
+                    try
+                    {
+                        List<Token> tokens = new Lexer.Lexer(options.Code).Tokenize();
+                        if (options.Debug)
+                            Debug.Debug.PrintTokens(tokens);
+                        Parser.Parser hassiumParser = new Parser.Parser(tokens, options.Code);
+                        AstNode ast = hassiumParser.Parse();
+                        var symtable = new SemanticAnalyser(ast).Analyse();
+                        var fmt = new BinaryFormatter();
+                        using (var s = new FileStream(Path.Combine(astf), FileMode.OpenOrCreate))
+                        {
+                            fmt.Serialize(s, ast);
+                        }
+                        using (var s = new FileStream(Path.Combine(symf), FileMode.OpenOrCreate))
+                        {
+                            fmt.Serialize(s, symtable);
+                        }
+                    }
+                    catch (ParseException e)
+                    {
+                        Console.WriteLine();
+                        printError(Program.options.Code, e);
+
+                        Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
+                        Environment.Exit(-1);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("There has been an error. Message: " + e.Message);
+                        Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
+                        Environment.Exit(-1);
+                    }
+                }
+
+                string pname =
+                    new string(Path.GetFileNameWithoutExtension(output)
+                        .Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
+                if (!char.IsLetter(pname[0])) pname = '_' + pname;
+                string resultcode = @"
+using System.Collections.Generic;
+using Hassium.HassiumObjects.Types;
+using Hassium.Interpreter;
+using Hassium.Lexer;
+using Hassium.Parser;
+using System.Diagnostics;
+using Hassium.Semantics;
+using System.Reflection;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
+namespace " + pname + @"
+{
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+                System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;"
+                + (options.Compile.Item3 ? "var assembly = Assembly.GetExecutingAssembly()" : 
+                "string code = " + '"' + options.Code.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r") + '"') + @";
+"
+                + (options.ShowTime ? @"
+Stopwatch st = new Stopwatch();
+st.Start();
+" : "") + @"
+                " + (options.Compile.Item3 ? @"
+                AstNode ast = null;
+                using (Stream s1 = assembly.GetManifestResourceStream(" + '"' + Path.GetFileName(astf) +  '"' + @"))
+                {
+                    ast = (AstNode)new BinaryFormatter().Deserialize(s1);
+                }" : @"
+                List<Token> tokens = new Lexer(code).Tokenize();
+                Parser hassiumParser = new Parser(tokens, code);
+                AstNode ast = hassiumParser.Parse();") + @"
+                Interpreter it = new Interpreter(new SemanticAnalyser(ast).Analyse(), ast) { HandleErrors = false, BuildDate = new System.IO.FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).LastWriteTime };
+                it.SetVariable(" + "\"args\"" + @", new HassiumArray(args), null, true);
+                it.Execute();"
++ (options.ShowTime ? "st.Stop();\nSystem.Console.WriteLine(\"\\n\" + st.Elapsed + \" seconds\");" : "") + @"
+                Console.ReadLine();
+                Environment.Exit(it.Exitcode);
+            }
+        }
+    }
+";
+
+                string hassiumLocation = Assembly.GetEntryAssembly().Location;
+
+                
+
                 CSharpCodeProvider provider = new CSharpCodeProvider();
                 CompilerParameters parameters = new CompilerParameters();
                 parameters.ReferencedAssemblies.Add(hassiumLocation);
@@ -132,9 +187,18 @@ st.Start();
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = true;
                 parameters.OutputAssembly = output;
-                
+                if (options.Compile.Item3)
+                {
+                    parameters.EmbeddedResources.Add(astf);
+                    parameters.EmbeddedResources.Add(symf);
+                }
+
                 Console.WriteLine("Build started");
                 CompilerResults results = provider.CompileAssemblyFromSource(parameters, resultcode);
+                foreach(var err in results.Errors)
+                {
+                    Console.WriteLine(err);
+                }
                 Console.WriteLine("Build finished");
 
                 Console.WriteLine("Merging assemblies...");
@@ -142,6 +206,12 @@ st.Start();
                     Path.Combine(Path.GetDirectoryName(hassiumLocation),
                         "libz.exe"), " inject-dll --assembly \"" + output + "\" --include \"" + hassiumLocation + "\"");
                 proc.WaitForExit();
+                if (options.Compile.Item3)
+                {
+                    Console.WriteLine("Deleting temp files");
+                    File.Delete(astf);
+                    File.Delete(symf);
+                }
                 Console.WriteLine("Done!");
 
                 Environment.Exit(0);
@@ -294,8 +364,25 @@ st.Start();
                         break;
                     case "-c":
                     case "--compile":
-                        options.Compile = new Tuple<bool, string>(true, args[++i]);
+                        bool obf = false;
+                        if(i + 2 < args.Count)
+                        {
+                            if (args[i + 2].ToLower() == "-o" || args[i + 2].ToLower() == "--obfuscate") obf = true;
+                        }
+                        options.Compile = new Tuple<bool, string, bool>(true, args[++i], obf);
+                        if (obf) i++;
                         break;
+                    case "-cl":
+                        var fl = args[++i];
+                        AstNode result = null;
+                        using (FileStream fs = new FileStream(fl, FileMode.Open))
+                        {
+                            result = (AstNode)new BinaryFormatter().Deserialize(fs);
+                        }
+                        var st = new SemanticAnalyser(result).Analyse();
+                        CurrentInterpreter = new Interpreter.Interpreter(st, result);
+                        CurrentInterpreter.Execute();
+                            break;
                     default:
                         if (File.Exists(args[i]))
                         {
