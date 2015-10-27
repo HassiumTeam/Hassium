@@ -49,7 +49,7 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("move", new InternalFunction(Move, 2));
             Attributes.Add("rename", new InternalFunction(Rename, 2));
             Attributes.Add("deleteFile", new InternalFunction(DeleteFile, 1));
-
+            Attributes.Add("readBytes", new InternalFunction(ReadBytes, 1));
             Attributes.Add("createText", new InternalFunction(createText, 1));
             Attributes.Add("openText", new InternalFunction(openText, 1));
             Attributes.Add("getCreationTime", new InternalFunction(getCreationTime, 1));
@@ -116,6 +116,16 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject ReadLines(HassiumObject[] args)
         {
             return File.ReadAllLines(args[0].ToString());
+        }
+
+        public HassiumObject ReadBytes(HassiumObject[] args)
+        {
+            byte[] bytes = File.ReadAllBytes(args[0].ToString());
+            HassiumByte[] res = new HassiumByte[bytes.Length];
+            for (int x = 0; x < bytes.Length; x++)
+                res[x] = new HassiumByte(bytes[x]);
+
+            return new HassiumArray(res);
         }
 
         public HassiumObject DeleteFile(HassiumObject[] args)
