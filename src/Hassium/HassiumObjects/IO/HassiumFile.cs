@@ -120,12 +120,7 @@ namespace Hassium.HassiumObjects.IO
 
         public HassiumObject ReadBytes(HassiumObject[] args)
         {
-            byte[] bytes = File.ReadAllBytes(args[0].ToString());
-            HassiumByte[] res = new HassiumByte[bytes.Length];
-            for (int x = 0; x < bytes.Length; x++)
-                res[x] = new HassiumByte(bytes[x]);
-
-            return new HassiumArray(res);
+            return new HassiumArray(File.ReadAllBytes(args[0].ToString()).Select(b => new HassiumByte(b)));
         }
 
         public HassiumObject DeleteFile(HassiumObject[] args)
