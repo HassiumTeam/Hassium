@@ -636,6 +636,7 @@ namespace Hassium.Interpreter
                         return
                             ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() !=
                             0;
+                    if (left == null || right == null) return left != right;
                     return new HassiumBool(left.ToString() != right.ToString());
                 case BinaryOperation.LessThan:
                     if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
