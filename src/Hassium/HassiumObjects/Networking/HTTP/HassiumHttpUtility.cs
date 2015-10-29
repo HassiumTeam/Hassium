@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
 using Hassium.Functions;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking.HTTP
@@ -35,32 +30,32 @@ namespace Hassium.HassiumObjects.Networking.HTTP
             }
         }
 
-        private HassiumObject htmlAttributeEncode(HassiumObject[] args)
+        public HassiumObject htmlAttributeEncode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.HtmlAttributeEncode(((HassiumString)args[0]).Value));
         }
 
-        private HassiumObject htmlDecode(HassiumObject[] args)
+        public HassiumObject htmlDecode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.HtmlDecode(((HassiumString)args[0]).Value));
         }
 
-        private HassiumObject htmlEncode(HassiumObject[] args)
+        public HassiumObject htmlEncode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.HtmlEncode(((HassiumString)args[0]).Value));
         }
 
-        private HassiumObject javaScriptStringEncode(HassiumObject[] args)
+        public HassiumObject javaScriptStringEncode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.JavaScriptStringEncode(((HassiumString)args[0]).Value));
         }
 
-        private HassiumObject urlDecode(HassiumObject[] args)
+        public HassiumObject urlDecode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.UrlDecode(((HassiumString)args[0]).Value));
         }
 
-        private HassiumObject urlEncode(HassiumObject[] args)
+        public HassiumObject urlEncode(HassiumObject[] args)
         {
             return new HassiumString(HttpUtility.UrlEncode(((HassiumString)args[0]).Value));
         }

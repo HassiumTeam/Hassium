@@ -39,23 +39,17 @@ namespace Hassium.HassiumObjects
 
     public class HassiumObject : IFunction
     {
-        private Dictionary<string, HassiumObject> _attributes;
-
         public bool IsInstance { get; set; }
 
         public event AttributeChangedHandler AttributeChanged = (a, v) => { };
 
         public delegate void AttributeChangedHandler(string attrname, HassiumObject value);
 
-        public Dictionary<string, HassiumObject> Attributes
-        {
-            get { return _attributes; }
-            protected set { _attributes = value; }
-        }
+        public Dictionary<string, HassiumObject> Attributes { get; protected set; }
 
         public HassiumObject()
         {
-            _attributes = new Dictionary<string, HassiumObject>();
+            Attributes = new Dictionary<string, HassiumObject>();
             IsInstance = true;
         }
 
@@ -65,33 +59,33 @@ namespace Hassium.HassiumObjects
             {
                 ((HassiumMethod) value).SelfReference = this;
             }
-            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
+            if (Attributes.ContainsKey(name) && Attributes[name] is HassiumProperty)
             {
-                var prop = ((HassiumProperty) _attributes[name]);
+                var prop = ((HassiumProperty) Attributes[name]);
                 if (prop.ReadOnly) throw new ParseException("The property " + prop.Name + " is read-only", -1);
                 if (IsInstance)
                     prop.SetValue(this, value);
                 else
                     prop.SetValue(value);
             }
-            else _attributes[name] = value;
+            else Attributes[name] = value;
             AttributeChanged(name, value);
         }
 
         public HassiumObject GetAttribute(string name, int pos)
         {
-            if ((name == "toString" || name == "toString`0") & !_attributes.ContainsKey(name)) return new InternalFunction(x => ToString(), 0);
-            if (!_attributes.ContainsKey(name))
+            if ((name == "toString" || name == "toString`0") & !Attributes.ContainsKey(name)) return new InternalFunction(x => ToString(), 0);
+            if (!Attributes.ContainsKey(name))
                 throw new ParseException("The attribute '" + name + "' doesn't exist for the specified object.", pos);
-            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumProperty)
-                return ((HassiumProperty) _attributes[name]).GetValue(this);
-            if (_attributes.ContainsKey(name) && _attributes[name] is HassiumMethod)
+            if (Attributes.ContainsKey(name) && Attributes[name] is HassiumProperty)
+                return ((HassiumProperty) Attributes[name]).GetValue(this);
+            if (Attributes.ContainsKey(name) && Attributes[name] is HassiumMethod)
             {
-                HassiumMethod ret = (HassiumMethod)_attributes[name];
+                HassiumMethod ret = (HassiumMethod)Attributes[name];
                 ret.SelfReference = this;
                 return ret;
             }
-            else return _attributes[name];
+            else return Attributes[name];
         }
 
         public override string ToString()

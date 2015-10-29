@@ -24,8 +24,8 @@
 // DAMAGE.
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using Hassium.Interpreter;
 using Hassium.Lexer;
@@ -125,6 +125,7 @@ namespace Hassium.Parser
 
         private static AstNode ParseStatement(Parser parser)
         {
+            if(parser.AcceptToken(TokenType.EndOfLine)) return new CodeBlock(parser.codePosition - 1);
             if (parser.MatchToken(TokenType.Identifier))
             {
                 switch (parser.CurrentToken().Value.ToString().ToLower())
@@ -502,7 +503,11 @@ namespace Hassium.Parser
                     parser.ExpectToken(TokenType.Colon);
                     pred.Add(pred2);
                 }
-                var cbody = ParseStatement(parser);
+                var cbody = new CodeBlock(parser.codePosition);
+                while (!parser.MatchToken(TokenType.Identifier, "case") && !parser.MatchToken(TokenType.Identifier, "default") && !parser.MatchToken(TokenType.RBrace))
+                {
+                    cbody.Children.Add(ParseStatement(parser));
+                }
                 cases.Add(new CaseNode(cpos, pred, cbody));
             }
             if (parser.MatchToken(TokenType.Identifier, "default"))
@@ -510,7 +515,11 @@ namespace Hassium.Parser
                 int dpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "default");
                 parser.ExpectToken(TokenType.Colon);
-                var dbody = ParseStatement(parser);
+                var dbody = new CodeBlock(parser.codePosition);
+                while (!parser.MatchToken(TokenType.RBrace))
+                {
+                    dbody.Children.Add(ParseStatement(parser));
+                }
                 defn = new CaseNode(dpos, null, dbody);
             }
             parser.ExpectToken(TokenType.RBrace);
@@ -621,17 +630,17 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.LBrace, "{");
 
             CodeBlock body = new CodeBlock(position);
-           for (int x = 0; !parser.MatchToken(TokenType.RBrace); x++)
+            for (int x = 0; !parser.MatchToken(TokenType.RBrace); x++)
             {
                 string entry = parser.ExpectToken(TokenType.Identifier).Value.ToString();
                 int entryNumber = 0;
 
-                if (parser.AcceptToken(TokenType.Assignment))
-                    entryNumber = Convert.ToInt32(parser.ExpectToken(TokenType.Number).Value);
-                else
-                    entryNumber = x;
+                entryNumber = parser.AcceptToken(TokenType.Assignment)
+                    ? Convert.ToInt32(parser.ExpectToken(TokenType.Number).Value)
+                    : x;
 
-                body.Children.Add(new BinOpNode(position, BinaryOperation.Assignment, new IdentifierNode(position, entry), new NumberNode(position, entryNumber, true)));
+                body.Children.Add(new BinOpNode(position, BinaryOperation.Assignment,
+                    new IdentifierNode(position, entry), new NumberNode(position, entryNumber, true)));
                 if (!parser.AcceptToken(TokenType.Comma))
                     break;
             }

@@ -60,6 +60,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("hour", new InternalFunction(x => Value.Hour, 0, true));
             Attributes.Add("minute", new InternalFunction(x => Value.Minute, 0, true));
             Attributes.Add("second", new InternalFunction(x => Value.Second, 0, true));
+            Attributes.Add("millisecond", new InternalFunction(x => Value.Millisecond, 0, true));
             Attributes.Add("isLeapYear", new InternalFunction(x => DateTime.IsLeapYear(Value.Year), 0, true));
             Attributes.Add("timeStamp", new InternalFunction(x => GetTimestamp(new HassiumObject[] {}), 0, true));
             Attributes.Add("toString", new InternalFunction(toString, new[] {0, 1}));

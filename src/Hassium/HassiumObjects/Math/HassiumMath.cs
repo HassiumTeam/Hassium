@@ -24,7 +24,6 @@
 // DAMAGE.
 
 using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Hassium.Functions;
@@ -158,7 +157,7 @@ namespace Hassium.HassiumObjects.Math
 
         public HassiumObject Round(HassiumObject[] args)
         {
-            return args.Count() > 1
+            return args.Length > 1
                 ? new HassiumDouble(System.Math.Round(args[0].HDouble().Value, args[1].HInt().Value))
                 : new HassiumDouble(System.Math.Round(args[0].HDouble().Value));
         }

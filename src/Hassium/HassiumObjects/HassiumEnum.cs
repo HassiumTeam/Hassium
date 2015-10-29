@@ -24,12 +24,7 @@
 // DAMAGE.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
-using Hassium.Interpreter;
 using Hassium.Parser.Ast;
 
 namespace Hassium.HassiumObjects
@@ -38,12 +33,12 @@ namespace Hassium.HassiumObjects
     {
         public EnumNode EnumNode { get; private set; }
         
-        public HassiumEnum(EnumNode value, Hassium.Interpreter.Interpreter interpreter)
+        public HassiumEnum(EnumNode value)
         {
             EnumNode = value;
             foreach (var bnode in value.Children[0].Children.OfType<BinOpNode>().Select(node => node))
             {
-                if (!(bnode.BinOp == BinaryOperation.Assignment))
+                if (bnode.BinOp != BinaryOperation.Assignment)
                     throw new Exception("Unknown binary opteration " + bnode.BinOp + " in " + value.Name + ". Must be type assignment!");
 
                 Attributes.Add(((IdentifierNode)bnode.Left).Identifier, ((NumberNode)bnode.Right).Value);

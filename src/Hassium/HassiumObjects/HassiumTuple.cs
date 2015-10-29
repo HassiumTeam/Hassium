@@ -23,14 +23,9 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Hassium.HassiumObjects;
-using Hassium.HassiumObjects.Types;
 using Hassium.Functions;
-using Hassium.Interpreter;
 using Hassium.Parser.Ast;
 
 namespace Hassium.HassiumObjects
@@ -39,19 +34,20 @@ namespace Hassium.HassiumObjects
     {
         public TupleNode TupleNode { get; private set; }
 
-        private int position { get; set; }
-
         public List<HassiumObject> Items { get; private set; } 
 
-        public HassiumTuple(TupleNode value, Hassium.Interpreter.Interpreter interpreter) : this(value.Children[0].Children.Select((v, i) => (HassiumObject)v.Visit(interpreter)).ToList(), interpreter)
+        public HassiumTuple(TupleNode value, Hassium.Interpreter.Interpreter interpreter) : this(value.Children[0].Children.Select((v, i) => (HassiumObject)v.Visit(interpreter)).ToList())
         {
             TupleNode = value;
         }
 
-        
 
+        public override string ToString()
+        {
+            return "Tuple (" + string.Join(", ", Items.Select(x => x == null ? "null" : x.ToString())) + ")";
+        }
 
-        public HassiumTuple(IList<HassiumObject> value, Hassium.Interpreter.Interpreter interpreter)
+        public HassiumTuple(IEnumerable<HassiumObject> value)
         {
             Items = value.ToList();
 

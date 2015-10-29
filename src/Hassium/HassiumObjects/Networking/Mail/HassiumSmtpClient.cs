@@ -23,13 +23,8 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
 using Hassium.Interpreter;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
@@ -43,7 +38,7 @@ namespace Hassium.HassiumObjects.Networking.Mail
         public HassiumSmtpClient(HassiumString server, HassiumInt port)
         {
             Value = new SmtpClient(server.ToString(), port.Value);
-            Attributes.Add("send", new InternalFunction(send, new int[] {1, 4}));
+            Attributes.Add("send", new InternalFunction(send, new[] {1, 4}));
 
             Attributes.Add("credentials", new HassiumProperty("credentials",
                 x =>

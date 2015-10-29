@@ -185,30 +185,30 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject ArrayAll(HassiumObject[] args)
         {
-            if (((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2)
-                return Value.All(x => args[0].Invoke(x.Key, x.Value));
-            return Value.All(x => args[0].Invoke(x));
+            return ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                ? Value.All(x => args[0].Invoke(x.Key, x.Value))
+                : Value.All(x => args[0].Invoke(x));
         }
 
         public HassiumObject ArraySelect(HassiumObject[] args)
         {
-            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
-                return Value.Select(x => args[0].Invoke(x.Key, x.Value)).ToArray();
-            return Value.Select(x => args[0].Invoke(x)).ToArray();
+            return ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                ? Value.Select(x => args[0].Invoke(x.Key, x.Value)).ToArray()
+                : Value.Select(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayWhere(HassiumObject[] args)
         {
-            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
-                return Value.Where(x => args[0].Invoke(x.Key, x.Value)).ToArray();
-            return Value.Where(x => args[0].Invoke(x)).ToArray();
+            return ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                ? Value.Where(x => args[0].Invoke(x.Key, x.Value)).ToArray()
+                : Value.Where(x => args[0].Invoke(x)).ToArray();
         }
 
         public HassiumObject ArrayAny(HassiumObject[] args)
         {
-            if (((HassiumMethod)args[0]).FuncNode.Parameters.Count == 2)
-                return Value.Any(x => args[0].Invoke(x.Key, x.Value));
-            return Value.Any(x => args[0].Invoke(x));
+            return ((HassiumMethod) args[0]).FuncNode.Parameters.Count == 2
+                ? Value.Any(x => args[0].Invoke(x.Key, x.Value))
+                : Value.Any(x => args[0].Invoke(x));
         }
 
         public HassiumObject ArrayFirst(HassiumObject[] args)

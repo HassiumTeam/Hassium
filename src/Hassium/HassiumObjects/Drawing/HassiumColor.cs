@@ -30,6 +30,7 @@ using System.Linq;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;
+// ReSharper disable LocalVariableHidesMember
 
 namespace Hassium.HassiumObjects.Drawing
 {
@@ -464,7 +465,7 @@ namespace Hassium.HassiumObjects.Drawing
             }
         }
 
-        private Color fromHsl(double hue, double saturation, double luminosity)
+        private static Color fromHsl(double hue, double saturation, double luminosity)
         {
             hue = hue / 360;
             saturation = saturation / 100;
@@ -524,7 +525,7 @@ namespace Hassium.HassiumObjects.Drawing
                 Convert.ToByte(blue * 255.0f));
         }
 
-        private Color fromHsv(double hue, double saturation, double value)
+        private static Color fromHsv(double hue, double saturation, double value)
         {
             saturation = saturation / 100;
             value = value / 100;
@@ -555,7 +556,7 @@ namespace Hassium.HassiumObjects.Drawing
             }
         }
 
-        private Color fromCmyk(double cyan, double magenta, double yellow, double black)
+        private static Color fromCmyk(double cyan, double magenta, double yellow, double black)
         {
             cyan /= 100;
             magenta /= 100;
@@ -567,7 +568,7 @@ namespace Hassium.HassiumObjects.Drawing
                 (yellow * (1 - black) + black) * 100);
         }
 
-        private Color fromCmy(double cyan, double magenta, double yellow)
+        private static Color fromCmy(double cyan, double magenta, double yellow)
         {
             cyan /= 100;
             magenta /= 100;
@@ -577,7 +578,7 @@ namespace Hassium.HassiumObjects.Drawing
                                     Convert.ToInt32((1 - magenta) * 255.0), Convert.ToInt32((1 - yellow) * 255.0));
         }
 
-        private Color fromXyz(double x, double y, double z)
+        private static Color fromXyz(double x, double y, double z)
         {
             x /= 100;
             y /= 100;
@@ -595,7 +596,7 @@ namespace Hassium.HassiumObjects.Drawing
                 Convert.ToInt32(b * 255));
         }
 
-        private Color fromLab(double _l, double _a, double _b)
+        private static Color fromLab(double _l, double _a, double _b)
         {
             double _y = (_l + 16.0) / 116.0;
             double _x = _a / 500.0 + _y;
@@ -612,7 +613,7 @@ namespace Hassium.HassiumObjects.Drawing
                 108.883 * (_z3 > 0.00885645168 ? _z3 : (_z - 16.0 / 116.0) / 7.787));
         }
 
-        private Color fromLch(double _l, double _c, double _h)
+        private static Color fromLch(double _l, double _c, double _h)
         {
             var hrad = _h * System.Math.PI / 180.0;
 
@@ -622,7 +623,7 @@ namespace Hassium.HassiumObjects.Drawing
             return Color.FromArgb(c.A, c.R - 1, c.G + 1, c.B + 1);
         }
 
-        private Color fromLuv(double _l, double _u, double _v)
+        private static Color fromLuv(double _l, double _u, double _v)
         {
             var uPrime = (4.0 * 95.047) / 1921.696;
             var vPrime = (9.0 * 100.000) / 1921.696;
@@ -639,7 +640,7 @@ namespace Hassium.HassiumObjects.Drawing
             return fromXyz(100 * x, 100 * y, 100 * z);
         }
 
-        private Color fromHunterLab(double _l, double _a, double _b)
+        private static Color fromHunterLab(double _l, double _a, double _b)
         {
             var x = (_a / 17.5) * (_l / 10.0);
             var itemL_10 = _l / 10.0;
@@ -651,7 +652,7 @@ namespace Hassium.HassiumObjects.Drawing
                 -(z - y) / 0.847);
         }
 
-        private Color fromYuv(double y, double u, double v)
+        private static Color fromYuv(double y, double u, double v)
         {
             /* THIS RETURNS NOT EXACT RESULTS (SLIGHT DIFFERENCE)
             double r = System.Math.Floor(y + 1.4075 * (v - 128));

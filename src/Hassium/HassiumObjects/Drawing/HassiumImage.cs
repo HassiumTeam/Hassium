@@ -23,7 +23,6 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-using System.CodeDom;
 using System.Drawing;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;

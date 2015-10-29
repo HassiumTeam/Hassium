@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System.Collections.Generic;
+using System.Linq;
 using Hassium.Functions;
 
 namespace Hassium.HassiumObjects.Collections
@@ -41,12 +42,24 @@ namespace Hassium.HassiumObjects.Collections
             Attributes.Add("pop", new InternalFunction(pop, 0));
             Attributes.Add("push", new InternalFunction(push, 1));
             Attributes.Add("length", new HassiumProperty("length", x => Value.Count, null, true));
+            Attributes.Add("reverse", new InternalFunction(reverse, 0));
+        }
+
+        private HassiumObject reverse(HassiumObject[] args)
+        {
+            Value = new Stack<HassiumObject>(Value);
+            return this;
         }
 
         private HassiumObject clear(HassiumObject[] args)
         {
             Value.Clear();
             return null;
+        }
+
+        public override string ToString()
+        {
+            return "Stack { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
         }
 
         private HassiumObject contains(HassiumObject[] args)

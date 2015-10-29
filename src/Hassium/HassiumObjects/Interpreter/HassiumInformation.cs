@@ -28,7 +28,6 @@
 using System;
 using System.IO;
 using Hassium.Functions;
-using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Interpreter

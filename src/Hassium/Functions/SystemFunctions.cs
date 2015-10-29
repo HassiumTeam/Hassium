@@ -24,7 +24,6 @@
 // DAMAGE.
 
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Globalization;
@@ -118,21 +117,25 @@ namespace Hassium.Functions
         [IntFunc("sizeOf", 1)]
         public static HassiumObject sizeOf(HassiumObject[] args)
         {
-            return new HassiumInt(Marshal.SizeOf(args[0]));
+            return Marshal.SizeOf(args[0]);
         }
 
         [IntFunc("nameOf", 1)]
         public static HassiumObject nameOf(HassiumObject[] args)
         {
 
-            foreach (KeyValuePair<string, HassiumObject> entry in Program.CurrentInterpreter.Globals)
-                if (entry.Value.GetHashCode() == args[0].GetHashCode())
-                    return new HassiumString(entry.Key);
-            foreach (KeyValuePair<string, HassiumObject> entry in Program.CurrentInterpreter.CallStack.Peek().Locals)
-                if (entry.Value.GetHashCode() == args[0].GetHashCode())
-                    return new HassiumString(entry.Key);
+            foreach (
+                var entry in
+                    Program.CurrentInterpreter.Globals.Where(entry => entry.Value.GetHashCode() == args[0].GetHashCode())
+                )
+                return entry.Key;
+            foreach (
+                var entry in
+                    Program.CurrentInterpreter.CallStack.Peek()
+                        .Locals.Where(entry => entry.Value.GetHashCode() == args[0].GetHashCode()))
+                return entry.Key;
 
-            return new HassiumString("");
+            return "";
         }
     }
 }

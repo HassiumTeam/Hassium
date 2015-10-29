@@ -29,7 +29,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using Hassium.Functions;
-using Hassium.HassiumObjects.Networking.HTTP;
 using Hassium.Interpreter;
 
 namespace Hassium.HassiumObjects.Types
@@ -113,28 +112,20 @@ namespace Hassium.HassiumObjects.Types
 
         public HassiumObject map(HassiumObject[] args)
         {
-            string ret = "";
-            foreach (char c in Value)
-                ret += ((HassiumMethod)args[0]).Invoke(c.ToString()).ToString();
-
-            return new HassiumString(ret);
+            return Value.Aggregate("", (current, c) => current + ((HassiumMethod) args[0]).Invoke(c.ToString()).ToString());
         }
 
         public HassiumObject fill(HassiumObject[] args)
         {
-            string ret = "";
             if (args.Length == 1)
-                foreach (char c in Value)
-                    ret += args[0].ToString();
-
+                return Value.Aggregate("", (current, c) => current + args[0].ToString());
             else
             {
-                ret = Value;
+                var ret = Value;
                 for (int x = Value.Length; x < args[1].HInt(); x++)
                     ret += args[0].ToString();
+                return ret;
             }
-
-            return ret;
         }
 
         public HassiumObject compare(HassiumObject[] args)
@@ -185,7 +176,7 @@ namespace Hassium.HassiumObjects.Types
                     {
                         int k = 0;
                         var words =
-                            word.ToLookup(c => + (int)System.Math.Floor(k++ / (double)(length - 1))).Select(e => new string(e.ToArray()) + "-");
+                            word.ToLookup(c => +(int)System.Math.Floor(k++ / (double)(length - 1))).Select(e => new string(e.ToArray()) + "-");
                         k = 0;
                         foreach (string cword in words)
                         {

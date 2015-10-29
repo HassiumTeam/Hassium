@@ -32,8 +32,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Hassium.Functions;
@@ -195,32 +193,36 @@ namespace Hassium.Interpreter
 
             var testAss = path == "" ? Assembly.GetExecutingAssembly() : Assembly.LoadFrom(path);
 
-            foreach (var type in testAss.GetTypes())
+            foreach (
+                var myfunc in
+                    testAss.GetTypes()
+                        .Where(type => type.GetInterface(typeof (ILibrary).FullName) != null)
+                        .SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.Static)))
             {
-                if (type.GetInterface(typeof (ILibrary).FullName) != null)
+                switch (myfunc.Name)
                 {
-                    foreach (var myfunc in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+                    case "GetConstants":
                     {
-                        if(myfunc.Name == "GetConstants")
+                        var res = myfunc.Invoke(null, new object[] {});
+                        var dict = res as Dictionary<string, HassiumObject>;
+                        if (dict != null)
                         {
-                            var res = myfunc.Invoke(null, new object[]{});
-                            var dict = res as Dictionary<string, HassiumObject>;
-                            if(dict != null)
-                            {
-                                foreach(var ct in dict) result.Add(ct.Key, ct.Value);
-                            }
-                            continue;
+                            foreach (var ct in dict) result.Add(ct.Key, ct.Value);
                         }
-                        if (myfunc.Name == "GetFunctions")
+                        continue;
+                    }
+                    case "GetFunctions":
+                    {
+                        var res = myfunc.Invoke(null, new object[] {});
+                        var dict = res as Dictionary<string, HassiumObject>;
+                        if (dict != null)
                         {
-                            var res = myfunc.Invoke(null, new object[] { });
-                            var dict = res as Dictionary<string, HassiumObject>;
-                            if (dict != null)
-                            {
-                                foreach (var ct in dict) result.Add(ct.Key, ct.Value);
-                            }
-                            continue;
+                            foreach (var ct in dict) result.Add(ct.Key, ct.Value);
                         }
+                        continue;
+                    }
+                    default:
+                    {
                         var theattr1 = myfunc.GetCustomAttributes(typeof (IntFunc), true);
                         foreach (var theattr in theattr1.OfType<IntFunc>())
                         {
@@ -236,6 +238,7 @@ namespace Hassium.Interpreter
                                         rfunc);
                             }
                         }
+                        continue;
                     }
                 }
             }
@@ -509,7 +512,7 @@ namespace Hassium.Interpreter
                     if (left is HassiumString || right is HassiumString)
                         return new HassiumString(left + right.ToString());
                     if (left is HassiumChar || right is HassiumChar)
-                        return left.ToString() + right.ToString();
+                        return left + right.ToString();
                     if (left is HassiumDate || right is HassiumDate)
                         return (HassiumDate) left + (HassiumDate) right;
                     if (left is HassiumKeyValuePair || right is HassiumKeyValuePair)
@@ -522,33 +525,37 @@ namespace Hassium.Interpreter
                         ev.AddHandler((HassiumMethod) right);
                         return ev;
                     }
-                    if(left is HassiumObject && ((HassiumObject)left).Attributes.ContainsKey("__add"))
+                    if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__add"))
                     {
                         return ((HassiumObject) left).GetAttribute("__add", pos).Invoke((HassiumObject) right);
                     }
-                    if (right is HassiumObject && ((HassiumObject)right).Attributes.ContainsKey("__add"))
+                    if (right is HassiumObject && ((HassiumObject) right).Attributes.ContainsKey("__add"))
                     {
-                        return ((HassiumObject)right).GetAttribute("__add", pos).Invoke((HassiumObject)left);
+                        return ((HassiumObject) right).GetAttribute("__add", pos).Invoke((HassiumObject) left);
                     }
                     return new HassiumDouble(Convert.ToDouble(left) + Convert.ToDouble(right));
 
                 case BinaryOperation.Subtraction:
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) - Convert.ToInt32(right));
+                    if (left is HassiumDate || right is HassiumDate)
+                        return (HassiumDate)left - (HassiumDate)right;
                     if (left is HassiumEvent && right is HassiumMethod)
                     {
                         var ev = (HassiumEvent) left;
                         ev.RemoveHandler((HassiumMethod) right);
                         return ev;
                     }
-                    
-                    if (left is HassiumObject && ((HassiumObject)left).Attributes.ContainsKey("__substract"))
+
+                    if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__substract"))
                     {
-                        return ((HassiumObject)left).GetAttribute("__substract", pos).Invoke((HassiumObject)right);
+                        return ((HassiumObject) left).GetAttribute("__substract", pos).Invoke((HassiumObject) right);
                     }
-                    if (left is HassiumObject && ((HassiumObject)left).Attributes.ContainsKey("__add"))
+                    if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__add"))
                     {
-                        return ((HassiumObject)left).GetAttribute("__add", pos).Invoke(InterpretUnaryOp((HassiumObject)right, UnaryOperation.Negate, pos));
+                        return
+                            ((HassiumObject) left).GetAttribute("__add", pos)
+                                .Invoke(InterpretUnaryOp((HassiumObject) right, UnaryOperation.Negate, pos));
                     }
                     if (right is HassiumObject && ((HassiumObject) right).Attributes.ContainsKey("__multiply") &&
                         ((HassiumObject) right).Attributes.ContainsKey("__add"))
@@ -560,20 +567,22 @@ namespace Hassium.Interpreter
                     return new HassiumDouble(Convert.ToDouble(left) - Convert.ToDouble(right));
 
                 case BinaryOperation.Division:
-                    
-                    if (left is HassiumObject && ((HassiumObject)left).Attributes.ContainsKey("__divide"))
+
+                    if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__divide"))
                     {
-                        return ((HassiumObject)left).GetAttribute("__divide", pos).Invoke((HassiumObject)right);
+                        return ((HassiumObject) left).GetAttribute("__divide", pos).Invoke((HassiumObject) right);
                     }
 
-                    if (right is HassiumObject && ((HassiumObject)right).Attributes.ContainsKey("__multiply") &&
-                        right is HassiumObject && ((HassiumObject)right).Attributes.ContainsKey("__divide"))
+                    if (right is HassiumObject && ((HassiumObject) right).Attributes.ContainsKey("__multiply") &&
+                        right is HassiumObject && ((HassiumObject) right).Attributes.ContainsKey("__divide"))
                     {
                         return
                             ((HassiumObject) right).GetAttribute("__divide", pos)
                                 .Invoke(((HassiumObject) right)
+                                    .GetAttribute("__multiply", pos)
+                                    .Invoke((HassiumObject) right))
                                 .GetAttribute("__multiply", pos)
-                                .Invoke((HassiumObject) right)).GetAttribute("__multiply", pos).Invoke((HassiumObject)left);
+                                .Invoke((HassiumObject) left);
                     }
 
                     if (Convert.ToDouble(right) == 0.0) throw new ParseException("Cannot divide by zero", pos);
@@ -592,13 +601,13 @@ namespace Hassium.Interpreter
                     }
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) * Convert.ToInt32(right));
-                    if (left is HassiumObject && ((HassiumObject)left).Attributes.ContainsKey("__multiply"))
+                    if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__multiply"))
                     {
-                        return ((HassiumObject)left).GetAttribute("__multiply", pos).Invoke((HassiumObject)right);
+                        return ((HassiumObject) left).GetAttribute("__multiply", pos).Invoke((HassiumObject) right);
                     }
-                    if (right is HassiumObject && ((HassiumObject)right).Attributes.ContainsKey("__multiply"))
+                    if (right is HassiumObject && ((HassiumObject) right).Attributes.ContainsKey("__multiply"))
                     {
-                        return ((HassiumObject)right).GetAttribute("__multiply", pos).Invoke((HassiumObject)left);
+                        return ((HassiumObject) right).GetAttribute("__multiply", pos).Invoke((HassiumObject) left);
                     }
                     return new HassiumDouble(Convert.ToDouble(left) * Convert.ToDouble(right));
                 case BinaryOperation.Equals:
@@ -610,7 +619,9 @@ namespace Hassium.Interpreter
                             new HassiumBool(((HassiumObject) left).HDouble().Value ==
                                             ((HassiumObject) right).HDouble().Value);
                     if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() == 0;
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() ==
+                            0;
                     return new HassiumBool(left.ToString() == right.ToString());
                 case BinaryOperation.LogicalAnd:
                     return new HassiumBool(Convert.ToBoolean(left) && Convert.ToBoolean(right));
@@ -621,24 +632,34 @@ namespace Hassium.Interpreter
                         return
                             new HassiumBool(((HassiumObject) left).HDouble().Value !=
                                             ((HassiumObject) right).HDouble().Value);
-                    if (((HassiumObject)left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject)left).GetAttribute("__compare", pos).Invoke((HassiumObject)right).HInt() != 0;
+                    if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() !=
+                            0;
                     return new HassiumBool(left.ToString() != right.ToString());
                 case BinaryOperation.LessThan:
-                    if (((HassiumObject)left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject)left).GetAttribute("__compare", pos).Invoke((HassiumObject)right).HInt() == -1;
+                    if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() ==
+                            -1;
                     return new HassiumBool(Convert.ToDouble(left) < Convert.ToDouble(right));
                 case BinaryOperation.GreaterThan:
-                    if (((HassiumObject)left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject)left).GetAttribute("__compare", pos).Invoke((HassiumObject)right).HInt() == 1;
+                    if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() ==
+                            1;
                     return new HassiumBool(Convert.ToDouble(left) > Convert.ToDouble(right));
                 case BinaryOperation.GreaterOrEqual:
-                    if (((HassiumObject)left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject)left).GetAttribute("__compare", pos).Invoke((HassiumObject)right).HInt() >= 0;
+                    if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() >=
+                            0;
                     return new HassiumBool(Convert.ToDouble(left) >= Convert.ToDouble(right));
                 case BinaryOperation.LesserOrEqual:
-                    if (((HassiumObject)left).Attributes.ContainsKey("__compare"))
-                        return ((HassiumObject)left).GetAttribute("__compare", pos).Invoke((HassiumObject)right).HInt() <= 0;
+                    if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
+                        return
+                            ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() <=
+                            0;
                     return new HassiumBool(Convert.ToDouble(left) <= Convert.ToDouble(right));
                 case BinaryOperation.CombinedComparison:
                     if (((HassiumObject) left).Attributes.ContainsKey("__compare"))
@@ -663,7 +684,7 @@ namespace Hassium.Interpreter
                 case BinaryOperation.BitshiftRight:
                     return new HassiumInt(Convert.ToInt32(left) >> Convert.ToInt32(right));
                 case BinaryOperation.Modulus:
-                    if(left is HassiumInt && right is HassiumInt)
+                    if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt(Convert.ToInt32(left) % Convert.ToInt32(right));
                     return new HassiumDouble(Convert.ToDouble(left) % Convert.ToDouble(right));
 
@@ -678,13 +699,13 @@ namespace Hassium.Interpreter
                     }
                     if (left is HassiumInt && right is HassiumInt)
                         return new HassiumInt((int) Math.Pow(Convert.ToInt32(left), Convert.ToInt32(right)));
-                    if (((HassiumObject)left).Attributes.ContainsKey("__pow"))
-                        return ((HassiumObject)left).GetAttribute("__pow", pos).Invoke((HassiumObject)right);
-                    return new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
+                    return ((HassiumObject) left).Attributes.ContainsKey("__pow")
+                        ? ((HassiumObject) left).GetAttribute("__pow", pos).Invoke((HassiumObject) right)
+                        : new HassiumDouble(Math.Pow(Convert.ToDouble(left), Convert.ToDouble(right)));
                 case BinaryOperation.Root:
-                    if (((HassiumObject)left).Attributes.ContainsKey("__root"))
-                        return ((HassiumObject)left).GetAttribute("__root", pos).Invoke((HassiumObject)right);
-                    return new HassiumDouble(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
+                    return ((HassiumObject) left).Attributes.ContainsKey("__root")
+                        ? ((HassiumObject) left).GetAttribute("__root", pos).Invoke((HassiumObject) right)
+                        : new HassiumDouble(Math.Pow(Convert.ToDouble(left), 1.0 / Convert.ToDouble(right)));
 
                 case BinaryOperation.NullCoalescing:
                     return HassiumObject.ToHassiumObject(left) ?? HassiumObject.ToHassiumObject(right);
@@ -945,7 +966,7 @@ namespace Hassium.Interpreter
         {
             var enode = node;
             if (!Globals.ContainsKey(enode.Name))
-                Globals.Add(enode.Name, new HassiumEnum(enode, this));
+                Globals.Add(enode.Name, new HassiumEnum(enode));
             return null;
         }
 
@@ -1503,7 +1524,7 @@ namespace Hassium.Interpreter
         {
             var pred = node.Predicate.Visit(this);
             
-            var cnode = node.Body.First(x => x.Values.Any(y =>
+            var cnode = node.Body.FirstOrDefault(x => x.Values.Any(y =>
             {
                 if (y is BinOpNode)
                 {

@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
-using Hassium.Functions;
-using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Networking
 {
     public class CGI : HassiumObject
     {
-        private HassiumDictionary _get = null;
-        private HassiumDictionary _post = null;
+        private HassiumDictionary _get;
+        private HassiumDictionary _post;
 
         public CGI()
         {
@@ -282,8 +278,8 @@ namespace Hassium.HassiumObjects.Networking
             }, null, true));*/
         }
 
-        private static bool _sessionstarted = false;
+        /*private static bool _sessionstarted = false;
         private static HassiumDictionary _sessionvalue = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
-        private static string _sessionfolder = "";
+        private static string _sessionfolder = "";*/
     }
 }

@@ -111,7 +111,7 @@ namespace Hassium
                     catch (ParseException e)
                     {
                         Console.WriteLine();
-                        printError(Program.options.Code, e);
+                        printError(options.Code, e);
 
                         Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
                         Environment.Exit(-1);
@@ -176,7 +176,7 @@ st.Start();
     }
 ";
 
-                string hassiumLocation = Assembly.GetEntryAssembly().Location;
+                var hassiumLocation = Assembly.GetEntryAssembly().Location;
 
                 
 
@@ -203,6 +203,7 @@ st.Start();
 
                 Console.WriteLine("Merging assemblies...");
                 var proc = Process.Start(
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     Path.Combine(Path.GetDirectoryName(hassiumLocation),
                         "libz.exe"), " inject-dll --assembly \"" + output + "\" --include \"" + hassiumLocation + "\"");
                 proc.WaitForExit();
@@ -256,7 +257,7 @@ st.Start();
                 catch (ParseException e)
                 {
                     Console.WriteLine();
-                    printError(Program.options.Code, e);
+                    printError(options.Code, e);
 
                     Console.WriteLine("\nStack Trace: \n" + e.StackTrace);
                     Environment.Exit(-1);
@@ -372,17 +373,6 @@ st.Start();
                         options.Compile = new Tuple<bool, string, bool>(true, args[++i], obf);
                         if (obf) i++;
                         break;
-                    case "-cl":
-                        var fl = args[++i];
-                        AstNode result = null;
-                        using (FileStream fs = new FileStream(fl, FileMode.Open))
-                        {
-                            result = (AstNode)new BinaryFormatter().Deserialize(fs);
-                        }
-                        var st = new SemanticAnalyser(result).Analyse();
-                        CurrentInterpreter = new Interpreter.Interpreter(st, result);
-                        CurrentInterpreter.Execute();
-                            break;
                     default:
                         if (File.Exists(args[i]))
                         {

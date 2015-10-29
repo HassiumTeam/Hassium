@@ -256,7 +256,9 @@ namespace Hassium.Lexer
                         }
 
                         if (next1 == current)
-                            add(new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
+                            add(next2 == '='
+                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar() + ReadChar())
+                            : new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
                         else if (next1 == '=')
                         {
                             if (current == '<' && next2 == '>')
@@ -433,11 +435,11 @@ namespace Hassium.Lexer
                     case 'x':
                         add(new Token(TokenType.Char, 'x'));
                         break;
-                    case '"':
-                        add(new Token(TokenType.Char, '"'));
+                    case '\'':
+                        add(new Token(TokenType.Char, '\''));
                         break;
                     default:
-                        throw new ParseException("Unknown escape code " + escapeChar.ToString(), position);
+                        throw new ParseException("Unknown escape code " + escapeChar, position);
                 }
                 
             }

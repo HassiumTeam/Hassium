@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Hassium.Functions;
 using Hassium.HassiumObjects;
 using Hassium.HassiumObjects.Types;
 using Hassium.Interpreter;

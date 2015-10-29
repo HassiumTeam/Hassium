@@ -38,7 +38,7 @@ namespace Hassium.Parser.Ast
 
         public string Member { private set; get; }
 
-        private bool _checknull = false;
+        private bool _checknull;
 
         public bool CheckForNull
         {

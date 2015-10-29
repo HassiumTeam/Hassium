@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using Hassium.HassiumObjects.IO;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.Drawing
@@ -20,46 +17,50 @@ namespace Hassium.HassiumObjects.Drawing
 
         public HassiumGradient(IList<HassiumObject> args) : this()
         {
-            if(args.Count == 2)
+            switch (args.Count)
             {
-                var type = args[0].ToString();
-                var size = args[1].HInt().Value;
+                case 2:
+                    var type = args[0].ToString();
+                    var size = args[1].HInt().Value;
 
-                GradientType = type;
+                    GradientType = type;
 
-                if(type == "hsl")
-                {
-                    for(int i = 0; i < size; i++)
+                    switch (type)
                     {
-                        double hue = i * (360.0 / size);
-                        Content.Add(new HassiumColor("hsl", hue, 0.5, 0.5));
+                        case "hsl":
+                            for(int i = 0; i < size; i++)
+                            {
+                                double hue = i * (360.0 / size);
+                                Content.Add(new HassiumColor("hsl", hue, 0.5, 0.5));
+                            }
+                            break;
+                        case "hsv":
+                            for (int i = 0; i < size; i++)
+                            {
+                                double hue = i * (360.0 / size);
+                                Content.Add(new HassiumColor("hsv", hue, 0.5, 0.5));
+                            }
+                            break;
                     }
-                }
-                else if (type == "hsv")
-                {
-                    for (int i = 0; i < size; i++)
+                    break;
+                case 3:
+                    Lower = (HassiumColor) args[1];
+                    Upper = (HassiumColor) args[2];
+
+                    Content = createGradient(args[0].HInt(), Lower.Value, Upper.Value).Select(x => new HassiumColor(x)).ToList();
+                    break;
+                default:
+                    if(args.Count > 2)
                     {
-                        double hue = i * (360.0 / size);
-                        Content.Add(new HassiumColor("hsv", hue, 0.5, 0.5));
+                        GradientType = "multiple";
+
+                        Content = createGradient(args[0].HInt(), args.Skip(1).Select(x => ((HassiumColor) x).Value).ToArray()).Select(x => new HassiumColor(x)).ToList();
                     }
-                }
-            }
-            else if(args.Count == 3)
-            {
-                Lower = (HassiumColor) args[1];
-                Upper = (HassiumColor) args[2];
-
-                Content = createGradient(args[0].HInt(), Lower.Value, Upper.Value).Select(x => new HassiumColor(x)).ToList();
-            }
-            else if(args.Count > 2)
-            {
-                GradientType = "multiple";
-
-                Content = createGradient(args[0].HInt(), args.Skip(1).Select(x => ((HassiumColor) x).Value).ToArray()).Select(x => new HassiumColor(x)).ToList();
+                    break;
             }
         }
 
-        private List<Color> createGradient(int size, params Color[] colors)
+        public IEnumerable<Color> createGradient(int size, params Color[] colors)
         {
             List<Color> palette = new List<Color>(size);
 

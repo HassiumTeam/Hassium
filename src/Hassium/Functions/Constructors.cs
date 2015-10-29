@@ -42,9 +42,10 @@ namespace Hassium.Functions
             return new HassiumObject();
         }
 
-        [IntFunc("Date", true, 0)]
+        [IntFunc("Date", true, new []{0,1})]
         public static HassiumObject Date(HassiumObject[] args)
         {
+            if(args.Length == 1) return new HassiumDate(new DateTime(1970, 1, 1).AddSeconds(args[0].HDouble()));
             return new HassiumDate(DateTime.Now);
         }
 

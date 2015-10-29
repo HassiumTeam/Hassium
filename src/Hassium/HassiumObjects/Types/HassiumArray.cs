@@ -23,8 +23,6 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
-using System;
-using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,6 +97,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("sort", new InternalFunction(Sort, new[] {0, 1}));
             Attributes.Add("unique", new InternalFunction(Unique, 0));
             Attributes.Add("toDictionary", new InternalFunction(ToDictionary, 1));
+            Attributes.Add("average", new InternalFunction(Average, new []{0,1}));
 
             _value = value.Select(ToHassiumObject).ToList();
         }
@@ -112,6 +111,12 @@ namespace Hassium.HassiumObjects.Types
         public override string ToString()
         {
             return "Array { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
+        }
+
+        public HassiumObject Average(HassiumObject[] args)
+        {
+            if (args.Length == 0) return Value.Average(x => (double)(x.HDouble()));
+            return Value.Average(x => args[0].Invoke(x).HDouble());
         }
 
         public HassiumObject ToDictionary(HassiumObject[] args)

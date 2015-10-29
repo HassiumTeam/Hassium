@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -24,22 +21,22 @@ namespace Hassium.HassiumObjects.Interpreter
             Attributes.Add("waitForFullGCComplete", new InternalFunction(waitForFullGCComplete, 0));
             Attributes.Add("pendingFinalizers", new InternalFunction(waitForPendingFinalizers, 0));
         }
-        
-        private HassiumObject addMemoryPressure(HassiumObject[] args)
+
+        public HassiumObject addMemoryPressure(HassiumObject[] args)
         {
             GC.AddMemoryPressure(Convert.ToInt64(((HassiumDouble)args[0]).Value));
 
             return null;
         }
 
-        private HassiumObject cancelFullGCNotification(HassiumObject[] args)
+        public HassiumObject cancelFullGCNotification(HassiumObject[] args)
         {
             GC.CancelFullGCNotification();
 
             return null;
         }
 
-        private HassiumObject collect(HassiumObject[] args)
+        public HassiumObject collect(HassiumObject[] args)
         {
             if (args.Length <= 0)
                 GC.Collect();
@@ -49,55 +46,55 @@ namespace Hassium.HassiumObjects.Interpreter
             return null;
         }
 
-        private HassiumObject collectionCount(HassiumObject[] args)
+        public HassiumObject collectionCount(HassiumObject[] args)
         {
             GC.CollectionCount(((HassiumInt)args[0]).Value);
 
             return null;
         }
 
-        private HassiumObject getGeneration(HassiumObject[] args)
+        public HassiumObject getGeneration(HassiumObject[] args)
         {
             return GC.GetGeneration(args[0]);
         }
 
-        private HassiumObject getTotalMemory(HassiumObject[] args)
+        public HassiumObject getTotalMemory(HassiumObject[] args)
         {
             return GC.GetTotalMemory(true);
         }
 
-        private HassiumObject keepAlive(HassiumObject[] args)
+        public HassiumObject keepAlive(HassiumObject[] args)
         {
             GC.KeepAlive(args[0]);
 
             return null;
         }
 
-        private HassiumObject removeMemoryPressure(HassiumObject[] args)
+        public HassiumObject removeMemoryPressure(HassiumObject[] args)
         {
             GC.RemoveMemoryPressure((long)((HassiumDouble)args[0]).Value);
 
             return null;
         }
 
-        private HassiumObject supressFinalize(HassiumObject[] args)
+        public HassiumObject supressFinalize(HassiumObject[] args)
         {
             GC.SuppressFinalize(args[0]);
 
             return null;
         }
 
-        private HassiumObject waitForFullGCApproach(HassiumObject[] args)
+        public HassiumObject waitForFullGCApproach(HassiumObject[] args)
         {
             return new HassiumString(GC.WaitForFullGCApproach().ToString());
         }
 
-        private HassiumObject waitForFullGCComplete(HassiumObject[] args)
+        public HassiumObject waitForFullGCComplete(HassiumObject[] args)
         {
             return new HassiumString(GC.WaitForFullGCComplete().ToString());
         }
 
-        private HassiumObject waitForPendingFinalizers(HassiumObject[] args)
+        public HassiumObject waitForPendingFinalizers(HassiumObject[] args)
         {
             GC.WaitForPendingFinalizers();
 
