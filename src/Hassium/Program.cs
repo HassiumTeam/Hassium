@@ -46,7 +46,7 @@ namespace Hassium
     public static class Program
     {
         // set this to true so run the code without exception handling, so the debugger can stop at exceptions
-        private static bool disableTryCatch = true;
+        private static bool disableTryCatch = false;
 
 
         public static class options

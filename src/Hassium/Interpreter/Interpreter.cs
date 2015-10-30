@@ -1068,6 +1068,13 @@ namespace Hassium.Interpreter
             return ret;
         }
 
+        public object Accept(BulkAssignNode node)
+        {
+            foreach (BinOpNode binNode in node.Nodes)
+                Accept(binNode);
+            return null;
+        }
+
         public object Accept(LabelNode node)
         {
             if (!CallStack.Any())

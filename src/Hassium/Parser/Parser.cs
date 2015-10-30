@@ -757,6 +757,27 @@ namespace Hassium.Parser
 
             AstNode left = parseConditional(parser);
 
+            var opos = parser.position;
+            var inodes = new List<AstNode> { left };
+            AstNode val = null;
+            if(parser.AcceptToken(TokenType.Comma))
+            {
+                while (parser.MatchToken(TokenType.Identifier))
+                {
+                    inodes.Add(ParseIdentifier(parser));
+                    if (!parser.AcceptToken(TokenType.Comma))
+                        break;
+                }
+
+                if (parser.AcceptToken(TokenType.Assignment))
+                {
+                    val = parseExpression(parser);
+                    return new BulkAssignNode(position,
+                        inodes.Select(x => new BinOpNode(x.Position, BinaryOperation.Assignment, x, val)));
+                }
+                else parser.position = opos;
+            }
+
             while (parser.CurrentToken().TokenClass == TokenType.Assignment ||
                    parser.CurrentToken().TokenClass == TokenType.OpAssign)
             {

@@ -82,6 +82,7 @@
     <Compile Include="Lexer\IFunction.cs" />
     <Compile Include="Parser\Ast\ArrayIndexerNode.cs" />
     <Compile Include="Parser\Ast\BreakNode.cs" />
+    <Compile Include="Parser\Ast\BulkAssignNode.cs" />
     <Compile Include="Parser\Ast\CharNode.cs" />
     <Compile Include="Parser\Ast\ClassNode.cs" />
     <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
