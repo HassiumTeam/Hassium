@@ -247,11 +247,11 @@ namespace Hassium.Interpreter
 
         private IFunction getFunction(string name, int parm, AstNode node)
         {
-            if (hasVariable(name + "`" + parm))
+            if (HasVariable(name + "`" + parm))
                 return getVariable(name + "`" + parm, node);
-            if (hasVariable(name + "`i"))
+            if (HasVariable(name + "`i"))
                 return getVariable(name + "`i", node);
-            if (hasVariable(name))
+            if (HasVariable(name))
                 return getVariable(name, node);
 
             if(Globals.Any(x => x.Key.StartsWith(name) && x.Key.Contains("`")) || CallStack.HasVariable(name, true))
@@ -281,7 +281,7 @@ namespace Hassium.Interpreter
             }
             else
             {
-                if (!hasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
+                if (!HasVariable(name)) throw new ParseException("The variable '" + name + "' doesn't exist.", node);
                 if (CallStack.HasVariable(name))
                     CallStack.FreeVariable(name);
                 else
@@ -291,75 +291,81 @@ namespace Hassium.Interpreter
 
         private HassiumObject interpretBinaryOp(BinOpNode node)
         {
-            if (node.BinOp == BinaryOperation.Is)
+            switch (node.BinOp)
             {
-                var target = (HassiumObject) node.Left.Visit(this);
-                if(node.Right is IdentifierNode)
-                {
-                    var name = node.Right.ToString().ToLower();
-                    if (name.Contains("`"))
+                case BinaryOperation.LogicalAnd:
+                    return ((HassiumObject)node.Left.Visit(this)).HBool().Value && ((HassiumObject) node.Right.Visit(this)).HBool().Value;
+                case BinaryOperation.LogicalOr:
+                    return ((HassiumObject)node.Left.Visit(this)).HBool().Value || ((HassiumObject)node.Right.Visit(this)).HBool().Value;
+                case BinaryOperation.Is:
+                    var target = (HassiumObject) node.Left.Visit(this);
+                    if(node.Right is IdentifierNode)
                     {
-                        var n = name.Split('`')[0];
-                        var pnums = name.Split('`')[1];
-                        if (pnums == "")
+                        var name = node.Right.ToString().ToLower();
+                        if (name.Contains("`"))
                         {
-                            throw new ParseException("Expected argument number", node.Right.Position + n.Length + 1);
+                            var n = name.Split('`')[0];
+                            var pnums = name.Split('`')[1];
+                            if (pnums == "")
+                            {
+                                throw new ParseException("Expected argument number", node.Right.Position + n.Length + 1);
+                            }
+                            var pnum = -1;
+                            try
+                            {
+                                pnum = int.Parse(pnums);
+                            }
+                            catch
+                            {
+                                throw new ParseException("Invalid argument number: " + pnums,
+                                    node.Right.Position + n.Length + 1);
+                            }
+                            return target is HassiumMethod &&
+                                   (n == "lambda"
+                                       ? ((HassiumMethod) target).IsLambda
+                                       : n == "func" && !((HassiumMethod) target).IsLambda) &&
+                                   ((HassiumMethod) target).FuncNode.Parameters.Count == pnum;
                         }
-                        var pnum = -1;
-                        try
+                        switch (name)
                         {
-                            pnum = int.Parse(pnums);
+                            case "string":
+                                return target is HassiumString;
+                            case "int":
+                                return target is HassiumInt;
+                            case "double":
+                                return target is HassiumDouble;
+                            case "array":
+                                return target is HassiumArray;
+                            case "enumerable":
+                                return target is HassiumArray || target is HassiumString || target is HassiumDictionary;
+                            case "dictionary":
+                                return target is HassiumDictionary;
+                            case "bool":
+                            case "boolean":
+                                return target is HassiumBool;
+                            case "byte":
+                                return target is HassiumByte;
+                            case "char":
+                                return target is HassiumChar;
+                            case "date":
+                            case "datetime":
+                            case "time":
+                                return target is HassiumDate;
+                            case "event":
+                                return target is HassiumEvent;
+                            case "object":
+                                return true;
+                            case "tuple":
+                                return target is HassiumTuple;
+                            case "func":
+                                return target is HassiumMethod && !((HassiumMethod) target).IsLambda;
+                            case "lambda":
+                                return target is HassiumMethod && ((HassiumMethod) target).IsLambda;
                         }
-                        catch
-                        {
-                            throw new ParseException("Invalid argument number: " + pnums,
-                                node.Right.Position + n.Length + 1);
-                        }
-                        return target is HassiumMethod &&
-                               (n == "lambda"
-                                   ? ((HassiumMethod) target).IsLambda
-                                   : n == "func" && !((HassiumMethod) target).IsLambda) &&
-                               ((HassiumMethod) target).FuncNode.Parameters.Count == pnum;
                     }
-                    switch (name)
-                    {
-                        case "string":
-                            return target is HassiumString;
-                        case "int":
-                            return target is HassiumInt;
-                        case "double":
-                            return target is HassiumDouble;
-                        case "array":
-                            return target is HassiumArray;
-                        case "enumerable":
-                            return target is HassiumArray || target is HassiumString || target is HassiumDictionary;
-                        case "dictionary":
-                            return target is HassiumDictionary;
-                        case "bool":
-                        case "boolean":
-                            return target is HassiumBool;
-                        case "byte":
-                            return target is HassiumByte;
-                        case "char":
-                            return target is HassiumChar;
-                        case "date":
-                        case "datetime":
-                        case "time":
-                            return target is HassiumDate;
-                        case "event":
-                            return target is HassiumEvent;
-                        case "object":
-                            return true;
-                        case "tuple":
-                            return target is HassiumTuple;
-                        case "func":
-                            return target is HassiumMethod && !((HassiumMethod) target).IsLambda;
-                        case "lambda":
-                            return target is HassiumMethod && ((HassiumMethod) target).IsLambda;
-                    }
-                }
-                else
-                    throw new ParseException("Expected type name", node.Right);
+                    else
+                        throw new ParseException("Expected type name", node.Right);
+                    break;
             }
             var right = (HassiumObject) node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
@@ -533,6 +539,27 @@ namespace Hassium.Interpreter
                     {
                         return ((HassiumObject) right).GetAttribute("__add", pos).Invoke((HassiumObject) left);
                     }
+                    if(left is HassiumArray)
+                    {
+                        var arr = ((HassiumArray) left).Value.ToList();
+                        arr.Add((HassiumObject)right);
+                        return new HassiumArray(arr);
+                    }
+                    if (left is HassiumDictionary)
+                    {
+                        var arr = ((HassiumDictionary)left).Value;
+                        var r = (HassiumObject) right;
+                        if (r is HassiumTuple)
+                        {
+                            var t = (HassiumTuple) r;
+                            arr.Add(new HassiumKeyValuePair(t.Items[0], t.Items[1]));
+                        }
+                        if(r is HassiumKeyValuePair)
+                        {
+                            arr.Add((HassiumKeyValuePair)r);
+                        }
+                        return new HassiumDictionary(arr.ToDictionary(x => x.Key, x => x.Value));
+                    }
                     return new HassiumDouble(Convert.ToDouble(left) + Convert.ToDouble(right));
 
                 case BinaryOperation.Subtraction:
@@ -613,7 +640,12 @@ namespace Hassium.Interpreter
                 case BinaryOperation.Equals:
                     if (left == null && right == null) return true;
                     if (left == null) return right == null;
-                    if (right == null) return left == null;
+                    if (right == null)
+                    {
+                        if (left is HassiumObject && ((HassiumObject) left).Attributes.ContainsKey("__isNull"))
+                            return ((HassiumObject) left).Attributes["__isNull"].HBool().Value;
+                        return left == null;
+                    }
                     if ((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
                         return
                             new HassiumBool(((HassiumObject) left).HDouble().Value ==
@@ -623,10 +655,6 @@ namespace Hassium.Interpreter
                             ((HassiumObject) left).GetAttribute("__compare", pos).Invoke((HassiumObject) right).HInt() ==
                             0;
                     return new HassiumBool(left.ToString() == right.ToString());
-                case BinaryOperation.LogicalAnd:
-                    return new HassiumBool(Convert.ToBoolean(left) && Convert.ToBoolean(right));
-                case BinaryOperation.LogicalOr:
-                    return new HassiumBool(Convert.ToBoolean(left) || Convert.ToBoolean(right));
                 case BinaryOperation.NotEqualTo:
                     if ((left is HassiumInt || left is HassiumDouble) && (right is HassiumInt || right is HassiumDouble))
                         return
@@ -675,10 +703,54 @@ namespace Hassium.Interpreter
                         ? new HassiumInt(-1)
                         : new HassiumInt(0);
                 case BinaryOperation.Xor:
+                    if (left is HassiumArray && right is HassiumArray)
+                    {
+                        var arr = ((HassiumArray)left).Value.ToList();
+                        var arr2 = ((HassiumArray)right).Value.ToList();
+                        arr.AddRange(arr2);
+                        arr = arr.Distinct().ToList();
+                        return new HassiumArray(arr);
+                    }
+                    if (left is HassiumDictionary && right is HassiumDictionary)
+                    {
+                        var arr = ((HassiumDictionary)left).Value;
+                        var arr2 = ((HassiumDictionary)right).Value;
+                        arr.AddRange(arr2);
+                        arr = arr.Distinct().ToList();
+                        return new HassiumDictionary(arr.ToDictionary(x => x.Key, x => x.Value));
+                    }
                     return new HassiumInt(Convert.ToInt32(left) ^ Convert.ToInt32(right));
                 case BinaryOperation.BitwiseAnd:
+                    if (left is HassiumArray && right is HassiumArray)
+                    {
+                        var arr = ((HassiumArray)left).Value.ToList();
+                        var arr2 = ((HassiumArray)right).Value.ToList();
+                        arr = arr.Where(x => arr2.Contains(x)).ToList();
+                        return new HassiumArray(arr);
+                    }
+                    if (left is HassiumDictionary && right is HassiumDictionary)
+                    {
+                        var arr = ((HassiumDictionary)left).Value;
+                        var arr2 = ((HassiumDictionary)right).Value;
+                        arr = arr.Where(x => arr2.Any(y => y.Key == x.Key && y.Value == x.Value)).ToList();
+                        return new HassiumDictionary(arr.ToDictionary(x => x.Key, x => x.Value));
+                    }
                     return new HassiumInt(Convert.ToInt32(left) & Convert.ToInt32(right));
                 case BinaryOperation.BitwiseOr:
+                    if (left is HassiumArray && right is HassiumArray)
+                    {
+                        var arr = ((HassiumArray)left).Value.ToList();
+                        var arr2 = ((HassiumArray)right).Value.ToList();
+                        arr.AddRange(arr2);
+                        return new HassiumArray(arr);
+                    }
+                    if (left is HassiumDictionary && right is HassiumDictionary)
+                    {
+                        var arr = ((HassiumDictionary)left).Value;
+                        var arr2 = ((HassiumDictionary)right).Value;
+                        arr.AddRange(arr2);
+                        return new HassiumDictionary(arr.ToDictionary(x => x.Key, x => x.Value));
+                    }
                     return new HassiumInt(Convert.ToInt32(left) | Convert.ToInt32(right));
                 case BinaryOperation.BitshiftLeft:
                     return new HassiumInt(Convert.ToInt32(left) << Convert.ToInt32(right));
@@ -773,7 +845,7 @@ namespace Hassium.Interpreter
             else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
         }
 
-        private bool hasVariable(string name, bool onlyglobal = false)
+        public bool HasVariable(string name, bool onlyglobal = false)
         {
             return onlyglobal
                 ? Globals.ContainsKey(name) || Constants.ContainsKey(name)
@@ -974,7 +1046,7 @@ namespace Hassium.Interpreter
         public object Accept(TupleNode node)
         {
             var tnode = node;
-            if(hasVariable(tnode.Name)) throw new ParseException("A variable with the name '" + tnode.Name + "' already exists", tnode);
+            if(HasVariable(tnode.Name)) throw new ParseException("A variable with the name '" + tnode.Name + "' already exists", tnode);
             var tuple = new HassiumTuple(tnode, this);
             if (tnode.IsInline) return tuple;
 
@@ -1311,9 +1383,18 @@ namespace Hassium.Interpreter
 
 
             HassiumObject ret = null;
-            if (hasVariable(call.Target + "`i") && !(target is InternalFunction))
-                ret = target.Invoke(new HassiumObject[] {new HassiumArray(arguments)});
-            else ret = target.Invoke(arguments);
+            // UNCOMMENT THIS FOR DEBUGGING
+            //try
+            //{
+                if (HasVariable(call.Target + "`i") && !(target is InternalFunction))
+                    ret = target.Invoke(new HassiumObject[] {new HassiumArray(arguments)});
+                else ret = target.Invoke(arguments);
+            //}
+            //catch(Exception e)
+            //{
+            //    if (e is ParseException && ((ParseException)e).Position != -1) throw;
+            //    throw new ParseException(e.Message, node.Position);
+            //}
             if (ReturnFunc)
                 ReturnFunc = false;
             return ret;

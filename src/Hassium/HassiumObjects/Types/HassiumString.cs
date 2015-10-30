@@ -93,6 +93,9 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
             Attributes.Add("addSlashes", new InternalFunction(addSlashes, 0));
             Attributes.Add("wordWrap", new InternalFunction(wordWrap, new[] { 1, 2 }));
+            Attributes.Add("format", new InternalFunction(format, -1));
+
+            Attributes.Add("__isNull", Value == null);
         }
 
         public static implicit operator HassiumArray(HassiumString s)
@@ -108,6 +111,11 @@ namespace Hassium.HassiumObjects.Types
         public HassiumObject reverse(HassiumObject[] args)
         {
             return string.Concat(Value.Reverse());
+        }
+
+        public HassiumObject format(HassiumObject[] args)
+        {
+            return string.Format(Value, args.Select(x => (object)(x.ToString())).ToArray());
         }
 
         public HassiumObject map(HassiumObject[] args)
@@ -267,7 +275,7 @@ namespace Hassium.HassiumObjects.Types
             if (lower < 0) lower = Value.Length + lower;
             var upper = args.Length == 2 ? args[1].HInt().Value : Value.Length - lower;
             if (upper < 0) upper = Value.Length + upper - lower;
-            if (lower >= Value.Length || lower + upper >= Value.Length) throw new ParseException("Out of bounds", -1);
+            if (lower >= Value.Length || lower + upper > Value.Length) throw new ParseException("Out of bounds", -1);
             return Value.Substring(lower, upper);
         }
 

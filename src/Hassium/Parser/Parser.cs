@@ -473,17 +473,18 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.LBrace);
             var cases = new List<CaseNode>();
             CaseNode defn = null;
+            List<AstNode> preds = new List<AstNode>();
             while (parser.MatchToken(TokenType.Identifier, "case"))
             {
                 int cpos = parser.codePosition;
                 parser.ExpectToken(TokenType.Identifier, "case");
-                List<AstNode> pred = new List<AstNode>();
+                AstNode pred = null;
                 if (parser.MatchToken(TokenType.Comparison) || parser.MatchToken(TokenType.Identifier, "in") ||
                     parser.MatchToken(TokenType.Identifier, "is"))
                 {
                     parser.tokens.Insert(parser.position,
                         new Token(TokenType.Identifier, "__caseval", parser.codePosition));
-                    pred.Add((BinOpNode) parseExpression(parser));
+                    pred = (BinOpNode) parseExpression(parser);
                 }
                 else if ((parser.MatchToken(TokenType.Identifier) || parser.MatchToken(TokenType.Number)) && parser.PreviousToken(-1).ToString() == "to")
                 {
@@ -492,23 +493,23 @@ namespace Hassium.Parser
                     if (parser.MatchToken(TokenType.Colon))
                         throw new ParseException("Expected upper range value", parser.codePosition);
                     var upper = parseExpression(parser);
-                    pred.Add(new BinOpNode(cpos, BinaryOperation.Range, lower, upper));
+                    pred = new BinOpNode(cpos, BinaryOperation.Range, lower, upper);
                 }
-                else pred = new List<AstNode> {parseExpression(parser)};
+                else pred = parseExpression(parser);
                 parser.ExpectToken("Expected case value", TokenType.Colon);
-                while (parser.MatchToken(TokenType.Identifier, "case"))
-                {
-                    parser.ExpectToken(TokenType.Identifier, "case");
-                    var pred2 = parseExpression(parser);
-                    parser.ExpectToken(TokenType.Colon);
-                    pred.Add(pred2);
-                }
                 var cbody = new CodeBlock(parser.codePosition);
                 while (!parser.MatchToken(TokenType.Identifier, "case") && !parser.MatchToken(TokenType.Identifier, "default") && !parser.MatchToken(TokenType.RBrace))
                 {
                     cbody.Children.Add(ParseStatement(parser));
                 }
-                cases.Add(new CaseNode(cpos, pred, cbody));
+
+                preds.Add(pred);
+
+                if(cbody.Children.Count > 0)
+                {
+                    cases.Add(new CaseNode(cpos, preds.ToList(), cbody));
+                    preds.Clear();
+                }
             }
             if (parser.MatchToken(TokenType.Identifier, "default"))
             {

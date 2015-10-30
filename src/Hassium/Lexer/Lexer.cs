@@ -151,24 +151,26 @@ namespace Hassium.Lexer
                     case '-':
                         if (next1 == current)
                             add(new Token(TokenType.MentalOperation, "" + ReadChar() + ReadChar()));
+                        else if (next1 == '=')
+                        {
+                            add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                        }
                         else
-                            switch (next1)
-                            {
-                                case '=':
-                                    add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
-                                    break;
-                                default:
-                                    add(new Token(TokenType.Operation, ReadChar()));
-                                    break;
-                            }
+                        {
+                            add(new Token(TokenType.Operation, ReadChar()));
+                        }
                         break;
                     case '%':
-                        add(new Token(TokenType.Operation, ReadChar()));
+                        add(next1 == '='
+                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '*':
                     case '/':
                         if (next1 == current)
-                            add(new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
+                            add(next2 == '='
+                                ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar() + ReadChar())
+                                : new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
                         else
                             switch (next1)
                             {
@@ -235,12 +237,23 @@ namespace Hassium.Lexer
                         break;
                     case '&':
                     case '|':
-                        add(next1 == current
-                            ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Operation, ReadChar()));
+                        if(next1 == current)
+                        {
+                            add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
+                        }
+                        else if (next1 == '=')
+                        {
+                            add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
+                        }
+                        else
+                        {
+                            add(new Token(TokenType.Operation, ReadChar()));
+                        }
                         break;
                     case '^':
-                        add(new Token(TokenType.Operation, ReadChar()));
+                        add(next1 == '='
+                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar())
+                            : new Token(TokenType.Operation, ReadChar()));
                         break;
                     case '?':
                         add(next1 == '?'

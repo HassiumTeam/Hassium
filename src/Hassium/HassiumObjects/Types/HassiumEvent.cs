@@ -29,7 +29,7 @@ namespace Hassium.HassiumObjects.Types
 
     public class HassiumEvent : HassiumObject
     {
-        public event HassiumEventHandler EventHandler;
+        public event HassiumEventHandler EventHandler = delegate { return null; };
 
         public void AddHandler(HassiumEventHandler hand)
         {

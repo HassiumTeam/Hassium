@@ -83,6 +83,8 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("zip", new InternalFunction(ArrayZip, 2));
 
             Attributes.Add("sort", new InternalFunction(Sort, new []{0,1}));
+
+            Attributes.Add("removeAtKey", new InternalFunction(RemoveAtKey, 1));
         }
 
         /*public static bool operator ==(HassiumDictionary a, HassiumDictionary b)
@@ -94,6 +96,11 @@ namespace Hassium.HassiumObjects.Types
         {
             return !(a == b);
         }*/
+
+        public HassiumObject RemoveAtKey(HassiumObject[] args)
+        {
+            return Value.RemoveAll(x => x.Key.ToString() == args[0].ToString());
+        }
 
         public HassiumObject ContainsKey(HassiumObject[] args)
         {

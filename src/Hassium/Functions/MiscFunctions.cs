@@ -37,6 +37,12 @@ namespace Hassium.Functions
 {
     public class MiscFunctions : ILibrary
     {
+        [IntFunc("varexists", 1)]
+        public static HassiumObject VarExists(HassiumObject[] args)
+        {
+            return Program.CurrentInterpreter.HasVariable(args[0].ToString());
+        }
+
         [IntFunc("type", 1)]
         public static HassiumObject Type(HassiumObject[] args)
         {
@@ -72,10 +78,18 @@ namespace Hassium.Functions
             return array;
         }
 
-        [IntFunc("fillzero", 1)]
+        [IntFunc("fillzero", new []{1,2})]
         public static HassiumObject FillZero(HassiumObject[] args)
         {
-            var zero = new HassiumInt(0);
+            HassiumObject zero;
+            if(args.Length == 2)
+            {
+                int mode = args[1].HInt().Value;
+                if(mode == 1) zero = new HassiumDouble(0.0);
+                if(mode == 2) zero = new HassiumBool(false);
+                else zero = new HassiumInt(0);
+            }
+            else zero = new HassiumInt(0);
 
             return Enumerable.Repeat(zero, args[0].HInt().Value).ToArray();
         }

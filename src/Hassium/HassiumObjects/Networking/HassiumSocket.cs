@@ -48,6 +48,7 @@ namespace Hassium.HassiumObjects.Networking
             Attributes.Add("listen", new InternalFunction(listen, 1));
             Attributes.Add("sendFile", new InternalFunction(sendFile, 1));
             Attributes.Add("send", new InternalFunction(send, 1));
+            Attributes.Add("stream", new HassiumProperty("stream", x => new HassiumNetworkStream(new NetworkStream(Value)), null, true));
         }
 
         private HassiumObject connect(HassiumObject[] args)
@@ -63,6 +64,7 @@ namespace Hassium.HassiumObjects.Networking
 
         private HassiumObject close(HassiumObject[] args)
         {
+            Value.Shutdown(SocketShutdown.Both);
             Value.Close();
             return null;
         }

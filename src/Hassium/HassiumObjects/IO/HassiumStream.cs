@@ -25,6 +25,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Text;
 using Hassium.Functions;
 using Hassium.HassiumObjects.Types;
 
@@ -48,6 +49,7 @@ namespace Hassium.HassiumObjects.IO
             Attributes.Add("read", new InternalFunction(Read, 0));
             Attributes.Add("seek", new InternalFunction(Seek, new[] {0, 1}));
             Attributes.Add("write", new InternalFunction(Write, 1));
+            Attributes.Add("readLine", new InternalFunction(ReadLine, 0));
         }
 
         public HassiumObject Flush(HassiumObject[] args)
@@ -65,6 +67,17 @@ namespace Hassium.HassiumObjects.IO
         public HassiumObject Read(HassiumObject[] args)
         {
             return Value.ReadByte();
+        }
+
+        public HassiumObject ReadLine(HassiumObject[] args)
+        {
+            var builder = new StringBuilder();
+            var c = 0;
+            while ((c = Value.ReadByte()) != '\n' && c != '\r' && c != -1)
+            {
+                builder.Append((char)c);
+            }
+            return builder.ToString();
         }
 
         public HassiumObject Seek(HassiumObject[] args)

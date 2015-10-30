@@ -98,6 +98,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("unique", new InternalFunction(Unique, 0));
             Attributes.Add("toDictionary", new InternalFunction(ToDictionary, 1));
             Attributes.Add("average", new InternalFunction(Average, new []{0,1}));
+            Attributes.Add("skip", new InternalFunction(skip, 1));
 
             _value = value.Select(ToHassiumObject).ToList();
         }
@@ -113,10 +114,16 @@ namespace Hassium.HassiumObjects.Types
             return "Array { " + string.Join(", ", Value.Select(x => x == null ? "null" : x.ToString())) + " }";
         }
 
+        public HassiumObject skip(HassiumObject[] args)
+        {
+            return new HassiumArray(Value.Skip(args[0].HInt()));
+        }
+
         public HassiumObject Average(HassiumObject[] args)
         {
-            if (args.Length == 0) return Value.Average(x => (double)(x.HDouble()));
-            return Value.Average(x => args[0].Invoke(x).HDouble());
+            return args.Length == 0
+                ? Value.Average(x => (double) (x.HDouble()))
+                : Value.Average(x => args[0].Invoke(x).HDouble());
         }
 
         public HassiumObject ToDictionary(HassiumObject[] args)

@@ -55,7 +55,7 @@ namespace Hassium.HassiumObjects.Conversion
             else if (args[0] is HassiumByte)
                 return new HassiumDouble(Convert.ToDouble(((HassiumByte)args[0]).Value));
             else if (args[0] is HassiumChar)
-                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
+                return double.Parse(args[0].HChar().ToString());
             else
                 throw new Exception("Unknown format for Convert.toDouble()");
         }
@@ -71,7 +71,7 @@ namespace Hassium.HassiumObjects.Conversion
             else if (args[0] is HassiumByte)
                 return new HassiumInt(Convert.ToInt32(((HassiumByte)args[0]).Value));
             else if (args[0] is HassiumChar)
-                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
+                return int.Parse(args[0].HChar().ToString());
             else
                 throw new Exception("Unknown format for Convert.toInt()");
         }
@@ -90,7 +90,7 @@ namespace Hassium.HassiumObjects.Conversion
             else if (args[0] is HassiumInt)
                 return new HassiumBool(Convert.ToBoolean(((HassiumInt) args[0]).Value));
             else if (args[0] is HassiumChar)
-                return new HassiumChar(Convert.ToChar(((HassiumChar)args[0]).Value));
+                return bool.Parse(args[0].HChar().ToString());
             else
                 throw new Exception("Unknown format for Convert.toBool");
         }
