@@ -60,6 +60,7 @@ namespace Hassium.HassiumObjects.Types
             Attributes.Add("isBetween", new InternalFunction(isBetween, new[] {2, 3}));
             Attributes.Add("toInt", new InternalFunction(toInt, 0));
             Attributes.Add("toDouble", new InternalFunction(toDouble, 0));
+            Attributes.Add("toChar", new InternalFunction(toChar, 0));
             Attributes.Add("toByte", new InternalFunction(toByte, 0));
             Attributes.Add("toBool", new InternalFunction(toBool, 0));
             Attributes.Add("max", new InternalFunction(max, 1));
@@ -95,6 +96,11 @@ namespace Hassium.HassiumObjects.Types
         private HassiumObject toInt(HassiumObject[] args)
         {
             return new HassiumInt(Convert.ToInt32(Value));
+        }
+
+        private HassiumObject toChar(HassiumObject[] args)
+        {
+            return new HassiumChar(Convert.ToChar(Value));
         }
 
         private HassiumObject toDouble(HassiumObject[] args)
