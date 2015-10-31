@@ -1,0 +1,6 @@
+func main () {
+	x = 0;
+	until (x > 10) {
+		println(x++);
+	}
+}

@@ -166,6 +166,8 @@ namespace Hassium.Parser
                         return parseUse(parser);
                     case "do":
                         return parseDo(parser);
+                    case "until":
+                        return parseUntil(parser);
                     case "goto":
                         return parseGoto(parser);
                     case "enum":
@@ -583,6 +585,19 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.EndOfLine);
 
             return new DoNode(position, predicate, doBody);
+        }
+
+        private static AstNode parseUntil(Parser parser)
+        {
+            int position = parser.codePosition;
+
+            parser.ExpectToken(TokenType.Identifier, "until");
+            parser.ExpectToken(TokenType.LParen);
+            AstNode predicate = parseExpression(parser);
+            parser.ExpectToken(TokenType.RParen);
+            AstNode untilBody = ParseStatement(parser);
+
+            return new UntilNode(position, predicate, untilBody);
         }
 
         private static AstNode parseWhile(Parser parser)

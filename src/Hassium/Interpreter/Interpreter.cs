@@ -1847,6 +1847,26 @@ namespace Hassium.Interpreter
             return null;
         }
 
+        public object Accept(UntilNode node)
+        {
+            var untilStmt = node;
+            isInLoop++;
+
+            while (!((HassiumBool) untilStmt.Preedicate.Visit(this)))
+            {
+                untilStmt.Body.Visit(this);
+                if (continueLoop) continueLoop = false;
+                if (breakLoop)
+                {
+                    breakLoop = false;
+                    break;
+                }
+            }
+
+            isInLoop--;
+            return null;
+        }
+
         public object Accept(WhileNode node)
         {
             var whileStmt = node;

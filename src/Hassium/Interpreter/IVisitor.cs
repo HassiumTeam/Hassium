@@ -72,5 +72,6 @@ namespace Hassium.Interpreter
         object Accept(EchoNode expr);
         object Accept(ObjectInitializerNode expr);
         object Accept(BulkAssignNode expr);
+        object Accept(UntilNode expr);
     }
 }
