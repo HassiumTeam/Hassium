@@ -1206,7 +1206,7 @@ namespace Hassium.Parser
                 case TokenType.Char:
                     return new CharNode(position, Convert.ToChar(parser.ExpectToken(TokenType.Char).Value));
                 case TokenType.Identifier:
-                    if (parser.PreviousToken(-1).Value.ToString() == ":" && parser.PreviousToken().TokenClass == TokenType.EndOfLine)
+                    if (parser.PreviousToken(-1).Value.ToString() == ":" && (parser.PreviousToken().TokenClass == TokenType.EndOfLine || parser.PreviousToken().TokenClass == TokenType.LBrace))
                     {
                         var t = new LabelNode(parser.codePosition, parser.ExpectToken(TokenType.Identifier).Value.ToString(),
                             parser.codePosition);
