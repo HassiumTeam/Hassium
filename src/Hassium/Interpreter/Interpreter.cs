@@ -1852,7 +1852,7 @@ namespace Hassium.Interpreter
             var untilStmt = node;
             isInLoop++;
 
-            while (!((HassiumBool) untilStmt.Preedicate.Visit(this)))
+            while (!((HassiumBool) untilStmt.Predicate.Visit(this)))
             {
                 untilStmt.Body.Visit(this);
                 if (continueLoop) continueLoop = false;

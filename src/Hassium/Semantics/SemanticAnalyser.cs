@@ -69,13 +69,14 @@ namespace Hassium.Semantics
 
         private void checkout(AstNode theNode)
         {
-            if(found.Contains(theNode.GetHashCode()))
+            if (theNode == null || theNode.Children == null) return;
+            if (theNode.Children.Count == 0) return;
+            
+            if (found.Contains(theNode.GetHashCode()))
             {
                 return;
             }
             found.Add(theNode.GetHashCode());
-            if (theNode.Children.Count == 0) return;
-            if (theNode == null || theNode.Children == null) return;
 
             foreach (LambdaFuncNode fnode in flatten(theNode.Children).OfType<LambdaFuncNode>().Select(node => (node)))
             {
