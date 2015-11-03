@@ -47,6 +47,11 @@ namespace Hassium.Parser.Ast
             Children.Add(doBody);
         }
 
+        public override string ToString()
+        {
+            return "[Do ( " + Predicate + " ) -> { " + DoBody + " } ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

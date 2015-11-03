@@ -53,6 +53,11 @@ namespace Hassium.Parser.Ast
             });
         }
 
+        public override string ToString()
+        {
+            return "[ArrayInitializer { " + Children.Select(x => x.ToString() + " ") + "} ]";
+        }
+
         public ArrayInitializerNode(int position) : this(position, new Dictionary<object, object>())
         {
         }

@@ -45,6 +45,11 @@ namespace Hassium.Parser.Ast
             Children.Add(body);
         }
 
+        public override string ToString()
+        {
+            return "[LambdaFunc `" + Parameters.Count + " ]";
+        }
+
         public static explicit operator FuncNode(LambdaFuncNode funcNode)
         {
             return new FuncNode(funcNode.Position, "", funcNode.Parameters, funcNode.Body);

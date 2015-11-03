@@ -44,6 +44,11 @@ namespace Hassium.Parser.Ast
             SetNode = set;
         }
 
+        public override string ToString()
+        {
+            return "[Property ( " + Name + " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

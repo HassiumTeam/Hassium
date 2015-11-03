@@ -56,6 +56,8 @@ namespace Hassium.Parser.Ast
             _checknull = checknull;
         }
 
+
+
         public override string ToString()
         {
             return Left + "." + Member;

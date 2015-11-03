@@ -31,13 +31,18 @@ namespace Hassium.Parser.Ast
     [Serializable]
     public class UntilNode : AstNode
     {
-        public AstNode Preedicate { get { return Children[0]; } }
+        public AstNode Predicate { get { return Children[0]; } }
         public AstNode Body { get { return Children[1]; } }
 
         public UntilNode(int codePos, AstNode predicate, AstNode body) : base(codePos)
         {
             Children.Add(predicate);
             Children.Add(body);
+        }
+
+        public override string ToString()
+        {
+            return "[Until ( " + Predicate + " ) -> { " + Body + " } ]";
         }
 
         public override object Visit(IVisitor visitor)

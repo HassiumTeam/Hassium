@@ -38,6 +38,11 @@ namespace Hassium.Parser.Ast
             Value = value;
         }
 
+        public override string ToString()
+        {
+            return "[Char '" + Value + "']";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

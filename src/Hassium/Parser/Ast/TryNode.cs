@@ -57,6 +57,11 @@ namespace Hassium.Parser.Ast
             if (finallyBody != null) Children.Add(finallyBody);
         }
 
+        public override string ToString()
+        {
+            return "[Try Catch" + (FinallyBody == null ? "" : " Finally") + "]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

@@ -54,6 +54,11 @@ namespace Hassium.Parser.Ast
             Children.Add(value);
         }
 
+        public override string ToString()
+        {
+            return "[Unary " + UnOp + " ( " + Value + " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

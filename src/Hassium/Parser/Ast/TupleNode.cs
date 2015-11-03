@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -40,6 +41,11 @@ namespace Hassium.Parser.Ast
         {
             Name = name;
             Children.Add(body);
+        }
+
+        public override string ToString()
+        {
+            return "[Tuple" + (IsInline ? "" : " " + Name) + " { " + Body.Children.Select(x => x.ToString() + " ") + "} ]";
         }
 
         public override object Visit(IVisitor visitor)

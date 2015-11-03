@@ -40,6 +40,11 @@ namespace Hassium.Parser.Ast
             Name = name;
         }
 
+        public override string ToString()
+        {
+            return "[Goto ( " + Name + " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

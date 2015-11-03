@@ -13,6 +13,11 @@ namespace Hassium.Parser.Ast
             Content = content;
         }
 
+        public override string ToString()
+        {
+            return "[Echo]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

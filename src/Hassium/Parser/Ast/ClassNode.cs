@@ -47,6 +47,11 @@ namespace Hassium.Parser.Ast
             Extends = extends;
         }
 
+        public override string ToString()
+        {
+            return "[Class ( " + Name + " ) " + (Extends == "" ? "" : " Extends ( " + Extends + " ) ") + "]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

@@ -43,6 +43,11 @@ namespace Hassium.Parser.Ast
             AfterPos = afpos;
         }
 
+        public override string ToString()
+        {
+            return "[Label ( " + Name + " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

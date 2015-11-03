@@ -53,6 +53,11 @@ namespace Hassium.Parser.Ast
             Children.Add(arguments);
         }
 
+        public override string ToString()
+        {
+            return "[Call ( " + Target + " ) With { " + Arguments + " } ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             try

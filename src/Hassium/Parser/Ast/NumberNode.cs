@@ -40,6 +40,11 @@ namespace Hassium.Parser.Ast
             IsInt = isint;
         }
 
+        public override string ToString()
+        {
+            return "[Number " + Value + "]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

@@ -13,6 +13,12 @@ namespace Hassium.Parser.Ast
         {
             Nodes = binaryOps.ToList();
         }
+
+        public override string ToString()
+        {
+            return "[BulkAssign { " + Nodes.Select(x => x.Left.ToString() + " ") + "} = " + Nodes.First().Right + " ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

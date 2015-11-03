@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -46,6 +47,11 @@ namespace Hassium.Parser.Ast
             Children.Add(predicate);
             Body = body;
             DefaultBody = defaultBody;
+        }
+
+        public override string ToString()
+        {
+            return "[Switch ( " + Predicate + " ) Cases { " + Body.Select(x => "[" + string.Join(", ", x.Values.Select(y => y.ToString())) + "] ") + " } ]";
         }
 
         public override object Visit(IVisitor visitor)

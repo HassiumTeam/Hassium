@@ -41,6 +41,11 @@ namespace Hassium.Parser.Ast
             Children.Add(node);
         }
 
+        public override string ToString()
+        {
+            return "[Unchecked]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

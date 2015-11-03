@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -33,6 +34,11 @@ namespace Hassium.Parser.Ast
     {
         public CodeBlock(int codePos) : base(codePos)
         {
+        }
+
+        public override string ToString()
+        {
+            return "[CodeBlock { " + Children.Select(x => x.ToString() + " ") + "} ]";
         }
 
         public override object Visit(IVisitor visitor)

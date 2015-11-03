@@ -31,14 +31,19 @@ namespace Hassium.Parser.Ast
     [Serializable]
     public class InstanceNode : AstNode
     {
-        public AstNode Target
+        public FunctionCallNode Target
         {
-            get { return Children[0]; }
+            get { return (FunctionCallNode)Children[0]; }
         }
 
         public InstanceNode(int position, AstNode value) : base(position)
         {
             Children.Add(value);
+        }
+
+        public override string ToString()
+        {
+            return "[Instance Of ( " + Target.Target + " ) With { " + Target.Arguments + " } ]";
         }
 
         public override object Visit(IVisitor visitor)

@@ -58,6 +58,12 @@ namespace Hassium.Parser.Ast
             Children.Add(elseBody);
         }
 
+        public override string ToString()
+        {
+            return "[IfNode ( " + Predicate + " ) Then { " + Body + " }" +
+                   (ElseBody.Children.Count == 0 ? "" : " Else { " + ElseBody + " }") + "]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

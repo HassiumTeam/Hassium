@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -34,6 +35,11 @@ namespace Hassium.Parser.Ast
         public Expression(int pos, AstNode child) : base(pos)
         {
             Children.Add(child);
+        }
+
+        public override string ToString()
+        {
+            return "[Expr { " + Children[0] + " } ]";
         }
 
         public override object Visit(IVisitor visitor)

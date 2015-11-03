@@ -46,6 +46,11 @@ namespace Hassium.Parser.Ast
             get { return Children[2]; }
         }
 
+        public override string ToString()
+        {
+            return "[While ( " + Predicate + " ) -> { " + Body + " }" + (ElseBody.Children.Count == 0 ? "" : " Else { " + ElseBody + " } ") + " ]";
+        }
+
         public WhileNode(int position, AstNode predicate, AstNode body)
             : this(position, predicate, body, new CodeBlock(position))
         {

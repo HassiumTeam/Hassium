@@ -47,6 +47,11 @@ namespace Hassium.Parser.Ast
             IsLibrary = library;
         }
 
+        public override string ToString()
+        {
+            return "[Use " + Path + (Name == "" ? "" : " -> " + Name) + "]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

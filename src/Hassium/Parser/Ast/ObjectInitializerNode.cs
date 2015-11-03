@@ -40,6 +40,11 @@ namespace Hassium.Parser.Ast
             Children.Add(item);
         }
 
+        public override string ToString()
+        {
+            return "[ObjectIninitializer { " + Value.Select(x => "[ " + x.Key + " = " + x.Value + " ] ") + "} ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

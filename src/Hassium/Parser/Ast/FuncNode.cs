@@ -57,6 +57,11 @@ namespace Hassium.Parser.Ast
             return new LambdaFuncNode(funcNode.Position, funcNode.Parameters, funcNode.Body);
         }
 
+        public override string ToString()
+        {
+            return "[Func ( " + Name + " ) `" + (InfParams ? "i" : Parameters.Count.ToString()) + " ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

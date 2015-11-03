@@ -23,6 +23,7 @@
 // ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 // DAMAGE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hassium.Parser;
@@ -63,8 +64,17 @@ namespace Hassium.Semantics
             return ch;
         }
 
+        private List<int> found = new List<int>(); 
+
+
         private void checkout(AstNode theNode)
         {
+            if(found.Contains(theNode.GetHashCode()))
+            {
+                return;
+            }
+            found.Add(theNode.GetHashCode());
+            if (theNode.Children.Count == 0) return;
             if (theNode == null || theNode.Children == null) return;
 
             foreach (LambdaFuncNode fnode in flatten(theNode.Children).OfType<LambdaFuncNode>().Select(node => (node)))

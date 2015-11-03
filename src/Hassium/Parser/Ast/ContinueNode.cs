@@ -35,6 +35,11 @@ namespace Hassium.Parser.Ast
         {
         }
 
+        public override string ToString()
+        {
+            return "[Continue]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

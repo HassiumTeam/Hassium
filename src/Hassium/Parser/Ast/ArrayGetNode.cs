@@ -53,6 +53,11 @@ namespace Hassium.Parser.Ast
             Children.Add(arguments.Children.Count == 2 ? arguments.Children[1] : new NumberNode(position, 1, true));
         }
 
+        public override string ToString()
+        {
+            return "[ArrayGet ( " + Target + " ) ( " + Arguments + " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

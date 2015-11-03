@@ -44,6 +44,12 @@ namespace Hassium.Parser.Ast
             IsBefore = before;
         }
 
+        public override string ToString()
+        {
+            return "[" + (IsBefore ? "Prefix" : "Postfix") + " " + (OpType == "--" ? "Dec" : "Inc") + " ( " + Target +
+                   " ) ]";
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

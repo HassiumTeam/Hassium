@@ -44,6 +44,11 @@ namespace Hassium.Parser.Ast
             Yield = yield;
         }
 
+        public override string ToString()
+        {
+            return "[" + (Yield ? "YieldReturn" : "Return") + (Value == null ? "]" : " ( " + Value + " ) ]");
+        }
+
         public override object Visit(IVisitor visitor)
         {
             return visitor.Accept(this);

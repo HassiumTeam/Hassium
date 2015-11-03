@@ -24,6 +24,7 @@
 // DAMAGE.
 
 using System;
+using System.Linq;
 using Hassium.Interpreter;
 
 namespace Hassium.Parser.Ast
@@ -93,6 +94,11 @@ namespace Hassium.Parser.Ast
             IsOpAssign = true;
             Children.Add(left);
             Children.Add(right);
+        }
+
+        public override string ToString()
+        {
+            return "[BinOp { " + Left + " } " + BinOp + " { " + Right + "} ]";
         }
 
         public override object Visit(IVisitor visitor)
