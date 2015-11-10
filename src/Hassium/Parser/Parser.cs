@@ -798,7 +798,14 @@ namespace Hassium.Parser
             {
                 if (!left.CanBeModified)
                     throw new ParseException("Trying to assign a read-only expression (try using == instead of =)", parser.CurrentToken().Position);
-                if (parser.AcceptToken(TokenType.Assignment))
+                if (parser.AcceptToken(TokenType.Assignment, "<->"))
+                {
+                    AstNode right = parseConditional(parser);
+                    if (!right.CanBeModified)
+                        throw new ParseException("Trying to assign a read-only expression", parser.CurrentToken().Position);
+                    left = new BinOpNode(position, BinaryOperation.Swap, left, right);
+                }
+                else if (parser.AcceptToken(TokenType.Assignment))
                 {
                     AstNode right = parseConditional(parser);
                     left = new BinOpNode(position, BinaryOperation.Assignment, left, right);

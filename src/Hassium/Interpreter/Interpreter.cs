@@ -289,10 +289,139 @@ namespace Hassium.Interpreter
             }
         }
 
+        private HassiumObject interpretAssignment(BinOpNode node)
+        {
+            return interpretAssignment(node.Left, (HassiumObject) (node.Right.Visit(this)), node);
+        }
+
+        private HassiumObject interpretAssignment(AstNode left, HassiumObject right, BinOpNode nd = null)
+        {
+            if (left is ArrayGetNode)
+            {
+                var call = (ArrayGetNode) left;
+
+                if (!call.Target.CanBeIndexed)
+                    throw new ParseException(
+                        "The [] operator only applies to objects of type Array, Dictionary or String.", nd);
+
+                if (!call.Target.CanBeModified)
+                    throw new ParseException("The specified target cannot be modified.", nd);
+
+                var evaluated = call.Target.Visit(this);
+                if (evaluated is HassiumDictionary)
+                {
+                    var theArray = ((HassiumDictionary) evaluated);
+                    HassiumObject arid = null;
+
+                    if (call.Arguments.Children.Count > 0)
+                        arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
+
+                    var theValue = (nd.IsOpAssign && arid != null)
+                        ? interpretBinaryOp(theArray[arid], right, nd.AssignOperation)
+                        : right;
+
+                    if (arid == null)
+                    {
+                        if (theValue is HassiumKeyValuePair) theArray.Value.Add((HassiumKeyValuePair) theValue);
+                        else theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
+                    }
+                    else
+                    {
+                        if (theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()))
+                        {
+                            foreach (var cur in theArray.Value.Where(cur => cur.Key.ToString() == arid.ToString()))
+                            {
+                                theArray.Value[cur.Key].Key = theValue;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            theArray[arid] = theValue;
+                        }
+                    }
+
+                    SetVariable(call.Target.ToString(), theArray, call);
+                }
+                else if (evaluated is HassiumArray || evaluated is HassiumString)
+                {
+                    HassiumArray theArray = null;
+                    if (evaluated is HassiumString)
+                        theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
+
+                    theArray = ((HassiumArray) evaluated);
+
+                    int arid = -1;
+                    bool append = false;
+
+                    if (call.Arguments.Children.Count > 0)
+                        arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
+                    else
+                        append = true;
+
+                    var theValue = nd.IsOpAssign
+                        ? interpretBinaryOp(theArray[arid], right, nd.AssignOperation)
+                        : right;
+
+                    if (append)
+                        theArray.Add(new[] {theValue});
+                    else
+                    {
+                        if (arid >= theArray.Value.Length)
+                            throw new ParseException("The index is out of the bounds of the array", call);
+
+                        theArray[arid] = theValue;
+                    }
+
+                    SetVariable(call.Target.ToString(), theArray, call);
+                }
+                else if (evaluated is HassiumTuple)
+                    throw new ParseException("Tuples are immutables (read-only)", nd);
+                else
+                {
+                    throw new ParseException(
+                        "The [] operator only applies to objects of type Array, Dictionary or String.", nd);
+                }
+            }
+            else if (left is MemberAccessNode)
+            {
+                var accessor = (MemberAccessNode) left;
+                var target = (HassiumObject) accessor.Left.Visit(this);
+                if (target == null && accessor.CheckForNull) return null;
+                target.SetAttribute(accessor.Member, right);
+            }
+            else if (left is ConditionalOpNode)
+            {
+                var conditional = (ConditionalOpNode) left;
+                var condition = conditional.Predicate.Visit(this) as HassiumBool;
+                AstNode target = null;
+                target = condition == true ? conditional.Body : conditional.ElseBody;
+                return
+                    interpretBinaryOp(new BinOpNode(nd.Position, BinaryOperation.Assignment, nd.AssignOperation,
+                        target, nd.Right));
+            }
+            else
+            {
+                if (!(left is IdentifierNode))
+                    throw new ParseException("Not a valid identifier", left);
+                SetVariable(left.ToString(),
+                    nd.IsOpAssign
+                        ? interpretBinaryOp(new BinOpNode(nd.Position, nd.AssignOperation, left, nd.Right))
+                        : right, nd);
+            }
+            return right;
+        }
+
         private HassiumObject interpretBinaryOp(BinOpNode node)
         {
             switch (node.BinOp)
             {
+                case BinaryOperation.Swap:
+                    var tmp = (HassiumObject) node.Left.Visit(this);
+                    interpretAssignment(new BinOpNode(node.Position, BinaryOperation.Assignment,
+                        node.Left, node.Right));
+                    interpretAssignment(node.Right, tmp, node);
+                    return null;
                 case BinaryOperation.LogicalAnd:
                     return ((HassiumObject)node.Left.Visit(this)).HBool().Value && ((HassiumObject) node.Right.Visit(this)).HBool().Value;
                 case BinaryOperation.LogicalOr:
@@ -365,124 +494,12 @@ namespace Hassium.Interpreter
                     }
                     else
                         throw new ParseException("Expected type name", node.Right);
-                    break;
+                    break;  
             }
-            var right = (HassiumObject) node.Right.Visit(this);
+            var right = (HassiumObject)node.Right.Visit(this);
             if (node.BinOp == BinaryOperation.Assignment)
             {
-                if (node.Left is ArrayGetNode)
-                {
-                    var call = (ArrayGetNode) (node.Left);
-
-                    if (!call.Target.CanBeIndexed)
-                        throw new ParseException(
-                            "The [] operator only applies to objects of type Array, Dictionary or String.", node);
-
-                    if (!call.Target.CanBeModified)
-                        throw new ParseException("The specified target cannot be modified.", node);
-
-                    var evaluated = call.Target.Visit(this);
-                    if (evaluated is HassiumDictionary)
-                    {
-                        var theArray = ((HassiumDictionary) evaluated);
-                        HassiumObject arid = null;
-
-                        if (call.Arguments.Children.Count > 0)
-                            arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
-
-                        var theValue = (node.IsOpAssign && arid != null)
-                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                            : right;
-
-                        if (arid == null)
-                        {
-                            if (theValue is HassiumKeyValuePair) theArray.Value.Add((HassiumKeyValuePair) theValue);
-                            else theArray.Value.Add(new HassiumKeyValuePair(theArray.Value.Count, theValue));
-                        }
-                        else
-                        {
-                            if (theArray.Value.Any(cur => cur.Key.ToString() == arid.ToString()))
-                            {
-                                foreach (var cur in theArray.Value.Where(cur => cur.Key.ToString() == arid.ToString()))
-                                {
-                                    theArray.Value[cur.Key].Key = theValue;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-
-                                theArray[arid] = theValue;
-                            }
-                        }
-
-                        SetVariable(call.Target.ToString(), theArray, call);
-                    }
-                    else if (evaluated is HassiumArray || evaluated is HassiumString)
-                    {
-                        HassiumArray theArray = null;
-                        if (evaluated is HassiumString)
-                            theArray = new HassiumArray(evaluated.ToString().ToCharArray().Cast<object>());
-
-                        theArray = ((HassiumArray) evaluated);
-
-                        int arid = -1;
-                        bool append = false;
-
-                        if (call.Arguments.Children.Count > 0)
-                            arid = (HassiumObject) call.Arguments.Children[0].Visit(this);
-                        else
-                            append = true;
-
-                        var theValue = node.IsOpAssign
-                            ? interpretBinaryOp(theArray[arid], right, node.AssignOperation)
-                            : right;
-
-                        if (append)
-                            theArray.Add(new[] {theValue});
-                        else
-                        {
-                            if (arid >= theArray.Value.Length)
-                                throw new ParseException("The index is out of the bounds of the array", call);
-
-                            theArray[arid] = theValue;
-                        }
-
-                        SetVariable(call.Target.ToString(), theArray, call);
-                    }
-                    else if (evaluated is HassiumTuple)
-                        throw new ParseException("Tuples are immutables (read-only)", node);
-                    else
-                    {
-                        throw new ParseException(
-                            "The [] operator only applies to objects of type Array, Dictionary or String.", node);
-                    }
-                }
-                else if (node.Left is MemberAccessNode)
-                {
-                    var accessor = (MemberAccessNode) node.Left;
-                    var target = (HassiumObject) accessor.Left.Visit(this);
-                    if (target == null && accessor.CheckForNull) return null;
-                    target.SetAttribute(accessor.Member, right);
-                }
-                else if(node.Left is ConditionalOpNode)
-                {
-                    var conditional = (ConditionalOpNode) node.Left;
-                    var condition = conditional.Predicate.Visit(this) as HassiumBool;
-                    AstNode target = null;
-                    target = condition == true ? conditional.Body : conditional.ElseBody;
-                    return interpretBinaryOp(new BinOpNode(node.Position, BinaryOperation.Assignment, node.AssignOperation, target, node.Right));
-                }
-                else
-                {
-                    if (!(node.Left is IdentifierNode))
-                        throw new ParseException("Not a valid identifier", node);
-                    SetVariable(node.Left.ToString(),
-                        node.IsOpAssign
-                            ? interpretBinaryOp(new BinOpNode(node.Position, node.AssignOperation, node.Left, node.Right))
-                            : right, node);
-                }
-                return right;
+                return interpretAssignment(node.Left, right, node);
             }
             var left = node.Left.Visit(this);
             if (node.BinOp == BinaryOperation.Is)

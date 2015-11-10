@@ -262,6 +262,12 @@ namespace Hassium.Lexer
                         break;
                     case '<':
                     case '>':
+                        if(current == '<' && next1 == '-' && next2 == '>')
+                        {
+                            add(new Token(TokenType.Assignment, "" + ReadChar() + ReadChar() + ReadChar()));
+                            break;
+                        }
+
                         if(current == '>' && next1 == '>' && next2 == '>')
                         {
                             ScanEcho();
@@ -316,6 +322,15 @@ namespace Hassium.Lexer
             while(HasChar())
             {
                 var current = ReadChar();
+
+                if(current == '\\' && PeekChar() == '<')
+                {
+                    ReadChar();
+                    if (PeekChar() == '<') ReadChar();
+                    if (PeekChar() == '<') ReadChar();
+                    continue;
+                }
+
                 if(current == '<' && PeekChar() == '<' && PeekChar(1) == '<')
                 {
                     ReadChar();

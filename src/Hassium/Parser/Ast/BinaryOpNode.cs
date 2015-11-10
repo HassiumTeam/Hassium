@@ -58,7 +58,8 @@ namespace Hassium.Parser.Ast
         Dot,
         Is,
         In,
-        Range
+        Range,
+        Swap
     }
 
     [Serializable]
