@@ -8,9 +8,9 @@ func main() {
 	print("How tall are you? ");
 	# Convert class has functions for turning strings into numbers
 
-	height = Convert.toNumber(input());
+	height = Convert.toDouble(input());
 	print("How much do you weigh? ");
-	weight = Convert.toNumber(input());
+	weight = Convert.toDouble(input());
 
 	println(calculateBMI(height, weight));
 }
