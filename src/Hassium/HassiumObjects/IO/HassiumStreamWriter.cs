@@ -25,6 +25,7 @@
 
 using System.IO;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Networking;
 
 namespace Hassium.HassiumObjects.IO
 {
@@ -32,9 +33,15 @@ namespace Hassium.HassiumObjects.IO
     {
         public StreamWriter Value { get; set; }
 
-        public HassiumStreamWriter(StreamWriter value)
+        public HassiumStreamWriter(HassiumObject value)
         {
-            Value = value;
+            if (value is HassiumStream)
+                Value = new StreamWriter(((HassiumStream)value).Value);
+            else if (value is HassiumSslStream)
+                Value = new StreamWriter(((HassiumSslStream)value).Value);
+            else
+                Value = new StreamWriter(value.ToString());
+
             Attributes.Add("write", new InternalFunction(write, 1));
             Attributes.Add("flush", new InternalFunction(flush, 0));
             Attributes.Add("close", new InternalFunction(close, 0));

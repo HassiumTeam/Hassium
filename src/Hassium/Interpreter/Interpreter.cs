@@ -1684,16 +1684,10 @@ namespace Hassium.Interpreter
                         Constants.Add("IO", new HassiumIO());
                         Constants.Add("StreamWriter",
                             new InternalFunction(
-                                x =>
-                                    new HassiumStreamWriter(x[0] is HassiumStream
-                                        ? new StreamWriter(((HassiumStream) x[0]).Value)
-                                        : new StreamWriter(x[0].ToString())), 1, false, true));
+                                x => new HassiumStreamWriter(x[0]), 1, false, true));
                         Constants.Add("StreamReader",
                             new InternalFunction(
-                                x =>
-                                    new HassiumStreamReader(x[0] is HassiumStream
-                                        ? new StreamReader(((HassiumStream) x[0]).Value)
-                                        : new StreamReader(x[0].ToString())), 1, false, true));
+                                x => new HassiumStreamReader(x[0]), 1, false, true));
                         Constants.Add("FileStream",
                             new InternalFunction(
                                 x => new HassiumFileStream(new FileStream(x[0].ToString(), FileMode.OpenOrCreate)), 1,

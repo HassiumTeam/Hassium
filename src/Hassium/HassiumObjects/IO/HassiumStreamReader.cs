@@ -25,6 +25,7 @@
 
 using System.IO;
 using Hassium.Functions;
+using Hassium.HassiumObjects.Networking;
 using Hassium.HassiumObjects.Types;
 
 namespace Hassium.HassiumObjects.IO
@@ -33,9 +34,15 @@ namespace Hassium.HassiumObjects.IO
     {
         public StreamReader Value { get; set; }
 
-        public HassiumStreamReader(StreamReader value)
+        public HassiumStreamReader(HassiumObject value)
         {
-            Value = value;
+            if (value is HassiumStream)
+                Value = new StreamReader(((HassiumStream)value).Value);
+            else if (value is HassiumSslStream)
+                Value = new StreamReader(((HassiumSslStream)value).Value);
+            else
+                Value = new StreamReader(value.ToString());
+
             Attributes.Add("readLine", new InternalFunction(readLine, 0));
             Attributes.Add("dispose", new InternalFunction(dispose, 0));
             Attributes.Add("endOfStream", new InternalFunction(endOfStream, 0));
