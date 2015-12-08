@@ -46,6 +46,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\HassiumEngine.cs" />
     <Compile Include="Functions\Constructors.cs" />
     <Compile Include="Functions\SystemFunctions.cs" />
     <Compile Include="HassiumObjects\Drawing\HassiumBitmap.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="HassiumObjects\Interpreter\HassiumStopWatch.cs" />
     <Compile Include="HassiumObjects\Networking\CGI.cs" />
     <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />
+    <Compile Include="HassiumObjects\Networking\HassiumSslStream.cs" />
     <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpUtility.cs" />
     <Compile Include="HassiumObjects\Networking\Mail\HassiumMailMessage.cs" />
     <Compile Include="HassiumObjects\Networking\Mail\HassiumSmtpClient.cs" />

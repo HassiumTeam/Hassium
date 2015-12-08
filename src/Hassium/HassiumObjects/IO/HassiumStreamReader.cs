@@ -38,6 +38,7 @@ namespace Hassium.HassiumObjects.IO
             Value = value;
             Attributes.Add("readLine", new InternalFunction(readLine, 0));
             Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("endOfStream", new InternalFunction(endOfStream, 0));
             Attributes.Add("close", new InternalFunction(close, 0));
             Attributes.Add("peek", new InternalFunction(peek, 0));
             Attributes.Add("read", new InternalFunction(read, 0));
@@ -64,6 +65,11 @@ namespace Hassium.HassiumObjects.IO
         private HassiumObject peek(HassiumObject[] args)
         {
             return new HassiumChar(((char) Value.Peek()));
+        }
+
+        private HassiumObject endOfStream(HassiumObject[] args)
+        {
+            return new HassiumBool(Value.EndOfStream);
         }
 
         private HassiumObject read(HassiumObject[] args)

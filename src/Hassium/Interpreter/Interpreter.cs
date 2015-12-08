@@ -1746,6 +1746,8 @@ namespace Hassium.Interpreter
                             new InternalFunction(
                                 x => new HassiumNetworkStream(new NetworkStream(((HassiumSocket)x[0]).Value)), 1, false,
                                 true));
+                        Constants.Add("SslStream",
+                            new InternalFunction(x => new HassiumSslStream((HassiumStream)x[0], (HassiumBool)x[1], x[2]), 3, false, true));
                         Constants.Add("HttpUtility", new HassiumHttpUtility());
                         Constants.Add("HttpListener",
                             new InternalFunction(x => new HassiumHttpListener(new HttpListener()), 0, false, true));
