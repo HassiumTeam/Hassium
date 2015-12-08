@@ -19,11 +19,13 @@ namespace Hassium.HassiumObjects.Networking
         public HassiumSslStream(HassiumStream stream)
         {
             Value = new SslStream(stream.Value);
+            addAttributes();
         }
 
         public HassiumSslStream(HassiumStream stream, HassiumBool leaveInnerStreamOpen)
         {
             Value = new SslStream(stream.Value, leaveInnerStreamOpen.Value);
+            addAttributes();
         }
 
         public HassiumSslStream(HassiumStream stream, HassiumBool leaveInnerStreamOpen, HassiumObject genericRemoteCertificateValidationCallback)
@@ -37,6 +39,17 @@ namespace Hassium.HassiumObjects.Networking
             {
                 Value = new SslStream(stream.Value, leaveInnerStreamOpen, null);
             }
+            addAttributes();
+        }
+
+        private void addAttributes()
+        {
+            Attributes.Add("authenticateAsClient", new InternalFunction(authenticateAsClient, 1));
+            Attributes.Add("close", new InternalFunction(close, 0));
+            Attributes.Add("dispose", new InternalFunction(dispose, 0));
+            Attributes.Add("flush", new InternalFunction(flush, 0));
+            Attributes.Add("readByte", new InternalFunction(readByte, 0));
+            Attributes.Add("writeByte", new InternalFunction(writeByte, 0));
         }
 
         private HassiumObject authenticateAsClient(HassiumObject[] args)
