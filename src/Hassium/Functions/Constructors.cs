@@ -34,14 +34,27 @@ using Hassium.Interpreter;
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Class containing global constructors.
+    /// </summary>
     public class Constructors : ILibrary
     {
+        /// <summary>
+        /// Returns a blank HassiumObject.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumObject</returns>
         [IntFunc("Object", true, 0)]
         public static HassiumObject Object(HassiumObject[] args)
         {
             return new HassiumObject();
         }
 
+        /// <summary>
+        /// Returns a new HassiumDate.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumDate.</returns>
         [IntFunc("Date", true, new []{0,1})]
         public static HassiumObject Date(HassiumObject[] args)
         {
@@ -49,6 +62,11 @@ namespace Hassium.Functions
             return new HassiumDate(DateTime.Now);
         }
 
+        /// <summary>
+        /// Returns a new array.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumArray</returns>
         [IntFunc("Array", true, 1)]
         public static HassiumObject Array(HassiumObject[] args)
         {
@@ -57,6 +75,11 @@ namespace Hassium.Functions
                 : new HassiumArray(new HassiumObject[args[0].HInt().Value]);
         }
 
+        /// <summary>
+        /// Returns a new HassiumRandom.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumRandom</returns>
         [IntFunc("Random", true, new[] {0, 1})]
         public static HassiumObject Random(HassiumObject[] args)
         {
@@ -65,7 +88,11 @@ namespace Hassium.Functions
                 : new HassiumRandom(new Random());
         }
 
-
+        /// <summary>
+        /// Returns a new Event.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumEvent</returns>
         [IntFunc("Event", true, -1)]
         public static HassiumObject Event(HassiumObject[] args)
         {
@@ -81,12 +108,22 @@ namespace Hassium.Functions
             return ret;
         }
 
+        /// <summary>
+        /// Returns a new HassiumStopWatch.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumStopWatch</returns>
         [IntFunc("StopWatch", true, 0)]
         public static HassiumObject StopWatch(HassiumObject[] args)
         {
             return new HassiumStopWatch();
         }
 
+        /// <summary>
+        /// Returns a new HassiumString.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumString</returns>
         [IntFunc("String", true, new []{0,1})]
         public static HassiumObject String(HassiumObject[] args)
         {
@@ -98,6 +135,11 @@ namespace Hassium.Functions
             return new HassiumString(initialValue);
         }
 
+        /// <summary>
+        /// Returns a new HassiumChar.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumChar</returns>
         [IntFunc("Char", true, new[] { 0, 1 })]
         public static HassiumObject Char(HassiumObject[] args)
         {
@@ -109,6 +151,11 @@ namespace Hassium.Functions
             return new HassiumChar(initialValue);
         }
 
+        /// <summary>
+        /// Returns a new HassiumInt.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumInt</returns>
         [IntFunc("Int", true, new[] { 0, 1 })]
         public static HassiumObject Int(HassiumObject[] args)
         {
@@ -120,6 +167,11 @@ namespace Hassium.Functions
             return new HassiumInt(initialValue);
         }
 
+        /// <summary>
+        /// Returns a new HassiumDouble.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumDouble</returns>
         [IntFunc("Double", true, new[] { 0, 1 })]
         public static HassiumObject Double(HassiumObject[] args)
         {

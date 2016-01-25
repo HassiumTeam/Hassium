@@ -27,6 +27,9 @@ using Hassium.Parser.Ast;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// Interface the interpreter must implement for the visitor pattern.
+    /// </summary>
     public interface IVisitor
     {
         object Accept(Expression expr);

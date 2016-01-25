@@ -30,6 +30,9 @@ using Hassium.HassiumObjects.Conversion;
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Class of global functions for interacting with the console.
+    /// </summary>
     public class ConsoleFunctions : ILibrary
     {
         /// <summary>

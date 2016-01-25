@@ -34,8 +34,16 @@ using Hassium.HassiumObjects.Types;
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Class of global functions for interacting with the system.
+    /// </summary>
     public class SystemFunctions : ILibrary
     {
+        /// <summary>
+        /// Executes a binary with arguments.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Result.</returns>
         [IntFunc("system", -1)]
         public static HassiumObject System(HassiumObject[] args)
         {
@@ -58,6 +66,11 @@ namespace Hassium.Functions
             return output;
         }
 
+        /// <summary>
+        /// Returns the current HassiumDate
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumDate</returns>
         [IntFunc("date", new[] {1, 3, 6, 0})]
         public static HassiumObject Date(HassiumObject[] args)
         {
@@ -77,6 +90,12 @@ namespace Hassium.Functions
             }
         }
 
+
+        /// <summary>
+        /// Returns a HassiumDateTime from a date string.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumDate</returns>
         [IntFunc("dateParse", new[] {1, 2})]
         public static HassiumObject DateParse(HassiumObject[] args)
         {
@@ -86,6 +105,11 @@ namespace Hassium.Functions
                 : new HassiumDate(DateTime.Parse(args[0].ToString()));
         }
 
+        /// <summary>
+        /// Returns the current HassiumType.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumTime</returns>
         [IntFunc("time", new[] {0, 1, 3})]
         public static HassiumObject Time(HassiumObject[] args)
         {
@@ -101,12 +125,22 @@ namespace Hassium.Functions
             }
         }
 
+        /// <summary>
+        /// Returns the current logged on user.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumString</returns>
         [IntFunc("currentUser", 0)]
         public static HassiumObject CurrentUser(HassiumObject[] args)
         {
             return Environment.UserName;
         }
 
+        /// <summary>
+        /// Pauses the current thread for a specified amount of time.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Null</returns>
         [IntFunc("sleep", 1)]
         public static HassiumObject Sleep(HassiumObject[] args)
         {
@@ -114,12 +148,22 @@ namespace Hassium.Functions
             return null;
         }
 
+        /// <summary>
+        /// Returns the size of a HassiumObject.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Size</returns>
         [IntFunc("sizeOf", 1)]
         public static HassiumObject sizeOf(HassiumObject[] args)
         {
             return Marshal.SizeOf(args[0]);
         }
 
+        /// <summary>
+        /// Returns the name of a HassiumObject.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumString</returns>
         [IntFunc("nameOf", 1)]
         public static HassiumObject nameOf(HassiumObject[] args)
         {

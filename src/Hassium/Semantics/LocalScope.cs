@@ -28,11 +28,20 @@ using System.Collections.Generic;
 
 namespace Hassium.Semantics
 {
+    /// <summary>
+    /// Class for the local scope.
+    /// </summary>
     [Serializable]
     public class LocalScope
     {
+        /// <summary>
+        /// List of the symbols.
+        /// </summary>
         public List<string> Symbols { get; private set; }
 
+        /// <summary>
+        /// Initializes a new LocalScope.
+        /// </summary>
         public LocalScope()
         {
             Symbols = new List<string>();

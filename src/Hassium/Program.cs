@@ -43,12 +43,17 @@ using Microsoft.CSharp;
 
 namespace Hassium
 {
+    /// <summary>
+    /// Main class.
+    /// </summary>
     public static class Program
     {
         // set this to true so run the code without exception handling, so the debugger can stop at exceptions
         private static bool disableTryCatch = false;
 
-
+        /// <summary>
+        /// Class containing compile time options.
+        /// </summary>
         public static class options
         {
             public static bool Debug { get; set; }
@@ -63,6 +68,10 @@ namespace Hassium
         public static Interpreter.Interpreter CurrentInterpreter = new Interpreter.Interpreter();
         private static Stopwatch st;
 
+        /// <summary>
+        /// Main entry point of the program.
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             Initialize(args);

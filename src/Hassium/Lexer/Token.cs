@@ -25,6 +25,9 @@
 
 namespace Hassium.Lexer
 {
+    /// <summary>
+    /// Enum that contains all the different token types.
+    /// </summary>
     public enum TokenType
     {
         LBrace,
@@ -52,12 +55,30 @@ namespace Hassium.Lexer
         Echo
     }
 
+    /// <summary>
+    /// Class for a Token.
+    /// </summary>
     public class Token
     {
+        /// <summary>
+        /// The TokenType.
+        /// </summary>
         public TokenType TokenClass { get; private set; }
+        /// <summary>
+        /// The value.
+        /// </summary>
         public object Value { get; private set; }
+        /// <summary>
+        /// The position in the code the token is in.
+        /// </summary>
         public int Position { get; private set; }
 
+        /// <summary>
+        /// Initializes a new Token using the type, value, and pos.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        /// <param name="pos"></param>
         public Token(TokenType type, object value, int pos = -1)
         {
             TokenClass = type;
@@ -65,6 +86,10 @@ namespace Hassium.Lexer
             Position = pos;
         }
 
+        /// <summary>
+        /// Returns the value.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Value.ToString();

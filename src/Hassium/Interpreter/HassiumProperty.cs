@@ -27,15 +27,43 @@ using Hassium.Functions;
 
 namespace Hassium.HassiumObjects
 {
+    /// <summary>
+    /// Delegate for a HassiumInstance.
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="arguments"></param>
+    /// <returns></returns>
     public delegate HassiumObject HassiumInstanceFunctionDelegate(HassiumObject self, params HassiumObject[] arguments);
 
+    /// <summary>
+    /// Class for a HassiumProperty.
+    /// </summary>
     public class HassiumProperty : HassiumObject
     {
+        /// <summary>
+        /// Delegate for set.
+        /// </summary>
         public HassiumInstanceFunctionDelegate SetValue;
+        /// <summary>
+        /// Delegatae for get.
+        /// </summary>
         public HassiumFunctionDelegate GetValue;
+        /// <summary>
+        /// Name of property.
+        /// </summary>
         public string Name;
+        /// <summary>
+        /// Returns if property is read-only.
+        /// </summary>
         public bool ReadOnly;
 
+        /// <summary>
+        /// Initializes a new HassiumProperty using the name, get, set, and optional ro values.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="get"></param>
+        /// <param name="set"></param>
+        /// <param name="ro"></param>
         public HassiumProperty(string name, HassiumFunctionDelegate get, HassiumInstanceFunctionDelegate set, bool ro = false)
         {
             Name = name;
@@ -44,6 +72,11 @@ namespace Hassium.HassiumObjects
             ReadOnly = ro;
         }
 
+        /// <summary>
+        /// Overrides the invoke to return get.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumObject return value.</returns>
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             return GetValue(args);

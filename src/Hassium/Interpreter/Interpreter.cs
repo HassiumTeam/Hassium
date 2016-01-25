@@ -54,15 +54,28 @@ using Hassium.Semantics;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// The delegate for handling an interpreter exit.
+    /// </summary>
+    /// <param name="code"></param>
     public delegate void ExitEventHandler(int code);
 
     /// <summary>
-    ///     Interpreter.
+    /// Class for a Hassium Interpreter.
     /// </summary>
     public class Interpreter : IVisitor
     {
+        /// <summary>
+        /// The CallStack.
+        /// </summary>
         public CallStack CallStack = new CallStack();
+        /// <summary>
+        /// Dictionary of the global variables.
+        /// </summary>
         public Dictionary<string, HassiumObject> Globals = new Dictionary<string, HassiumObject>();
+        /// <summary>
+        /// Dictionary for constants such as true, false, Convert, Console, Information, and null.
+        /// </summary>
         public Dictionary<string, HassiumObject> Constants = new Dictionary<string, HassiumObject>
         {
             {"true", new HassiumBool(true)},
@@ -73,13 +86,30 @@ namespace Hassium.Interpreter
             {"null", null}
         };
 
+        /// <summary>
+        /// The Abstract Syntax Tree.
+        /// </summary>
         public AstNode Code { get; set; }
+        /// <summary>
+        /// The SymbolTable for the Interpreter.
+        /// </summary>
         public SymbolTable SymbolTable { get; set; }
 
+        /// <summary>
+        /// Determines if Interpreter handles exceptions thrown.
+        /// </summary>
         public bool HandleErrors { get; set; }
+        /// <summary>
+        /// Determines if interpreter is handling a return statement.
+        /// </summary>
         public bool ReturnFunc { get; set; }
-
+        /// <summary>
+        /// Determines if interpreter is running a function.
+        /// </summary>
         public int IsInFunction { get; set; }
+        /// <summary>
+        /// The exit code.
+        /// </summary>
         public int Exitcode = -1;
 
         private bool enforceMainEntryPoint;
@@ -90,10 +120,14 @@ namespace Hassium.Interpreter
 
         private int isInLoop { get; set; }
         private Stack<int> position = new Stack<int>(); 
+
+        /// <summary>
+        /// A Stack object containing the position inside an AST Node.
+        /// </summary>
         public Stack<int> NodePos = new Stack<int>(); 
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Interpreter" /> class.
+        /// Initializes a new instance of the <see cref="Interpreter" /> class.
         /// </summary>
         public Interpreter(bool forcemain = true)
         {
@@ -103,6 +137,12 @@ namespace Hassium.Interpreter
             HandleErrors = true;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Interpreter" /> class.
+        /// </summary>
+        /// <param name="symbolTable"></param>
+        /// <param name="code"></param>
+        /// <param name="forcemain"></param>
         public Interpreter(SymbolTable symbolTable, AstNode code, bool forcemain = true)
         {
             Code = code;
@@ -112,10 +152,15 @@ namespace Hassium.Interpreter
             HandleErrors = true;
         }
 
-        public DateTime BuildDate { get; set; }
+        /// <summary>
+        /// The build date of the interpreter.
+        /// </summary>
+        public DateTime BuildDate { get; set; } 
 
-         
-
+        /// <summary>
+        /// Begins executing the code.
+        /// </summary>
+        /// <param name="repl"></param>
         public void Execute(bool repl = false)
         {
             isRepl = repl;
@@ -171,6 +216,14 @@ namespace Hassium.Interpreter
             }
         }
 
+        /// <summary>
+        /// Sets a variable to a value.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="node"></param>
+        /// <param name="forceglobal"></param>
+        /// <param name="onlyexist"></param>
         public void SetVariable(string name, HassiumObject value, AstNode node, bool forceglobal = false,
             bool onlyexist = false)
         {
@@ -862,6 +915,12 @@ namespace Hassium.Interpreter
             else throw new ParseException("The variable '" + name + "' doesn't exist.", node);
         }
 
+        /// <summary>
+        /// Returns if the variable name exist in the current context.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="onlyglobal"></param>
+        /// <returns></returns>
         public bool HasVariable(string name, bool onlyglobal = false)
         {
             return onlyglobal

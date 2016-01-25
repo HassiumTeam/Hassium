@@ -28,6 +28,7 @@
     <ConsolePause>false</ConsolePause>
     <Commandlineparameters>/home/jacob/test.has</Commandlineparameters>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\Hassium.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>

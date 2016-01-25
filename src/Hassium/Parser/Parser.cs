@@ -34,7 +34,7 @@ using Hassium.Parser.Ast;
 namespace Hassium.Parser
 {
     /// <summary>
-    ///     Parser.
+    /// Class for the Parser.
     /// </summary>
     public class Parser
     {
@@ -52,6 +52,11 @@ namespace Hassium.Parser
             get { return tokens.Count <= position; }
         }
 
+        /// <summary>
+        /// Initializes a new Parser using the list of tokens and code.
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <param name="code"></param>
         public Parser(List<Token> tokens, string code)
         {
             this.tokens = tokens;
@@ -69,27 +74,52 @@ namespace Hassium.Parser
             return block;
         }
 
+        /// <summary>
+        /// Returns the current token.
+        /// </summary>
+        /// <returns>Token</returns>
         public Token CurrentToken()
         {
             return position >= tokens.Count ? new Token(TokenType.Identifier, "") : tokens[position];
         }
 
+        /// <summary>
+        /// Returns the previous token or further tokens from delay.
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <returns>Token</returns>
         public Token PreviousToken(int delay = 1)
         {
             return position - delay >= tokens.Count ? new Token(TokenType.Identifier, null) : tokens[position - delay];
         }
 
+        /// <summary>
+        /// Returns if the current token's class is equal to clazz.
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <returns>bool</returns>
         public bool MatchToken(TokenType clazz)
         {
             return position < tokens.Count && tokens[position].TokenClass == clazz;
         }
 
+        /// <summary>
+        /// Returns if the current token's class is equal to clazz and the current token's value is equal to value.
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="value"></param>
+        /// <returns>bool</returns>
         public bool MatchToken(TokenType clazz, string value)
         {
             return position < tokens.Count && tokens[position].TokenClass == clazz &&
                    tokens[position].Value.ToString() == value;
         }
 
+        /// <summary>
+        /// Returns true and increments the position if the current token's class is equal to clazz.
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <returns>bool</returns>
         public bool AcceptToken(TokenType clazz)
         {
             if (MatchToken(clazz))
@@ -101,6 +131,12 @@ namespace Hassium.Parser
             return false;
         }
 
+        /// <summary>
+        /// Returns true and increments the position if the current token's class is equal to clazz and the current token's value is equal to value.
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="value"></param>
+        /// <returns>bool</returns>
         public bool AcceptToken(TokenType clazz, string value)
         {
             if (MatchToken(clazz, value))
@@ -112,11 +148,26 @@ namespace Hassium.Parser
             return false;
         }
 
+        /// <summary>
+        /// Returns and increments the position of the tokens if the current token's class is equal to clazz
+        /// and the the current token's value is equal to value, or throws an exception.
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <param name="value"></param>
+        /// <returns>Token</returns>
         public Token ExpectToken(TokenType clazz, string value = "")
         {
             return ExpectToken("Expected " + (value == "" ? clazz.ToString() : value) + ", got " + (position >= tokens.Count ? "EOF" : CurrentToken().Value + " [" + CurrentToken().TokenClass + "]"), clazz, value);
         }
 
+        /// <summary>
+        /// Returns and increments the position of the tokens if the current token's class is equal to clazz
+        /// and the the current token's value is equal to value, or throws an exception with msg.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="clazz"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public Token ExpectToken(string msg, TokenType clazz, string value = "")
         {
             if (value == "" ? MatchToken(clazz) : MatchToken(clazz, value)) return tokens[position++];

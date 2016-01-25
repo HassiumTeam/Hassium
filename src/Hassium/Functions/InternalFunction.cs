@@ -29,18 +29,45 @@ using Hassium.HassiumObjects;
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Delegate for HassiumFunctions.
+    /// </summary>
+    /// <param name="arguments"></param>
+    /// <returns>Return from function.</returns>
     public delegate HassiumObject HassiumFunctionDelegate(params HassiumObject[] arguments);
 
+    /// <summary>
+    /// Class that defines a Hassium function.
+    /// </summary>
     public class InternalFunction : HassiumObject
     {
         private HassiumFunctionDelegate target;
 
+        /// <summary>
+        /// Determines if the function is static.
+        /// </summary>
         public bool IsStatic { get; set; }
 
+        /// <summary>
+        /// Initializes a new InternalFunction using the target args, prop, constr, and stati.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="args"></param>
+        /// <param name="prop"></param>
+        /// <param name="constr"></param>
+        /// <param name="stati"></param>
         public InternalFunction(HassiumFunctionDelegate target, int args, bool prop = false, bool constr = false, bool stati = false) : this(target, new []{args}, prop, constr, stati)
         {
         }
 
+        /// <summary>
+        /// Initializes a new InternalFunction using the target args, prop, constr, and stati.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="args"></param>
+        /// <param name="prop"></param>
+        /// <param name="constr"></param>
+        /// <param name="stati"></param>
         public InternalFunction(HassiumFunctionDelegate target, int[] args, bool prop = false, bool constr = false, bool stati = false)
         {
             this.target = target;
@@ -50,19 +77,36 @@ namespace Hassium.Functions
             IsStatic = stati;
         }
 
+        /// <summary>
+        /// Determines if function is a property.
+        /// </summary>
         public bool IsProperty { get; set; }
 
+        /// <summary>
+        /// Determines if function is a constructor.
+        /// </summary>
         public bool IsConstructor { get; set; }
 
+        /// <summary>
+        /// The number of arguments for the function.
+        /// </summary>
         public int[] Arguments { get; set; }
 
-
+        /// <summary>
+        /// Returns a string representation of the function.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[InternalFunction: {0}`{1}{2}]", target.Method.Name,
                 target.Method.GetParameters().Length, IsStatic ? " Static" : "");
         }
 
+        /// <summary>
+        /// Invokes the function.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if (!Arguments.Contains(args.Length) && Arguments[0] != -1)
@@ -72,22 +116,56 @@ namespace Hassium.Functions
         }
     }
 
+    /// <summary>
+    /// Class for internal function attribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class IntFunc : Attribute
     {
+        /// <summary>
+        /// Function name.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Function alias.
+        /// </summary>
         public string Alias { get; set; }
+
+        /// <summary>
+        /// Determines if the function is a constructor.
+        /// </summary>
         public bool Constructor { get; set; }
+
+        /// <summary>
+        /// The number of arguments for the function.
+        /// </summary>
         public int[] Arguments { get; set; }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name and args.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
         public IntFunc(string name, int args) : this(name, args, "")
         {
         }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name and args.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
         public IntFunc(string name, int[] args) : this(name, args, "")
         {
         }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name, args, and alias.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
+        /// <param name="alias"></param>
         public IntFunc(string name, int args, string alias)
         {
             Name = name;
@@ -96,6 +174,12 @@ namespace Hassium.Functions
             Arguments = new[] {args};
         }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name, args, and alias.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="args"></param>
+        /// <param name="alias"></param>
         public IntFunc(string name, int[] args, string alias)
         {
             Name = name;
@@ -104,6 +188,12 @@ namespace Hassium.Functions
             Arguments = args;
         }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name, constr, and args.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="constr"></param>
+        /// <param name="args"></param>
         public IntFunc(string name, bool constr, int args)
         {
             Name = name;
@@ -112,6 +202,12 @@ namespace Hassium.Functions
             Arguments = new[] {args};
         }
 
+        /// <summary>
+        /// Initializes a new IntFunc with the name, constr, and args.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="constr"></param>
+        /// <param name="args"></param>
         public IntFunc(string name, bool constr, int[] args)
         {
             Name = name;

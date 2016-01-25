@@ -35,14 +35,27 @@ using Hassium.Interpreter;
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Class containing misc global functions.
+    /// </summary>
     public class MiscFunctions : ILibrary
     {
+        /// <summary>
+        /// Returns true if the variable exists in the current context.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumBool</returns>
         [IntFunc("varexists", 1)]
         public static HassiumObject VarExists(HassiumObject[] args)
         {
             return Program.CurrentInterpreter.HasVariable(args[0].ToString());
         }
 
+        /// <summary>
+        /// Returns the type of object something is.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumType</returns>
         [IntFunc("type", 1)]
         public static HassiumObject Type(HassiumObject[] args)
         {
@@ -52,12 +65,22 @@ namespace Hassium.Functions
                     .Substring(args[0].GetType().ToString().LastIndexOf(".", StringComparison.Ordinal) + 1);
         }
 
+        /// <summary>
+        /// Throws an exception.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Null</returns>
         [IntFunc("throw", -1)]
         public static HassiumObject Throw(HassiumObject[] args)
         {
             throw new Exception(string.Join("", args.Cast<object>()));
         }
 
+        /// <summary>
+        /// Fills an array with nothing.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumArray</returns>
         [IntFunc("fill", 2)]
         public static HassiumObject Fill(HassiumObject[] args)
         {
@@ -77,7 +100,12 @@ namespace Hassium.Functions
             }
             return array;
         }
-
+        
+        /// <summary>
+        /// Flils an array with zeros.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumArray</returns>
         [IntFunc("fillzero", new []{1,2})]
         public static HassiumObject FillZero(HassiumObject[] args)
         {
@@ -93,7 +121,12 @@ namespace Hassium.Functions
 
             return Enumerable.Repeat(zero, args[0].HInt().Value).ToArray();
         }
-
+        
+        /// <summary>
+        /// Returns an enumerable of a range for use in foreach.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumArray</returns>
         [IntFunc("range", new[] {2, 3})]
         public static HassiumObject Range(HassiumObject[] args)
         {
@@ -119,6 +152,11 @@ namespace Hassium.Functions
                     : Enumerable.Range((int) from, (int) to).Select(x => new HassiumDouble(x)).ToArray());
         }
 
+        /// <summary>
+        /// Applies a function to each element in an array.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumArray</returns>
         [IntFunc("map", 2)]
         public static HassiumObject Map(HassiumObject[] args)
         {
@@ -130,6 +168,11 @@ namespace Hassium.Functions
             return ret;
         }
 
+        /// <summary>
+        /// Runs a function on a new thread.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Null</returns>
         [IntFunc("threadRun", 1)]
         public static HassiumObject threadRun(HassiumObject[] args)
         {
@@ -139,6 +182,11 @@ namespace Hassium.Functions
             return null;
         }
 
+        /// <summary>
+        /// Calls a method on the .NET runtime.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumObject</returns>
         [IntFunc("runtimecall", -1)]
         public static HassiumObject RuntimeCall(HassiumObject[] args)
         {

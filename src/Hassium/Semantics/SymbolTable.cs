@@ -28,13 +28,25 @@ using System.Collections.Generic;
 
 namespace Hassium.Semantics
 {
+    /// <summary>
+    /// Class for the symbol table.
+    /// </summary>
     [Serializable]
     public class SymbolTable
     {
+        /// <summary>
+        /// List of symbols.
+        /// </summary>
         public List<string> Symbols { get; private set; }
 
+        /// <summary>
+        /// Dictionary of LocalScopes and their names.
+        /// </summary>
         public Dictionary<string, LocalScope> ChildScopes { get; private set; }
 
+        /// <summary>
+        /// Initializes a new SymbolTable.
+        /// </summary>
         public SymbolTable()
         {
             Symbols = new List<string>();

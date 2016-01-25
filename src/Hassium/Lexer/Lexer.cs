@@ -33,7 +33,7 @@ using Hassium.Interpreter;
 namespace Hassium.Lexer
 {
     /// <summary>
-    ///     Lexer.
+    /// Class for a Lexer to tokenize source code.
     /// </summary>
     public class Lexer
     {
@@ -41,11 +41,20 @@ namespace Hassium.Lexer
         private int position;
         private List<Token> result = new List<Token>();
 
+        /// <summary>
+        /// Initializes a new lexer using the code.
+        /// </summary>
+        /// <param name="code"></param>
         public Lexer(string code)
         {
             this.code = code;
         }
 
+        /// <summary>
+        /// Static method that 'golf's source code to remove unnessecary whitespace.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns>Golfed code.</returns>
         public static string Minimize(string code)
         {
             string result = "";
@@ -92,7 +101,7 @@ namespace Hassium.Lexer
         }
 
         /// <summary>
-        ///     Tokenize this instance.
+        /// Tokenize this instance.
         /// </summary>
         public List<Token> Tokenize()
         {

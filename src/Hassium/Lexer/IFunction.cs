@@ -27,8 +27,16 @@ using Hassium.HassiumObjects;
 
 namespace Hassium.Lexer
 {
+    /// <summary>
+    /// Interface for functions.
+    /// </summary>
     public interface IFunction
     {
+        /// <summary>
+        /// Must have an Invoke method that takes an array of args and has a return value.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumObject</returns>
         HassiumObject Invoke(HassiumObject[] args);
     }
 }

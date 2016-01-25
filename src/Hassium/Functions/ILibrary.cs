@@ -25,6 +25,9 @@
 
 namespace Hassium.Functions
 {
+    /// <summary>
+    /// Interface that all global class libraries must implement.
+    /// </summary>
     public interface ILibrary
     {
         //Dictionary<string, InternalFunction> GetFunctions();

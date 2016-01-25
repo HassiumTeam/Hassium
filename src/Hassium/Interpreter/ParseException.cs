@@ -28,17 +28,35 @@ using Hassium.Parser;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// Class for parsing exceptions.
+    /// </summary>
     public class ParseException : Exception
     {
+        /// <summary>
+        /// The node the exception is on.
+        /// </summary>
         public AstNode Node { get; private set; }
+        /// <summary>
+        /// The position in the code the exception is on.
+        /// </summary>
         public int Position { get; private set; }
 
-
+        /// <summary>
+        /// Initializes a new ParseException using the message and node.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="node"></param>
         public ParseException(string message, AstNode node) : this(message, node.Position)
         {
             Node = node;
         }
 
+        /// <summary>
+        /// Initializes a new ParseException using the message and position.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="position"></param>
         public ParseException(string message, int position) : base(message)
         {
             Position = position;

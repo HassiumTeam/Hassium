@@ -31,18 +31,32 @@ using Hassium.Parser.Ast;
 
 namespace Hassium.Semantics
 {
+    /// <summary>
+    /// Class for the semantic analyser.
+    /// </summary>
     public class SemanticAnalyser
     {
+        /// <summary>
+        /// The Abstract Syntax Tree.
+        /// </summary>
         public AstNode Code { get; private set; }
 
         private SymbolTable result = new SymbolTable();
         private LocalScope currentLocalScope;
 
+        /// <summary>
+        /// Initializes an new SemanticAnalyser using code.
+        /// </summary>
+        /// <param name="code"></param>
         public SemanticAnalyser(AstNode code)
         {
             Code = code;
         }
 
+        /// <summary>
+        /// Analyses the AST.
+        /// </summary>
+        /// <returns>SymbolTable</returns>
         public SymbolTable Analyse()
         {
             checkout(Code);

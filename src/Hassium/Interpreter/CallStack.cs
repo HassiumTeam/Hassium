@@ -4,36 +4,63 @@ using Hassium.HassiumObjects;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// Class containing the call stack.
+    /// </summary>
     public class CallStack
     {
         private Stack<StackFrame> frames = new Stack<StackFrame>();
 
+        /// <summary>
+        /// Returns the top StackFrame.
+        /// </summary>
+        /// <returns>StackFrame</returns>
         public StackFrame Peek()
         {
             return frames.Peek();
         }
 
+        /// <summary>
+        /// Pushes a StackFrame to the call stack.
+        /// </summary>
+        /// <param name="st"></param>
         public void Push(StackFrame st)
         {
             frames.Push(st);
         }
 
+        /// <summary>
+        /// Returns true if the call stack is not empty.
+        /// </summary>
+        /// <returns>bool</returns>
         public bool Any()
         {
             return frames.Count > 0;
         }
 
+        /// <summary>
+        /// Pops the top StackFrame off.
+        /// </summary>
+        /// <returns>StackFrame</returns>
         public StackFrame Pop()
         {
             return frames.Pop();
         }
 
-
+        /// <summary>
+        /// The return value of a Hassium Function.
+        /// </summary>
         public HassiumObject ReturnValue
         {
             get { return frames.Peek().ReturnValue; }
         }
 
+        /// <summary>
+        /// Returns the value from a variable name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="st"></param>
+        /// <returns>HassiumObject</returns>
         public HassiumObject GetVariable(string name, bool st = false)
         {
             HassiumObject ret = null;
@@ -52,11 +79,21 @@ namespace Hassium.Interpreter
             return ret;
         }
 
+        /// <summary>
+        /// Returns a dictionary containing all the local variables and their names.
+        /// </summary>
+        /// <param name="all"></param>
+        /// <returns></returns>
         public Dictionary<string, HassiumObject> GetLocals(bool all = false)
         {
             return all ? frames.SelectMany(x => x.Locals).ToDictionary(x => x.Key, x => x.Value) : frames.Peek().Locals;
         }
-
+        
+        /// <summary>
+        /// Sets a variable at name to value.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         public void SetVariable(string name, HassiumObject value)
         {
             if (frames.Any(x => x.Locals.ContainsKey(name)))
@@ -64,6 +101,11 @@ namespace Hassium.Interpreter
             else Peek().Locals[name] = value;
         }
 
+        /// <summary>
+        /// Frees a variable off the call stack.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="st"></param>
         public void FreeVariable(string name, bool st = false)
         {
             if (frames.Any(x => x.Locals.ContainsKey(name)))
@@ -73,6 +115,12 @@ namespace Hassium.Interpreter
                     frames.First(x => x.Locals.ContainsKey(name)).Locals.Remove(name);
         }
 
+        /// <summary>
+        /// Returns true if the variable exists in the current context.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="st"></param>
+        /// <returns>bool</returns>
         public bool HasVariable(string name, bool st = false)
         {
             if (frames.Count == 0) return false;

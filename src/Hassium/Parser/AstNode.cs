@@ -31,13 +31,25 @@ using Hassium.Parser.Ast;
 
 namespace Hassium.Parser
 {
+    /// <summary>
+    /// Class for a node on the Abstract Syntax Tree.
+    /// </summary>
     [Serializable]
     public abstract class AstNode
     {
+        /// <summary>
+        /// The sub-nodes in the AST.
+        /// </summary>
         public List<AstNode> Children { get; private set; }
 
+        /// <summary>
+        /// The current position in the code.
+        /// </summary>
         public int Position { get; set; }
 
+        /// <summary>
+        /// Returns if the node is one that can be indexed.
+        /// </summary>
         public bool CanBeIndexed
         {
             get
@@ -48,6 +60,9 @@ namespace Hassium.Parser
             }
         }
 
+        /// <summary>
+        /// Returns if the node is a return value;
+        /// </summary>
         public bool ReturnsValue
         {
             get
@@ -60,13 +75,27 @@ namespace Hassium.Parser
             }
         }
 
+        /// <summary>
+        /// Returns if there are any children in the AST.
+        /// </summary>
+        /// <param name="fc"></param>
+        /// <returns>bool</returns>
         public bool Any(Func<AstNode, bool> fc)
         {
             return Children.Any(node => node.Children.Count > 0 && (fc(node) || node.Any(fc)));
         }
 
+        /// <summary>
+        /// Visits the current node.
+        /// </summary>
+        /// <param name="visitor"></param>
+        /// <returns></returns>
         public abstract object Visit(IVisitor visitor);
 
+        /// <summary>
+        /// Visits the children of the visitor.
+        /// </summary>
+        /// <param name="visitor"></param>
         public void VisitChild(IVisitor visitor)
         {
             Children.All(x =>
@@ -76,15 +105,25 @@ namespace Hassium.Parser
             });
         }
 
+        /// <summary>
+        /// Return if the node can be modified.
+        /// </summary>
         public bool CanBeModified
         {
             get { return this is IdentifierNode || this is MemberAccessNode || this is ArrayGetNode || (this is ConditionalOpNode && ((ConditionalOpNode)this).Body.CanBeModified && ((ConditionalOpNode)this).ElseBody.CanBeModified); }
         }
 
+        /// <summary>
+        /// Initializes a new AstNode using -1 as the position.
+        /// </summary>
         protected AstNode() : this(-1)
         {
         }
 
+        /// <summary>
+        /// Initializes a new AstNode using position.
+        /// </summary>
+        /// <param name="position"></param>
         protected AstNode(int position)
         {
             Children = new List<AstNode>();

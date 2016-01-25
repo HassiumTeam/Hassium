@@ -29,21 +29,43 @@ using Hassium.Semantics;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// Class for the StackFrame.
+    /// </summary>
     public class StackFrame
     {
+        /// <summary>
+        /// Implements 'this'.
+        /// </summary>
         public HassiumObject Self
         {
             get { return Locals.ContainsKey("this") ? Locals["this"] : null; }
         }
-
+        /// <summary>
+        /// The LocalScope the stack frame is in.
+        /// </summary>
         public LocalScope Scope { get; private set; }
 
+        /// <summary>
+        /// Dictionary containing the local variables.
+        /// </summary>
         public Dictionary<string, HassiumObject> Locals { get; private set; }
 
+        /// <summary>
+        /// Dictionary containing the labels.
+        /// </summary>
         public Dictionary<string, int> Labels { get; private set; } 
 
+        /// <summary>
+        /// The return value.
+        /// </summary>
         public HassiumObject ReturnValue { get; set; }
 
+        /// <summary>
+        /// Initializes a new StackFrame using the scope and optional self.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="self"></param>
         public StackFrame(LocalScope scope, HassiumObject self = null)
         {
             Scope = scope;

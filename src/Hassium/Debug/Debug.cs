@@ -30,6 +30,9 @@ using Hassium.Lexer;
 
 namespace Hassium.Debug
 {
+    /// <summary>
+    /// Class for debugger output of compile time resources.
+    /// </summary>
     public static class Debug
     {
         /// <summary>

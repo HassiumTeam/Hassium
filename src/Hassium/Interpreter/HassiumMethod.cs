@@ -33,32 +33,70 @@ using Hassium.Semantics;
 
 namespace Hassium.Interpreter
 {
+    /// <summary>
+    /// Class for a HassiumMethod.
+    /// </summary>
     public class HassiumMethod : HassiumObject
     {
+        /// <summary>
+        /// Implements 'this'.
+        /// </summary>
         public HassiumObject SelfReference { get; set; }
+        /// <summary>
+        /// The interpreter being used.
+        /// </summary>
         public Interpreter Interpreter;
+        /// <summary>
+        /// The local scope.
+        /// </summary>
         public LocalScope LocalScope;
+        /// <summary>
+        /// The AST Node.
+        /// </summary>
         public FuncNode FuncNode;
+        /// <summary>
+        /// The stack frame.
+        /// </summary>
         public StackFrame stackFrame;
 
+        /// <summary>
+        /// Returns the name of the FuncNode.
+        /// </summary>
         public string Name
         {
             get { return FuncNode.Name; }
         }
 
+        /// <summary>
+        /// Returns if function is a lambda.
+        /// </summary>
         public bool IsLambda { get; private set; }
 
+        /// <summary>
+        /// Returns if function is static.
+        /// </summary>
         public bool IsStatic
         {
             get { return !FuncNode.Parameters.Contains("this"); }
             set { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns if function is a constructor
+        /// </summary>
         public bool IsConstructor
         {
             get { return Name == "new"; }
         }
 
+        /// <summary>
+        /// Initializes a new HassiumMethod using the interpreter, funcNode, localScope, self, and optional lambda.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="funcNode"></param>
+        /// <param name="localScope"></param>
+        /// <param name="self"></param>
+        /// <param name="lambda"></param>
         public HassiumMethod(Interpreter interpreter, FuncNode funcNode, LocalScope localScope, HassiumObject self, bool lambda = false) : this(interpreter, funcNode, (StackFrame)null, self, lambda)
         {
             /*SelfReference = self;
@@ -70,6 +108,14 @@ namespace Hassium.Interpreter
             LocalScope = localScope;
         }
 
+        /// <summary>
+        /// Initializes a new HassiumMethod using the interpreter, funcNode, stackFrame, self, and optional lambda.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="funcNode"></param>
+        /// <param name="stackFrame"></param>
+        /// <param name="self"></param>
+        /// <param name="lambda"></param>
         public HassiumMethod(Interpreter interpreter, FuncNode funcNode, StackFrame stackFrame, HassiumObject self, bool lambda = false)
         {
             SelfReference = self;
@@ -80,11 +126,20 @@ namespace Hassium.Interpreter
             IsLambda = lambda;
         }
 
+        /// <summary>
+        /// Invokes a HassiumEventHandler.
+        /// </summary>
+        /// <param name="mt"></param>
         public static implicit operator HassiumEventHandler(HassiumMethod mt)
         {
             return mt.Invoke;
         }
 
+        /// <summary>
+        /// Invokes a Hassium Function.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>HassiumObject return value.</returns>
         public override HassiumObject Invoke(params HassiumObject[] args)
         {
             if (stackFrame == null ||
@@ -124,6 +179,10 @@ namespace Hassium.Interpreter
             return ret;
         }
 
+        /// <summary>
+        /// Returns a string representation of the HassiumMethod.
+        /// </summary>
+        /// <returns>string</returns>
         public override string ToString()
         {
             return string.Format("[HassiumMethod: {0}`{1} SelfReference={2} {3}]", Name, (FuncNode.InfParams ? "i" : FuncNode.Parameters.Count.ToString()),
