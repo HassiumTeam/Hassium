@@ -1,0 +1,14 @@
+use IO;
+use Net;
+
+func main () {
+	conn = new NetConnection(Dns.resolveHost("irc.freenode.net"), 6667);
+	while (!conn.connected)
+		;
+	reader = new FileReader(conn.getStream());
+	writer = new FileWriter(conn.getStream());
+
+	while (true) {
+		println(reader.readLine());
+	}
+}

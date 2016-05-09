@@ -1,28 +1,38 @@
+use Util;
+
 func main () {
-	new Brainfuck(3000).run("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+	watch = new StopWatch();
+	watch.start();
+	bf = new Brainfuck();
+	# Hello, World!
+	bf.execute("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+	println(watch.milliseconds);
 }
 
-
 class Brainfuck {
-    func new (memLength)
-        this.mem = fillzero(memLength);
-    
-    func run (com, this) {
-        mem = this.mem;
-        ip, mp = 0;
-        EOF = com.length;
-        
-        while (ip < EOF) {
-            c = com[ip];
-            if (c == ">")mp++;
-            if (c == "<")mp--;
-            if (c == "+")mem[mp]++;
-            if (c == "-")mem[mp]--;
-            if (c == ".")print(mem[mp].toChar());
-            if (c == ",")mem[mp] = Convert.toChar(input(true));
-            if (c == "[")if (mem[mp] == 0) while (com[ip].toString()!="]")ip++;
-            if (c == "]")if (mem[mp] != 0) while (com[ip].toString()!="[")ip--;
-            ip++;
-        }
-    }
+	func new () {
+		# init ram
+		this.ram = this.fillzero(20000);
+	}
+	func fillzero (amount) {
+		res = [];
+		for (i = 0; i < amount; i = i + 1)
+			res.add(0);
+		return res;
+	}
+
+	func execute (source) {
+		mp = 0;
+		# iterate and run the code
+		for (ip = 0; ip < source.length; ip = ip + 1) {
+			c = source[ip];
+			if (c == '>')mp = mp + 1;
+			if (c == '<')mp = mp - 1;
+			if (c == '+')this.ram[mp] = this.ram[mp] + 1;
+			if (c == '-')this.ram[mp] = this.ram[mp] - 1;
+			if (c == '.')print(this.ram[mp].toChar());
+			if (c == '[')if (this.ram[mp] == 0) while (source[ip]!=']')ip = ip + 1;
+			if (c == ']')if (this.ram[mp] != 0) while (source[ip]!='[')ip = ip - 1;
+		}
+	}
 }

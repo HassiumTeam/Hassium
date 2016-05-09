@@ -1,199 +1,149 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <configuration>
-      <runtime>
-        <loadFromRemoteSources enabled="true" />
-      </runtime>
-    </configuration>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4D071F79-A66C-4C18-A702-FD50E6C4BC3B}</ProjectGuid>
+    <ProjectGuid>{1D142DB4-D6EA-49C0-B092-5E459F0FCF2A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Hassium</RootNamespace>
     <AssemblyName>Hassium</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>/home/jacob/test.has</Commandlineparameters>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\Hassium.XML</DocumentationFile>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\HassiumEngine.cs" />
-    <Compile Include="Functions\Constructors.cs" />
-    <Compile Include="Functions\SystemFunctions.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumBitmap.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumColor.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumGradient.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumImage.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumPoint.cs" />
-    <Compile Include="HassiumObjects\Drawing\HassiumSize.cs" />
-    <Compile Include="HassiumObjects\HassiumEnum.cs" />
-    <Compile Include="HassiumObjects\HassiumModule.cs" />
-    <Compile Include="HassiumObjects\HassiumTuple.cs" />
-    <Compile Include="HassiumObjects\Interpreter\HassiumGC.cs" />
-    <Compile Include="HassiumObjects\Interpreter\HassiumStopWatch.cs" />
-    <Compile Include="HassiumObjects\Networking\CGI.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumDns.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumSslStream.cs" />
-    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpUtility.cs" />
-    <Compile Include="HassiumObjects\Networking\Mail\HassiumMailMessage.cs" />
-    <Compile Include="HassiumObjects\Networking\Mail\HassiumSmtpClient.cs" />
-    <Compile Include="Interpreter\CallStack.cs" />
-    <Compile Include="Interpreter\HassiumProperty.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumConsole.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumDirectory.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumFile.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumFileStream.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumIO.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumStream.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumStreamReader.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumStreamWriter.cs" />
-    <Compile Include="HassiumObjects\Math\HassiumMath.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumEvent.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumInt.cs" />
-    <Compile Include="Interpreter\IVisitor.cs" />
-    <Compile Include="Interpreter\ParseException.cs" />
-    <Compile Include="Lexer\IFunction.cs" />
-    <Compile Include="Parser\Ast\ArrayIndexerNode.cs" />
-    <Compile Include="Parser\Ast\BreakNode.cs" />
-    <Compile Include="Parser\Ast\BulkAssignNode.cs" />
-    <Compile Include="Parser\Ast\CharNode.cs" />
-    <Compile Include="Parser\Ast\ClassNode.cs" />
-    <Compile Include="Parser\Ast\ConditionalOpNode.cs" />
-    <Compile Include="Parser\Ast\ContinueNode.cs" />
-    <Compile Include="Parser\Ast\EchoNode.cs" />
-    <Compile Include="Parser\Ast\EnumNode.cs" />
-    <Compile Include="Parser\Ast\Expression.cs" />
-    <Compile Include="Parser\Ast\InstanceNode.cs" />
-    <Compile Include="Parser\Ast\LambdaFuncNode.cs" />
-    <Compile Include="Parser\Ast\ObjectInitializerNode.cs" />
-    <Compile Include="Parser\Ast\PropertyNode.cs" />
-    <Compile Include="Parser\Ast\SwitchNode.cs" />
-    <Compile Include="Parser\Ast\TupleNode.cs" />
-    <Compile Include="Parser\Ast\UncheckedNode.cs" />
-    <Compile Include="Parser\Ast\UntilNode.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Parser\Ast\ArrayGetNode.cs" />
-    <Compile Include="Parser\Ast\ArrayInitializerNode.cs" />
-    <Compile Include="Parser\Ast\ForEachNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Lexer.cs" />
-    <Compile Include="Debug\Debug.cs" />
     <Compile Include="Parser\AstNode.cs" />
-    <Compile Include="Parser\Ast\NumberNode.cs" />
-    <Compile Include="Parser\Ast\BinaryOpNode.cs" />
-    <Compile Include="Parser\Ast\StringNode.cs" />
+    <Compile Include="Parser\IVisitor.cs" />
     <Compile Include="Parser\Parser.cs" />
-    <Compile Include="Parser\Ast\ArgListNode.cs" />
-    <Compile Include="Parser\Ast\FunctionCallNode.cs" />
-    <Compile Include="Parser\Ast\CodeBlock.cs" />
+    <Compile Include="Parser\Ast\CodeBlockNode.cs" />
     <Compile Include="Parser\Ast\StatementNode.cs" />
-    <Compile Include="Interpreter\Interpreter.cs" />
+    <Compile Include="Parser\Ast\StringNode.cs" />
     <Compile Include="Parser\Ast\IdentifierNode.cs" />
-    <Compile Include="Functions\InternalFunction.cs" />
-    <Compile Include="Parser\Ast\IfNode.cs" />
-    <Compile Include="Parser\Ast\WhileNode.cs" />
-    <Compile Include="Parser\Ast\UnaryOpNode.cs" />
-    <Compile Include="Functions\ILibrary.cs" />
-    <Compile Include="Functions\ConsoleFunctions.cs" />
-    <Compile Include="Functions\MiscFunctions.cs" />
-    <Compile Include="Parser\Ast\ForNode.cs" />
-    <Compile Include="Parser\Ast\TryNode.cs" />
+    <Compile Include="Parser\Ast\BinaryOperationNode.cs" />
+    <Compile Include="Parser\Ast\UnaryOperationNode.cs" />
+    <Compile Include="Parser\Ast\ExpressionNode.cs" />
     <Compile Include="Parser\Ast\FuncNode.cs" />
-    <Compile Include="Parser\Ast\ThreadNode.cs" />
-    <Compile Include="Semantics\SymbolTable.cs" />
-    <Compile Include="Semantics\LocalScope.cs" />
-    <Compile Include="Semantics\SemanticAnalyser.cs" />
-    <Compile Include="Interpreter\StackFrame.cs" />
+    <Compile Include="Parser\Ast\ArgListNode.cs" />
+    <Compile Include="Parser\Ast\CharNode.cs" />
+    <Compile Include="Parser\Ast\FunctionCallNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumStream.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumDns.cs" />
+    <Compile Include="Runtime\StandardLibrary\Reflection\HassiumAssembly.cs" />
+    <Compile Include="Runtime\StandardLibrary\Reflection\HassiumReflectionModule.cs" />
+    <Compile Include="SemanticAnalysis\SemanticAnalyzer.cs" />
+    <Compile Include="SemanticAnalysis\SymbolTable.cs" />
+    <Compile Include="Parser\Ast\ConditionalNode.cs" />
+    <Compile Include="Parser\Ast\WhileNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumDouble.cs" />
+    <Compile Include="Runtime\StandardLibrary\HassiumObject.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumString.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumFunction.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumChar.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumBool.cs" />
+    <Compile Include="Runtime\StandardLibrary\GlobalFunctions.cs" />
+    <Compile Include="CodeGen\Instruction.cs" />
+    <Compile Include="CodeGen\HassiumModule.cs" />
+    <Compile Include="Runtime\VirtualMachine.cs" />
+    <Compile Include="Runtime\StackFrame.cs" />
+    <Compile Include="Parser\Ast\AttributeAccessNode.cs" />
+    <Compile Include="CodeGen\MethodBuilder.cs" />
+    <Compile Include="CodeGen\HassiumCompiler.cs" />
+    <Compile Include="Parser\Ast\ClassNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\HassiumClass.cs" />
+    <Compile Include="Parser\Ast\NewNode.cs" />
+    <Compile Include="Parser\Ast\ThisNode.cs" />
+    <Compile Include="Parser\Ast\BreakNode.cs" />
+    <Compile Include="Parser\Ast\BoolNode.cs" />
+    <Compile Include="Parser\Ast\ForNode.cs" />
+    <Compile Include="Parser\Ast\ContinueNode.cs" />
+    <Compile Include="Parser\Ast\ArrayDeclarationNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumNull.cs" />
+    <Compile Include="Parser\Ast\ArrayAccessNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumProperty.cs" />
+    <Compile Include="Parser\Ast\PropertyNode.cs" />
+    <Compile Include="CodeGen\UserDefinedProperty.cs" />
     <Compile Include="Parser\Ast\ReturnNode.cs" />
-    <Compile Include="Parser\Ast\IncDecNode.cs" />
-    <Compile Include="HassiumObjects\HassiumObject.cs" />
-    <Compile Include="Parser\Ast\MemberAccessNode.cs" />
-    <Compile Include="Interpreter\HassiumMethod.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumWebClient.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumTcpClient.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumNetworkStream.cs" />
-    <Compile Include="HassiumObjects\Networking\HassiumSocket.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumArray.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumBool.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumDate.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumDictionary.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumDouble.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumString.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumPath.cs" />
-    <Compile Include="HassiumObjects\Reflection\HassiumAssembly.cs" />
-    <Compile Include="HassiumObjects\Reflection\HassiumModule.cs" />
-    <Compile Include="HassiumObjects\Text\HassiumEncoding.cs" />
-    <Compile Include="HassiumObjects\Text\HassiumStringBuilder.cs" />
-    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListener.cs" />
-    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerContext.cs" />
-    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerResponse.cs" />
-    <Compile Include="HassiumObjects\Networking\HTTP\HassiumHttpListenerRequest.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumBinaryWriter.cs" />
-    <Compile Include="HassiumObjects\IO\HassiumBinaryReader.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumByte.cs" />
-    <Compile Include="HassiumObjects\Text\HassiumTextReader.cs" />
-    <Compile Include="HassiumObjects\Text\HassiumTextWriter.cs" />
-    <Compile Include="HassiumObjects\Random\HassiumRandom.cs" />
-    <Compile Include="HassiumObjects\Types\HassiumChar.cs" />
-    <Compile Include="HassiumObjects\Collections\HassiumStack.cs" />
-    <Compile Include="HassiumObjects\HassiumClass.cs" />
-    <Compile Include="HassiumObjects\Conversion\HassiumConvert.cs" />
+    <Compile Include="Runtime\StandardLibrary\InternalModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumFileReader.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumIOModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumFile.cs" />
     <Compile Include="Parser\Ast\UseNode.cs" />
-    <Compile Include="HassiumObjects\Interpreter\HassiumDebug.cs" />
-    <Compile Include="Parser\Ast\DoNode.cs" />
-    <Compile Include="Parser\Ast\LabelNode.cs" />
-    <Compile Include="Parser\Ast\GotoNode.cs" />
-    <Compile Include="HassiumObjects\Interpreter\HassiumInformation.cs" />
+    <Compile Include="HassiumExecuter.cs" />
+    <Compile Include="Parser\Ast\EnumNode.cs" />
+    <Compile Include="Runtime\RuntimeException.cs" />
+    <Compile Include="SourceLocation.cs" />
+    <Compile Include="Parser\ParserException.cs" />
+    <Compile Include="Runtime\StandardLibrary\InternalException.cs" />
+    <Compile Include="Parser\Ast\ForeachNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumInt.cs" />
+    <Compile Include="Parser\Ast\DoubleNode.cs" />
+    <Compile Include="Parser\Ast\Int64Node.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumFileWriter.cs" />
+    <Compile Include="Runtime\StandardLibrary\Text\HassiumTextModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\Text\HassiumStringBuilder.cs" />
+    <Compile Include="Runtime\StandardLibrary\Text\HassiumEncoding.cs" />
+    <Compile Include="Parser\Ast\SwitchNode.cs" />
+    <Compile Include="Parser\Ast\CaseNode.cs" />
+    <Compile Include="Parser\Ast\TerenaryOperationNode.cs" />
+    <Compile Include="Parser\Ast\ExpressionStatementNode.cs" />
+    <Compile Include="Parser\Ast\LambdaNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumEvent.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumNetModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumNetConnection.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumThread.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumConnectionListener.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumSocket.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumWebClient.cs" />
+    <Compile Include="Runtime\StandardLibrary\Collections\HassiumStack.cs" />
+    <Compile Include="Runtime\StandardLibrary\Collections\HassiumCollectionsModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumKeyValuePair.cs" />
+    <Compile Include="Parser\Ast\KeyValuePairNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Math\HassiumMath.cs" />
+    <Compile Include="Runtime\StandardLibrary\Math\HassiumMathModule.cs" />
+    <Compile Include="Parser\Ast\TupleNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumTuple.cs" />
+    <Compile Include="Runtime\StandardLibrary\Math\HassiumRandom.cs" />
+    <Compile Include="Runtime\StandardLibrary\Util\HassiumUtilModule.cs" />
+    <Compile Include="Runtime\StandardLibrary\Util\HassiumStopWatch.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumPath.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumList.cs" />
+    <Compile Include="Runtime\StandardLibrary\IO\HassiumUI.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumClosure.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumHttpUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
-  <ItemGroup />
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
-          <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Runtime\StandardLibrary\HTTP\" />
+  </ItemGroup>
 </Project>

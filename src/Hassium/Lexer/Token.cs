@@ -1,98 +1,43 @@
-// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-//  * Redistributions of source code must retain the above copyright notice, this list
-//    of conditions and the following disclaimer.
-// 
-//  * Redistributions in binary form must reproduce the above copyright notice, this
-//    list of conditions and the following disclaimer in the documentation and/or
-//    other materials provided with the distribution.
-// Neither the name of the copyright holder nor the names of its contributors may be
-// used to endorse or promote products derived from this software without specific
-// prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-// DAMAGE.
+using System;
 
 namespace Hassium.Lexer
 {
-    /// <summary>
-    /// Enum that contains all the different token types.
-    /// </summary>
-    public enum TokenType
-    {
-        LBrace,
-        RBrace,
-        LBracket,
-        RBracket,
-        Identifier,
-        String,
-        Number,
-        LParen,
-        RParen,
-        Comma,
-        Operation,
-        OpAssign,
-        Comparison,
-        Assignment,
-        Exception,
-        EndOfLine,
-        UnaryOperation,
-        MentalOperation,
-        Lambda,
-        Dot,
-        Char,
-        Colon,
-        Echo
-    }
-
-    /// <summary>
-    /// Class for a Token.
-    /// </summary>
     public class Token
     {
-        /// <summary>
-        /// The TokenType.
-        /// </summary>
-        public TokenType TokenClass { get; private set; }
-        /// <summary>
-        /// The value.
-        /// </summary>
-        public object Value { get; private set; }
-        /// <summary>
-        /// The position in the code the token is in.
-        /// </summary>
-        public int Position { get; private set; }
+        public TokenType TokenType { get; private set; }
+        public string Value { get; private set; }
+        public SourceLocation SourceLocation { get; private set; }
 
-        /// <summary>
-        /// Initializes a new Token using the type, value, and pos.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="value"></param>
-        /// <param name="pos"></param>
-        public Token(TokenType type, object value, int pos = -1)
+        public Token(TokenType tokenType, string value, SourceLocation location)
         {
-            TokenClass = type;
+            TokenType = tokenType;
             Value = value;
-            Position = pos;
-        }
-
-        /// <summary>
-        /// Returns the value.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return Value.ToString();
+            SourceLocation = location;
         }
     }
+
+    public enum TokenType
+    {
+        Assignment,
+        BinaryOperation,
+        Char,
+        Colon,
+        Comma,
+        Comparison,
+        Dot,
+        Double,
+        Identifier,
+        Int64,
+        LeftBrace,
+        LeftParentheses,
+        LeftSquare,
+        Question,
+        RightBrace,
+        RightParentheses,
+        RightSquare,
+        Semicolon,
+        String,
+        UnaryOperation
+    }
 }
+

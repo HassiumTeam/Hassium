@@ -1,5 +1,0 @@
-# func main is the main entry point of the program
-
-func main() {
-	println("Hello, world!");
-}

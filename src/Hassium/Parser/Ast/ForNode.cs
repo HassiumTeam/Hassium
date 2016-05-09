@@ -1,72 +1,48 @@
-// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-//  * Redistributions of source code must retain the above copyright notice, this list
-//    of conditions and the following disclaimer.
-// 
-//  * Redistributions in binary form must reproduce the above copyright notice, this
-//    list of conditions and the following disclaimer in the documentation and/or
-//    other materials provided with the distribution.
-// Neither the name of the copyright holder nor the names of its contributors may be
-// used to endorse or promote products derived from this software without specific
-// prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-// DAMAGE.
-
 using System;
-using Hassium.Interpreter;
 
-namespace Hassium.Parser.Ast
+using Hassium.Lexer;
+
+namespace Hassium.Parser
 {
-    [Serializable]
-    public class ForNode : AstNode
+    public class ForNode: AstNode
     {
-        public AstNode Left
+        public AstNode SingleStatement { get { return Children[0]; } }
+        public AstNode Predicate { get { return Children[1]; } }
+        public AstNode RepeatStatement { get { return Children[2]; } }
+        public AstNode Body { get { return Children[3]; } }
+        public ForNode(AstNode singleStatement, AstNode predicate, AstNode repeatStatement, AstNode body, SourceLocation location)
         {
-            get { return Children[0]; }
-        }
-
-        public AstNode Predicate
-        {
-            get { return Children[1]; }
-        }
-
-        public AstNode Right
-        {
-            get { return Children[2]; }
-        }
-
-        public AstNode Body
-        {
-            get { return Children[3]; }
-        }
-
-        public ForNode(int position, AstNode left, AstNode predicate, AstNode right, AstNode body) : base(position)
-        {
-            Children.Add(left);
+            Children.Add(singleStatement);
             Children.Add(predicate);
-            Children.Add(right);
+            Children.Add(repeatStatement);
             Children.Add(body);
+            this.SourceLocation = location;
         }
 
-        public override string ToString()
+        public static ForNode Parse(Parser parser)
         {
-            return "[For ( " + Left + " )  ( " + Predicate + " ) ( " + Right + " ) -> { " + Body + " } ]";
+            parser.ExpectToken(TokenType.Identifier, "for");
+            parser.ExpectToken(TokenType.LeftParentheses);
+            AstNode singleStatement = ExpressionStatementNode.Parse(parser);
+            parser.AcceptToken(TokenType.Semicolon);
+            AstNode predicate = ExpressionNode.Parse(parser);
+            parser.AcceptToken(TokenType.Semicolon);
+            AstNode repeatStatement = ExpressionStatementNode.Parse(parser);
+            parser.ExpectToken(TokenType.RightParentheses);
+            AstNode body = StatementNode.Parse(parser);
+
+            return new ForNode(singleStatement, predicate, repeatStatement, body, parser.Location);
         }
 
-        public override object Visit(IVisitor visitor)
+        public override void Visit(IVisitor visitor)
         {
-            return visitor.Accept(this);
+            visitor.Accept(this);
+        }
+        public override void VisitChildren(IVisitor visitor)
+        {
+            foreach (AstNode child in Children)
+                child.Visit(visitor);
         }
     }
 }
+

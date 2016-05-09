@@ -1,610 +1,297 @@
-// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-//  * Redistributions of source code must retain the above copyright notice, this list
-//    of conditions and the following disclaimer.
-// 
-//  * Redistributions in binary form must reproduce the above copyright notice, this
-//    list of conditions and the following disclaimer in the documentation and/or
-//    other materials provided with the distribution.
-// Neither the name of the copyright holder nor the names of its contributors may be
-// used to endorse or promote products derived from this software without specific
-// prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-// DAMAGE.
-
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using Hassium.Interpreter;
 
 namespace Hassium.Lexer
 {
-    /// <summary>
-    /// Class for a Lexer to tokenize source code.
-    /// </summary>
     public class Lexer
     {
-        private string code;
+        private List<Token> result;
         private int position;
-        private List<Token> result = new List<Token>();
+        private string code;
+        private SourceLocation location;
 
-        /// <summary>
-        /// Initializes a new lexer using the code.
-        /// </summary>
-        /// <param name="code"></param>
-        public Lexer(string code)
+        public List<Token> Scan(string source)
         {
-            this.code = code;
-        }
+            result = new List<Token>();
+            position = 0;
+            code = source;
+            location = new SourceLocation(1, 0);
 
-        /// <summary>
-        /// Static method that 'golf's source code to remove unnessecary whitespace.
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns>Golfed code.</returns>
-        public static string Minimize(string code)
-        {
-            string result = "";
-            bool isIdentifier = false;
-
-            for (int index = 0; index < code.Length; index++)
+            whiteSpace();
+            while (position < code.Length)
             {
-                char c = code[index];
-
-                if ((char.IsLetter(c) || "_".Contains(c)))
-                {
-                    isIdentifier = true;
-                    result += c;
-                    continue;
-                }
-                else if (" \r\n".Contains(c) && !isIdentifier)
-                {
-                    continue;
-                }
+                char orig;
+                if (char.IsLetter((char)peekChar()) || (char)peekChar() == '_')
+                    result.Add(scanIdentifier());
+                else if (char.IsDigit((char)peekChar()))
+                    result.Add(scanNumber());
                 else
                 {
-                    isIdentifier = false;
-                }
-
-                switch (c)
-                {
-                    case '#':
-                        while (code[index++] != '\n')
-                        {
-                        }
-                        continue;
-                    case ';':
-                        if (index != 0 && !char.IsLetterOrDigit(code[index - 1]))
-                        {
-                            continue;
-                        }
-                        break;
-                }
-
-                result += c;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Tokenize this instance.
-        /// </summary>
-        public List<Token> Tokenize()
-        {
-            EatWhiteSpaces();
-
-            while (HasChar())
-            {
-                ReadToken();
-            }
-
-            return result;
-        }
-
-        private void ReadToken()
-        {
-            EatWhiteSpaces();
-
-            var current = PeekChar();
-            var next1 = HasChar() ? PeekChar(1) : '\0';
-            var next2 = HasChar(1) ? PeekChar(2) : '\0';
-
-            if ("0123456789".Contains(current))
-            {
-                add(ScanNumber());
-            }
-            else if (char.IsLetter(current) || "_".Contains(current))
-            {
-                add(ScanIdentifier());
-            }
-            else if ("\r\n".Contains(current))
-            {
-                add(new Token(TokenType.EndOfLine, ReadChar()));
-            }
-            else
-            {
-                switch (current)
-                {
-                    case '@':
-                        if (next1 == '"' || next1 == '\'')
-                            ScanString(true);
-                        break;
-                    case '"':
-                        ScanString();
-                        break;
-                    case '\'':
-                        ScanChar();
-                        break;
-                    case '$':
-                        ScanComment(false);
-                        break;
-                    case '#':
-                        ScanComment(true);
-                        break;
-
-                    case '+':
-                    case '-':
-                        if (next1 == current)
-                            add(new Token(TokenType.MentalOperation, "" + ReadChar() + ReadChar()));
-                        else if (next1 == '=')
-                        {
-                            add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
-                        }
-                        else
-                        {
-                            add(new Token(TokenType.Operation, ReadChar()));
-                        }
-                        break;
-                    case '%':
-                        add(next1 == '='
-                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Operation, ReadChar()));
-                        break;
-                    case '*':
-                    case '/':
-                        if (next1 == current)
-                            add(next2 == '='
-                                ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar() + ReadChar())
-                                : new Token(TokenType.Operation, "" + ReadChar() + ReadChar()));
-                        else
-                            switch (next1)
-                            {
-                                case '=':
-                                    add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
-                                    break;
-                                default:
-                                    add(new Token(TokenType.Operation, ReadChar()));
-                                    break;
-                            }
-                        break;
-                    case '.':
-                        add(new Token(TokenType.Dot, ReadChar()));
-                        break;
-                    case ';':
-                    case '\n':
-                        add(new Token(TokenType.EndOfLine, ReadChar()));
-                        break;
-                    case ',':
-                        add(new Token(TokenType.Comma, ReadChar()));
-                        break;
-                    case '(':
-                        add(new Token(TokenType.LParen, ReadChar()));
-                        break;
-                    case ')':
-                        add(new Token(TokenType.RParen, ReadChar()));
-                        break;
-                    case '[':
-                        add(new Token(TokenType.LBracket, ReadChar()));
-                        break;
-                    case ']':
-                        add(new Token(TokenType.RBracket, ReadChar()));
-                        break;
-                    case '{':
-                        add(new Token(TokenType.LBrace, ReadChar()));
-                        break;
-                    case '}':
-                        add(new Token(TokenType.RBrace, ReadChar()));
-                        break;
-                    case ':':
-                        add(new Token(TokenType.Colon, ReadChar()));
-                        break;
-                    case '=':
-                        switch (next1)
-                        {
-                            case '>':
-                                add(new Token(TokenType.Lambda, "" + ReadChar() + ReadChar()));
-                                break;
-                            case '=':
-                                add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                                break;
-                            default:
-                                add(new Token(TokenType.Assignment, "" + ReadChar()));
-                                break;
-                        }
-                        break;
-                    case '!':
-                        add(next1 == '='
-                            ? new Token(TokenType.Comparison, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.UnaryOperation, ReadChar()));
-                        break;
-                    case '~':
-                        add(new Token(TokenType.UnaryOperation, ReadChar()));
-                        break;
-                    case '&':
-                    case '|':
-                        if(next1 == current)
-                        {
-                            add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                        }
-                        else if (next1 == '=')
-                        {
-                            add(new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar()));
-                        }
-                        else
-                        {
-                            add(new Token(TokenType.Operation, ReadChar()));
-                        }
-                        break;
-                    case '^':
-                        add(next1 == '='
-                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Operation, ReadChar()));
-                        break;
-                    case '?':
-                        add(next1 == '?'
-                            ? new Token(TokenType.Operation, "" + ReadChar() + ReadChar())
-                            : new Token(TokenType.Operation, ReadChar()));
-                        break;
-                    case '<':
-                    case '>':
-                        if(current == '<' && next1 == '-' && next2 == '>')
-                        {
-                            add(new Token(TokenType.Assignment, "" + ReadChar() + ReadChar() + ReadChar()));
+                    switch ((char)peekChar())
+                    {
+                        case '\"':
+                            result.Add(scanString());
                             break;
-                        }
-
-                        if(current == '>' && next1 == '>' && next2 == '>')
-                        {
-                            ScanEcho();
+                        case '\'':
+                            readChar();
+                            result.Add(new Token(TokenType.Char, ((char)readChar()).ToString(), location));
+                            readChar();
                             break;
-                        }
-
-                        if (next1 == current)
-                            add(next2 == '='
-                            ? new Token(TokenType.OpAssign, "" + ReadChar() + ReadChar() + ReadChar())
-                            : new Token(TokenType.Operation, ReadChar() + "" + ReadChar()));
-                        else if (next1 == '=')
-                        {
-                            if (current == '<' && next2 == '>')
-                                add(new Token(TokenType.Comparison,
-                                    "" + ReadChar() + ReadChar() + ReadChar()));
+                        case ';':
+                            result.Add(new Token(TokenType.Semicolon, string.Empty, location));
+                            readChar();
+                            break;
+                        case ':':
+                            result.Add(new Token(TokenType.Colon, string.Empty, location));
+                            readChar();
+                            break;
+                        case ',':
+                            result.Add(new Token(TokenType.Comma, string.Empty, location));
+                            readChar();
+                            break;
+                        case '(':
+                            result.Add(new Token(TokenType.LeftParentheses, string.Empty, location));
+                            readChar();
+                            break;
+                        case ')':
+                            result.Add(new Token(TokenType.RightParentheses, string.Empty, location));
+                            readChar();
+                            break;
+                        case '{':
+                            result.Add(new Token(TokenType.LeftBrace, string.Empty, location));
+                            readChar();
+                            break;
+                        case '}':
+                            result.Add(new Token(TokenType.RightBrace, string.Empty, location));
+                            readChar();
+                            break;
+                        case '.':
+                            result.Add(new Token(TokenType.BinaryOperation, ".", location));
+                            readChar();
+                            break;
+                        case '?':
+                            result.Add(new Token(TokenType.Question, "?", location));
+                            readChar();
+                            break;
+                        case '+':
+                        case '-':
+                            orig = (char)readChar();
+                            if ((char)peekChar() == orig)
+                                result.Add(new Token(TokenType.UnaryOperation, orig.ToString() + ((char)readChar()).ToString(), location));
+                            else if ((char)peekChar() == '=')
+                                result.Add(new Token(TokenType.Assignment, orig.ToString() + ((char)readChar()).ToString(), location));
                             else
-                                add(new Token(TokenType.Comparison, "" + ReadChar() + ReadChar()));
-                        }
-                        else
-                            add(new Token(TokenType.Comparison, ReadChar()));
-                        break;
-                    default:
-                        result.Add(new Token(TokenType.Exception,
-                            "Unexpected " + PeekChar() + " encountered at position " + position));
-                        ReadChar();
-                        break;
-                }
-            }
-
-            EatWhiteSpaces();
-        }
-
-        /// <summary>
-        ///     Scans Comment
-        /// </summary>
-        private void ScanComment(bool oneLine)
-        {
-            ReadChar();
-            while (HasChar() && PeekChar() != (oneLine ? '\n' : '$'))
-                ReadChar();
-
-            if (!oneLine && HasChar()) ReadChar();
-        }
-
-        private void ScanEcho()
-        {
-            ReadChar();
-            ReadChar();
-            ReadChar();
-            StringBuilder builder = new StringBuilder();
-
-            while(HasChar())
-            {
-                var current = ReadChar();
-
-                if(current == '\\' && PeekChar() == '<')
-                {
-                    ReadChar();
-                    if (PeekChar() == '<') ReadChar();
-                    if (PeekChar() == '<') ReadChar();
-                    continue;
-                }
-
-                if(current == '<' && PeekChar() == '<' && PeekChar(1) == '<')
-                {
-                    ReadChar();
-                    ReadChar();
-
-                    break;
-                }
-                builder.Append(current);
-            }
-
-            add(new Token(TokenType.Echo, builder.ToString()));
-        }
-
-        /// <summary>
-        ///     Scans the string.
-        /// </summary>
-        /// <returns>The string.</returns>
-        /// <param name="isVerbatim">If set to <c>true</c> the string is verbatim (no escape sequences).</param>
-        private void ScanString(bool isVerbatim = false)
-        {
-            int pos = position;
-            var quote = ReadChar();
-            if (isVerbatim) quote = ReadChar();
-            StringBuilder stringBuilder = new StringBuilder();
-            var isEscaping = false;
-            var isUnicode = false;
-            var currentUnicodeChar = "";
-
-            while (HasChar() && (isEscaping || PeekChar() != quote))
-            {
-                var currentChar = ReadChar();
-                if (currentChar == '#' && !isEscaping && !isVerbatim && PeekChar() == '{')
-                {
-                    ReadChar();
-                    if (PeekChar() == '}')
-                    {
-                        ReadChar();
-                        continue;
-                    }
-                    add(new Token(TokenType.String, stringBuilder.ToString()));
-                    stringBuilder.Clear();
-                    isEscaping = false;
-                    isUnicode = false;
-                    currentUnicodeChar = "";
-                    add(new Token(TokenType.Operation, '+'));
-                    add(new Token(TokenType.LParen, '('));
-                    while (HasChar() && PeekChar() != '}')
-                        ReadToken();
-                    ReadChar();
-                    add(new Token(TokenType.RParen, ')'));
-                    add(new Token(TokenType.Operation, '+'));
-                    continue;
-                }
-                if (isUnicode)
-                {
-                    if (char.IsLetter(currentChar) || IsHexChar(currentChar)) currentUnicodeChar += currentChar;
-                    else
-                    {
-                        isUnicode = false;
-                        stringBuilder.Append(char.ConvertFromUtf32(int.Parse(currentUnicodeChar, NumberStyles.HexNumber)));
-                        currentUnicodeChar = "";
-                    }
-                }
-                if (isEscaping)
-                {
-                    switch (currentChar)
-                    {
-                        case '\\':
-                            stringBuilder.Append('\\');
+                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
                             break;
-                        case 'n':
-                            stringBuilder.Append('\n');
+                        case '*':
+                        case '/':
+                            orig = (char)readChar();
+                            if ((char)peekChar() == orig)
+                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString() + ((char)readChar()).ToString(), location));
+                            else
+                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
                             break;
-                        case 'r':
-                            stringBuilder.Append('\r');
+                        case '%':
+                        case '^':
+                            orig = (char)readChar();
+                            if ((char)peekChar() == '=')
+                                result.Add(new Token(TokenType.Assignment, orig.ToString() + ((char)readChar()).ToString(), location));
+                            else
+                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
                             break;
-                        case 't':
-                            stringBuilder.Append('\t');
+                        case '|':
+                            readChar();
+                            if ((char)peekChar() == '|')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.BinaryOperation, "||", location));
+                            }
+                            else if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Assignment, "|=", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.BinaryOperation, "|", location));
                             break;
-                        case '"':
-                            stringBuilder.Append('"');
+                        case '&':
+                            readChar();
+                            if ((char)peekChar() == '&')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.BinaryOperation, "&&", location));
+                            }
+                            else if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Assignment, "&=", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.BinaryOperation, "&", location));
+                            break;
+                        case '=':
+                            readChar();
+                            if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Comparison, "==", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.Assignment, "=", location));
+                            break;
+                        case '!':
+                            readChar();
+                            if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Comparison, "!=", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.UnaryOperation, "!", location));
+                            break;
+                        case '<':
+                            readChar();
+                            if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Comparison, "<=", location));
+                            }
+                            else if ((char)peekChar() == '-' && (char)peekChar(1) == '>')
+                            {
+                                readChar();readChar();
+                                result.Add(new Token(TokenType.BinaryOperation, "<->", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.Comparison, "<", location));
+                            break;
+                        case '>':
+                            readChar();
+                            if ((char)peekChar() == '=')
+                            {
+                                readChar();
+                                result.Add(new Token(TokenType.Comparison, ">=", location));
+                            }
+                            else
+                                result.Add(new Token(TokenType.Comparison, ">", location));
+                            break;
+                        case '[':
+                            readChar();
+                            result.Add(new Token(TokenType.LeftSquare, "[", location));
+                            break;
+                        case ']':
+                            readChar();
+                            result.Add(new Token(TokenType.RightSquare, "]", location));
                             break;
                         case '#':
-                            stringBuilder.Append('#');
-                            break;
-                        case 'x':
-                            isUnicode = true;
+                            scanSingleComment();
                             break;
                         default:
-                            stringBuilder.Append(currentChar);
-                            break;
+                            throw new Exception("Caught unknown char in lexer: " + readChar());
                     }
-
-                    isEscaping = false;
                 }
-                else
-                {
-                    if (currentChar == '\\' && !isVerbatim) isEscaping = true;
-                    else stringBuilder.Append(currentChar);
-                }
+                whiteSpace();
             }
 
-            if (HasChar()) ReadChar();
-            else throw new ParseException("Unfinished string", pos);
-
-            add(new Token(TokenType.String, stringBuilder));
+            return result;
         }
 
-        private void ScanChar()
+        private void whiteSpace()
         {
-            ReadChar();
-            if (PeekChar() == '\\')
+            while (char.IsWhiteSpace((char)peekChar()) && peekChar() != -1)
+                readChar();
+        }
+
+        private Token scanIdentifier()
+        {
+            string str = "";
+            while (char.IsLetterOrDigit((char)peekChar()) || (char)peekChar() == '_' && peekChar() != -1)
+                str += (char)readChar();
+            return new Token(TokenType.Identifier, str, location);
+        }
+
+        private Token scanNumber()
+        {
+            string data = "";
+            while (char.IsDigit((char)peekChar()) || (char)peekChar() == '.' && peekChar() != -1)
+                data += (char)readChar();
+            try
             {
-                ReadChar();
-                char escapeChar = ReadChar();
-                switch (escapeChar)
-                {
-                    case 'n':
-                        add(new Token(TokenType.Char, '\n'));
-                        break;
-                    case '\\':
-                        add(new Token(TokenType.Char, '\\'));
-                        break;
-                    case 'r':
-                        add(new Token(TokenType.Char, 'r'));
-                        break;
-                    case 't':
-                        add(new Token(TokenType.Char, '\t'));
-                        break;
-                    case 'x':
-                        add(new Token(TokenType.Char, 'x'));
-                        break;
-                    case '\'':
-                        add(new Token(TokenType.Char, '\''));
-                        break;
-                    default:
-                        throw new ParseException("Unknown escape code " + escapeChar, position);
-                }
-                
+                return new Token(TokenType.Int64, Convert.ToInt64(data).ToString(), location);
             }
+            catch
+            {
+                return new Token(TokenType.Double, Convert.ToDouble(data).ToString(), location);
+            }
+        }
+
+        private Token scanString()
+        {
+            string str = "";
+            readChar();
+            while ((char)peekChar() != '\"' && peekChar() != -1)
+            {
+                char ch = (char)readChar();
+                if (ch == '\\')
+                    str += scanEscapeCode((char)readChar());
+                else
+                    str += ch;
+            }
+            readChar();
+
+            return new Token(TokenType.String, str, location);
+        }
+
+        private void scanSingleComment()
+        {
+            readChar();
+            while (peekChar() != -1 && peekChar() != '\n')
+                readChar();
+        }
+
+        private char scanEscapeCode(char escape)
+        {
+            switch (escape)
+            {
+                case '\\':
+                    return '\\';
+                case '\"':
+                    return '\"';
+                case '\'':
+                    return '\'';
+                case '\a':
+                    return '\a';
+                case '\b':
+                    return '\b';
+                case '\f':
+                    return '\f';
+                case '\n':
+                    return '\n';
+                case '\r':
+                    return '\r';
+                case '\t':
+                    return '\t';
+                case '\v':
+                    return '\v';
+                default:
+                    throw new ParserException("Unknown escape code \\" + escape, location);
+            }
+        }
+
+        private int peekChar(int n = 0)
+        {
+            return position + n < code.Length ? code[position + n] : -1;
+        }
+        private int readChar()
+        {
+            if (position >= code.Length)
+                return -1;
+            if (peekChar() == '\n')
+                location = new SourceLocation(location.Line + 1, 0);
             else
-                add(new Token(TokenType.Char, ReadChar()));
+                location = new SourceLocation(location.Line, location.Letter + 1);
 
-            ReadChar();
-        }
-
-        private static bool IsHexChar(char c)
-        {
-            return "abcdefABCDEF".Contains(c);
-        }
-
-        /// <summary>
-        ///     Scans a number
-        /// </summary>
-        /// <returns>The number token</returns>
-        private Token ScanNumber()
-        {
-            var stringBuilder = new StringBuilder();
-            bool separator = false;
-            while (HasChar() && (char.IsDigit(PeekChar()) || IsHexChar(PeekChar()) || "xo._".Contains(PeekChar())))
-            {
-                var cchar = ReadChar();
-                if (cchar == '_')
-                {
-                    if (separator) break;
-                    separator = true;
-                }
-                else
-                {
-                    separator = false;
-                    stringBuilder.Append(cchar);
-                }
-            }
-            var finalNumber = stringBuilder.ToString();
-            var baseName = "";
-            var baseSize = 0;
-            if (finalNumber.StartsWith("0x"))
-            {
-                baseName = "hex";
-                baseSize = 16;
-            }
-            if (finalNumber.StartsWith("0b"))
-            {
-                baseName = "binary";
-                baseSize = 2;
-            }
-            if (finalNumber.StartsWith("0o"))
-            {
-                baseName = "octal";
-                baseSize = 8;
-            }
-            if (baseName != "")
-            {
-                if (finalNumber.Length == 2)
-                    throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
-                try
-                {
-                    return new Token(TokenType.Number, Convert.ToInt32(finalNumber.Substring(2), baseSize).ToString());
-                }
-                catch
-                {
-                    throw new ParseException("Invalid " + baseName + " number: " + finalNumber, position);
-                }
-            }
-            else
-            {
-                double temp = 0;
-                if (double.TryParse(finalNumber, NumberStyles.Any, CultureInfo.InvariantCulture, out temp))
-                {
-                    return (temp == Math.Truncate(temp) && !finalNumber.Contains('.'))
-                        ? new Token(TokenType.Number, (int) temp)
-                        : new Token(TokenType.Number, temp);
-                }
-                else
-                {
-                    throw new ParseException("Invalid number: " + finalNumber, position);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Scans an identifier
-        /// </summary>
-        /// <returns>The identifier</returns>
-        private Token ScanIdentifier()
-        {
-            var stringBuilder = new StringBuilder();
-            while (HasChar() && (char.IsLetterOrDigit(PeekChar()) || "_".Contains(PeekChar())))
-            {
-                stringBuilder.Append(ReadChar());
-            }
-            if (PeekChar() == '`' && "0123456789i".Contains(PeekChar(1)))
-            {
-                stringBuilder.Append(ReadChar());
-                stringBuilder.Append(ReadChar());
-            }
-            var finalId = stringBuilder.ToString();
-            if (finalId.Contains('.'))
-                throw new ParseException("Invalid character in Identifier: . (period)", position);
-            return new Token(TokenType.Identifier, finalId);
-        }
-
-        private void EatWhiteSpaces()
-        {
-            while (HasChar() && char.IsWhiteSpace(PeekChar())) ReadChar();
-        }
-        
-        private char PeekChar(int n = 0)
-        {
-            return position + n < code.Length ? code[position + n] : '\0';
-        }
-
-        private bool HasChar(int number = 0)
-        {
-            return position + number < code.Length;
-        }
-
-        private char ReadChar()
-        {
             return code[position++];
-        }
-
-        private void add(Token token)
-        {
-            result.Add(new Token(token.TokenClass, token.Value, position - token.Value.ToString().Length));
         }
     }
 }
+

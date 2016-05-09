@@ -1,57 +1,51 @@
-﻿// Copyright (c) 2015, HassiumTeam (JacobMisirian, zdimension) All rights reserved.
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-// 
-//  * Redistributions of source code must retain the above copyright notice, this list
-//    of conditions and the following disclaimer.
-// 
-//  * Redistributions in binary form must reproduce the above copyright notice, this
-//    list of conditions and the following disclaimer in the documentation and/or
-//    other materials provided with the distribution.
-// Neither the name of the copyright holder nor the names of its contributors may be
-// used to endorse or promote products derived from this software without specific
-// prior written permission.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-// SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-// BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT ,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-// ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-// DAMAGE.
-
 using System;
-using Hassium.Interpreter;
 
-namespace Hassium.Parser.Ast
+using Hassium.Lexer;
+
+namespace Hassium.Parser
 {
-    [Serializable]
-    public class PropertyNode : AstNode
+    public class PropertyNode: AstNode
     {
-        public FuncNode GetNode { get; private set; }
-        public FuncNode SetNode { get; private set; }
-        public string Name { get; private set; }
-
-        public PropertyNode(int position, string name, FuncNode get, FuncNode set) : base(position)
+        public string Identifier { get; private set; }
+        public AstNode GetBody { get { return Children[0]; } }
+        public AstNode SetBody { get { return Children[1]; } }
+        public PropertyNode(string identifier, AstNode getBody, SourceLocation location, AstNode setBody = null)
         {
-            Name = name;
-            Children.Add(get);
-            Children.Add(set);
-            GetNode = get;
-            SetNode = set;
+            Identifier = identifier;
+            Children.Add(getBody);
+            if (setBody != null)
+                Children.Add(setBody);
+            this.SourceLocation = location;
         }
 
-        public override string ToString()
+        public static PropertyNode Parse(Parser parser)
         {
-            return "[Property ( " + Name + " ) ]";
+            string identifier = parser.ExpectToken(TokenType.Identifier).Value;
+            parser.ExpectToken(TokenType.LeftBrace);
+            parser.ExpectToken(TokenType.Identifier, "get");
+            parser.ExpectToken(TokenType.LeftBrace);
+            AstNode getBody = StatementNode.Parse(parser);
+            parser.AcceptToken(TokenType.Semicolon);
+            parser.ExpectToken(TokenType.RightBrace);
+            if (!parser.AcceptToken(TokenType.Identifier, "set"))
+                return new PropertyNode(identifier, getBody, parser.Location);
+            parser.ExpectToken(TokenType.LeftBrace);
+            AstNode setBody = StatementNode.Parse(parser);
+            parser.AcceptToken(TokenType.Semicolon);
+            parser.ExpectToken(TokenType.RightBrace);
+            parser.ExpectToken(TokenType.RightBrace);
+            return new PropertyNode(identifier, getBody, parser.Location, setBody);
         }
 
-        public override object Visit(IVisitor visitor)
+        public override void Visit(IVisitor visitor)
         {
-            return visitor.Accept(this);
+            visitor.Accept(this);
+        }
+        public override void VisitChildren(IVisitor visitor)
+        {
+            foreach (AstNode child in Children)
+                child.Visit(visitor);
         }
     }
 }
+

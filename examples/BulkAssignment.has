@@ -1,7 +1,0 @@
-func main () {
-	x, y, z = 5;
-	x, y = 6;
-	x = 7;
-
-	println(x, y, z);
-}

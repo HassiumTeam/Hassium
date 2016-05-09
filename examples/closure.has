@@ -1,0 +1,7 @@
+func main () {
+	println (one (4) (5) );
+}
+
+func one (x) {
+	return lambda (y) { return y + x };
+}

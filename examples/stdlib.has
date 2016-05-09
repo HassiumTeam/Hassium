@@ -1,0 +1,35 @@
+func map (list, function) {
+	result = [];
+	foreach (element in list)
+		result.add(function(element));
+	return result;
+}
+
+func mapWhere (list, function, conditionFunc) {
+	result = [];
+	foreach (element in list)
+		if (conditionFunc(element))
+			result.add(function(element));
+	return result;
+}
+
+func range (lower, upper) {
+	result = [];
+	while (lower < upper) {
+		result.add(lower);
+		lower = lower + 1;
+	}
+
+	return result;
+}
+
+func rangeWhere (lower, upper, conditionFunc) {
+        result = [];
+        while (lower < upper) {
+                if (conditionFunc(lower))
+                        result.add(lower);
+                lower = lower + 1;
+        }
+
+        return result;
+}

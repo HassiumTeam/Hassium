@@ -1,0 +1,11 @@
+use Math;
+
+func main () {
+	rng = new Random();
+	while (true) {
+		# Generate number
+		println(rng.nextInt(0, 20));
+		# Sleep for .1 seconds
+		sleep(100);
+	}
+}

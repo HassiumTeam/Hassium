@@ -1,25 +1,27 @@
-# Define classes with class <className>
-
+# base class
 class Dog {
-	# Constructors are called new
 	func new(name) {
+		# Create attribute inside of class
 		this.Name = name;
 	}
 
-	# Instance methods must have the argument this
-	func showName(this) {
+	func showName() {
 		println(this.Name);
 	}
 
-	func bark(this) {
+	func bark() {
 		println("Woof!");
 	}
 }
 
-# You can extend classes with class <newClassName> : <otherClassName>
+# Inherits all the methods from the base class.
 class BigDog : Dog {
-	func growl(this) {
+	func growl() {
 		println("GRRRR");
+	}
+	# Overloads the bark() method from the base class.
+	func bark() {
+		println("Big dog bark");
 	}
 }
 
@@ -27,8 +29,12 @@ func main() {
 	fiddo = new Dog("Fiddo");
 	fiddo.showName();
 	fiddo.bark();
+
 	bigDog = new BigDog("Charlie");
+	# Inherited method
 	bigDog.showName();
+	# Overloaded method
 	bigDog.bark();
+	# Method exclusive to BigDog
 	bigDog.growl();
 }

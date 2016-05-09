@@ -1,16 +1,15 @@
-# You can define a funcion with func <funcName>
+# You define functions with func <funcName>
 
-func calculateBMI(height, weight) {
+func calculateBMI (height, weight) {
 	return weight / (height * height);
 }
 
-func main() {
+func main () {
 	print("How tall are you? ");
-	# Convert class has functions for turning strings into numbers
+	height = input().toDouble();
+	
+	print("Hoe much to you weight? ");
+	weight = input().toDouble();
 
-	height = Convert.toDouble(input());
-	print("How much do you weigh? ");
-	weight = Convert.toDouble(input());
-
-	println(calculateBMI(height, weight));
+	println("BMI: " + calculateBMI(height, weight));
 }
