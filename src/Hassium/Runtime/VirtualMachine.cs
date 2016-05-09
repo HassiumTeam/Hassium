@@ -12,13 +12,19 @@ namespace Hassium.Runtime
         public StackFrame StackFrame { get { return stackFrame; } }
         public Stack<HassiumObject> Stack { get { return stack; } }
         public Stack<string> CallStack { get { return callStack; } }
+        public Stack<HassiumObject> Handlers { get { return handlers; } }
+        public SourceLocation CurrentSourceLocation { get { return sourceLocation; } }
         public HassiumModule CurrentlyExecutingModule { get { return module; } }
+
         private StackFrame stackFrame;
         private Stack<HassiumObject> stack;
         private Stack<string> callStack = new Stack<string>();
+        private Stack<HassiumObject> handlers = new Stack<HassiumObject>();
 
         private Dictionary<double, HassiumObject> globals;
         private HassiumModule module;
+        private SourceLocation sourceLocation;
+        private int position;
 
         public void Execute(HassiumModule module)
         {
@@ -38,12 +44,12 @@ namespace Hassium.Runtime
         public HassiumObject ExecuteMethod(MethodBuilder method)
         {
             gatherLabels(method);
-            for (int position = 0; position < method.Instructions.Count; position++)
+            for (position = 0; position < method.Instructions.Count; position++)
             {
                 HassiumObject left, right, value, list, index, location;
                 double argument = method.Instructions[position].Argument;
                 int argumentInt = Convert.ToInt32(argument);
-                SourceLocation sourceLocation = method.Instructions[position].SourceLocation;
+                sourceLocation = method.Instructions[position].SourceLocation;
                 string attribute;
              //   Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, stackFrame.Frames.Count);
                 try
@@ -115,7 +121,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                throw new RuntimeException(location + " does not contain a definition for " + attribute, sourceLocation);
+                                throw new InternalException(location + " does not contain a definition for " + attribute);
                             }
                             if (attrib is HassiumProperty)
                                 stack.Push(((HassiumProperty)attrib).GetValue(this, new HassiumObject[] { }));
@@ -131,7 +137,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                throw new RuntimeException("Cannot find global identifier!", sourceLocation);
+                                throw new InternalException("Cannot find global identifier!");
                             }
                             break;
                         case InstructionType.Load_List_Element:
@@ -145,11 +151,17 @@ namespace Hassium.Runtime
                         case InstructionType.Pop:
                             stack.Pop();
                             break;
+                        case InstructionType.Pop_Handler:
+                            handlers.Pop();
+                            break;
                         case InstructionType.Push:
                             stack.Push(new HassiumInt(argumentInt));
                             break;
                         case InstructionType.Push_Bool:
                             stack.Push(new HassiumBool(argument == 1));
+                            break;
+                        case InstructionType.Push_Handler:
+                            handlers.Push(module.ConstantPool[argumentInt]);
                             break;
                         case InstructionType.Push_Object:
                             stack.Push(module.ConstantPool[argumentInt]);
@@ -179,7 +191,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                throw new RuntimeException(location + " does not contain a definition for " + attribute, sourceLocation);
+                                throw new InternalException(location + " does not contain a definition for " + attribute);
                             }
                             break;
                         case InstructionType.Store_List_Element:
@@ -202,11 +214,11 @@ namespace Hassium.Runtime
                 }
                 catch (InternalException ex)
                 {
-                    throw new RuntimeException(ex.Message, sourceLocation);
+                    RaiseException(ex.Message);
                 }
                 catch (DivideByZeroException)
                 {
-                    throw new RuntimeException("Divide by zero!", sourceLocation);
+                    RaiseException("Divide by zero!");
                 }
             }
             return HassiumObject.Null;
@@ -267,6 +279,19 @@ namespace Hassium.Runtime
                 case 16:
                     stack.Push(new HassiumDouble(Math.Pow(HassiumDouble.Create(left).Value, HassiumDouble.Create(right).Value)));
                     break;
+            }
+        }
+
+        public void RaiseException(string message)
+        {
+            Console.WriteLine(handlers.Count);
+            if (handlers.Count == 0)
+                throw new RuntimeException(message, sourceLocation);
+            else
+            {
+                HassiumExceptionHandler handler = handlers.Pop() as HassiumExceptionHandler;
+                handler.Method.Invoke(this, new HassiumObject[] { new HassiumString(message) });
+                position = Convert.ToInt32(handler.Label);
             }
         }
 

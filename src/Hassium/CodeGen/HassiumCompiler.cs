@@ -503,6 +503,26 @@ namespace Hassium.CodeGen
         {
             currentMethod.Emit(node.SourceLocation, InstructionType.Self_Reference, findIndex(currentMethod.Name));
         }
+        public void Accept(TryCatchNode node)
+        {
+            double endLabel = generateSymbol();
+            var previousMethod = currentMethod;
+            currentMethod = new MethodBuilder();
+            currentMethod.Name = "__catch__";
+            table.EnterScope();
+            if (!table.FindSymbol("value"))
+                table.AddSymbol("value");
+            currentMethod.Parameters.Add("value", table.GetIndex("value"));
+            node.CatchBody.VisitChildren(this);
+            HassiumExceptionHandler handler = new HassiumExceptionHandler(currentMethod, endLabel);
+            module.ConstantPool.Add(handler);
+            int catchIndex = findIndex(handler);
+            currentMethod = previousMethod;
+            currentMethod.Emit(node.SourceLocation, InstructionType.Push_Handler, catchIndex);
+            node.TryBody.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Pop_Handler);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Label, endLabel);
+        }
         public void Accept(TupleNode node)
         {
             node.VisitChildren(this);

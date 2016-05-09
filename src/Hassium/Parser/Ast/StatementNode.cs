@@ -31,8 +31,6 @@ namespace Hassium.Parser
                 return new BreakNode(parser.Location);
             else if (parser.AcceptToken(TokenType.Identifier, "continue"))
                 return new ContinueNode(parser.Location);
-            else if (parser.MatchToken(TokenType.Identifier) && parser.GetToken(1).TokenType == TokenType.LeftBrace)
-                return PropertyNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "return"))
                 return ReturnNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "use"))
@@ -41,6 +39,10 @@ namespace Hassium.Parser
                 return EnumNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "switch"))
                 return SwitchNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "try"))
+                return TryCatchNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier) && parser.GetToken(1).TokenType == TokenType.LeftBrace)
+                return PropertyNode.Parse(parser);
             else
                 return ExpressionStatementNode.Parse(parser);
         }

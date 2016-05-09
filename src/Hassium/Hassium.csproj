@@ -140,6 +140,8 @@
     <Compile Include="Runtime\StandardLibrary\IO\HassiumUI.cs" />
     <Compile Include="Runtime\StandardLibrary\Types\HassiumClosure.cs" />
     <Compile Include="Runtime\StandardLibrary\Net\HassiumHttpUtility.cs" />
+    <Compile Include="Parser\Ast\TryCatchNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\Types\HassiumExceptionHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
