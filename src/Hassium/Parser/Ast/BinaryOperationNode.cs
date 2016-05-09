@@ -43,7 +43,6 @@ namespace Hassium.Parser
         LesserThanOrEqual,
         OR,
         Power,
-        Root,
         Swap,
         XOR,
         XAnd,

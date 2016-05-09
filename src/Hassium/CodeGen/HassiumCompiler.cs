@@ -224,9 +224,6 @@ namespace Hassium.CodeGen
                 case BinaryOperation.Power:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 16);
                     break;
-                case BinaryOperation.Root:
-                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 17);
-                    break;
             }
         }
         public void Accept(BoolNode node)

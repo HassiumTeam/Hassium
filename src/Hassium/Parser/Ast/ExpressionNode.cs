@@ -180,10 +180,6 @@ namespace Hassium.Parser
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Division, left, parseMultiplicitive(parser), parser.Location);
                         continue;
-                    case "//":
-                        parser.AcceptToken(TokenType.BinaryOperation);
-                        left = new BinaryOperationNode(BinaryOperation.Root, left, parseMultiplicitive(parser), parser.Location);
-                        continue;
                     case "%":
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Modulus, left, parseMultiplicitive(parser), parser.Location);
