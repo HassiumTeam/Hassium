@@ -487,7 +487,7 @@ namespace Hassium.CodeGen
                 currentMethod.Emit(node.SourceLocation, InstructionType.Label, endCase);
             }
         }
-        public void Accept(TerenaryOperationNode node)
+        public void Accept(TernaryOperationNode node)
         {
             double falseLabel = generateSymbol();
             double endLabel = generateSymbol();

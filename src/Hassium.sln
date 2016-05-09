@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hassium", "Hassium\Hassium.csproj", "{1D142DB4-D6EA-49C0-B092-5E459F0FCF2A}"
 EndProject
 Global
@@ -13,6 +15,12 @@ Global
 		{1D142DB4-D6EA-49C0-B092-5E459F0FCF2A}.Debug|x86.Build.0 = Debug|x86
 		{1D142DB4-D6EA-49C0-B092-5E459F0FCF2A}.Release|x86.ActiveCfg = Release|x86
 		{1D142DB4-D6EA-49C0-B092-5E459F0FCF2A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 57efdc02-a753-47c3-8906-cea00c8285c5
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Hassium\Hassium.csproj

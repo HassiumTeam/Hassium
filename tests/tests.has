@@ -1,1 +1,673 @@
- 
+﻿# Welcome to HATRED.
+# Hassium Testing Runtime Environment Distribution
+use Math;
+use io;
+use drawing;
+use debug;
+use net;
+
+exitcode = 0;
+failed = [];
+passed = 0;
+
+
+class TestClass {
+    func testFunc(num1, num2) {
+        return num1 + num2;
+    }
+}
+
+func printst(ok, msg)
+{
+	print(msg + " [");
+	f = Console.foregroundColor;
+	if(ok)
+	{
+		Console.foregroundColor = "green";
+		print("✓");
+	}
+	else
+	{
+		Console.foregroundColor = "red";
+		print("✗");
+	}
+	Console.foregroundColor = f;
+	println("]");
+}
+
+func assert(that, msg)
+{
+	printst(that, msg);
+	
+	upst(that, msg);
+}
+
+func upst(that, msg)
+{
+	if(that)
+	{
+		passed++;
+	}
+	else
+	{
+		failed[] = msg;
+		exitcode = 1;
+	}
+}
+
+func assertfail(that, msg)
+{
+	isfailed = false;
+	try 
+	{
+		eval(that);
+	}
+	catch
+	{
+		isfailed = true;
+	}
+	printst(isfailed, msg);
+	upst(isfailed, msg);
+}
+
+
+
+func asserteq(a, b, msg)
+{
+	ok = a == b;
+	
+	printst(ok, msg);
+	
+	if(ok)
+	{
+		passed++;
+	}
+	else
+	{
+		failed[] = msg + "\n    Expected: " + b + "\n    Got:      " + a;
+		exitcode = 1;
+	}
+}
+
+
+
+
+
+func main()
+{
+    println("--- BEGIN TESTS FOR HASSIUM " + Interpreter.version + " ---");
+
+    opTests();
+    numberFormatTests();
+    functionTests();
+    closureTest();
+    objectTest();
+    recursionTest();
+    instanceTest();
+	importTests();
+	eventTests();
+	arrayTests();
+	drawingTests();
+	tupleTests();
+    println();
+    if(failed.length == 0) println("Everything went good");
+    else println("Some tests failed.");
+    println();
+    println(passed + " test" + (passed == 1 ?: "s") + " passed");
+	println();
+    println(failed.length + " test" + (failed.length == 1 ?: "s") + " failed" + (failed.any() ? ":"));
+	if(failed.any())
+	{
+		foreach(m in failed)
+		{
+			println("  " + m);
+		}
+	}
+	println();
+	
+    println("--- END TESTS FOR HASSIUM ---");
+	println();
+	println("Current version: Hassium ", Interpreter.version);
+	println("Build date: " + Interpreter.buildDate.toString("x"));
+
+    exit(exitcode);
+	
+	println("This should not be seen, as there's an exit() line above.");
+}
+
+func opTests()
+{
+    println("Operators tests");
+    println();
+
+    # basic operators
+    asserteq(13 + 8, 21, "should pass if addition result is correct");
+    asserteq(29 - 56, -27, "should pass if substraction result is correct");
+    asserteq(36 / 3, 12, "should pass if division result is correct");
+    assertfail("38 / 0 == 1", "should fail (division by zero)");
+    asserteq(41 * 3, 123, "should pass if multiplication result is correct");
+	asserteq("ab" * 4, "abababab", "string multiplication (repeat)");
+    asserteq(117 % 17, 15, "should pass if modulo result is correct");
+
+	# equals
+	asserteq(5, 5, "int should be equal to itself");
+	asserteq(3.14, Math.round(Math.pi, 2), "int should be equal to itself");
+	asserteq("abc", "abc", "string should be equal to itself");
+	asserteq(["abc", 123, 4.81654], [4.81654, 123, "abc"].reverse(), "array should be equal to itself");
+	asserteq(["abc": 123, 456: "def", "ghi": 789], ["ghi": 789, 456: "def", "abc": 123].reverse(), "dictionary should be equal to itself");
+	asserteq(true, !false, "true should be equal to !false");
+	asserteq(date(1,2,3,4,5,6), date(1,2,3,4,5,6), "date should be equal to itself");
+	
+    # comparison
+    assert(14 < 21, "object should be less than value");
+    assert(38 > -8, "object should be greater than value");
+    assert(1 != 2, "object should not be equal to value");
+    assert(38 <= 41 - 3, "object should be less or equal than value");
+    assert(21 >= 14 + 7, "object should be greater or equal than value");
+
+    # logical
+    assert(2 + 2 == 4 && 3 + 3 == 6, "should pass if both values are true");
+    assert(8 * 3 == 1515 || 3 * 9 == 27, "should pass if any of the values is true");
+
+    # bitwise
+    asserteq(5 ^ 3, 6, "should pass if XOR result is correct");
+    asserteq(23 << 2, 92, "should pass if Bitshift Left result is correct");
+    asserteq(-105 >> 1, -53, "should pass if Bitshift right result is correct");
+    asserteq(6 & 13, 4, "should pass if AND result is correct");
+    asserteq(5 | 3, 7, "should pass if OR result is correct");
+
+    # other
+    asserteq(12 ** 3, 1728, "should pass if ** (power) result is correct");
+	asserteq("abc" ** 3, "abcabcabcabcabcabcabcabcabc", "should pass if ** (power) result is correct too");
+    asserteq(512 // 3, 8, "should pass if // (root) result is correct");
+	
+	# ++ and --
+	abc = 5;
+	asserteq(abc++, 5, "post-fix should increment after returning");
+	asserteq(++abc, 7, "pre-fix should increment before returning");
+	asserteq(abc--, 7, "post-fix should decrement after returning");
+	asserteq(--abc, 5, "pre-fix should increment before returning");
+	
+	# operator precedence
+	asserteq(8 * 2 ** 3 - 4 * 4 / 8.0, 62, "operator precedence 1");
+	asserteq(4 * 4 / 8.0, 2, "operator precedence 2");
+	
+	asserteq(0b1111_1111_1111_1111, 0xFFFF, "binary / hex / digit separator");
+
+    ab = null;
+    cd = 5;
+    asserteq((ab ?? cd), 5, "should pass if ?? (null-coalescing) result is correct");
+	
+	a1 = null;
+	b1 = null;
+	c1 = null;
+	d1 = "ok";
+	asserteq(a1 ?? b1 ?? c1 ?? d1, "ok", "should pass if chaining ?? (null-coalescing) is correct");
+	
+	
+	func test()
+	{
+		a = null;
+		b = "abc";
+		c = 38;
+		d = "test";
+		return a;
+	}
+	
+	a = test();
+    b = "abc";
+    c = 38;
+    d = "test";
+    a?.b = b;
+    a?.b?.c = c;
+    a?.b?.c?.d = d;
+	asserteq(Convert.toString(test()?.b?.c?.d), "null", "should pass if left?.right (null-check) is correct");
+
+    asserteq(1 <=> 2, -1, "should pass if <=> result is correct");
+	
+	boolean = true;
+	asserteq((boolean ? "ab" : "cd"), "ab", "should pass if ?: (ternary operator) result is correct");
+	asserteq((boolean ? "cd"), "cd", "should pass if ? (ternary operator) result is correct");
+	
+	a = 0;
+	b = 0;
+	c = 5;
+	(c > 3 ? a : b) = 2;
+	asserteq(a, 2, "should pass if ternary operator assignment works");
+	
+	asserteq("abc #{++cd}", "abc 6", "string interpolation");
+	
+	a = 5;
+label1:
+	a--;
+	if(a > 0) goto label1;
+	asserteq(a, 0, "labels");
+	
+	a = 5;
+	b = "def";
+	
+	a <-> b;
+	
+	assert(a == "def" && b == 5, "variable swapping");
+
+
+    println();
+    println("End of operator tests");
+    println();
+}
+
+func functionTests()
+{
+    func test(x) {
+        return x * 4;
+    }
+
+    println("Functions tests");
+    println();
+    asserteq(test(4), 16, "should pass if Function test(4) is correct");
+    println();
+    asserteq(TestClass.testFunc(4, 5), 9, "should pass if Function TestClass.testFunc(4, 5) is correct");
+	
+	func add(args*) {
+		return args.sum();
+	}
+	asserteq(add(1, 8, -5, 3), 7, "function with unlimited args");
+	
+	
+	
+    println("End of function tests");
+    println();
+}
+
+func numberFormatTests()
+{
+    println("Number format tests");
+    println();
+    asserteq(0xDA, 218, "should pass if hexadecimal numbers are parsed correctly");
+    asserteq(0o173, 123, "should pass if octal numbers are parsed correctly");
+    asserteq(0b110101011, 427, "should pass if binary numbers are parsed correctly");
+    asserteq(Math.round(runtimecall("System.Math.PI"), 2), 3.14, "should pass if decimal numbers are parsed correctly");
+    println();
+    println("End of number format tests");
+    println();
+}
+
+
+
+func closureTest() {
+    println("Closures tests");
+    println();
+    func startAt (x) {
+        return lambda (y) {
+            return x + y;
+        }
+    }
+    closure1 = startAt (1);
+    closure2 = startAt (5);
+    a = closure1(3);
+    b = closure2(3);
+    asserteq(a, 4, "closure1(3) should equal 4");
+    asserteq(b, 8, "closure2(3) should equal 8");
+    println();
+    println("End of closures tests");
+    println();
+}
+
+
+
+func recursionTest()
+{
+    println("Recursion tests");
+    println();
+	
+	func recursion (c) {
+		if (c == 5) {
+			asserteq(c, 5, "c be 5");
+			recursion (c + 1);
+			asserteq(c, 5, "c should remain 5");
+			recursion (c + 1);
+			asserteq(c, 5, "c should still remain 5");
+		}
+		return 0;
+	}
+	
+	func fib (n) {
+		if (n == 0) {
+			return 0;
+		} else if (n == 1) {
+			return 1;
+		}
+		return fib (n - 1) + fib (n - 2);
+	}
+	
+    recursion(5);
+    asserteq(fib(6), 8, "fib(6) should equals 8");
+    println();
+    println("End of recursion tests");
+    println();
+}
+
+func objectTest () {
+    println("Object tests");
+    println();
+    
+	assert("abc" is String, "'is' operator for string");
+	assert(2 is int, "'is' operator for int");
+	assert(Math.pi is double, "'is' operator for double");
+	
+    func Person (name, age)
+    {
+        ret = new Object();
+        ret.getName = this => this.name;
+        ret.getAge = this => this.age;
+        ret.toString = this => "Hello my name is " + this.name + " and I'm " + age + " years old.";
+        ret.name = name;
+        ret.age = age;
+        return ret;
+    }
+    
+    person = Person ("Reagan", 16);
+	assert (person is Object, "person should be of type Object");
+    assert (person.name == "Reagan", "person.name should equal Reagan");
+    assert (person.age == 16, "person.age should equal 16");
+    assert (person.getName () == "Reagan", "person.getName () should equal Reagan");
+    assert (person.getAge () == 16, "person.getAge () should equal 16");
+    assert (person.toString() == "Hello my name is Reagan and I'm 16 years old.", "person.toString()");
+    
+	
+	test = () => () => new { name: "Reagan", age: 16 };
+	asserteq(test()().age, 16, "object initializer");
+	
+    println();
+    println("Object tests");
+    println();
+}
+    
+class PersonClass
+{
+    func new(name, age)
+    {
+        this.Name = name;
+        this.Age = age;
+    }
+	
+	
+    
+    property Name
+	{
+		get;
+		set;
+	}
+	
+	property Age
+	{
+		get;
+		set;
+	}
+    
+    func toString(this)
+    {
+        return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old.";
+    }
+}
+
+class Employee : PersonClass
+{
+	func new(name, age, location) : base(name, age)
+	{
+		this.Location = location;
+	}
+	
+	property Location
+	{
+		get;
+		set;
+	}
+	
+	func toString(this)
+	{
+		return "Hello my name is " + this.Name + " and I'm " + this.Age + " years old and I live in " + this.Location + ".";
+	}
+}
+    
+func instanceTest () {
+    println("Class instance tests");
+    println();
+
+    person = new PersonClass ("Reagan", 16);
+	assert (person is PersonClass, "person should be of type PersonClass");
+    assert (person.Name == "Reagan", "person.name should equal Reagan");
+    assert (person.Age == 16, "person.age should equal 16");
+	person.Name = "New Reagan";
+	person.Age = 34;
+	assert (person.Name == "New Reagan", "person.name should equal New Reagan");
+    assert (person.Age == 34, "person.age should equal 34");
+    asserteq(person.toString(), "Hello my name is New Reagan and I'm 34 years old.", "person.toString()");
+	employee = new Employee("Mark", 38, "New York");
+	assert (employee is PersonClass, "employee should be of type PersonClass as it extends it");
+	assert(employee is Employee, "employee should be of type Employee too");
+	asserteq(employee.Name, "Mark", "employee.Name");
+	asserteq(employee.Age, 38, "employee.Age");
+	asserteq(employee.Location, "New York", "employee.Location");
+	employee.Location = "Paris";
+	asserteq(employee.Location, "Paris", "employee.Location after setting property");
+	asserteq(employee.toString(), "Hello my name is Mark and I'm 38 years old and I live in Paris.", "employee.toString()");
+    
+    println();
+    println("End of class instance tests");
+    println();
+}
+
+
+
+
+
+func importTests()
+{
+	println("Module import tests");
+    println();
+	println("Importing testImport.has as myModule");
+	use "testImport.has" as myModule;
+	println("↓ this should print Hello from testImport.has!");
+	myModule.printTest();
+	asserteq(myModule.importVar, 5, "myModule.importVar should equal 5");
+	println();
+	println("Trying to instanciate myModule.importClass");
+	myClass = new myModule.importClass("test");
+	asserteq(myClass.getName(), "test", "myClass.getName() should equal test");
+	println();
+	println("Importing testImport.has in global scope");
+	use "testImport.has";
+	println("↓ this should print Hello from testImport.has!");
+	printTest();
+	asserteq(importVar, 5, "importVar should equal 5");
+	
+	
+	
+	println();
+    println("End of module import tests");
+    println();
+}
+
+func eventTests()
+{
+	println("Event tests");
+    println();
+
+	func handler1(args)
+	{
+		println("handler 1: " + args[0] + " " + args[1]);
+	}
+	
+	func handler2(args)
+	{
+		println("handler 2: " + args[0] + " " + args[1]);
+	}
+	
+	func handler3(args)
+	{
+		println("handler 3: " + args[0] + " " + args[1]);
+	}
+	
+	func handler4(args)
+	{
+		println("handler 4: " + args[0] + " " + args[1]);
+	}
+	hand = new Event(handler1, handler2);
+	
+	hand += handler3;
+	hand += handler4;
+	
+	hand("abc");
+	
+	hand -= handler1;
+	hand -= handler2;
+	hand -= handler3;
+	
+	hand("abc");
+	
+	println();
+    println("End of event tests");
+    println();
+}
+
+func arrayTests()
+{
+	println("Array tests");
+	println();
+	
+	theStr = "abcdef";
+	theStrArr = [];
+	foreach(c in theStr)
+	{
+		theStrArr[] = c;
+	}
+	asserteq(theStrArr, ["a","b","c","d","e","f"], "string to char array");
+	
+	theArr = ["abc", "def", 123, 456, runtimecall("System.Math.PI")];	
+	assert(123 in theArr, "'in' operator for arrays");
+	asserteq(theArr.toString(), "Array { abc, def, 123, 456, 3.14159265358979 }", "array to string");
+	use collections;
+	theArr2 = new Dictionary();
+	
+	foreach([index, x] in theArr)
+	{
+		theArr2[] = new KeyValuePair(index, x);
+	}	
+	asserteq(theArr[1 : 3], ["def", 123, 456], "array slice");
+	asserteq(theArr2.toString(), "Dictionary { [0] => abc, [1] => def, [2] => 123, [3] => 456, [4] => 3.14159265358979 }", "array to string after foreach");
+
+	theDict = ["abc" : 123, 456 : "ghi", "jkl" : 789];
+	assert("ghi" in theDict, "'in' operator on Dictionary");
+	assert("ab" in "alphabet", "'in' operator on String");
+	theDict[123] = "mno";
+	theDict[] = 456; # if you use the [] operator with nothing inside, it appends at the end of the array
+	asserteq(theDict[123], "mno", "check dictionary value after setting with []");
+	asserteq(theDict.toString(), "Dictionary { [abc] => 123, [456] => ghi, [jkl] => 789, [123] => mno, [4] => 456 }", "dictionary to string");
+	asserteq(theDict.&abc, 123, "dictionary.&key access");
+	assert(theDict.all((key, value) => theDict[key] == value), "check key and value in dictionary");
+	
+	tmpIndex = 0;
+	foreach([index, key, value] in theDict) # by using the tuple syntax you can foreach the keys and values
+	{
+		ok = theDict[key] == value && tmpIndex == index;
+		asserteq(ok, true, "check index, key and value, foreach in a dictionary");
+		tmpIndex++;
+	}
+	
+	func yieldTest()
+	{
+		for(i = 0; i <= 10; i += 2)
+		{
+			yield i;
+		}
+	}
+	
+	asserteq(yieldTest(), [0, 2, 4, 6, 8, 10], "yield return");
+	
+	println();
+	println("End of array tests");
+	println();
+}
+
+func drawingTests()
+{
+	println("Drawing module tests");
+	println();
+	
+	clr = new Color("#f0f8ff");
+	asserteq(clr.argb, -984833, "hex to color conversion, argb property check");
+	
+	clr = new Color("#2be1ce");
+	asserteq(clr.red, 43, "color.red");
+	asserteq(clr.green, 225, "color.green");
+	asserteq(clr.blue, 206, "color.blue");
+	
+	asserteq(clr.complementary, new Color(225, 43, 62), "complementary color");
+	asserteq(clr.complementary.complementary, clr, "complementary color back");
+	
+	asserteq(clr.triadic, [new Color(225, 206, 43), new Color(206, 43, 225)], "triadic color");
+	asserteq(clr.tetradic, [new Color(62, 225, 43), new Color(206, 43, 225), new Color(225, 43, 62)], "tetradic color");
+	asserteq(clr.splitCompl, [new Color(225, 115, 43), new Color(206, 43, 153)], "split complementary color");
+	asserteq(clr.analogous, [new Color(43, 225, 115), new Color(43, 153, 225)], "analogous color");
+	
+	asserteq(clr.toHsl().values.select(x => Math.round(x, 1)), [173.7, 75.2, 52.5], "color to HSL conversion");
+	asserteq(clr.toHsv().values.select(x => Math.round(x, 1)), [173.7, 80.9, 88.2], "color to HSV conversion");
+	asserteq(clr.toCmyk().values.select(x => Math.round(x, 2)), [80.89, 0, 8.44, 11.76], "color to CMYK conversion");
+	asserteq(clr.toCmy().values.select(x => Math.round(x, 2)), [83.14, 11.76, 19.22], "color to CMY conversion");
+	asserteq(clr.toXyz().values.select(x => Math.round(x, 2)), [39.06, 58.82, 67.69], "color to XYZ conversion");
+	asserteq(clr.toLab().values.select(x => Math.round(x, 2)), [81.19, -47.19, -3.12], "color to CIE-LAB conversion");
+	asserteq(clr.toLch().values.select(x => Math.round(x, 2)), [81.19, 47.29, 183.78], "color to CIE-LCH conversion");
+	asserteq(clr.toLuv().values.select(x => Math.round(x, 2)), [81.19, -62.15, 2.6], "color to CIE-LUV conversion");
+	asserteq(clr.toHunterLab().values.select(x => Math.round(x, 2)), [76.69, -43.30, 1.36], "color to Hunter-Lab conversion");
+	asserteq(clr.toYuv().values.select(x => Math.round(x, 2)), [168, 149, 38], "color to YUV conversion");
+	
+	clr = new Color("hsl", 173.7, 75.2, 52.5);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from HSL");
+	
+	clr = new Color("hsv", 173.7, 80.9, 88.2);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from HSV");
+	
+	clr = new Color("cmyk", 80.89, 0, 8.44, 11.76);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CMYK");
+	
+	clr = new Color("cmy", 83.14, 11.76, 19.22);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CMY");
+	
+	clr = new Color("xyz", 39.06, 58.82, 67.69);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from XYZ");
+	
+	clr = new Color("lab", 81.19, -47.19, -3.12);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LAB");
+	
+	clr = new Color("lch", 81.19, 47.294403, 183.780079);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LCH");
+	
+	clr = new Color("luv", 81.19, -62.15, 2.6);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from CIE-LUV");
+	
+	clr = new Color("hunter-lab", 76.69, -43.30, 1.36);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from Hunter-Lab");
+	
+	$clr = new Color("yuv", 168, 149, 38);
+	assert(clr.red == 43 && clr.green == 225 && clr.blue == 206, "color after converting from YUV");$
+	
+	println();
+	println("End of drawing module tests");
+	println();
+}
+
+func tupleTests()
+{
+	myTuple = (() => tuple ("abc", 123, [1, 3.14]))();
+	assert(myTuple.Item0 == "abc" && myTuple.Item1 == 123 && myTuple.Item2 == [1, 3.14] && myTuple is tuple, "accessing tuple items");
+	asserteq(myTuple[1], 123, "tuple indexing");
+	
+	func someFunction(x, y)
+	{	
+		return tuple (x, y);
+	}
+	
+	a = someFunction(5, 6);
+	assert(a.Item0 == 5 && a.Item1 == 6 && a is tuple, "accessing inline tuple items");
+}

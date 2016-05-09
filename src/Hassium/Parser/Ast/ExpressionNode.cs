@@ -16,10 +16,10 @@ namespace Hassium.Parser
             AstNode expression = parseAssignment(parser);
             if (parser.AcceptToken(TokenType.Question))
             {
-                AstNode terenaryTrue = Parse(parser);
+                AstNode ternaryTrue = Parse(parser);
                 parser.ExpectToken(TokenType.Colon);
-                AstNode terenaryFalse = Parse(parser);
-                expression = new TerenaryOperationNode(expression, terenaryTrue, terenaryFalse, parser.Location);
+                AstNode ternaryFalse = Parse(parser);
+                expression = new TernaryOperationNode(expression, ternaryTrue, ternaryFalse, parser.Location);
             }
             else if (parser.AcceptToken(TokenType.Colon))
                 return new KeyValuePairNode(expression, ExpressionNode.Parse(parser), parser.Location);

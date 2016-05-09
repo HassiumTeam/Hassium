@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Hassium.Lexer
 {
@@ -185,8 +186,11 @@ namespace Hassium.Lexer
                         case '#':
                             scanSingleComment();
                             break;
+                        case '$':
+                            scanMultilineComment();
+                            break;
                         default:
-                            throw new Exception("Caught unknown char in lexer: " + readChar());
+                            throw new ParserException("Caught unknown char in lexer: " + readChar(), location);
                     }
                 }
                 whiteSpace();
@@ -216,11 +220,11 @@ namespace Hassium.Lexer
                 data += (char)readChar();
             try
             {
-                return new Token(TokenType.Int64, Convert.ToInt64(data).ToString(), location);
+                return new Token(TokenType.Int64, Convert.ToInt64(data, CultureInfo.InvariantCulture).ToString(), location);
             }
             catch
             {
-                return new Token(TokenType.Double, Convert.ToDouble(data).ToString(), location);
+                return new Token(TokenType.Double, Convert.ToDouble(data, CultureInfo.InvariantCulture).ToString(), location);
             }
         }
 
@@ -248,29 +252,37 @@ namespace Hassium.Lexer
                 readChar();
         }
 
+        private void scanMultilineComment()
+        {
+            readChar();
+            while(peekChar() != -1 && peekChar() != '$')
+                readChar();
+            readChar();
+        }
+
         private char scanEscapeCode(char escape)
         {
             switch (escape)
             {
                 case '\\':
                     return '\\';
-                case '\"':
+                case '"':
                     return '\"';
                 case '\'':
                     return '\'';
-                case '\a':
+                case 'a':
                     return '\a';
-                case '\b':
+                case 'b':
                     return '\b';
-                case '\f':
+                case 'f':
                     return '\f';
-                case '\n':
+                case 'n':
                     return '\n';
-                case '\r':
+                case 'r':
                     return '\r';
-                case '\t':
+                case 't':
                     return '\t';
-                case '\v':
+                case 'v':
                     return '\v';
                 default:
                     throw new ParserException("Unknown escape code \\" + escape, location);

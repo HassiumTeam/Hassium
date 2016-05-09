@@ -35,7 +35,7 @@ namespace Hassium.Parser
         void Accept(StatementNode node);
         void Accept(StringNode node);
         void Accept(SwitchNode node);
-        void Accept(TerenaryOperationNode node);
+        void Accept(TernaryOperationNode node);
         void Accept(TryCatchNode node);
         void Accept(TupleNode node);
         void Accept(ThisNode node);

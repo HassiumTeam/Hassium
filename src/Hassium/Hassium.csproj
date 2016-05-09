@@ -114,7 +114,7 @@
     <Compile Include="Runtime\StandardLibrary\Text\HassiumEncoding.cs" />
     <Compile Include="Parser\Ast\SwitchNode.cs" />
     <Compile Include="Parser\Ast\CaseNode.cs" />
-    <Compile Include="Parser\Ast\TerenaryOperationNode.cs" />
+    <Compile Include="Parser\Ast\TernaryOperationNode.cs" />
     <Compile Include="Parser\Ast\ExpressionStatementNode.cs" />
     <Compile Include="Parser\Ast\LambdaNode.cs" />
     <Compile Include="Runtime\StandardLibrary\Types\HassiumEvent.cs" />
@@ -144,8 +144,8 @@
     <Compile Include="Runtime\StandardLibrary\Types\HassiumExceptionHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
   <ItemGroup>
     <Folder Include="Runtime\StandardLibrary\HTTP\" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

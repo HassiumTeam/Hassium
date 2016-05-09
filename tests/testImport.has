@@ -1,0 +1,18 @@
+func printTest()
+{
+	println("Hello from testImport.has!");
+}
+
+class importClass
+{
+	func new(name)
+	{
+		this.Name = name;
+	}
+	func getName(this)
+	{
+		return this.Name;
+	}
+}
+
+importVar = 5;
