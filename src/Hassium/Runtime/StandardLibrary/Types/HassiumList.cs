@@ -104,9 +104,9 @@ namespace Hassium.Runtime.StandardLibrary.Types
                     return new HassiumDouble(i);
             return new HassiumDouble(-1);
         }
-        private HassiumDouble get_Length(VirtualMachine vm, HassiumObject[] args)
+        private HassiumInt get_Length(VirtualMachine vm, HassiumObject[] args)
         {
-            return new HassiumDouble(Value.Count);
+            return new HassiumInt(Value.Count);
         }
         private HassiumNull remove(VirtualMachine vm, HassiumObject[] args)
         {
