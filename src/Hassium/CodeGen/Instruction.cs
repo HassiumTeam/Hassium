@@ -42,6 +42,7 @@ namespace Hassium.CodeGen
         Push_Bool,
         Push_Handler,
         Push_Object,
+        Raise,
         Return,
         Self_Reference,
         Store_Attribute,

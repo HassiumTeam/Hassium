@@ -447,6 +447,11 @@ namespace Hassium.CodeGen
         public void Accept(PropertyNode node)
         {
         }
+        public void Accept(RaiseNode node)
+        {
+            node.Expression.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Raise);
+        }
         public void Accept(ReturnNode node)
         {
             node.VisitChildren(this);
@@ -514,7 +519,7 @@ namespace Hassium.CodeGen
                 table.AddSymbol("value");
             currentMethod.Parameters.Add("value", table.GetIndex("value"));
             node.CatchBody.VisitChildren(this);
-            HassiumExceptionHandler handler = new HassiumExceptionHandler(currentMethod, endLabel);
+            HassiumExceptionHandler handler = new HassiumExceptionHandler(previousMethod, currentMethod, endLabel);
             module.ConstantPool.Add(handler);
             int catchIndex = findIndex(handler);
             currentMethod = previousMethod;

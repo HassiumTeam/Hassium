@@ -41,6 +41,8 @@ namespace Hassium.Parser
                 return SwitchNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "try"))
                 return TryCatchNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "raise"))
+                return RaiseNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier) && parser.GetToken(1).TokenType == TokenType.LeftBrace)
                 return PropertyNode.Parse(parser);
             else

@@ -1,15 +1,19 @@
 using System;
 
+using Hassium.CodeGen;
+
 namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumExceptionHandler: HassiumObject
     {
-        public HassiumObject Method { get; private set; }
+        public MethodBuilder SourceMethod { get; private set; }
+        public MethodBuilder HandlerMethod { get; private set; }
         public double Label { get; private set; }
 
-        public HassiumExceptionHandler(HassiumObject method, double label)
+        public HassiumExceptionHandler(MethodBuilder sourceMethod, MethodBuilder handlerMethod, double label)
         {
-            Method = method;
+            SourceMethod = sourceMethod;
+            HandlerMethod = handlerMethod;
             Label = label;
         }
     }
