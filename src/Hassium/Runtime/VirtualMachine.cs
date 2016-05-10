@@ -12,14 +12,14 @@ namespace Hassium.Runtime
         public StackFrame StackFrame { get { return stackFrame; } }
         public Stack<HassiumObject> Stack { get { return stack; } }
         public Stack<string> CallStack { get { return callStack; } }
-        public Stack<HassiumObject> Handlers { get { return handlers; } }
+        public Stack<HassiumExceptionHandler> Handlers { get { return handlers; } }
         public SourceLocation CurrentSourceLocation { get { return sourceLocation; } }
         public HassiumModule CurrentlyExecutingModule { get { return module; } }
 
         private StackFrame stackFrame;
         private Stack<HassiumObject> stack;
         private Stack<string> callStack = new Stack<string>();
-        private Stack<HassiumObject> handlers = new Stack<HassiumObject>();
+        private Stack<HassiumExceptionHandler> handlers = new Stack<HassiumExceptionHandler>();
 
         private Dictionary<double, HassiumObject> globals;
         private HassiumModule module;
@@ -51,7 +51,7 @@ namespace Hassium.Runtime
                 int argumentInt = Convert.ToInt32(argument);
                 sourceLocation = method.Instructions[position].SourceLocation;
                 string attribute;
-             //   Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, stackFrame.Frames.Count);
+              //  Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, stackFrame.Frames.Count);
                 try
                 {
                     switch (method.Instructions[position].InstructionType)
@@ -172,10 +172,15 @@ namespace Hassium.Runtime
                             stack.Push(new HassiumBool(argument == 1));
                             break;
                         case InstructionType.Push_Handler:
-                            handlers.Push(module.ConstantPool[argumentInt]);
+                            HassiumExceptionHandler handler = (HassiumExceptionHandler)module.ConstantPool[argumentInt];
+                            handler.Frame = StackFrame.Frames.Peek();
+                            handlers.Push(handler);
                             break;
                         case InstructionType.Push_Object:
                             stack.Push(module.ConstantPool[argumentInt]);
+                            break;
+                        case InstructionType.Raise:
+                            RaiseException(stack.Pop(), method);
                             break;
                         case InstructionType.Return:
                             return stack.Pop();
@@ -197,13 +202,13 @@ namespace Hassium.Runtime
                             }
                             else
                                 try
-                            {
-                                location.Attributes[attribute] = stack.Pop();
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                throw new InternalException(location + " does not contain a definition for " + attribute);
-                            }
+                                {
+                                    location.Attributes[attribute] = stack.Pop();
+                                }
+                                catch (KeyNotFoundException)
+                                {
+                                    throw new InternalException(location + " does not contain a definition for " + attribute);
+                                }
                             break;
                         case InstructionType.Store_List_Element:
                             index = stack.Pop();
@@ -225,11 +230,11 @@ namespace Hassium.Runtime
                 }
                 catch (InternalException ex)
                 {
-                    RaiseException(ex.Message);
+                    RaiseException(new HassiumString(ex.Message), method);
                 }
                 catch (DivideByZeroException)
                 {
-                    RaiseException("Divide by zero!");
+                    RaiseException(new HassiumString("Divide by zero!"), method);
                 }
             }
             return HassiumObject.Null;
@@ -308,16 +313,15 @@ namespace Hassium.Runtime
             }
         }
 
-        public void RaiseException(string message)
+        public void RaiseException(HassiumObject message, MethodBuilder method)
         {
-            Console.WriteLine(handlers.Count);
             if (handlers.Count == 0)
-                throw new RuntimeException(message, sourceLocation);
+                throw new RuntimeException(message.ToString(this), sourceLocation);
             else
             {
                 HassiumExceptionHandler handler = handlers.Pop() as HassiumExceptionHandler;
-                handler.Method.Invoke(this, new HassiumObject[] { new HassiumString(message) });
-                position = Convert.ToInt32(handler.Label);
+                handler.Invoke(this, new HassiumObject[] { message });
+                position = handler.SourceMethod.Labels[handler.Label];
             }
         }
 
@@ -341,8 +345,10 @@ namespace Hassium.Runtime
         {
             method.Labels = new Dictionary<double, int>();
             for (int i = 0; i < method.Instructions.Count; i++)
+            {
                 if (method.Instructions[i].InstructionType == InstructionType.Label)
                     method.Labels.Add(method.Instructions[i].Argument, i);
+            }
         }
 
         private void gatherGlobals(List<HassiumObject> constantPool)

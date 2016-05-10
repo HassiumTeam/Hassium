@@ -55,6 +55,7 @@ namespace Hassium.SemanticAnalysis
         public void Accept(IdentifierNode node) {}
         public void Accept(Int64Node node) {}
         public void Accept(NewNode node) {}
+        public void Accept(RaiseNode node) {}
         public void Accept(CharNode node) {}
         public void Accept(ConditionalNode node)
         {

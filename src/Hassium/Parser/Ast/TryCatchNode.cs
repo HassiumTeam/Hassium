@@ -19,13 +19,9 @@ namespace Hassium.Parser
         public static TryCatchNode Parse(Parser parser)
         {
             parser.ExpectToken(TokenType.Identifier, "try");
-            parser.ExpectToken(TokenType.LeftBrace);
             AstNode tryBody = StatementNode.Parse(parser);
-            parser.ExpectToken(TokenType.RightBrace);
             parser.ExpectToken(TokenType.Identifier, "catch");
-            parser.ExpectToken(TokenType.LeftBrace);
             AstNode catchBody = StatementNode.Parse(parser);
-            parser.ExpectToken(TokenType.RightBrace);
 
             return new TryCatchNode(tryBody, catchBody, parser.Location);
         }

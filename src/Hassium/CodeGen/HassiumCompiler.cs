@@ -467,6 +467,11 @@ namespace Hassium.CodeGen
         public void Accept(PropertyNode node)
         {
         }
+        public void Accept(RaiseNode node)
+        {
+            node.Expression.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Raise);
+        }
         public void Accept(ReturnNode node)
         {
             node.VisitChildren(this);
@@ -483,6 +488,7 @@ namespace Hassium.CodeGen
         }
         public void Accept(SwitchNode node)
         {
+            double endSwitchLabel = generateSymbol();
             node.Predicate.Visit(this);
             table.EnterScope();
             table.AddSymbol("__tmp__");
@@ -504,8 +510,12 @@ namespace Hassium.CodeGen
                 currentMethod.Emit(node.SourceLocation, InstructionType.Jump, endCase);
                 currentMethod.Emit(node.SourceLocation, InstructionType.Label, caseLabel);
                 cas.Body.Visit(this);
+                currentMethod.Emit(node.SourceLocation, InstructionType.Jump, endSwitchLabel);
                 currentMethod.Emit(node.SourceLocation, InstructionType.Label, endCase);
             }
+            if (node.DefaultCase != null)
+                node.DefaultCase.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Label, endSwitchLabel);
         }
         public void Accept(TernaryOperationNode node)
         {
@@ -534,7 +544,7 @@ namespace Hassium.CodeGen
                 table.AddSymbol("value");
             currentMethod.Parameters.Add("value", table.GetIndex("value"));
             node.CatchBody.VisitChildren(this);
-            HassiumExceptionHandler handler = new HassiumExceptionHandler(currentMethod, endLabel);
+            HassiumExceptionHandler handler = new HassiumExceptionHandler(previousMethod, currentMethod, endLabel);
             module.ConstantPool.Add(handler);
             int catchIndex = findIndex(handler);
             currentMethod = previousMethod;

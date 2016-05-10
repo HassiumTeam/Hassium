@@ -1,0 +1,18 @@
+func main () {
+	while (true) {
+		switch (input ()) {
+			case "a", "b" {
+				println ("Got a or b");
+			}
+			case "c", "d" {
+				println ("Got c or d");
+			}
+			case "e" {
+				println ("Got e");
+			}
+			default {
+				println ("Default value");
+			}
+		}
+	}
+}
