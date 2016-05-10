@@ -191,13 +191,13 @@ namespace Hassium.Runtime
                             }
                             else
                                 try
-                            {
-                                location.Attributes[attribute] = stack.Pop();
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                throw new InternalException(location + " does not contain a definition for " + attribute);
-                            }
+                                {
+                                    location.Attributes[attribute] = stack.Pop();
+                                }
+                                catch (KeyNotFoundException)
+                                {
+                                    throw new InternalException(location + " does not contain a definition for " + attribute);
+                                }
                             break;
                         case InstructionType.Store_List_Element:
                             index = stack.Pop();

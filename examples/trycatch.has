@@ -1,0 +1,21 @@
+func main () {
+	foo ();	
+}
+
+func foo () {
+	a = 3;
+	try {
+		bar();
+	} catch {
+		println("Caught: " + value.toString() + a);
+	}
+}
+
+func bar () {
+	baz();
+}
+
+func baz () {
+	x = 2;
+	raise x;
+}

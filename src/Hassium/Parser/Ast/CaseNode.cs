@@ -21,7 +21,10 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.Identifier, "case");
             List<AstNode> predicates = new List<AstNode>();
             while (!parser.MatchToken(TokenType.LeftBrace))
+            {
+                parser.AcceptToken(TokenType.Comma);
                 predicates.Add(ExpressionNode.Parse(parser));
+            }
             AstNode body = StatementNode.Parse(parser);
 
             return new CaseNode(predicates, body, parser.Location);

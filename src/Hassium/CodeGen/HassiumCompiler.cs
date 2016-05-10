@@ -468,6 +468,7 @@ namespace Hassium.CodeGen
         }
         public void Accept(SwitchNode node)
         {
+            double endSwitchLabel = generateSymbol();
             node.Predicate.Visit(this);
             table.EnterScope();
             table.AddSymbol("__tmp__");
@@ -489,8 +490,12 @@ namespace Hassium.CodeGen
                 currentMethod.Emit(node.SourceLocation, InstructionType.Jump, endCase);
                 currentMethod.Emit(node.SourceLocation, InstructionType.Label, caseLabel);
                 cas.Body.Visit(this);
+                currentMethod.Emit(node.SourceLocation, InstructionType.Jump, endSwitchLabel);
                 currentMethod.Emit(node.SourceLocation, InstructionType.Label, endCase);
             }
+            if (node.DefaultCase != null)
+                node.DefaultCase.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Label, endSwitchLabel);
         }
         public void Accept(TerenaryOperationNode node)
         {

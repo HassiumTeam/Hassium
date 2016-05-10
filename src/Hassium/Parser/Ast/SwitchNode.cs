@@ -8,11 +8,13 @@ namespace Hassium.Parser
     public class SwitchNode: AstNode
     {
         public AstNode Predicate { get; private set; }
-        public SwitchNode(AstNode predicate, List<CaseNode> cases, SourceLocation location)
+        public AstNode DefaultCase { get; private set; }
+        public SwitchNode(AstNode predicate, List<CaseNode> cases, AstNode defaultCase, SourceLocation location)
         {
             Predicate = predicate;
             foreach (CaseNode node in cases)
                 Children.Add(node);
+            DefaultCase = defaultCase;
             this.SourceLocation = location;
         }
 
@@ -26,9 +28,12 @@ namespace Hassium.Parser
             parser.ExpectToken(TokenType.LeftBrace);
             while (parser.MatchToken(TokenType.Identifier, "case"))
                 cases.Add(CaseNode.Parse(parser));
+            AstNode defaultCase = null;
+            if (parser.AcceptToken(TokenType.Identifier, "default"))
+                defaultCase = StatementNode.Parse(parser);
             parser.ExpectToken(TokenType.RightBrace);
 
-            return new SwitchNode(predicate, cases, parser.Location);
+            return new SwitchNode(predicate, cases, defaultCase, parser.Location);
         }
 
         public override void Visit(IVisitor visitor)
