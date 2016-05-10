@@ -161,7 +161,9 @@ namespace Hassium.Runtime
                             stack.Push(new HassiumBool(argument == 1));
                             break;
                         case InstructionType.Push_Handler:
-                            handlers.Push((HassiumExceptionHandler)module.ConstantPool[argumentInt]);
+                            HassiumExceptionHandler handler = (HassiumExceptionHandler)module.ConstantPool[argumentInt];
+                            handler.Frame = StackFrame.Frames.Peek();
+                            handlers.Push(handler);
                             break;
                         case InstructionType.Push_Object:
                             stack.Push(module.ConstantPool[argumentInt]);
@@ -292,7 +294,7 @@ namespace Hassium.Runtime
             else
             {
                 HassiumExceptionHandler handler = handlers.Pop() as HassiumExceptionHandler;
-                handler.HandlerMethod.Invoke(this, new HassiumObject[] { message });
+                handler.Invoke(this, new HassiumObject[] { message });
                 position = handler.SourceMethod.Labels[handler.Label];
             }
         }
