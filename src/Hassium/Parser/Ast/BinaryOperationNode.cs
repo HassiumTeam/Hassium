@@ -33,8 +33,8 @@ namespace Hassium.Parser
         Subtraction,
         Multiplication,
         Division,
+        IntegerDivision,
         Modulus,
-        Raise,
         EqualTo,
         NotEqualTo,
         GreaterThan,
@@ -47,7 +47,11 @@ namespace Hassium.Parser
         XOR,
         XAnd,
         LogicalOr,
-        LogicalAnd
+        LogicalAnd,
+        BitShiftLeft,
+        BitShiftRight,
+        NullCoalescing,
+        In,
     }
 }
 

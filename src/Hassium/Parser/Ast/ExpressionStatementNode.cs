@@ -1,4 +1,5 @@
 using System;
+using Hassium.Lexer;
 
 namespace Hassium.Parser
 {
@@ -14,6 +15,7 @@ namespace Hassium.Parser
         public static AstNode Parse(Parser parser)
         {
             AstNode expression = ExpressionNode.Parse(parser);
+            parser.AcceptToken(TokenType.Semicolon);
             if (expression is FunctionCallNode)
                 return new ExpressionStatementNode(expression, parser.Location);
             else if (expression is BinaryOperationNode)

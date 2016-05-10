@@ -49,6 +49,7 @@ namespace Hassium.CodeGen
         Store_Local,
         Store_List_Element,
         Unary_Operation,
+        //Load_List_Element_Last
     }
 }
 

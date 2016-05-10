@@ -15,13 +15,16 @@ namespace Hassium.Parser
         {
             ArrayDeclarationNode ret = new ArrayDeclarationNode(parser.Location);
             parser.ExpectToken(TokenType.LeftSquare);
-            if (parser.AcceptToken(TokenType.RightSquare))
-                return ret;
-            ret.Children.Add(ExpressionNode.Parse(parser));
-            while (parser.AcceptToken(TokenType.Comma))
-                ret.Children.Add(ExpressionNode.Parse(parser));
-            parser.ExpectToken(TokenType.RightSquare);
 
+            while(!parser.AcceptToken(TokenType.RightSquare))
+            {
+                var item = ExpressionNode.Parse(parser);
+                if(parser.AcceptToken(TokenType.Colon))
+                    ret.Children.Add(new KeyValuePairNode(item, ExpressionNode.Parse(parser), parser.Location));
+                else
+                    ret.Children.Add(item);
+                parser.AcceptToken(TokenType.Comma);
+            }
             return ret;
         }
 

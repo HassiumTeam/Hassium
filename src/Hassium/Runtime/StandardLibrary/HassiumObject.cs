@@ -27,6 +27,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public const string ENUMERABLE_NEXT =           "__enumerablenext__";
         public const string ENUMERABLE_RESET =          "__enumerableReset__";
         public const string NOT =                       "__not__";
+        public const string BITWISE_COMPLEMENT =        "__bcompl__";
+        public const string NEGATE =                    "__negate__";
+        public const string BIT_SHIFT_LEFT =            "__bshiftleft__";
+        public const string BIT_SHIFT_RIGHT =           "__bshiftright__";
+        public const string CONTAINS =                  "__contains__";
         public const string TOSTRING_FUNCTION =         "toString";
 
         public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
@@ -73,27 +78,27 @@ namespace Hassium.Runtime.StandardLibrary.Types
         }
         public virtual HassiumBool Equals(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[EQUALS_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[EQUALS_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool NotEquals(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[NOT_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[NOT_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool GreaterThan(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[GREATER_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[GREATER_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool GreaterThanOrEqual(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[GREATER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[GREATER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool LesserThan(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[LESSER_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[LESSER_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool LesserThanOrEqual(VirtualMachine vm, HassiumObject obj)
         {
-            return ((HassiumBool)Attributes[LESSER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj }));
+            return (HassiumBool)Attributes[LESSER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {
@@ -124,6 +129,31 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public virtual HassiumObject Not(VirtualMachine vm)
         {
             return Attributes[NOT].Invoke(vm, new HassiumObject[0]);
+        }
+
+        public virtual HassiumObject BitwiseComplement(VirtualMachine vm)
+        {
+            return Attributes[BITWISE_COMPLEMENT].Invoke(vm, new HassiumObject[0]);
+        }
+
+        public virtual HassiumObject Negate(VirtualMachine vm)
+        {
+            return Attributes[NEGATE].Invoke(vm, new HassiumObject[0]);
+        }
+
+        public virtual HassiumObject BitShiftLeft(VirtualMachine vm, HassiumObject obj)
+        {
+            return Attributes[BIT_SHIFT_LEFT].Invoke(vm, new HassiumObject[] { obj });
+        }
+
+        public virtual HassiumObject BitShiftRight(VirtualMachine vm, HassiumObject obj)
+        {
+            return Attributes[BIT_SHIFT_RIGHT].Invoke(vm, new HassiumObject[] { obj });
+        }
+
+        public virtual HassiumBool Contains(VirtualMachine vm, HassiumObject obj)
+        {
+            return HassiumBool.Create(Attributes[CONTAINS].Invoke(vm, new[] {obj}));
         }
 
         public string ToString(VirtualMachine vm)

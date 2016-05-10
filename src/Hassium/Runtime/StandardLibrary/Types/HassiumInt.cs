@@ -38,6 +38,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,           new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,          new HassiumFunction(__enumerablereset__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,         new HassiumFunction(__tostring__, 0));
+            Attributes.Add(BITWISE_COMPLEMENT, new HassiumFunction(__bcompl__, 0));
+            Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
+            Attributes.Add(BIT_SHIFT_LEFT, new HassiumFunction(__bshiftleft__, 1));
+            Attributes.Add(BIT_SHIFT_RIGHT, new HassiumFunction(__bshiftright__, 1));
             Types.Add(this.GetType().Name);
         }
 
@@ -177,6 +181,26 @@ namespace Hassium.Runtime.StandardLibrary.Types
         private HassiumString __tostring__ (VirtualMachine vm, HassiumObject[] args)
         {
             return new HassiumString(Value.ToString());
+        }
+
+        private HassiumObject __bcompl__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumInt(~Value);
+        }
+
+        private HassiumObject __negate__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumInt(-Value);
+        }
+
+        private HassiumObject __bshiftleft__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumInt(Value << (int)HassiumInt.Create(args[0]).Value);
+        }
+
+        private HassiumObject __bshiftright__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumInt(Value >> (int)HassiumInt.Create(args[0]).Value);
         }
     }
 }

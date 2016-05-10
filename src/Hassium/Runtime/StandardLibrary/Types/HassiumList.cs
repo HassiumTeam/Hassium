@@ -39,6 +39,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
+            Attributes.Add(CONTAINS, new HassiumFunction(__contains__, 1));
             Types.Add(GetType().Name);
         }
 
@@ -51,7 +52,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         private HassiumBool contains(VirtualMachine vm, HassiumObject[] args)
         {
             foreach (HassiumObject obj in args)
-                if (!Value.Any(x => x.Equals(vm, args[0]).Value))
+                if (!Value.Any(x => x.Equals(vm, obj).Value))
                     return new HassiumBool(false);
             return new HassiumBool(true);
         }
@@ -205,6 +206,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             EnumerableIndex = 0;
             return HassiumObject.Null;
+        }
+
+        private HassiumObject __contains__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumBool(Value.Any(x => x.Equals(vm, args[0]).Value));
         }
     }
 }

@@ -141,8 +141,19 @@ namespace Hassium.Runtime
                             }
                             break;
                         case InstructionType.Load_List_Element:
-                            index = stack.Pop();
-                            list = stack.Pop();
+                            /*if (position < method.Instructions.Count - 1 &&
+                                method.Instructions[position + 1].InstructionType ==
+                                InstructionType.Load_List_Element_Last)
+                            {
+                                list = stack.Pop();
+                                var _list = (HassiumList) list;
+                                index = new HassiumInt(_list.Value.Count);
+                            }
+                            else
+                            {*/
+                                index = stack.Pop();
+                                list = stack.Pop(); 
+                            //}
                             stack.Push(list.Index(this, index));
                             break;
                         case InstructionType.Load_Local:
@@ -241,43 +252,58 @@ namespace Hassium.Runtime
                     stack.Push(left.Div(this, right));
                     break;
                 case 4:
-                    stack.Push(left.Mod(this, right));
+                    stack.Push(new HassiumInt((long)Math.Floor((double)left.Div(this, right).Value)));
                     break;
                 case 5:
-                    stack.Push(left.XOR(this, right));
+                    stack.Push(left.Mod(this, right));
                     break;
                 case 6:
-                    stack.Push(left.OR(this, right));
+                    stack.Push(left.XOR(this, right));
                     break;
                 case 7:
-                    stack.Push(left.Xand(this, right));
+                    stack.Push(left.OR(this, right));
                     break;
                 case 8:
-                    stack.Push(left.Equals(this, right));
+                    stack.Push(left.Xand(this, right));
                     break;
                 case 9:
-                    stack.Push(left.NotEquals(this, right));
+                    stack.Push(left.Equals(this, right));
                     break;
                 case 10:
-                    stack.Push(left.GreaterThan(this, right));
+                    stack.Push(left.NotEquals(this, right));
                     break;
                 case 11:
-                    stack.Push(left.GreaterThanOrEqual(this, right));
+                    stack.Push(left.GreaterThan(this, right));
                     break;
                 case 12:
-                    stack.Push(left.LesserThan(this, right));
+                    stack.Push(left.GreaterThanOrEqual(this, right));
                     break;
                 case 13:
-                    stack.Push(left.LesserThanOrEqual(this, right));
+                    stack.Push(left.LesserThan(this, right));
                     break;
                 case 14:
-                    stack.Push(new HassiumBool(HassiumBool.Create(left).Value || HassiumBool.Create(right).Value));
+                    stack.Push(left.LesserThanOrEqual(this, right));
                     break;
                 case 15:
-                    stack.Push(new HassiumBool(HassiumBool.Create(left).Value && HassiumBool.Create(right).Value));
+                    stack.Push(new HassiumBool(HassiumBool.Create(left).Value || HassiumBool.Create(right).Value));
                     break;
                 case 16:
+                    stack.Push(new HassiumBool(HassiumBool.Create(left).Value && HassiumBool.Create(right).Value));
+                    break;
+                case 17:
                     stack.Push(new HassiumDouble(Math.Pow(HassiumDouble.Create(left).Value, HassiumDouble.Create(right).Value)));
+                    break;
+                case 18:
+                    stack.Push(left.BitShiftLeft(this, right));
+                    break;
+                case 19:
+                    stack.Push(left.BitShiftRight(this, right));
+                    break;
+                case 20:
+                    stack.Push(left is HassiumNull ? right : left);
+                    break;
+                case 21:
+                    stack.Push(left.Contains(this, right));
                     break;
             }
         }
@@ -301,6 +327,12 @@ namespace Hassium.Runtime
             {
                 case 0:
                     stack.Push(target.Not(this));
+                    break;
+                case 1:
+                    stack.Push(target.BitwiseComplement(this));
+                    break;
+                case 2:
+                    stack.Push(target.Negate(this));
                     break;
             }
         }

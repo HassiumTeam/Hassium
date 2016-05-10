@@ -43,6 +43,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
+            Attributes.Add(CONTAINS, new HassiumFunction(__contains__, 1));
             Types.Add(this.GetType().Name);
         }
 
@@ -235,6 +236,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumBool operator != (HassiumString left, HassiumString right)
         {
             return new HassiumBool(left.Value != right.Value);
+        }
+
+        private HassiumBool __contains__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumBool(Value.Contains(args[0].ToString()));
         }
 
         public override bool Equals(object obj)

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Lexer
 {
@@ -21,182 +23,214 @@ namespace Hassium.Lexer
             whiteSpace();
             while (position < code.Length)
             {
-                char orig;
-                if (char.IsLetter((char)peekChar()) || (char)peekChar() == '_')
-                    result.Add(scanIdentifier());
-                else if (char.IsDigit((char)peekChar()))
-                    result.Add(scanNumber());
-                else
-                {
-                    switch ((char)peekChar())
-                    {
-                        case '\"':
-                            result.Add(scanString());
-                            break;
-                        case '\'':
-                            readChar();
-                            result.Add(new Token(TokenType.Char, ((char)readChar()).ToString(), location));
-                            readChar();
-                            break;
-                        case ';':
-                            result.Add(new Token(TokenType.Semicolon, string.Empty, location));
-                            readChar();
-                            break;
-                        case ':':
-                            result.Add(new Token(TokenType.Colon, string.Empty, location));
-                            readChar();
-                            break;
-                        case ',':
-                            result.Add(new Token(TokenType.Comma, string.Empty, location));
-                            readChar();
-                            break;
-                        case '(':
-                            result.Add(new Token(TokenType.LeftParentheses, string.Empty, location));
-                            readChar();
-                            break;
-                        case ')':
-                            result.Add(new Token(TokenType.RightParentheses, string.Empty, location));
-                            readChar();
-                            break;
-                        case '{':
-                            result.Add(new Token(TokenType.LeftBrace, string.Empty, location));
-                            readChar();
-                            break;
-                        case '}':
-                            result.Add(new Token(TokenType.RightBrace, string.Empty, location));
-                            readChar();
-                            break;
-                        case '.':
-                            result.Add(new Token(TokenType.BinaryOperation, ".", location));
-                            readChar();
-                            break;
-                        case '?':
-                            result.Add(new Token(TokenType.Question, "?", location));
-                            readChar();
-                            break;
-                        case '+':
-                        case '-':
-                            orig = (char)readChar();
-                            if ((char)peekChar() == orig)
-                                result.Add(new Token(TokenType.UnaryOperation, orig.ToString() + ((char)readChar()).ToString(), location));
-                            else if ((char)peekChar() == '=')
-                                result.Add(new Token(TokenType.Assignment, orig.ToString() + ((char)readChar()).ToString(), location));
-                            else
-                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
-                            break;
-                        case '*':
-                        case '/':
-                            orig = (char)readChar();
-                            if ((char)peekChar() == orig)
-                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString() + ((char)readChar()).ToString(), location));
-                            else
-                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
-                            break;
-                        case '%':
-                        case '^':
-                            orig = (char)readChar();
-                            if ((char)peekChar() == '=')
-                                result.Add(new Token(TokenType.Assignment, orig.ToString() + ((char)readChar()).ToString(), location));
-                            else
-                                result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
-                            break;
-                        case '|':
-                            readChar();
-                            if ((char)peekChar() == '|')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.BinaryOperation, "||", location));
-                            }
-                            else if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Assignment, "|=", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.BinaryOperation, "|", location));
-                            break;
-                        case '&':
-                            readChar();
-                            if ((char)peekChar() == '&')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.BinaryOperation, "&&", location));
-                            }
-                            else if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Assignment, "&=", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.BinaryOperation, "&", location));
-                            break;
-                        case '=':
-                            readChar();
-                            if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Comparison, "==", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.Assignment, "=", location));
-                            break;
-                        case '!':
-                            readChar();
-                            if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Comparison, "!=", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.UnaryOperation, "!", location));
-                            break;
-                        case '<':
-                            readChar();
-                            if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Comparison, "<=", location));
-                            }
-                            else if ((char)peekChar() == '-' && (char)peekChar(1) == '>')
-                            {
-                                readChar();readChar();
-                                result.Add(new Token(TokenType.BinaryOperation, "<->", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.Comparison, "<", location));
-                            break;
-                        case '>':
-                            readChar();
-                            if ((char)peekChar() == '=')
-                            {
-                                readChar();
-                                result.Add(new Token(TokenType.Comparison, ">=", location));
-                            }
-                            else
-                                result.Add(new Token(TokenType.Comparison, ">", location));
-                            break;
-                        case '[':
-                            readChar();
-                            result.Add(new Token(TokenType.LeftSquare, "[", location));
-                            break;
-                        case ']':
-                            readChar();
-                            result.Add(new Token(TokenType.RightSquare, "]", location));
-                            break;
-                        case '#':
-                            scanSingleComment();
-                            break;
-                        case '$':
-                            scanMultilineComment();
-                            break;
-                        default:
-                            throw new ParserException("Caught unknown char in lexer: " + readChar(), location);
-                    }
-                }
-                whiteSpace();
+                scanToken();
             }
 
             return result;
+        }
+
+        private void scanToken()
+        {
+            char orig;
+            if (char.IsLetter((char)peekChar()) || (char)peekChar() == '_')
+                result.Add(scanIdentifier());
+            else if (char.IsDigit((char)peekChar()))
+                result.Add(scanNumber());
+            else
+            {
+                switch ((char)peekChar())
+                {
+                    case '@':
+                        if (peekChar() == '"')
+                        {
+                            readChar();
+                            result.Add(scanString(true));
+                        }
+                        break;
+                    case '\"':
+                        result.Add(scanString(false));
+                        break;
+                    case '\'':
+                        readChar();
+                        result.Add(new Token(TokenType.Char, ((char)readChar()).ToString(), location));
+                        readChar();
+                        break;
+                    case ';':
+                        result.Add(new Token(TokenType.Semicolon, ";", location));
+                        readChar();
+                        break;
+                    case ':':
+                        result.Add(new Token(TokenType.Colon, ":", location));
+                        readChar();
+                        break;
+                    case ',':
+                        result.Add(new Token(TokenType.Comma, ",", location));
+                        readChar();
+                        break;
+                    case '(':
+                        result.Add(new Token(TokenType.LeftParentheses, "(", location));
+                        readChar();
+                        break;
+                    case ')':
+                        result.Add(new Token(TokenType.RightParentheses, ")", location));
+                        readChar();
+                        break;
+                    case '{':
+                        result.Add(new Token(TokenType.LeftBrace, "{", location));
+                        readChar();
+                        break;
+                    case '}':
+                        result.Add(new Token(TokenType.RightBrace, "}", location));
+                        readChar();
+                        break;
+                    case '.':
+                        result.Add(new Token(TokenType.BinaryOperation, ".", location));
+                        readChar();
+                        break;
+                    case '?':
+                        readChar();
+                        if (peekChar() == '?')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, "??", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.Question, "?", location));
+                        break;
+                    case '+':
+                    case '-':
+                        orig = (char)readChar();
+                        if ((char)peekChar() == orig)
+                            result.Add(new Token(TokenType.UnaryOperation, orig.ToString() + (char)readChar(), location));
+                        else if ((char)peekChar() == '=')
+                            result.Add(new Token(TokenType.Assignment, orig.ToString() + (char)readChar(), location));
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
+                        break;
+                    case '*':
+                    case '/':
+                        orig = (char)readChar();
+                        if ((char)peekChar() == orig)
+                            result.Add(new Token(TokenType.BinaryOperation, orig.ToString() + (char)readChar(), location));
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
+                        break;
+                    case '%':
+                    case '^':
+                        orig = (char)readChar();
+                        if ((char)peekChar() == '=')
+                            result.Add(new Token(TokenType.Assignment, orig.ToString() + (char)readChar(), location));
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
+                        break;
+                    case '|':
+                        readChar();
+                        if ((char)peekChar() == '|')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, "||", location));
+                        }
+                        else if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Assignment, "|=", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, "|", location));
+                        break;
+                    case '&':
+                        readChar();
+                        if ((char)peekChar() == '&')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, "&&", location));
+                        }
+                        else if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Assignment, "&=", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, "&", location));
+                        break;
+                    case '=':
+                        readChar();
+                        if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Comparison, "==", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.Assignment, "=", location));
+                        break;
+                    case '!':
+                        readChar();
+                        if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Comparison, "!=", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.UnaryOperation, "!", location));
+                        break;
+                    case '<':
+                        readChar();
+                        if(peekChar() == '<')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, "<<", location));
+                        }
+                        else if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Comparison, "<=", location));
+                        }
+                        else if ((char)peekChar() == '-' && (char)peekChar(1) == '>')
+                        {
+                            readChar(); readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, "<->", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.Comparison, "<", location));
+                        break;
+                    case '>':
+                        readChar();
+                        if (peekChar() == '>')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.BinaryOperation, ">>", location));
+                        }
+                        else if ((char)peekChar() == '=')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.Comparison, ">=", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.Comparison, ">", location));
+                        break;
+                    case '[':
+                        readChar();
+                        result.Add(new Token(TokenType.LeftSquare, "[", location));
+                        break;
+                    case ']':
+                        readChar();
+                        result.Add(new Token(TokenType.RightSquare, "]", location));
+                        break;
+                    case '#':
+                        scanSingleComment();
+                        break;
+                    case '$':
+                        scanMultilineComment();
+                        break;
+                    case '~':
+                        readChar();
+                        result.Add(new Token(TokenType.UnaryOperation, "~", location));
+                        break;
+                    default:
+                        throw new ParserException("Caught unknown char in lexer: " + readChar(), location);
+                }
+            }
+            whiteSpace();
         }
 
         private void whiteSpace()
@@ -215,34 +249,107 @@ namespace Hassium.Lexer
 
         private Token scanNumber()
         {
-            string data = "";
-            while (char.IsDigit((char)peekChar()) || (char)peekChar() == '.' && peekChar() != -1)
-                data += (char)readChar();
-            try
+            var str = new StringBuilder();
+            var sep = false;
+            while (peekChar() != -1 &&
+                   (char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains((char)peekChar()) || "xo._".Contains((char) peekChar())))
             {
-                return new Token(TokenType.Int64, Convert.ToInt64(data, CultureInfo.InvariantCulture).ToString(), location);
+                var cchar = (char)readChar();
+                if(cchar == '_')
+                {
+                    if (sep) break;
+                    sep = true;
+                }
+                else
+                {
+                    sep = false;
+                    str.Append(cchar);
+                }
             }
-            catch
+            var final = str.ToString();
+            var bname = "";
+            var bsize = 0;
+            if(final.StartsWith("0x"))
             {
-                return new Token(TokenType.Double, Convert.ToDouble(data, CultureInfo.InvariantCulture).ToString(), location);
+                bname = "hex";
+                bsize = 16;
+            }
+            else if(final.StartsWith("0b"))
+            {
+                bname = "binary";
+                bsize = 2;
+            }
+            else if(final.StartsWith("0o"))
+            {
+                bname = "octal";
+                bsize = 8;
+            }
+            if(bname != "")
+            {
+                try
+                {
+                    return new Token(TokenType.Int64, Convert.ToInt64(final.Substring(2), bsize).ToString(), location);
+                }
+                catch
+                {
+                    throw new ParserException("Invalid " + bname + " number: " + final, location);
+                }
+            }
+            else
+            {
+                try
+                {
+                    return new Token(TokenType.Int64, long.Parse(final, NumberStyles.Any, CultureInfo.InvariantCulture).ToString(), location);
+                }
+                catch
+                {
+                    try
+                    {
+                        return new Token(TokenType.Double,
+                            double.Parse(final, NumberStyles.Any, CultureInfo.InvariantCulture).ToString(), location);
+                    }
+                    catch
+                    {
+                        throw new ParserException("Invalid number: " + final, location);
+                    }
+                }
             }
         }
 
-        private Token scanString()
+        private Token scanString(bool isVerbatim)
         {
-            string str = "";
+            var str = new StringBuilder();
             readChar();
             while ((char)peekChar() != '\"' && peekChar() != -1)
             {
                 char ch = (char)readChar();
-                if (ch == '\\')
-                    str += scanEscapeCode((char)readChar());
+                if (ch == '\\' && !isVerbatim)
+                    str.Append(scanEscapeCode((char)readChar()));
+                else if (ch == '#' && !isVerbatim && peekChar() == '{')
+                {
+                    readChar();
+                    if (peekChar() == '}')
+                    {
+                        readChar();
+                        continue;
+                    }
+                    result.Add(new Token(TokenType.String, str.ToString(), location));
+                    str.Clear();
+                    result.Add(new Token(TokenType.BinaryOperation, "+", location));
+                    result.Add(new Token(TokenType.LeftParentheses, "(", location));
+                    while (peekChar() != -1 && peekChar() != '}')
+                        scanToken();
+                    readChar();
+                    result.Add(new Token(TokenType.RightParentheses, ")", location));
+                    result.Add(new Token(TokenType.BinaryOperation, "+", location));
+                    continue;
+                }
                 else
-                    str += ch;
+                    str.Append(ch);
             }
             readChar();
 
-            return new Token(TokenType.String, str, location);
+            return new Token(TokenType.String, str.ToString(), location);
         }
 
         private void scanSingleComment()
@@ -284,6 +391,8 @@ namespace Hassium.Lexer
                     return '\t';
                 case 'v':
                     return '\v';
+                case '#':
+                    return '#';
                 default:
                     throw new ParserException("Unknown escape code \\" + escape, location);
             }

@@ -30,7 +30,9 @@ namespace Hassium.Parser
         PostDecrement,
         PostIncrement,
         PreDecrement,
-        PreIncrement
+        PreIncrement,
+        BitwiseComplement,
+        Negate
     }
 }
 

@@ -36,6 +36,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,           new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,          new HassiumFunction(__enumerablereset__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,         new HassiumFunction(__tostring__, 0));
+            Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
             Types.Add(this.GetType().Name);
         }
 
@@ -163,6 +164,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         private HassiumString __tostring__ (VirtualMachine vm, HassiumObject[] args)
         {
             return new HassiumString(Value.ToString());
+        }
+
+        private HassiumObject __negate__(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumDouble(-Value);
         }
 
         public override bool Equals(object obj)

@@ -85,7 +85,7 @@ namespace Hassium.CodeGen
                             if (!module.Attributes[clazz.Name].Attributes.ContainsKey(attribute.Key))
                             if (attribute.Value is MethodBuilder)
                             {
-                                MethodBuilder newMethod = ((MethodBuilder)attribute.Value);
+                                MethodBuilder newMethod = (MethodBuilder)attribute.Value;
                                 newMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
                                 module.Attributes[clazz.Name].Attributes.Add(attribute.Key, newMethod);
                             }
@@ -111,6 +111,8 @@ namespace Hassium.CodeGen
         public void Accept(ArrayAccessNode node)
         {
             node.VisitChildren(this);
+            /*if(node.Expression == null)
+                currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element_Last);*/
             currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element);
         }
         public void Accept(ArrayDeclarationNode node)
@@ -157,6 +159,9 @@ namespace Hassium.CodeGen
                     {
                         ArrayAccessNode access = node.Left as ArrayAccessNode;
                         access.Target.Visit(this);
+                        /*if (access.Expression == null)
+                            currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element_Last);
+                        else*/
                         access.Expression.Visit(this);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Store_List_Element);
                     }
@@ -173,41 +178,44 @@ namespace Hassium.CodeGen
                 case BinaryOperation.Division:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 3);
                     break;
-                case BinaryOperation.Modulus:
+                case BinaryOperation.IntegerDivision:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 4);
                     break;
-                case BinaryOperation.XOR:
+                case BinaryOperation.Modulus:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 5);
                     break;
-                case BinaryOperation.OR:
+                case BinaryOperation.XOR:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 6);
                     break;
-                case BinaryOperation.XAnd:
+                case BinaryOperation.OR:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 7);
                     break;
-                case BinaryOperation.EqualTo:
+                case BinaryOperation.XAnd:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 8);
                     break;
-                case BinaryOperation.NotEqualTo:
+                case BinaryOperation.EqualTo:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 9);
                     break;
-                case BinaryOperation.GreaterThan:
+                case BinaryOperation.NotEqualTo:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 10);
                     break;
-                case BinaryOperation.GreaterThanOrEqual:
+                case BinaryOperation.GreaterThan:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 11);
                     break;
-                case BinaryOperation.LesserThan:
+                case BinaryOperation.GreaterThanOrEqual:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 12);
                     break;
-                case BinaryOperation.LesserThanOrEqual:
+                case BinaryOperation.LesserThan:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 13);
                     break;
-                case BinaryOperation.LogicalOr:
+                case BinaryOperation.LesserThanOrEqual:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 14);
                     break;
-                case BinaryOperation.LogicalAnd:
+                case BinaryOperation.LogicalOr:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 15);
+                    break;
+                case BinaryOperation.LogicalAnd:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 16);
                     break;
                 case BinaryOperation.Swap:
                     table.AddSymbol("__swaptmp__");
@@ -222,7 +230,19 @@ namespace Hassium.CodeGen
                     currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, right);
                     break;
                 case BinaryOperation.Power:
-                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 16);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 17);
+                    break;
+                case BinaryOperation.BitShiftLeft:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 18);
+                    break;
+                case BinaryOperation.BitShiftRight:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 19);
+                    break;
+                case BinaryOperation.NullCoalescing:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 20);
+                    break;
+                case BinaryOperation.In:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 21);
                     break;
             }
         }
@@ -550,11 +570,19 @@ namespace Hassium.CodeGen
                             currentMethod.Emit(node.SourceLocation, InstructionType.Dup);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Push, 1);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 
-                                           (node.UnaryOperation == UnaryOperation.PostIncrement || node.UnaryOperation == UnaryOperation.PreIncrement) ? 0 : 1);
+                                           node.UnaryOperation == UnaryOperation.PostIncrement || node.UnaryOperation == UnaryOperation.PreIncrement ? 0 : 1);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, table.GetIndex(identifier));
                         if (node.UnaryOperation == UnaryOperation.PreDecrement || node.UnaryOperation == UnaryOperation.PreIncrement)
                             currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, table.GetIndex(identifier));
                     }
+                    break;
+                case UnaryOperation.BitwiseComplement:
+                    node.Body.Visit(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 1);
+                    break;
+                case UnaryOperation.Negate:
+                    node.Body.Visit(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 2);
                     break;
             }
         }
