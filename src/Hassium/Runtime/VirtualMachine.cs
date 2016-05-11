@@ -24,7 +24,7 @@ namespace Hassium.Runtime
         private Dictionary<double, HassiumObject> globals;
         private HassiumModule module;
         private SourceLocation sourceLocation;
-        private int position;
+        private Stack<MethodBuilder> methodStack = new Stack<MethodBuilder>();
 
         public void Execute(HassiumModule module)
         {
@@ -43,15 +43,18 @@ namespace Hassium.Runtime
 
         public HassiumObject ExecuteMethod(MethodBuilder method)
         {
+            methodStack.Push(method);
             gatherLabels(method);
-            for (position = 0; position < method.Instructions.Count; position++)
+            for (methodStack.Peek().SourcePosition = 0; method.SourcePosition < method.Instructions.Count; method.SourcePosition++)
             {
                 HassiumObject left, right, value, list, index, location;
+                int position = method.SourcePosition;
                 double argument = method.Instructions[position].Argument;
                 int argumentInt = Convert.ToInt32(argument);
                 sourceLocation = method.Instructions[position].SourceLocation;
                 string attribute;
-              //  Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, stackFrame.Frames.Count);
+     //          Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, method.Name);
+       
                 try
                 {
                     switch (method.Instructions[position].InstructionType)
@@ -96,15 +99,15 @@ namespace Hassium.Runtime
                             stack.Pop().EnumerableReset(this);
                             break;
                         case InstructionType.Jump:
-                            position = method.Labels[argument];
+                            method.SourcePosition = method.Labels[argument];
                             break;
                         case InstructionType.Jump_If_True:
                             if (((HassiumBool)stack.Pop()).Value)
-                                position = method.Labels[argument];
+                                method.SourcePosition = method.Labels[argument];
                             break;
                         case InstructionType.Jump_If_False:
                             if (!((HassiumBool)stack.Pop()).Value)
-                                position = method.Labels[argument];
+                                method.SourcePosition = method.Labels[argument];
                             break;
                         case InstructionType.Key_Value_Pair:
                             HassiumObject value_ = stack.Pop();
@@ -140,20 +143,12 @@ namespace Hassium.Runtime
                                 throw new InternalException("Cannot find global identifier!");
                             }
                             break;
+                        case InstructionType.Load_Global_Variable:
+                            stack.Push(module.Globals[argumentInt]);
+                            break;
                         case InstructionType.Load_List_Element:
-                            /*if (position < method.Instructions.Count - 1 &&
-                                method.Instructions[position + 1].InstructionType ==
-                                InstructionType.Load_List_Element_Last)
-                            {
-                                list = stack.Pop();
-                                var _list = (HassiumList) list;
-                                index = new HassiumInt(_list.Value.Count);
-                            }
-                            else
-                            {*/
-                                index = stack.Pop();
-                                list = stack.Pop(); 
-                            //}
+                            index = stack.Pop();
+                            list = stack.Pop();
                             stack.Push(list.Index(this, index));
                             break;
                         case InstructionType.Load_Local:
@@ -183,6 +178,7 @@ namespace Hassium.Runtime
                             RaiseException(stack.Pop(), method);
                             break;
                         case InstructionType.Return:
+                            methodStack.Pop();
                             return stack.Pop();
                         case InstructionType.Self_Reference:
                             stack.Push(method.Parent);
@@ -209,6 +205,9 @@ namespace Hassium.Runtime
                                 {
                                     throw new InternalException(location + " does not contain a definition for " + attribute);
                                 }
+                            break;
+                        case InstructionType.Store_Global_Variable:
+                            module.Globals[argumentInt] = stack.Pop();
                             break;
                         case InstructionType.Store_List_Element:
                             index = stack.Pop();
@@ -237,6 +236,7 @@ namespace Hassium.Runtime
                     RaiseException(new HassiumString("Divide by zero!"), method);
                 }
             }
+            methodStack.Pop();
             return HassiumObject.Null;
         }
 
@@ -319,9 +319,9 @@ namespace Hassium.Runtime
                 throw new RuntimeException(message.ToString(this), sourceLocation);
             else
             {
-                HassiumExceptionHandler handler = handlers.Pop() as HassiumExceptionHandler;
+                HassiumExceptionHandler handler = handlers.Peek() as HassiumExceptionHandler;
                 handler.Invoke(this, new HassiumObject[] { message });
-                position = handler.SourceMethod.Labels[handler.Label];
+                handler.SourceMethod.SourcePosition = handler.SourceMethod.Labels[handler.Label];
             }
         }
 
@@ -346,6 +346,7 @@ namespace Hassium.Runtime
             method.Labels = new Dictionary<double, int>();
             for (int i = 0; i < method.Instructions.Count; i++)
             {
+      //          Console.WriteLine(method.Instructions[i].InstructionType + "\t" + method.Instructions[i].Argument);
                 if (method.Instructions[i].InstructionType == InstructionType.Label)
                     method.Labels.Add(method.Instructions[i].Argument, i);
             }
@@ -358,6 +359,9 @@ namespace Hassium.Runtime
                     globals.Add(Convert.ToDouble(i), GlobalFunctions.FunctionList[constantPool[i].ToString(this)]);
                 else if (module.Attributes.ContainsKey(constantPool[i].ToString(this)))
                     globals.Add(i, module.Attributes[constantPool[i].ToString(this)]);
+            List<int> keys = new List<int>(module.Globals.Keys);
+            foreach (int key in keys)
+                module.Globals[key] = module.Globals[key].Invoke(this, new HassiumObject[0]);
         }
     }
 }

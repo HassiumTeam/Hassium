@@ -31,6 +31,7 @@ namespace Hassium
         private Scope globalScope = new Scope();
         public int NextIndex { get { return nextIndex; } set { nextIndex = value; } }
         private int nextIndex = 0;
+        private int nextGlobalIndex = 0;
 
         public bool InGlobalScope { get { return scopes.Peek() == globalScope; } }
 
@@ -58,6 +59,10 @@ namespace Hassium
                     return scope.GetSymbol(name);
             return -1;
         }
+        public int GetGlobalIndex(string name)
+        {
+            return globalScope.GetSymbol(name);
+        }
 
         public bool FindSymbol(string name)
         {
@@ -66,11 +71,20 @@ namespace Hassium
                     return true;
             return false;
         }
+        public bool FindGlobalSymbol(string name)
+        {
+            return globalScope.FindSymbol(name);
+        }
 
         public int AddSymbol(string name)
         {
             scopes.Peek().AddSymbol(name, nextIndex);
             return nextIndex++;
+        }
+        public int AddGlobalSymbol(string name)
+        {
+            globalScope.AddSymbol(name, nextGlobalIndex);
+            return nextGlobalIndex++;
         }
     }
 }

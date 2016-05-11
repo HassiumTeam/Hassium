@@ -9,16 +9,22 @@ namespace Hassium.CodeGen
 {
     public class MethodBuilder: HassiumObject
     {
+        public HassiumClass Parent { get; set; }
         public string Name { get { return name; } set { name = value; Types.Add("HassiumFunction"); } }
         private string name = "";
-        public string SourceRepresentation { get; set; }
-        public bool IsConstructor { get { return Name == "new"; } }
-        public HassiumClass Parent { get; set; }
+
         public Dictionary<string, int> Parameters = new Dictionary<string, int>();
-        public Dictionary<double, int> Labels = new Dictionary<double, int>();
         public List<Instruction> Instructions = new List<Instruction>();
+
+        public Dictionary<double, int> Labels = new Dictionary<double, int>();
         public Stack<double> BreakLabels = new Stack<double>();
         public Stack<double> ContinueLabels = new Stack<double>();
+
+        public string SourceRepresentation { get; set; }
+        public bool IsConstructor { get { return Name == "new"; } }
+
+        public int SourcePosition { get; set; }
+
 
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {

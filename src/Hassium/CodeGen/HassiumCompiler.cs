@@ -14,6 +14,8 @@ namespace Hassium.CodeGen
         private HassiumModule module;
         private MethodBuilder currentMethod;
 
+        private bool popExpressionStatementsFromStack = true;
+
         public HassiumModule Compile(AstNode ast, SymbolTable table, string name)
         {
             this.table = table;
@@ -27,6 +29,28 @@ namespace Hassium.CodeGen
                 {
                     child.Visit(this);
                     module.Attributes.Add(currentMethod.Name, currentMethod);
+                }
+                else if (child is ExpressionStatementNode)
+                {
+                    if (child.Children[0] is BinaryOperationNode)
+                    {
+                        var operation = child.Children[0] as BinaryOperationNode;
+                        if (operation.BinaryOperation == BinaryOperation.Assignment)
+                        {
+                            string ident = ((IdentifierNode)operation.Left).Identifier;
+                            if (!table.FindGlobalSymbol(ident))
+                                table.AddGlobalSymbol(ident);
+                            var previousMethod = currentMethod;
+                            currentMethod = new MethodBuilder();
+                            currentMethod.Name = "__assign__";
+                            popExpressionStatementsFromStack = true;
+                            operation.Right.Visit(this);
+                            popExpressionStatementsFromStack = true;
+                            currentMethod.Emit(operation.SourceLocation, InstructionType.Return);
+                            module.Globals.Add(table.GetGlobalIndex(ident), currentMethod);
+                            currentMethod = previousMethod;
+                        }
+                    }
                 }
                 else if (child is ClassNode)
                     child.Visit(this);
@@ -141,10 +165,18 @@ namespace Hassium.CodeGen
                     if (node.Left is IdentifierNode)
                     {
                         string identifier = ((IdentifierNode)node.Left).Identifier;
-                        if (!table.FindSymbol(identifier))
-                            table.AddSymbol(identifier);
-                        currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, table.GetIndex(identifier));
-                        currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, table.GetIndex(identifier));
+                        if (table.FindGlobalSymbol(identifier))
+                        {
+                            currentMethod.Emit(node.SourceLocation, InstructionType.Store_Global_Variable, table.GetGlobalIndex(identifier));
+                            currentMethod.Emit(node.SourceLocation, InstructionType.Load_Global_Variable, table.GetGlobalIndex(identifier));
+                        }
+                        else
+                        {
+                            if (!table.FindSymbol(identifier))
+                                table.AddSymbol(identifier);
+                            currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, table.GetIndex(identifier));
+                            currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, table.GetIndex(identifier));
+                        }
                     }
                     else if (node.Left is AttributeAccessNode)
                     {
@@ -345,7 +377,8 @@ namespace Hassium.CodeGen
         public void Accept(ExpressionStatementNode node)
         {
             node.VisitChildren(this);
-            currentMethod.Emit(node.SourceLocation, InstructionType.Pop);
+            if (popExpressionStatementsFromStack)
+                currentMethod.Emit(node.SourceLocation, InstructionType.Pop);
         }
         public void Accept(ForNode node)
         {
@@ -415,7 +448,9 @@ namespace Hassium.CodeGen
         }
         public void Accept(IdentifierNode node)
         {
-            if (!table.FindSymbol(node.Identifier))
+            if (table.FindGlobalSymbol(node.Identifier))
+                currentMethod.Emit(node.SourceLocation, InstructionType.Load_Global_Variable, table.GetGlobalIndex(node.Identifier));
+            else if (!table.FindSymbol(node.Identifier))
             {
                 if (!containsConstant(node.Identifier))
                     module.ConstantPool.Add(new HassiumString(node.Identifier));
