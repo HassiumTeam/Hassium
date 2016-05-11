@@ -25,12 +25,7 @@ namespace Hassium.CodeGen
 
             foreach (AstNode child in ast.Children)
             {
-                if (child is FuncNode)
-                {
-                    child.Visit(this);
-                    module.Attributes.Add(currentMethod.Name, currentMethod);
-                }
-                else if (child is ExpressionStatementNode)
+                if (child is ExpressionStatementNode)
                 {
                     if (child.Children[0] is BinaryOperationNode)
                     {
@@ -51,6 +46,14 @@ namespace Hassium.CodeGen
                             currentMethod = previousMethod;
                         }
                     }
+                }
+            }
+            foreach (AstNode child in ast.Children)
+            {
+                if (child is FuncNode)
+                {
+                    child.Visit(this);
+                    module.Attributes.Add(currentMethod.Name, currentMethod);
                 }
                 else if (child is ClassNode)
                     child.Visit(this);
