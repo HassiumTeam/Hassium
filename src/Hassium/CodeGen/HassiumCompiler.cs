@@ -608,17 +608,26 @@ namespace Hassium.CodeGen
                     if (node.Body is IdentifierNode)
                     {
                         string identifier = ((IdentifierNode)node.Body).Identifier;
-                        if (!table.FindSymbol(identifier))
-                            table.AddSymbol(identifier);
-                        currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, table.GetIndex(identifier));
+                        Instruction loadInstruction, storeInstruction;
+                        if (table.FindGlobalSymbol(identifier))
+                        {
+                            loadInstruction = new Instruction(InstructionType.Load_Global_Variable, table.GetGlobalIndex(identifier), node.SourceLocation);
+                            storeInstruction = new Instruction(InstructionType.Store_Global_Variable, table.GetGlobalIndex(identifier), node.SourceLocation);
+                        }
+                        else
+                        {
+                            loadInstruction = new Instruction(InstructionType.Load_Local, table.GetIndex(identifier), node.SourceLocation);
+                            storeInstruction = new Instruction(InstructionType.Store_Local, table.GetIndex(identifier), node.SourceLocation);
+                        }
+                        currentMethod.Instructions.Add(loadInstruction);
                         if (node.UnaryOperation == UnaryOperation.PostDecrement || node.UnaryOperation == UnaryOperation.PostIncrement)
                             currentMethod.Emit(node.SourceLocation, InstructionType.Dup);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Push, 1);
                         currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 
                                            node.UnaryOperation == UnaryOperation.PostIncrement || node.UnaryOperation == UnaryOperation.PreIncrement ? 0 : 1);
-                        currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, table.GetIndex(identifier));
+                        currentMethod.Instructions.Add(storeInstruction);
                         if (node.UnaryOperation == UnaryOperation.PreDecrement || node.UnaryOperation == UnaryOperation.PreIncrement)
-                            currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, table.GetIndex(identifier));
+                            currentMethod.Instructions.Add(loadInstruction);
                     }
                     break;
                 case UnaryOperation.BitwiseComplement:

@@ -37,6 +37,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("trimRight",     new HassiumFunction(trimRight, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.ADD_FUNCTION,          new HassiumFunction(__add__, 1));
+            Attributes.Add(HassiumObject.MUL_FUNCTION,          new HassiumFunction(__mul__, 1));
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,       new HassiumFunction(__equals__, 1));
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequal__, 1));
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
@@ -173,6 +174,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             return this + new HassiumString(args[0].ToString(vm));
         }
+        private HassiumObject __mul__ (VirtualMachine vm, HassiumObject[] args)
+        {
+            return this * HassiumInt.Create(args[0]);
+        }
         private HassiumObject __equals__ (VirtualMachine vm, HassiumObject[] args)
         {
             HassiumObject obj = args[0];
@@ -215,17 +220,17 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             return new HassiumString(left.Value + right.Value);
         }
-        public static HassiumString operator * (HassiumString left, HassiumDouble right)
+        public static HassiumString operator * (HassiumString left, HassiumInt right)
         {
             StringBuilder sb = new StringBuilder();
-            for (double i = 0; i < right.Value; i++)
+            for (int i = 0; i < right.Value; i++)
                 sb.Append(left.Value);
             return new HassiumString(sb.ToString());
         }
-        public static HassiumString operator * (HassiumDouble left, HassiumString right)
+        public static HassiumString operator * (HassiumInt left, HassiumString right)
         {
             StringBuilder sb = new StringBuilder();
-            for (double i = 0; i < left.Value; i++)
+            for (int i = 0; i < left.Value; i++)
                 sb.Append(right.Value);
             return new HassiumString(sb.ToString());
         }

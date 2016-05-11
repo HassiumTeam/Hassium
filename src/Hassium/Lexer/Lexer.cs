@@ -112,6 +112,8 @@ namespace Hassium.Lexer
                         orig = (char)readChar();
                         if ((char)peekChar() == orig)
                             result.Add(new Token(TokenType.BinaryOperation, orig.ToString() + (char)readChar(), location));
+                        else if ((char)peekChar() == '=')
+                            result.Add(new Token(TokenType.Assignment, orig.ToString() + (char)readChar(), location));
                         else
                             result.Add(new Token(TokenType.BinaryOperation, orig.ToString(), location));
                         break;

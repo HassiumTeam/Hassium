@@ -50,14 +50,20 @@ namespace Hassium.Runtime.StandardLibrary.Types
         }
         public virtual HassiumObject Sub(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(SUB_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support subtracting!");
             return Attributes[SUB_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Mul(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(MUL_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support multiplying!");
             return Attributes[MUL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Div(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(DIV_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support dividing!");
             return Attributes[DIV_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Mod(VirtualMachine vm, HassiumObject obj)
