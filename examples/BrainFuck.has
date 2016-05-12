@@ -12,13 +12,7 @@ func main () {
 class Brainfuck {
 	func new () {
 		# init ram
-		this.ram = this.fillzero(20000);
-	}
-	func fillzero (amount) {
-		res = [];
-		for (i = 0; i < amount; i = i + 1)
-			res.add(0);
-		return res;
+		this.ram = fillList([], 20000);
 	}
 
 	func execute (source) {
