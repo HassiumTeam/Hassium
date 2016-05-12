@@ -12,6 +12,7 @@ namespace Hassium.Runtime.StandardLibrary
         public static Dictionary<string, HassiumFunction> FunctionList = new Dictionary<string, HassiumFunction>()
         {
             { "exit",           new HassiumFunction(exit, 1) },
+            { "fillList",       new HassiumFunction(fillList, new int[] { 1, 2, 3 }) },
             { "format",         new HassiumFunction(format, -1) },
             { "getAttribute",   new HassiumFunction(getAttribute, 2) },
             { "hasAttribute",   new HassiumFunction(hasAttribute, 2) },
@@ -29,6 +30,16 @@ namespace Hassium.Runtime.StandardLibrary
         {
             Environment.Exit((int)HassiumInt.Create(args[0]).Value);
             return HassiumObject.Null;
+        }
+        private static HassiumList fillList(VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = HassiumList.Create(args[0]);
+            HassiumObject filler = (args.Length == 3) ? args[2] : new HassiumInt(0);
+            int max = (int)HassiumInt.Create(args[1]).Value;
+            for (int i = 0; i < max; i++)
+                list.Value.Add(filler.Clone() as HassiumObject);
+
+            return list;
         }
         private static HassiumString format(VirtualMachine vm, HassiumObject[] args)
         {

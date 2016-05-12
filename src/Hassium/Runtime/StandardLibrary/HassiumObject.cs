@@ -68,42 +68,62 @@ namespace Hassium.Runtime.StandardLibrary.Types
         }
         public virtual HassiumObject Mod(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(MOD_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support modulus!");
             return Attributes[MOD_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject XOR(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(XOR_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support xor!");
             return Attributes[XOR_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject OR(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(OR_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support logical or!");
             return Attributes[OR_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Xand(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(XAND_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support and!");
             return Attributes[XAND_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool Equals(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(EQUALS_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support equals!");
             return (HassiumBool)Attributes[EQUALS_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool NotEquals(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(NOT_EQUAL_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support not equal!");
             return (HassiumBool)Attributes[NOT_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool GreaterThan(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(GREATER_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support greater than!");
             return (HassiumBool)Attributes[GREATER_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool GreaterThanOrEqual(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(GREATER_OR_EQUAL_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support greater than or equal!");
             return (HassiumBool)Attributes[GREATER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool LesserThan(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(LESSER_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support lesser than!");
             return (HassiumBool)Attributes[LESSER_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumBool LesserThanOrEqual(VirtualMachine vm, HassiumObject obj)
         {
+            if (!Attributes.ContainsKey(LESSER_OR_EQUAL_FUNCTION))
+                throw new InternalException("Object " + GetType().Name + " does not support lesser than or equal!");
             return (HassiumBool)Attributes[LESSER_OR_EQUAL_FUNCTION].Invoke(vm, new HassiumObject[] { obj });
         }
         public virtual HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)

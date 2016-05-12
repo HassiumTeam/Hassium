@@ -1,1 +1,0 @@
-func test (n) { if (n > 10) return n; return test (n + 1); } func main () { println(test (0)); }

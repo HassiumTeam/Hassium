@@ -33,13 +33,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("remove",        new HassiumFunction(remove, -1));
             Attributes.Add("reverse",       new HassiumFunction(reverse, 0));
             Attributes.Add("split",         new HassiumFunction(split, new int[] { 1, 2 }));
+            Attributes.Add(HassiumObject.CONTAINS,              new HassiumFunction(contains, 1));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
             Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION,  new HassiumFunction(__storeindex__, 2));
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
-            Attributes.Add(CONTAINS, new HassiumFunction(__contains__, 1));
             Types.Add(GetType().Name);
         }
 
@@ -206,11 +206,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             EnumerableIndex = 0;
             return HassiumObject.Null;
-        }
-
-        private HassiumObject __contains__(VirtualMachine vm, HassiumObject[] args)
-        {
-            return new HassiumBool(Value.Any(x => x.Equals(vm, args[0]).Value));
         }
     }
 }

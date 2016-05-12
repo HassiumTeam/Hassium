@@ -145,8 +145,5 @@
     <Compile Include="Parser\Ast\RaiseNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Runtime\StandardLibrary\HTTP\" />
-  </ItemGroup>
   <ItemGroup />
 </Project>
