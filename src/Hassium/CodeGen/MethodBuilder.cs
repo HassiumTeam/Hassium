@@ -23,8 +23,6 @@ namespace Hassium.CodeGen
         public string SourceRepresentation { get; set; }
         public bool IsConstructor { get { return Name == "new"; } }
 
-        public int SourcePosition { get; set; }
-
 
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {

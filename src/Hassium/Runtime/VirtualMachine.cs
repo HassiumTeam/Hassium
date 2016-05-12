@@ -25,6 +25,7 @@ namespace Hassium.Runtime
         private HassiumModule module;
         private SourceLocation sourceLocation;
         private Stack<MethodBuilder> methodStack = new Stack<MethodBuilder>();
+        private Dictionary<MethodBuilder, int> exceptionReturns = new Dictionary<MethodBuilder, int>(); 
 
         public void Execute(HassiumModule module)
         {
@@ -45,10 +46,15 @@ namespace Hassium.Runtime
         {
             methodStack.Push(method);
             gatherLabels(method);
-            for (methodStack.Peek().SourcePosition = 0; method.SourcePosition < method.Instructions.Count; method.SourcePosition++)
+            for (int position = 0; position < method.Instructions.Count; position++)
             {
+                if (exceptionReturns.ContainsKey(method))
+                {
+                    position = exceptionReturns[method];
+                    exceptionReturns.Remove(method);
+                }
+
                 HassiumObject left, right, value, list, index, location;
-                int position = method.SourcePosition;
                 double argument = method.Instructions[position].Argument;
                 int argumentInt = Convert.ToInt32(argument);
                 sourceLocation = method.Instructions[position].SourceLocation;
@@ -99,15 +105,15 @@ namespace Hassium.Runtime
                             stack.Pop().EnumerableReset(this);
                             break;
                         case InstructionType.Jump:
-                            method.SourcePosition = method.Labels[argument];
+                            position = method.Labels[argument];
                             break;
                         case InstructionType.Jump_If_True:
                             if (((HassiumBool)stack.Pop()).Value)
-                                method.SourcePosition = method.Labels[argument];
+                                position = method.Labels[argument];
                             break;
                         case InstructionType.Jump_If_False:
                             if (!((HassiumBool)stack.Pop()).Value)
-                                method.SourcePosition = method.Labels[argument];
+                                position = method.Labels[argument];
                             break;
                         case InstructionType.Key_Value_Pair:
                             HassiumObject value_ = stack.Pop();
@@ -175,7 +181,7 @@ namespace Hassium.Runtime
                             stack.Push(module.ConstantPool[argumentInt]);
                             break;
                         case InstructionType.Raise:
-                            RaiseException(stack.Pop(), method);
+                            RaiseException(stack.Pop(), method, ref position);
                             break;
                         case InstructionType.Return:
                             methodStack.Pop();
@@ -229,11 +235,11 @@ namespace Hassium.Runtime
                 }
                 catch (InternalException ex)
                 {
-                    RaiseException(new HassiumString(ex.Message), method);
+                    RaiseException(new HassiumString(ex.Message), method, ref position);
                 }
                 catch (DivideByZeroException)
                 {
-                    RaiseException(new HassiumString("Divide by zero!"), method);
+                    RaiseException(new HassiumString("Divide by zero!"), method, ref position);
                 }
             }
             methodStack.Pop();
@@ -313,7 +319,7 @@ namespace Hassium.Runtime
             }
         }
 
-        public void RaiseException(HassiumObject message, MethodBuilder method)
+        public void RaiseException(HassiumObject message, MethodBuilder method, ref int pos)
         {
             if (handlers.Count == 0)
                 throw new RuntimeException(message.ToString(this), sourceLocation);
@@ -321,7 +327,8 @@ namespace Hassium.Runtime
             {
                 HassiumExceptionHandler handler = handlers.Peek() as HassiumExceptionHandler;
                 handler.Invoke(this, new HassiumObject[] { message });
-                handler.SourceMethod.SourcePosition = handler.SourceMethod.Labels[handler.Label];
+                //pos = handler.SourceMethod.Labels[handler.Label];
+                exceptionReturns.Add(handler.SourceMethod, handler.SourceMethod.Labels[handler.Label]);
             }
         }
 
