@@ -316,6 +316,9 @@ namespace Hassium.Runtime
                 case 21:
                     stack.Push(left.Contains(this, right));
                     break;
+                case 22:
+                    stack.Push(new HassiumBool(left.Types.Contains(HassiumString.Create(right).Value)));
+                    break;
             }
         }
 

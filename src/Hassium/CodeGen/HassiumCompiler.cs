@@ -279,6 +279,10 @@ namespace Hassium.CodeGen
                 case BinaryOperation.In:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 21);
                     break;
+                case BinaryOperation.Is:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 22);
+                    break;
+
             }
         }
         public void Accept(BoolNode node)

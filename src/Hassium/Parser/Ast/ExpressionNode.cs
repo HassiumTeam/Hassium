@@ -13,16 +13,6 @@ namespace Hassium.Parser
 
         public static AstNode Parse(Parser parser)
         {
-            /*AstNode expression = parseAssignment(parser);
-            if (parser.AcceptToken(TokenType.Question))
-            {
-                parser.ExpectToken(TokenType.Colon);
-                AstNode ternaryFalse = Parse(parser);
-                expression = new TernaryOperationNode(expression, ternaryTrue, ternaryFalse, parser.Location);
-            }
-            else if (parser.AcceptToken(TokenType.Colon))
-                return new KeyValuePairNode(expression, ExpressionNode.Parse(parser), parser.Location);
-            return expression;*/
             return parseAssignment(parser);
         }
 
@@ -256,6 +246,10 @@ namespace Hassium.Parser
             {
                 switch (parser.GetToken().Value)
                 {
+                    case "is":
+                        parser.AcceptToken(TokenType.BinaryOperation);
+                        left = new BinaryOperationNode(BinaryOperation.Is, left, new StringNode(parser.ExpectToken(TokenType.Identifier).Value, parser.Location), parser.Location);
+                        continue;
                     case "*":
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Multiplication, left, parseMultiplicative(parser), parser.Location);
@@ -304,7 +298,7 @@ namespace Hassium.Parser
                         return new UnaryOperationNode(UnaryOperation.BitwiseComplement, parseUnary(parser), parser.Location);
                 }
             }
-            else if(parser.MatchToken(TokenType.BinaryOperation))
+            else if (parser.MatchToken(TokenType.BinaryOperation))
             {
                 switch (parser.GetToken().Value)
                 {

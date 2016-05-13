@@ -246,7 +246,7 @@ namespace Hassium.Lexer
             string str = "";
             while (char.IsLetterOrDigit((char)peekChar()) || (char)peekChar() == '_' && peekChar() != -1)
                 str += (char)readChar();
-            return new Token(TokenType.Identifier, str, location);
+            return new Token(str == "is" ? TokenType.BinaryOperation : TokenType.Identifier, str, location);
         }
 
         private Token scanNumber()
