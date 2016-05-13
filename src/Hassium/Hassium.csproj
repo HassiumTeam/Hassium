@@ -73,7 +73,6 @@
     <Compile Include="Runtime\StandardLibrary\GlobalFunctions.cs" />
     <Compile Include="CodeGen\Instruction.cs" />
     <Compile Include="CodeGen\HassiumModule.cs" />
-    <Compile Include="Runtime\VirtualMachine.cs" />
     <Compile Include="Runtime\StackFrame.cs" />
     <Compile Include="Parser\Ast\AttributeAccessNode.cs" />
     <Compile Include="CodeGen\MethodBuilder.cs" />
@@ -143,6 +142,8 @@
     <Compile Include="Parser\Ast\TryCatchNode.cs" />
     <Compile Include="Runtime\StandardLibrary\Types\HassiumExceptionHandler.cs" />
     <Compile Include="Parser\Ast\RaiseNode.cs" />
+    <Compile Include="Runtime\VirtualMachine.cs" />
+    <Compile Include="Runtime\StandardLibrary\Util\HassiumProcess.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

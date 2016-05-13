@@ -9,6 +9,7 @@ namespace Hassium.Runtime.StandardLibrary.Util
         public HassiumUtilModule() : base ("Util")
         {
             Attributes.Add("eval", new HassiumFunction(eval, 1));
+            Attributes.Add("Process", new HassiumProcess());
             Attributes.Add("StopWatch", new HassiumStopWatch());
         }
 
