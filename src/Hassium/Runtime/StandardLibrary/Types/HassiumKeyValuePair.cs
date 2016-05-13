@@ -14,6 +14,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("key",   new HassiumProperty(get_Key, set_Key));
             Attributes.Add("value", new HassiumProperty(get_Value, set_Value));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(toString, 0));
+            AddType("KeyValuePair");
         }
 
         private HassiumObject get_Key(VirtualMachine vm, HassiumObject[] args)

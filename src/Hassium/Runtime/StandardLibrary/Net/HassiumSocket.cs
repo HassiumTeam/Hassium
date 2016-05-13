@@ -32,6 +32,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             hassiumSocket.Attributes.Add("listen",      new HassiumFunction(hassiumSocket.listen, 1));
             hassiumSocket.Attributes.Add("send",        new HassiumFunction(hassiumSocket.send, 1));
             hassiumSocket.Attributes.Add("sendFile",    new HassiumFunction(hassiumSocket.sendFile, 1));
+            hassiumSocket.AddType("Socket");
 
             return hassiumSocket;
         }

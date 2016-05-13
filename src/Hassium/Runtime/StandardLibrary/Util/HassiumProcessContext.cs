@@ -44,6 +44,7 @@ namespace Hassium.Runtime.StandardLibrary.Util
             hassiumProcessContext.Attributes.Add("redirectStandardError",   new HassiumProperty(hassiumProcessContext.get_RedirectStandardError, hassiumProcessContext.set_RedirectStandardError));
             hassiumProcessContext.Attributes.Add("redirectStandardInput",   new HassiumProperty(hassiumProcessContext.get_RedirectStandardInput, hassiumProcessContext.set_RedirectStandardInput));
             hassiumProcessContext.Attributes.Add("redirectStandardOutput",  new HassiumProperty(hassiumProcessContext.get_RedirectStandardOutput, hassiumProcessContext.set_RedirectStandardOutput));
+            hassiumProcessContext.AddType("ProcessContext");
 
             return hassiumProcessContext;
         }

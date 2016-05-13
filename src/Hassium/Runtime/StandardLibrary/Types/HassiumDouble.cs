@@ -10,7 +10,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumDouble Create(HassiumObject obj)
         {
             if (!(obj is HassiumDouble))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumDouble!", obj.GetType().Name));
+                throw new InternalException(string.Format("Cannot convert from {0} to double!", obj.Type()));
             return (HassiumDouble)obj;
         }
 
@@ -37,7 +37,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,          new HassiumFunction(__enumerablereset__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,         new HassiumFunction(__tostring__, 0));
             Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
-            Types.Add(this.GetType().Name);
+            Types.Add("double");
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

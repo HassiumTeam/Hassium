@@ -12,7 +12,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumList Create(HassiumObject obj)
         {
             if (!(obj is HassiumList))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumList!", obj.GetType().Name));
+                throw new InternalException(string.Format("Cannot convert from {0} to list!", obj.Type()));
             return (HassiumList)obj;
         }
 
@@ -40,7 +40,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
-            Types.Add(GetType().Name);
+            AddType("list");
         }
 
         private HassiumObject _add(VirtualMachine vm, HassiumObject[] args)

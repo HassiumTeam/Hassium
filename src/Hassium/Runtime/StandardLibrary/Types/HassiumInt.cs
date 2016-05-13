@@ -9,7 +9,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumInt Create(HassiumObject obj)
         {
             if (!(obj is HassiumInt))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumInt!", obj.GetType().Name));
+                throw new InternalException(string.Format("Cannot convert from {0} to int!", obj.Type()));
             return (HassiumInt)obj;
         }
 
@@ -42,7 +42,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
             Attributes.Add(BIT_SHIFT_LEFT, new HassiumFunction(__bshiftleft__, 1));
             Attributes.Add(BIT_SHIFT_RIGHT, new HassiumFunction(__bshiftright__, 1));
-            Types.Add(this.GetType().Name);
+            AddType("int");
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

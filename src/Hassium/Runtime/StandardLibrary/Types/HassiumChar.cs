@@ -9,7 +9,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumChar Create(HassiumObject obj)
         {
             if (!(obj is HassiumChar))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumChar!", obj.GetType().Name));
+                throw new InternalException(string.Format("Cannot convert from {0} to char!", obj.Type()));
             return (HassiumChar)obj;
         }
 
@@ -37,7 +37,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,   new HassiumFunction(__equals__, 1));
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,new HassiumFunction(__notequals__, 1));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(__tostring__, 0));
-            Types.Add(this.GetType().Name);
+            AddType("char");
         }
 
         private HassiumBool isDigit(VirtualMachine vm, HassiumObject[] args)

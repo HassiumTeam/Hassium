@@ -23,6 +23,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             hassiumConnectionListener.Attributes.Add("pending",             new HassiumFunction(hassiumConnectionListener.pending, 0));
             hassiumConnectionListener.Attributes.Add("start",               new HassiumFunction(hassiumConnectionListener.start, 0));
             hassiumConnectionListener.Attributes.Add("stop",                new HassiumFunction(hassiumConnectionListener.stop, 0));
+            hassiumConnectionListener.AddType("ConnectionListener");
 
             return hassiumConnectionListener;
         }

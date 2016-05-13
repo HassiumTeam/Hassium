@@ -28,6 +28,7 @@ namespace Hassium.Runtime.StandardLibrary.Util
             hassiumStopWatch.Attributes.Add("start",        new HassiumFunction(hassiumStopWatch.start, 0));
             hassiumStopWatch.Attributes.Add("stop",         new HassiumFunction(hassiumStopWatch.stop, 0));
             hassiumStopWatch.Attributes.Add("ticks",        new HassiumProperty(hassiumStopWatch.get_Ticks));
+            hassiumStopWatch.AddType("StopWatch");
 
             return hassiumStopWatch;
         }

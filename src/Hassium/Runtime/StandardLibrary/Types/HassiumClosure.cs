@@ -13,6 +13,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Method = method;
             Frame = frame;
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(__invoke__, -1));
+            AddType("lambda");
         }
 
         public HassiumObject __invoke__ (VirtualMachine vm, HassiumObject[] args)

@@ -22,6 +22,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             Attributes.Add("windowLeft",        new HassiumProperty(get_WindowLeft, set_WindowLeft));
             Attributes.Add("windowTop",         new HassiumProperty(get_WindowTop, set_WindowTop));
             Attributes.Add("windowWidth",       new HassiumProperty(get_WindowWidth, set_WindowWidth));
+            AddType("UI");
         }
 
         private HassiumString get_BackgroundColor(VirtualMachine vm, HassiumObject[] args)

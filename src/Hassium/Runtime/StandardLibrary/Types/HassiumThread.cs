@@ -20,6 +20,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             hassiumThread.Attributes.Add("sleep",   new HassiumFunction(hassiumThread.sleep, 1));
             hassiumThread.Attributes.Add("start",   new HassiumFunction(hassiumThread.start, 0));
             hassiumThread.Attributes.Add("stop",    new HassiumFunction(hassiumThread.stop, 0));
+            hassiumThread.AddType("Thread");
 
             return hassiumThread;
         }

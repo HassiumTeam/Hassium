@@ -27,6 +27,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             Attributes.Add("writeBytes",        new HassiumFunction(writeBytes, 2));
             Attributes.Add("writeLines",        new HassiumFunction(writeLines, 2));
             Attributes.Add("writeText",         new HassiumFunction(writeText, 2));
+            AddType("File");
         }
 
         private HassiumString createDirectory(VirtualMachine vm, HassiumObject[] args)

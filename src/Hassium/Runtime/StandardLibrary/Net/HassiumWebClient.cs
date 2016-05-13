@@ -18,6 +18,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             Attributes.Add("uploadData",        new HassiumFunction(uploadData, new int[] { 2, 3 }));
             Attributes.Add("uploadFile",        new HassiumFunction(uploadFile, new int[] { 2, 3 }));
             Attributes.Add("uploadString",      new HassiumFunction(uploadString, new int[] { 2, 3 }));
+            AddType("WebClient");
         }
 
         private HassiumList downloadData(VirtualMachine vm, HassiumObject[] args)

@@ -13,6 +13,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             Attributes.Add("htmlEncode",    new HassiumFunction(htmlEncode, 1));
             Attributes.Add("urlDecode",     new HassiumFunction(urlDecode, 1));
             Attributes.Add("urlEncode",     new HassiumFunction(urlEncode, 1));
+            AddType("HttpUtility");
         }
 
         private HassiumString htmlDecode(VirtualMachine vm, HassiumObject[] args)

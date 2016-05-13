@@ -29,6 +29,7 @@ namespace Hassium.Runtime.StandardLibrary.Math
             Attributes.Add("sin",   new HassiumFunction(sin, 1));
             Attributes.Add("sqrt",  new HassiumFunction(sqrt, 1));
             Attributes.Add("tan",   new HassiumFunction(tan, 1));
+            AddType("Math");
         }
 
         private HassiumObject abs(VirtualMachine vm, HassiumObject[] args)

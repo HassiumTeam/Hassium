@@ -17,6 +17,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             HandlerMethod = handlerMethod;
             Label = label;
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(__invoke__, -1));
+            AddType("ExceptionHandler");
         }
 
         private HassiumObject __invoke__ (VirtualMachine vm, HassiumObject[] args)

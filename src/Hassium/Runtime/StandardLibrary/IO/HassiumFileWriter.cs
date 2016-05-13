@@ -33,6 +33,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             hassiumFileWriter.Attributes.Add("writeLine",   new HassiumFunction(hassiumFileWriter.writeLine, 1));
             hassiumFileWriter.Attributes.Add("writeList",   new HassiumFunction(hassiumFileWriter.writeList, 1));
             hassiumFileWriter.Attributes.Add("writeString", new HassiumFunction(hassiumFileWriter.writeString, 1));
+            hassiumFileWriter.AddType("FileWriter");
 
             return hassiumFileWriter;
         }

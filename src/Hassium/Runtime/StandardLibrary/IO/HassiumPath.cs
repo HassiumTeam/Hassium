@@ -16,6 +16,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             Attributes.Add("parseFileName",                 new HassiumFunction(parseFileName, 1));
             Attributes.Add("parseFileNameWithoutExtension", new HassiumFunction(parseFileNameWithoutExtension, 1));
             Attributes.Add("parseRoot",                     new HassiumFunction(parseRoot, 1));
+            AddType("Path");
         }
 
         private HassiumString getTempFile(VirtualMachine vm, HassiumObject[] args)

@@ -17,6 +17,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,   new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,  new HassiumFunction(__enumerablereset__, 0));
+            AddType("tuple");
         }
 
         private HassiumInt get_Length(VirtualMachine vm, HassiumObject[] args)

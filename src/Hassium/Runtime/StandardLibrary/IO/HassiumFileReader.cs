@@ -34,6 +34,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             hassiumFileReader.Attributes.Add("readInt64",   new HassiumFunction(hassiumFileReader.readInt64, 0));
             hassiumFileReader.Attributes.Add("readLine",    new HassiumFunction(hassiumFileReader.readLine, 0));
             hassiumFileReader.Attributes.Add("readString",  new HassiumFunction(hassiumFileReader.readString, 0));
+            hassiumFileReader.AddType("FileReader");
 
             return hassiumFileReader;
         }

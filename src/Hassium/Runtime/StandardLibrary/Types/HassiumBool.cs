@@ -9,7 +9,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumBool Create(HassiumObject obj)
         {
             if (!(obj is HassiumBool))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumBool!", obj.GetType().Name));
+                throw new InternalException(string.Format("Cannot convert from {0} to bool", obj.Type()));
             return (HassiumBool)obj;
         }
 
@@ -24,7 +24,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequals__, 1));
             Attributes.Add(HassiumObject.NOT,                   new HassiumFunction(__not__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
-            Types.Add(this.GetType().Name);
+            AddType("bool");
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

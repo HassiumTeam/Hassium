@@ -112,7 +112,7 @@ namespace Hassium.Runtime.StandardLibrary
         }
         private static HassiumObject type(VirtualMachine vm, HassiumObject[] args)
         {
-            return new HassiumString(args[0].Types[args[0].Types.Count - 1]);
+            return new HassiumString(args[0].Type());
         }
         private static HassiumObject types(VirtualMachine vm, HassiumObject[] args)
         {

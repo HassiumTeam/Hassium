@@ -11,6 +11,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             GetValue = getValue;
             SetValue = setValue;
+            AddType("property");
         }
 
         public new HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)

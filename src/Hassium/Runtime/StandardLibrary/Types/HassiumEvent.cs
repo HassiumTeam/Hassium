@@ -22,6 +22,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             hassiumEvent.Attributes.Add("add",          new HassiumFunction(hassiumEvent.add, -1));
             hassiumEvent.Attributes.Add("handle",       new HassiumFunction(hassiumEvent.handle, -1));
             hassiumEvent.Attributes.Add("remove",       new HassiumFunction(hassiumEvent.handle, -1));
+            hassiumEvent.AddType("Event");
 
             return hassiumEvent;
         }

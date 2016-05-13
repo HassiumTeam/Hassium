@@ -29,6 +29,7 @@ namespace Hassium.Runtime.StandardLibrary.Collections
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_FULL,      new HassiumFunction(hassiumStack.__enumerablefull__, 0));
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_NEXT,      new HassiumFunction(hassiumStack.__enumerablenext__, 0));
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_RESET,     new HassiumFunction(hassiumStack.__enumerablereset__, 0));
+            hassiumStack.AddType("Stack");
 
             return hassiumStack;
         }

@@ -6,6 +6,7 @@ namespace Hassium.Runtime.StandardLibrary
 {
     public class HassiumClass: HassiumObject
     {
+        public string Name { get; set; }
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {
             if (!Attributes.ContainsKey("new"))

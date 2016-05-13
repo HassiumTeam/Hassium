@@ -27,6 +27,7 @@ namespace Hassium.Runtime.StandardLibrary.Text
             hassiumStringBuilder.Attributes.Add(HassiumObject.ADD_FUNCTION,         new HassiumFunction(hassiumStringBuilder.__add__, 1));
             hassiumStringBuilder.Attributes.Add(HassiumObject.INDEX_FUNCTION,       new HassiumFunction(hassiumStringBuilder.__index__, 1));
             hassiumStringBuilder.Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION, new HassiumFunction(hassiumStringBuilder.__storeindex__, 2));
+            hassiumStringBuilder.AddType("StringBuilder");
 
             return hassiumStringBuilder;
         }

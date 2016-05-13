@@ -11,7 +11,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumString Create(HassiumObject obj)
         {
             if (!(obj is HassiumString))
-                throw new InternalException(string.Format("Cannot convert from {0} to HassiumString!", obj.GetType()));
+                throw new InternalException(string.Format("Cannot convert from {0} to string!", obj.Type()));
             return (HassiumString)obj;
         }
 
@@ -45,7 +45,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
-            Types.Add(this.GetType().Name);
+            AddType("string");
         }
 
         private HassiumBool contains(VirtualMachine vm, HassiumObject[] args)

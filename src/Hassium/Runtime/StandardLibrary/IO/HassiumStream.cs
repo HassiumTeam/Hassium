@@ -11,6 +11,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
         public HassiumStream(Stream stream)
         {
             Stream = stream;
+            AddType("Stream");
         }
     }
 }
