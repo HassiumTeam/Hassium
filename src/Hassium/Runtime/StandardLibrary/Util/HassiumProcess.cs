@@ -23,6 +23,7 @@ namespace Hassium.Runtime.StandardLibrary.Util
             Attributes.Add("getProcessList",    new HassiumFunction(getProcessList, 0));
             Attributes.Add("isProcessRunning",  new HassiumFunction(isProcessRunning, 1));
             Attributes.Add("killProcess",       new HassiumFunction(killProcess, 1));
+            Attributes.Add("start",             new HassiumFunction(start, 1));
         }
 
         private HassiumProcess createFromProcess(Process process)
@@ -98,6 +99,24 @@ namespace Hassium.Runtime.StandardLibrary.Util
                 return new HassiumString("");
             }
         }
+        private HassiumNull start(VirtualMachine vm, HassiumObject[] args)
+        {
+            switch (args.Length)
+            {
+                case 1:
+                    if (args[0] is HassiumString)
+                        Process.Start(HassiumString.Create(args[0]).Value);
+                    else
+                        Process.Start(HassiumProcessContext.Create(args[0]).StartInfo);
+                    break;
+                case 2:
+                    Process.Start(HassiumString.Create(args[0]).Value, HassiumString.Create(args[1]).Value);
+                    break;
+            }
+
+            return HassiumObject.Null;
+        }
+
         public HassiumString toString(VirtualMachine vm, HassiumObject[] args)
         {
             return get_Name(vm, args);

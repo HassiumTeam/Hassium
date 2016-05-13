@@ -8,9 +8,10 @@ namespace Hassium.Runtime.StandardLibrary.Util
     {
         public HassiumUtilModule() : base ("Util")
         {
-            Attributes.Add("eval", new HassiumFunction(eval, 1));
-            Attributes.Add("Process", new HassiumProcess());
-            Attributes.Add("StopWatch", new HassiumStopWatch());
+            Attributes.Add("eval",              new HassiumFunction(eval, 1));
+            Attributes.Add("Process",           new HassiumProcess());
+            Attributes.Add("ProcessContext",    new HassiumProcessContext());
+            Attributes.Add("StopWatch",         new HassiumStopWatch());
         }
 
         public HassiumNull eval(VirtualMachine vm, HassiumObject[] args)
