@@ -15,7 +15,7 @@ namespace Hassium
             if (config.CreatePackage)
             {
                 File.WriteAllText("manifest.conf", config.SourceFile);
-                ZipFile.CreateFromDirectory(Directory.GetCurrentDirectory(), config.PackageFile);
+                ZipFile.CreateFromDirectory(Directory.GetCurrentDirectory(), Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "/" + config.PackageFile);
             }
             else
             {
@@ -28,6 +28,7 @@ namespace Hassium
                     ZipFile.ExtractToDirectory(config.SourceFile, path);
                     Directory.SetCurrentDirectory(path);
                     HassiumExecuter.FromFilePath(File.ReadAllText("manifest.conf"));
+                    Directory.Delete(path, true);
                 }
                 else
                     HassiumExecuter.FromFilePath(config.SourceFile);

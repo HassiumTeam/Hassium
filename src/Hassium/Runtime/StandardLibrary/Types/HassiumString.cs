@@ -42,9 +42,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,       new HassiumFunction(__equals__, 1));
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequal__, 1));
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
-            Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
-            Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
-            Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
+            Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
             AddType("string");
         }
 
@@ -60,6 +58,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 elements[i] = new HassiumChar((char)bytes[i]);
 
             return new HassiumList(elements);
+        }
+        private HassiumString format(VirtualMachine vm, HassiumObject[] args)
+        {
+            string[] argString = new string[args.Length];
+            for (int i = 0; i < argString.Length; i++)
+                argString[i] = args[i].ToString(vm);
+            return new HassiumString(string.Format(Value, argString)); 
         }
         private HassiumDouble get_Length(VirtualMachine vm, HassiumObject[] args)
         {
@@ -201,21 +206,12 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 return new HassiumChar(Value[(int)((HassiumInt)obj).Value]);
             throw new InternalException("Cannot index string with " + obj);
         }
-        private int enumerableIndex = 0;
-        private HassiumBool __enumerablefull__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            return new HassiumBool(enumerableIndex >= Value.Length);
-        }
-        private HassiumChar __enumerablenext__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            return new HassiumChar(Value[enumerableIndex++]);
-        }
-        private HassiumNull __enumerablereset__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            enumerableIndex = 0;
-            return HassiumObject.Null;
-        }
 
+        private HassiumObject __iter__ (VirtualMachine vm, HassiumObject[] args)
+        {
+            return toList(vm, args);
+        }
+        
         public static HassiumString operator + (HassiumString left, HassiumString right)
         {
             return new HassiumString(left.Value + right.Value);

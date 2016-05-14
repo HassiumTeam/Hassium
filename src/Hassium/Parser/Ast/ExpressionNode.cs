@@ -258,6 +258,10 @@ namespace Hassium.Parser
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Power, left, parseMultiplicative(parser), parser.Location);
                         continue;
+                    case "..":
+                        parser.AcceptToken(TokenType.BinaryOperation);
+                        left = new BinaryOperationNode(BinaryOperation.Range, left, parseMultiplicative(parser), parser.Location);
+                        continue;
                     case "/":
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Division, left, parseMultiplicative(parser), parser.Location);

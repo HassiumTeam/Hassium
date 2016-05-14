@@ -84,8 +84,14 @@ namespace Hassium.Lexer
                         readChar();
                         break;
                     case '.':
-                        result.Add(new Token(TokenType.BinaryOperation, ".", location));
                         readChar();
+                        if ((char)peekChar() == '.')
+                        {
+                            result.Add(new Token(TokenType.BinaryOperation, "..", location));
+                            readChar();
+                        }
+                        else
+                            result.Add(new Token(TokenType.BinaryOperation, ".", location));
                         break;
                     case '?':
                         readChar();

@@ -50,6 +50,7 @@ namespace Hassium.Parser
         LesserThanOrEqual,
         OR,
         Power,
+        Range,
         Swap,
         XOR,
         XAnd

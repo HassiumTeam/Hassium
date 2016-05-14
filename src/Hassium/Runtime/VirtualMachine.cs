@@ -95,6 +95,9 @@ namespace Hassium.Runtime
                         case InstructionType.Dup:
                             stack.Push(stack.Peek());
                             break;
+                        case InstructionType.Iter:
+                            stack.Push(stack.Pop().Iter(this));
+                            break;
                         case InstructionType.Enumerable_Full:
                             stack.Push(stack.Pop().EnumerableFull(this));
                             break;
@@ -133,7 +136,7 @@ namespace Hassium.Runtime
                                 throw new InternalException(location + " does not contain a definition for " + attribute);
                             }
                             if (attrib is HassiumProperty)
-                                stack.Push(((HassiumProperty)attrib).GetValue(this, new HassiumObject[] { }));
+                                stack.Push(((HassiumProperty)attrib).GetValue(this, new HassiumObject[0]));
                             else if (attrib is UserDefinedProperty)
                                 stack.Push(ExecuteMethod(((UserDefinedProperty)attrib).GetMethod));
                             else
@@ -318,6 +321,9 @@ namespace Hassium.Runtime
                     break;
                 case 22:
                     stack.Push(new HassiumBool(left.Types.Contains(HassiumString.Create(right).Value)));
+                    break;
+                case 23:
+                    stack.Push(GlobalFunctions.FunctionList["range"].Invoke(this, new HassiumObject[] { left, right }));
                     break;
             }
         }

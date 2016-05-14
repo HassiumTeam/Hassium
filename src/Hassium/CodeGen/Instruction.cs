@@ -24,6 +24,7 @@ namespace Hassium.CodeGen
         Create_List,
         Create_Tuple,
         Dup,
+        Iter,
         Enumerable_Full,
         Enumerable_Next,
         Enumerable_Reset,

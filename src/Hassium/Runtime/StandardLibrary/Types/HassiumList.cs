@@ -37,6 +37,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
             Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION,  new HassiumFunction(__storeindex__, 2));
+            Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
@@ -194,6 +195,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
             return args[1];
         }
         public int EnumerableIndex = 0;
+        private HassiumObject __iter__ (VirtualMachine vm, HassiumObject[] args)
+        {
+            return this;
+        }
         private HassiumObject __enumerablefull__ (VirtualMachine vm, HassiumObject[] args)
         {
             return new HassiumBool(EnumerableIndex >= Value.Count);

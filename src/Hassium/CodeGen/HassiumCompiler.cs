@@ -282,7 +282,9 @@ namespace Hassium.CodeGen
                 case BinaryOperation.Is:
                     currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 22);
                     break;
-
+                case BinaryOperation.Range:
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Binary_Operation, 23);
+                    break;
             }
         }
         public void Accept(BoolNode node)
@@ -415,6 +417,7 @@ namespace Hassium.CodeGen
             table.AddSymbol("__tmp__");
             int tmp = table.GetIndex("__tmp__");
             node.Expression.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Iter);
             currentMethod.Emit(node.SourceLocation, InstructionType.Store_Local, tmp);
             currentMethod.Emit(node.SourceLocation, InstructionType.Label, foreachLabel);
             currentMethod.Emit(node.SourceLocation, InstructionType.Load_Local, tmp);
