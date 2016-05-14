@@ -13,7 +13,7 @@ namespace Hassium
     {
         public static void Main(string[] args)
         {
-            HassiumExecuter.FromFilePath(args[0]);
+            HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser(args).Parse());
         }
     }
 }

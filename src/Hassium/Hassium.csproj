@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Hassium</RootNamespace>
     <AssemblyName>Hassium</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Web" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -145,6 +147,8 @@
     <Compile Include="Runtime\VirtualMachine.cs" />
     <Compile Include="Runtime\StandardLibrary\Util\HassiumProcess.cs" />
     <Compile Include="Runtime\StandardLibrary\Util\HassiumProcessContext.cs" />
+    <Compile Include="HassiumArgumentParser.cs" />
+    <Compile Include="HassiumArgumentConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
