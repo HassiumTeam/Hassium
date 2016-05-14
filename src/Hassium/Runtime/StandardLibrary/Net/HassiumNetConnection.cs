@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -36,6 +37,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             HassiumNetConnection hassiumNetConnection = new HassiumNetConnection();
 
             hassiumNetConnection.TcpClient = new TcpClient(HassiumString.Create(args[0]).Value, (int)HassiumInt.Create(args[1]).Value);
+
             hassiumNetConnection.Attributes.Add("close", new HassiumFunction(hassiumNetConnection.close, 0));
             hassiumNetConnection.Attributes.Add("connected", new HassiumProperty(hassiumNetConnection.connected));
             hassiumNetConnection.Attributes.Add("getStream", new HassiumFunction(hassiumNetConnection.getStream, 0));
@@ -54,6 +56,9 @@ namespace Hassium.Runtime.StandardLibrary.Net
         }
         public HassiumStream getStream(VirtualMachine vm, HassiumObject[] args)
         {
+            if (args.Length == 1)
+            if (HassiumBool.Create(args[0]).Value)
+                return new HassiumStream(new SslStream(TcpClient.GetStream(), false, new RemoteCertificateValidationCallback((sender, certificate, chain, sslPolicyErrors) => true), null));
             return new HassiumStream(TcpClient.GetStream());
         }
     }
