@@ -169,7 +169,7 @@ namespace Hassium.Runtime
                             handlers.Pop();
                             break;
                         case InstructionType.Push:
-                            stack.Push(new HassiumInt(argumentInt));
+                            stack.Push(new HassiumDouble(argument));
                             break;
                         case InstructionType.Push_Bool:
                             stack.Push(new HassiumBool(argument == 1));
