@@ -34,7 +34,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.GREATER_OR_EQUAL_FUNCTION, new HassiumFunction(__greaterorequal__, 1));
             Attributes.Add(HassiumObject.LESSER_FUNCTION,           new HassiumFunction(__lesser__, 1));
             Attributes.Add(HassiumObject.LESSER_OR_EQUAL_FUNCTION,  new HassiumFunction(__lesserorequal__, 1));
-            Attributes.Add(HassiumObject.ITER_FUNCTION,             new HassiumFunction(__iter__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,         new HassiumFunction(__tostring__, 0));
             Attributes.Add(BITWISE_COMPLEMENT, new HassiumFunction(__bcompl__, 0));
             Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
@@ -161,10 +160,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
             else if (args[0] is HassiumInt)
                 return new HassiumBool(Value <= ((HassiumInt)args[0]).Value);
             throw new InternalException("Cannot operate HassiumInt on " + args[0].GetType().Name);
-        }
-        private HassiumObject __iter__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            return GlobalFunctions.FunctionList["range"].Invoke(vm, new HassiumObject[] { new HassiumInt(0), this });
         }
         private HassiumString __tostring__ (VirtualMachine vm, HassiumObject[] args)
         {
