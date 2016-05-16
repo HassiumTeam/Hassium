@@ -12,11 +12,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
 
             Attributes.Add("length", new HassiumProperty(get_Length));
             Attributes.Add("split", new HassiumFunction(split, 2));
-            Attributes.Add(HassiumObject.INDEX_FUNCTION,    new HassiumFunction(__index__, 1));
-            Attributes.Add(HassiumObject.ENUMERABLE_FULL,   new HassiumFunction(__enumerablefull__, 0));
-            Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(__tostring__, 0));
-            Attributes.Add(HassiumObject.ENUMERABLE_NEXT,   new HassiumFunction(__enumerablenext__, 0));
-            Attributes.Add(HassiumObject.ENUMERABLE_RESET,  new HassiumFunction(__enumerablereset__, 0));
+            Attributes.Add(HassiumObject.EQUALS_FUNCTION,       new HassiumFunction(__equals__, 1));
+            Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequals__, 1));
+            Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
+            Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
+            Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             AddType("tuple");
         }
 
@@ -37,6 +37,18 @@ namespace Hassium.Runtime.StandardLibrary.Types
             return new HassiumTuple(elements);
         }
 
+        private HassiumBool __equals__ (VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = HassiumList.Create(args[0].Iter(vm));
+            for (int i = 0; i < list.Value.Count; i++)
+                if (!list.Value[i].Equals(vm, Value[i]).Value)
+                    return new HassiumBool(false);
+            return new HassiumBool(true);
+        }
+        private HassiumBool __notequals__ (VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumBool(!__equals__(vm, args).Value);
+        } 
         private HassiumObject __index__ (VirtualMachine vm, HassiumObject[] args)
         {
             HassiumObject obj = args[0];
@@ -55,19 +67,9 @@ namespace Hassium.Runtime.StandardLibrary.Types
             return new HassiumString(sb.ToString());
         }
 
-        public int EnumerableIndex = 0;
-        private HassiumObject __enumerablefull__ (VirtualMachine vm, HassiumObject[] args)
+        private HassiumList __iter__ (VirtualMachine vm, HassiumObject[] args)
         {
-            return new HassiumBool(EnumerableIndex >= Value.Length);
-        }
-        private HassiumObject __enumerablenext__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            return Value[EnumerableIndex++];
-        }
-        private HassiumObject __enumerablereset__ (VirtualMachine vm, HassiumObject[] args)
-        {
-            EnumerableIndex = 0;
-            return HassiumObject.Null;
+            return new HassiumList(Value);
         }
     }
 }
