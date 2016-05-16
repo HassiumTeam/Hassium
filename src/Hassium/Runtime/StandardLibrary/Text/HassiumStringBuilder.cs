@@ -7,10 +7,13 @@ namespace Hassium.Runtime.StandardLibrary.Text
 {
     public class HassiumStringBuilder: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("StringBuilder");
+
         public StringBuilder StringBuilder { get; set; } 
         public HassiumStringBuilder()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, new int[] { 0, 1 }));
+            AddType(HassiumStringBuilder.TypeDefinition);
         }
 
         private HassiumStringBuilder _new (VirtualMachine vm, HassiumObject[] args)
@@ -27,7 +30,6 @@ namespace Hassium.Runtime.StandardLibrary.Text
             hassiumStringBuilder.Attributes.Add(HassiumObject.ADD_FUNCTION,         new HassiumFunction(hassiumStringBuilder.__add__, 1));
             hassiumStringBuilder.Attributes.Add(HassiumObject.INDEX_FUNCTION,       new HassiumFunction(hassiumStringBuilder.__index__, 1));
             hassiumStringBuilder.Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION, new HassiumFunction(hassiumStringBuilder.__storeindex__, 2));
-            hassiumStringBuilder.AddType("StringBuilder");
 
             return hassiumStringBuilder;
         }

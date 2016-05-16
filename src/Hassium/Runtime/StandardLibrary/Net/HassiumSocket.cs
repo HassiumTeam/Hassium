@@ -8,10 +8,13 @@ namespace Hassium.Runtime.StandardLibrary.Net
 {
     public class HassiumSocket: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Socket");
+
         public Socket Socket { get; set; }
         public HassiumSocket()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 3));
+            AddType(HassiumSocket.TypeDefinition);
         }
 
         private HassiumSocket _new(VirtualMachine vm, HassiumObject[] args)
@@ -32,7 +35,6 @@ namespace Hassium.Runtime.StandardLibrary.Net
             hassiumSocket.Attributes.Add("listen",      new HassiumFunction(hassiumSocket.listen, 1));
             hassiumSocket.Attributes.Add("send",        new HassiumFunction(hassiumSocket.send, 1));
             hassiumSocket.Attributes.Add("sendFile",    new HassiumFunction(hassiumSocket.sendFile, 1));
-            hassiumSocket.AddType("Socket");
 
             return hassiumSocket;
         }

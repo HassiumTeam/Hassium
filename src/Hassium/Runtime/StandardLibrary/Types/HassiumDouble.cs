@@ -4,6 +4,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumDouble: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("double");
         public new double Value { get; private set; }
         public int ValueInt { get { return Convert.ToInt32(Value); } }
 
@@ -37,7 +38,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,          new HassiumFunction(__enumerablereset__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,         new HassiumFunction(__tostring__, 0));
             Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
-            Types.Add("double");
+            AddType(HassiumDouble.TypeDefinition);
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

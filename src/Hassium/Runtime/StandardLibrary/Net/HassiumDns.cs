@@ -13,7 +13,6 @@ namespace Hassium.Runtime.StandardLibrary.Net
             Attributes.Add("resolveAddresses",  new HassiumFunction(resolveAddresses, 1));
             Attributes.Add("resolveHost",       new HassiumFunction(resolveHost, 1));
             Attributes.Add("resolveHosts",      new HassiumFunction(resolveHosts, 1));
-            AddType("Dns");
         }
 
         private HassiumString resolveAddress(VirtualMachine vm, HassiumObject[] args)

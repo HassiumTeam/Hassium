@@ -5,11 +5,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumThread: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Thread");
         public Thread Thread { get; set; }
         public HassiumThread()
         {
             Attributes.Add("executeMethod", new HassiumFunction(executeMethod, 2));
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 2));
+            AddType(HassiumThread.TypeDefinition);
         }
 
         private HassiumThread _new(VirtualMachine vm, HassiumObject[] args)
@@ -20,7 +22,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
             hassiumThread.Attributes.Add("sleep",   new HassiumFunction(hassiumThread.sleep, 1));
             hassiumThread.Attributes.Add("start",   new HassiumFunction(hassiumThread.start, 0));
             hassiumThread.Attributes.Add("stop",    new HassiumFunction(hassiumThread.stop, 0));
-            hassiumThread.AddType("Thread");
 
             return hassiumThread;
         }

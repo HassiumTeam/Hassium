@@ -8,10 +8,13 @@ namespace Hassium.Runtime.StandardLibrary.Net
 {
     public class HassiumConnectionListener: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ConnectionListener");
+
         public TcpListener TcpListener { get; set; }
         public HassiumConnectionListener()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 2));
+            AddType(HassiumConnectionListener.TypeDefinition);
         }
 
         private HassiumConnectionListener _new(VirtualMachine vm, HassiumObject[] args)
@@ -23,7 +26,6 @@ namespace Hassium.Runtime.StandardLibrary.Net
             hassiumConnectionListener.Attributes.Add("pending",             new HassiumFunction(hassiumConnectionListener.pending, 0));
             hassiumConnectionListener.Attributes.Add("start",               new HassiumFunction(hassiumConnectionListener.start, 0));
             hassiumConnectionListener.Attributes.Add("stop",                new HassiumFunction(hassiumConnectionListener.stop, 0));
-            hassiumConnectionListener.AddType("ConnectionListener");
 
             return hassiumConnectionListener;
         }

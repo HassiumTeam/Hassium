@@ -7,6 +7,8 @@ namespace Hassium.Runtime.StandardLibrary.Util
 {
     public class HassiumProcess: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Process");
+
         public Process Process { get; set; }
 
         public static HassiumProcess Create(HassiumObject obj)
@@ -24,7 +26,6 @@ namespace Hassium.Runtime.StandardLibrary.Util
             Attributes.Add("isProcessRunning",  new HassiumFunction(isProcessRunning, 1));
             Attributes.Add("killProcess",       new HassiumFunction(killProcess, 1));
             Attributes.Add("start",             new HassiumFunction(start, 1));
-            AddType("Process");
         }
 
         private HassiumProcess createFromProcess(Process process)
@@ -35,7 +36,6 @@ namespace Hassium.Runtime.StandardLibrary.Util
             hassiumProcess.Attributes.Add("kill",   new HassiumFunction(hassiumProcess.kill, 0));
             hassiumProcess.Attributes.Add("name",   new HassiumProperty(hassiumProcess.get_Name));
             hassiumProcess.Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(hassiumProcess.toString, 0));
-            hassiumProcess.AddType("Process");
 
             return hassiumProcess;
         }

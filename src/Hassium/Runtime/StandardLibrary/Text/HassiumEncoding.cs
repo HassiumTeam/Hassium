@@ -7,10 +7,13 @@ namespace Hassium.Runtime.StandardLibrary.Text
 {
     public class HassiumEncoding: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Encoding");
+
         public new Encoding Value { get; set; }
         public HassiumEncoding()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 1));
+            AddType(HassiumEncoding.TypeDefinition);
         }
 
         private HassiumEncoding _new(VirtualMachine vm, HassiumObject[] args)
@@ -38,7 +41,6 @@ namespace Hassium.Runtime.StandardLibrary.Text
             hassiumEncoding.Attributes.Add("encodingName",  new HassiumProperty(hassiumEncoding.get_EncodingName));
             hassiumEncoding.Attributes.Add("getBytes",      new HassiumFunction(hassiumEncoding.getBytes, 1));
             hassiumEncoding.Attributes.Add("headerName",    new HassiumProperty(hassiumEncoding.get_HeaderName));
-            hassiumEncoding.AddType("Encoding");
 
             return hassiumEncoding;
         }

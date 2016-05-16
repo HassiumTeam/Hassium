@@ -248,7 +248,7 @@ namespace Hassium.Parser
                 {
                     case "is":
                         parser.AcceptToken(TokenType.BinaryOperation);
-                        left = new BinaryOperationNode(BinaryOperation.Is, left, new StringNode(parser.ExpectToken(TokenType.Identifier).Value, parser.Location), parser.Location);
+                        left = new BinaryOperationNode(BinaryOperation.Is, left, parseMultiplicative(parser), parser.Location);
                         continue;
                     case "*":
                         parser.AcceptToken(TokenType.BinaryOperation);

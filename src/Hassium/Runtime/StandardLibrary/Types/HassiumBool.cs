@@ -4,6 +4,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumBool: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("bool");
         public new bool Value { get; private set; }
 
         public static HassiumBool Create(HassiumObject obj)
@@ -24,7 +25,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequals__, 1));
             Attributes.Add(HassiumObject.NOT,                   new HassiumFunction(__not__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
-            AddType("bool");
+            AddType(HassiumBool.TypeDefinition);
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

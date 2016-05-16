@@ -8,10 +8,13 @@ namespace Hassium.Runtime.StandardLibrary.IO
 {
     public class HassiumFileWriter: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("FileWriter");
+
         public BinaryWriter BinaryWriter { get; set; }
         public HassiumFileWriter()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 1));
+            AddType(HassiumFileWriter.TypeDefinition);
         }
 
         private HassiumFileWriter _new(VirtualMachine vm, HassiumObject[] args)
@@ -33,7 +36,6 @@ namespace Hassium.Runtime.StandardLibrary.IO
             hassiumFileWriter.Attributes.Add("writeLine",   new HassiumFunction(hassiumFileWriter.writeLine, 1));
             hassiumFileWriter.Attributes.Add("writeList",   new HassiumFunction(hassiumFileWriter.writeList, 1));
             hassiumFileWriter.Attributes.Add("writeString", new HassiumFunction(hassiumFileWriter.writeString, 1));
-            hassiumFileWriter.AddType("FileWriter");
 
             return hassiumFileWriter;
         }

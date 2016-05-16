@@ -6,6 +6,8 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumString: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("string");
+
         public new string Value { get; private set; }
 
         public static HassiumString Create(HassiumObject obj)
@@ -43,7 +45,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,    new HassiumFunction(__notequal__, 1));
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
             Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
-            AddType("string");
+            AddType(HassiumString.TypeDefinition);
         }
 
         private HassiumBool contains(VirtualMachine vm, HassiumObject[] args)

@@ -4,6 +4,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumChar: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("char");
         public new char Value { get; private set; }
 
         public static HassiumChar Create(HassiumObject obj)
@@ -37,7 +38,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,   new HassiumFunction(__equals__, 1));
             Attributes.Add(HassiumObject.NOT_EQUAL_FUNCTION,new HassiumFunction(__notequals__, 1));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(__tostring__, 0));
-            AddType("char");
+            AddType(HassiumChar.TypeDefinition);
         }
 
         private HassiumBool isDigit(VirtualMachine vm, HassiumObject[] args)

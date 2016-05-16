@@ -112,13 +112,13 @@ namespace Hassium.Runtime.StandardLibrary
         }
         private static HassiumObject type(VirtualMachine vm, HassiumObject[] args)
         {
-            return new HassiumString(args[0].Type());
+            return new HassiumString(args[0].Type().ToString(vm));
         }
         private static HassiumObject types(VirtualMachine vm, HassiumObject[] args)
         {
             HassiumObject[] elements = new HassiumObject[args[0].Types.Count];
             for (int i = 0; i < elements.Length; i++)
-                elements[i] = new HassiumString(args[0].Types[i]);
+                elements[i] = new HassiumString(args[0].Types[i].ToString(vm));
             return new HassiumList(elements);
         }
     }

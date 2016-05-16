@@ -12,11 +12,14 @@ namespace Hassium.Runtime.StandardLibrary.Net
 {
     public class HassiumNetConnection: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("NetConnection");
+
         public TcpClient TcpClient { get; set; }
 
         public HassiumNetConnection()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 2));
+            AddType(HassiumNetConnection.TypeDefinition);
         }
 
         public static HassiumNetConnection CreateFromTcpClient(TcpClient client)
@@ -27,7 +30,6 @@ namespace Hassium.Runtime.StandardLibrary.Net
             hassiumNetConnection.Attributes.Add("close",        new HassiumFunction(hassiumNetConnection.close, 0));
             hassiumNetConnection.Attributes.Add("connected",    new HassiumProperty(hassiumNetConnection.connected));
             hassiumNetConnection.Attributes.Add("getStream",    new HassiumFunction(hassiumNetConnection.getStream, 0));
-            hassiumNetConnection.AddType("NetConnection");
 
             return hassiumNetConnection;
         }

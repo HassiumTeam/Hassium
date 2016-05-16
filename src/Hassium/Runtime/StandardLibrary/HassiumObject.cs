@@ -36,9 +36,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public const string TOSTRING_FUNCTION =         "toString";
 
         public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
-        public List<string> Types = new List<string>()
+
+        private static HassiumTypeDefinition defaultTypeDefinition = new HassiumTypeDefinition("object");
+        public List<HassiumTypeDefinition> Types = new List<HassiumTypeDefinition>()
         {
-            "object"
+            defaultTypeDefinition
         };
 
         public object Value { get; set; }
@@ -181,11 +183,11 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             return HassiumBool.Create(Attributes[CONTAINS].Invoke(vm, new[] {obj}));
         }
-        public void AddType(string type)
+        public void AddType(HassiumTypeDefinition type)
         {
             Types.Add(type);
         }
-        public string Type()
+        public virtual HassiumTypeDefinition Type()
         {
             return Types[Types.Count - 1];
         }
@@ -193,7 +195,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             if (Attributes.ContainsKey("toString"))
                 return ((HassiumString)Attributes["toString"].Invoke(vm, new HassiumObject[0])).Value;
-            return Type();
+            return Type().ToString(vm);
         }
 
         public object Clone()

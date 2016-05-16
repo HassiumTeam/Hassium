@@ -8,10 +8,12 @@ namespace Hassium.Runtime.StandardLibrary.Collections
 {
     public class HassiumStack: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Stack");
         public List<HassiumObject> Stack { get; set; }
         public HassiumStack()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 0));
+            AddType(HassiumStack.TypeDefinition);
         }
 
         private HassiumStack _new(VirtualMachine vm, HassiumObject[] args)
@@ -29,7 +31,6 @@ namespace Hassium.Runtime.StandardLibrary.Collections
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_FULL,      new HassiumFunction(hassiumStack.__enumerablefull__, 0));
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_NEXT,      new HassiumFunction(hassiumStack.__enumerablenext__, 0));
             hassiumStack.Attributes.Add(HassiumObject.ENUMERABLE_RESET,     new HassiumFunction(hassiumStack.__enumerablereset__, 0));
-            hassiumStack.AddType("Stack");
 
             return hassiumStack;
         }

@@ -4,6 +4,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumInt: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("int");
         public new Int64 Value { get; private set; }
 
         public static HassiumInt Create(HassiumObject obj)
@@ -39,7 +40,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(NEGATE, new HassiumFunction(__negate__, 0));
             Attributes.Add(BIT_SHIFT_LEFT, new HassiumFunction(__bshiftleft__, 1));
             Attributes.Add(BIT_SHIFT_RIGHT, new HassiumFunction(__bshiftright__, 1));
-            AddType("int");
+            AddType(HassiumInt.TypeDefinition);
         }
 
         private HassiumBool toBool(VirtualMachine vm, HassiumObject[] args)

@@ -7,6 +7,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumEvent: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Event");
         public HassiumList Handlers { get; set; }
 
         public HassiumEvent()
@@ -22,7 +23,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             hassiumEvent.Attributes.Add("add",          new HassiumFunction(hassiumEvent.add, -1));
             hassiumEvent.Attributes.Add("handle",       new HassiumFunction(hassiumEvent.handle, -1));
             hassiumEvent.Attributes.Add("remove",       new HassiumFunction(hassiumEvent.handle, -1));
-            hassiumEvent.AddType("Event");
+            hassiumEvent.AddType(HassiumEvent.TypeDefinition);
 
             return hassiumEvent;
         }

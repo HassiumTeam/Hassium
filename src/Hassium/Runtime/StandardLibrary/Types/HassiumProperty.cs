@@ -4,6 +4,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumProperty: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("property");
         public HassiumFunctionDelegate GetValue;
         public HassiumFunctionDelegate SetValue;
 
@@ -11,7 +12,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             GetValue = getValue;
             SetValue = setValue;
-            AddType("property");
+            AddType(TypeDefinition);
         }
 
         public new HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)

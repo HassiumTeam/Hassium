@@ -8,6 +8,7 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
 {
     public class HassiumAssembly: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Assembly");
         private HassiumAssembly create(HassiumObject module)
         {
             HassiumAssembly hassiumAssembly = new HassiumAssembly();
@@ -17,7 +18,6 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
             hassiumAssembly.Attributes.Add("getAttributes", new HassiumFunction(hassiumAssembly.getAttributes, 0));
             hassiumAssembly.Attributes.Add("getClasses",    new HassiumFunction(hassiumAssembly.getClasses, 0));
             hassiumAssembly.Attributes.Add("getFunctions",  new HassiumFunction(hassiumAssembly.getFunctions, 0));
-            hassiumAssembly.AddType("Assembly");
 
             return hassiumAssembly;
         }
@@ -28,7 +28,7 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
             Attributes.Add("fromFile",        new HassiumFunction(fromFile, 1));
             Attributes.Add("fromObject",      new HassiumFunction(fromObject, 1));
             Attributes.Add("getCurrentAssembly",    new HassiumFunction(getCurrentAssembly, 0));
-            AddType("Assembly");
+            AddType(HassiumAssembly.TypeDefinition);
         }
         
         public HassiumList disassemble(VirtualMachine vm, HassiumObject[] args)

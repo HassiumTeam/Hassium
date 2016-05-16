@@ -310,6 +310,8 @@ namespace Hassium.CodeGen
                 module.ConstantPool.Add(new HassiumString(node.Name));
             HassiumClass clazz = new HassiumClass();
             clazz.Name = node.Name;
+            clazz.TypeDefinition = new Hassium.Runtime.HassiumTypeDefinition(clazz.Name);
+            clazz.AddType(clazz.TypeDefinition);
 
             foreach (AstNode child in node.Body.Children)
             {

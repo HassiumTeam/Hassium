@@ -7,6 +7,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
     public delegate HassiumObject HassiumFunctionDelegate(VirtualMachine vm, params HassiumObject[] args);
     public class HassiumFunction: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("func");
         private HassiumFunctionDelegate target;
         public int[] ParamLengths { get; private set; }
 
@@ -14,13 +15,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             this.target = target;
             ParamLengths = new int[] { paramLength };
-            AddType("func");
+            AddType(HassiumFunction.TypeDefinition);
         }
         public HassiumFunction(HassiumFunctionDelegate target, int[] paramLengths)
         {
             this.target = target;
             ParamLengths = paramLengths;
-            AddType("func");
+            AddType(HassiumFunction.TypeDefinition);
         }
 
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)

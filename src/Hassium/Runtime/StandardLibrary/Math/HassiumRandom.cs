@@ -6,10 +6,13 @@ namespace Hassium.Runtime.StandardLibrary.Math
 {
     public class HassiumRandom: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Random");
+
         public new Random Value { get; set; }
         public HassiumRandom()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, new int[] { 0, 1 }));
+            AddType(HassiumRandom.TypeDefinition);
         }
 
         private HassiumRandom _new(VirtualMachine vm, HassiumObject[] args)
@@ -19,7 +22,6 @@ namespace Hassium.Runtime.StandardLibrary.Math
             hassiumRandom.Value = args.Length == 1 ?    new Random((int)HassiumInt.Create(args[0]).Value) : new Random();
             hassiumRandom.Attributes.Add("nextDouble",  new HassiumFunction(hassiumRandom.nextDouble, 0));
             hassiumRandom.Attributes.Add("nextInt",     new HassiumFunction(hassiumRandom.nextInt, new int[] { 0, 1, 2 }));
-            hassiumRandom.AddType("Random");
 
             return hassiumRandom;
         }

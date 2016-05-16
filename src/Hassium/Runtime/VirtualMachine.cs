@@ -12,6 +12,7 @@ namespace Hassium.Runtime
         public StackFrame StackFrame { get { return stackFrame; } }
         public Stack<HassiumObject> Stack { get { return stack; } }
         public Stack<string> CallStack { get { return callStack; } }
+        public Dictionary<string, HassiumObject> Globals { get { return globals; } }
         public Stack<HassiumExceptionHandler> Handlers { get { return handlers; } }
         public SourceLocation CurrentSourceLocation { get { return sourceLocation; } }
         public HassiumModule CurrentlyExecutingModule { get { return module; } }
@@ -21,15 +22,14 @@ namespace Hassium.Runtime
         private Stack<string> callStack = new Stack<string>();
         private Stack<HassiumExceptionHandler> handlers = new Stack<HassiumExceptionHandler>();
 
-        private Dictionary<double, HassiumObject> globals;
+        private Dictionary<string, HassiumObject> globals;
         private HassiumModule module;
         private SourceLocation sourceLocation;
-        private Stack<MethodBuilder> methodStack = new Stack<MethodBuilder>();
         private Dictionary<MethodBuilder, int> exceptionReturns = new Dictionary<MethodBuilder, int>(); 
 
         public void Execute(HassiumModule module)
         {
-            globals = new Dictionary<double, HassiumObject>();
+            globals = new Dictionary<string, HassiumObject>();
             stack = new Stack<HassiumObject>();
             stackFrame = new StackFrame();
             this.module = module;
@@ -44,7 +44,6 @@ namespace Hassium.Runtime
 
         public HassiumObject ExecuteMethod(MethodBuilder method)
         {
-            methodStack.Push(method);
             gatherLabels(method);
             for (int position = 0; position < method.Instructions.Count; position++)
             {
@@ -145,7 +144,7 @@ namespace Hassium.Runtime
                         case InstructionType.Load_Global:
                             try
                             {
-                                stack.Push(globals[argument]);
+                                stack.Push(globals[module.ConstantPool[argumentInt].ToString(this)]);
                             }
                             catch (KeyNotFoundException)
                             {
@@ -187,7 +186,6 @@ namespace Hassium.Runtime
                             RaiseException(stack.Pop(), method, ref position);
                             break;
                         case InstructionType.Return:
-                            methodStack.Pop();
                             return stack.Pop();
                         case InstructionType.Self_Reference:
                             stack.Push(method.Parent);
@@ -245,7 +243,6 @@ namespace Hassium.Runtime
                     RaiseException(new HassiumString("Divide by zero!"), method, ref position);
                 }
             }
-            methodStack.Pop();
             return HassiumObject.Null;
         }
 
@@ -320,7 +317,7 @@ namespace Hassium.Runtime
                     stack.Push(left.Contains(this, right));
                     break;
                 case 22:
-                    stack.Push(new HassiumBool(left.Types.Contains(HassiumString.Create(right).Value)));
+                    stack.Push(new HassiumBool(left.Types.Contains(right.Type())));
                     break;
                 case 23:
                     stack.Push(GlobalFunctions.FunctionList["range"].Invoke(this, new HassiumObject[] { left, right }));
@@ -336,7 +333,6 @@ namespace Hassium.Runtime
             {
                 HassiumExceptionHandler handler = handlers.Peek() as HassiumExceptionHandler;
                 handler.Invoke(this, new HassiumObject[] { message });
-                //pos = handler.SourceMethod.Labels[handler.Label];
                 exceptionReturns.Add(handler.SourceMethod, handler.SourceMethod.Labels[handler.Label]);
             }
         }
@@ -372,9 +368,11 @@ namespace Hassium.Runtime
         {
             for (int i = 0; i < constantPool.Count; i++)
                 if (GlobalFunctions.FunctionList.ContainsKey(constantPool[i].ToString(this)))
-                    globals.Add(Convert.ToDouble(i), GlobalFunctions.FunctionList[constantPool[i].ToString(this)]);
+                    globals.Add(constantPool[i].ToString(this), GlobalFunctions.FunctionList[constantPool[i].ToString(this)]);
                 else if (module.Attributes.ContainsKey(constantPool[i].ToString(this)))
-                    globals.Add(i, module.Attributes[constantPool[i].ToString(this)]);
+                    globals.Add(constantPool[i].ToString(this), module.Attributes[constantPool[i].ToString(this)]);
+                else if (HassiumTypesModule.Instance.Attributes.ContainsKey(constantPool[i].ToString(this)))
+                    globals.Add(constantPool[i].ToString(this), HassiumTypesModule.Instance.Attributes[constantPool[i].ToString(this)]);
             List<int> keys = new List<int>(module.Globals.Keys);
             foreach (int key in keys)
                 module.Globals[key] = module.Globals[key].Invoke(this, new HassiumObject[0]);

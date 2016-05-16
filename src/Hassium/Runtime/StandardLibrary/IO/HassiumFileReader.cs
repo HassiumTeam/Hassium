@@ -8,10 +8,13 @@ namespace Hassium.Runtime.StandardLibrary.IO
 {
     public class HassiumFileReader: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("FileReader");
+
         public BinaryReader BinaryReader { get; set; }
         public HassiumFileReader()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 1));
+            AddType(HassiumFileReader.TypeDefinition);
         }
 
         private HassiumFileReader _new(VirtualMachine vm, HassiumObject[] args)
@@ -34,7 +37,6 @@ namespace Hassium.Runtime.StandardLibrary.IO
             hassiumFileReader.Attributes.Add("readInt64",   new HassiumFunction(hassiumFileReader.readInt64, 0));
             hassiumFileReader.Attributes.Add("readLine",    new HassiumFunction(hassiumFileReader.readLine, 0));
             hassiumFileReader.Attributes.Add("readString",  new HassiumFunction(hassiumFileReader.readString, 0));
-            hassiumFileReader.AddType("FileReader");
 
             return hassiumFileReader;
         }

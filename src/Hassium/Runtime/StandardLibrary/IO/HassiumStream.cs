@@ -8,6 +8,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
 {
     public class HassiumStream: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Stream");
         public Stream Stream { get; private set; }
         public HassiumStream(Stream stream)
         {
@@ -21,7 +22,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
             Attributes.Add("readTo",            new HassiumFunction(readTo, 1));
             Attributes.Add("write",             new HassiumFunction(write, 1));
             Attributes.Add("writeByte",         new HassiumFunction(writeByte, 1));
-            AddType("Stream");
+            AddType(HassiumStream.TypeDefinition);
         }
             
         private HassiumInt get_Length(VirtualMachine vm, HassiumObject[] args)

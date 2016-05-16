@@ -11,7 +11,7 @@ namespace Hassium.CodeGen
     public class MethodBuilder: HassiumObject
     {
         public HassiumClass Parent { get; set; }
-        public string Name { get { return name; } set { name = value; Types.Add("func"); } }
+        public string Name { get { return name; } set { name = value; AddType(HassiumFunction.TypeDefinition); } }
         private string name = "";
 
         public Dictionary<FuncNode.Parameter, int> Parameters = new Dictionary<FuncNode.Parameter, int>();
@@ -37,7 +37,7 @@ namespace Hassium.CodeGen
                 HassiumObject argument = args[counter++];
                 if (param.Key.IsEnforced)
                 {
-                    if (!argument.Types.Contains(param.Key.Type))
+                    if (!argument.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type]))
                         throw new InternalException(string.Format("Expected type {0} to {1}, instead got {2}!", param.Key.Type, SourceRepresentation, argument.Type()));
                 }
                 
@@ -51,7 +51,7 @@ namespace Hassium.CodeGen
             {
                 HassiumClass ret = new HassiumClass();
                 ret.Attributes = CloneDictionary(Parent.Attributes);
-                ret.Types.Add(Parent.Name);
+                ret.AddType(Parent.TypeDefinition);
                 foreach (HassiumObject obj in ret.Attributes.Values)
                     if (obj is MethodBuilder)
                         ((MethodBuilder)obj).Parent = ret;

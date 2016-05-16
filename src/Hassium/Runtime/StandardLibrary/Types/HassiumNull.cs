@@ -6,7 +6,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
     {
         public HassiumNull()
         {
-            Types.Add(this.GetType().Name);
+            Types.Add(new HassiumTypeDefinition("null"));
         }
     }
 }

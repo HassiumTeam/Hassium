@@ -6,6 +6,8 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumExceptionHandler: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ExceptionHandler");
+
         public MethodBuilder SourceMethod { get; private set; }
         public MethodBuilder HandlerMethod { get; private set; }
         public double Label { get; private set; }
@@ -17,7 +19,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             HandlerMethod = handlerMethod;
             Label = label;
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(__invoke__, -1));
-            AddType("ExceptionHandler");
+            AddType(HassiumExceptionHandler.TypeDefinition);
         }
 
         private HassiumObject __invoke__ (VirtualMachine vm, HassiumObject[] args)

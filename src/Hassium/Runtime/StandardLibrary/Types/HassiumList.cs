@@ -7,6 +7,8 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumList: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("list");
+
         public new List<HassiumObject> Value { get; private set; }
 
         public static HassiumList Create(HassiumObject obj)
@@ -44,7 +46,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_RESET,      new HassiumFunction(__enumerablereset__, 0));
-            AddType("list");
+            AddType(HassiumList.TypeDefinition);
         }
 
         private HassiumObject _add(VirtualMachine vm, HassiumObject[] args)

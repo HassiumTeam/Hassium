@@ -7,10 +7,13 @@ namespace Hassium.Runtime.StandardLibrary.Util
 {
     public class HassiumStopWatch: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("StopWatch");
+
         public new Stopwatch Value { get; private set; }
         public HassiumStopWatch()
         {
             Attributes.Add(HassiumObject.INVOKE_FUNCTION, new HassiumFunction(_new, 0));
+            AddType(HassiumStopWatch.TypeDefinition);
         }
 
         private HassiumStopWatch _new(VirtualMachine vm, HassiumObject[] args)
@@ -28,7 +31,6 @@ namespace Hassium.Runtime.StandardLibrary.Util
             hassiumStopWatch.Attributes.Add("start",        new HassiumFunction(hassiumStopWatch.start, 0));
             hassiumStopWatch.Attributes.Add("stop",         new HassiumFunction(hassiumStopWatch.stop, 0));
             hassiumStopWatch.Attributes.Add("ticks",        new HassiumProperty(hassiumStopWatch.get_Ticks));
-            hassiumStopWatch.AddType("StopWatch");
 
             return hassiumStopWatch;
         }

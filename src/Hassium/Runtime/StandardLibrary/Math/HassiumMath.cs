@@ -23,13 +23,12 @@ namespace Hassium.Runtime.StandardLibrary.Math
             Attributes.Add("log10", new HassiumFunction(log10, 2));
             Attributes.Add("max",   new HassiumFunction(max, 2));
             Attributes.Add("min",   new HassiumFunction(min, 2));
-            Attributes.Add("Pi",    new HassiumProperty(get_Pi));
+            Attributes.Add("pi",    new HassiumProperty(get_Pi));
             Attributes.Add("pow",   new HassiumFunction(pow, 2));
             Attributes.Add("round", new HassiumFunction(round, 1));
             Attributes.Add("sin",   new HassiumFunction(sin, 1));
             Attributes.Add("sqrt",  new HassiumFunction(sqrt, 1));
             Attributes.Add("tan",   new HassiumFunction(tan, 1));
-            AddType("Math");
         }
 
         private HassiumObject abs(VirtualMachine vm, HassiumObject[] args)

@@ -5,6 +5,8 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumTuple: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("tuple");
+
         public new HassiumObject[] Value { get; private set; }
         public HassiumTuple(HassiumObject[] elements)
         {
@@ -17,7 +19,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
             Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
-            AddType("tuple");
+            AddType(HassiumTuple.TypeDefinition);
         }
 
         private HassiumInt get_Length(VirtualMachine vm, HassiumObject[] args)

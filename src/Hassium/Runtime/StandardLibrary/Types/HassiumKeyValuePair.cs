@@ -4,6 +4,8 @@ namespace Hassium.Runtime.StandardLibrary.Types
 {
     public class HassiumKeyValuePair: HassiumObject
     {
+        public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("KeyValuePair");
+
         public HassiumObject Key { get; set; }
         public new HassiumObject Value { get; set; }
         public HassiumKeyValuePair(HassiumObject key, HassiumObject value)
@@ -14,7 +16,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("key",   new HassiumProperty(get_Key, set_Key));
             Attributes.Add("value", new HassiumProperty(get_Value, set_Value));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION, new HassiumFunction(toString, 0));
-            AddType("KeyValuePair");
+            AddType(HassiumKeyValuePair.TypeDefinition);
         }
 
         private HassiumObject get_Key(VirtualMachine vm, HassiumObject[] args)
