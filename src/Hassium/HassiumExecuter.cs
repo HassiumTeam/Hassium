@@ -11,6 +11,7 @@ namespace Hassium
 {
     public class HassiumExecuter
     {
+        public static VirtualMachine vm;
         public static HassiumModule FromFilePath(string filePath, bool executeVM = true)
         {
             return FromString(File.ReadAllText(filePath), executeVM);
@@ -31,7 +32,7 @@ namespace Hassium
                 module = compiler.Compile(ast, table, "MainModule");
                 if (executeVM)
                 {
-                    VirtualMachine vm = new VirtualMachine();
+                    vm = new VirtualMachine();
                     try
                     {
                         vm.Execute(module);

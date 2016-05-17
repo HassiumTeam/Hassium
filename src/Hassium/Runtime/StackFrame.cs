@@ -44,6 +44,8 @@ namespace Hassium.Runtime
         }
         public void Add(int index, HassiumObject value = null)
         {
+            if (Frames.Peek().ContainsVariable(index))
+                Frames.Peek().variables.Remove(index);
             Frames.Peek().Add(index, value);
         }
         public bool Contains(int index)

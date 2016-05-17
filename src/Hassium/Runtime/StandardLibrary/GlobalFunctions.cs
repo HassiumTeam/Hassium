@@ -9,15 +9,18 @@ namespace Hassium.Runtime.StandardLibrary
 {
     public static class GlobalFunctions
     {
-        public static Dictionary<string, HassiumFunction> FunctionList = new Dictionary<string, HassiumFunction>()
+        public static Dictionary<string, HassiumObject> FunctionList = new Dictionary<string, HassiumObject>()
         {
             { "exit",           new HassiumFunction(exit, 1) },
             { "fillList",       new HassiumFunction(fillList, new int[] { 1, 2, 3 }) },
+            { "filter",         new HassiumFunction(filter, 2) },
             { "format",         new HassiumFunction(format, -1) },
             { "getAttribute",   new HassiumFunction(getAttribute, 2) },
+            { "globals",        new HassiumProperty(get_Globals) },
             { "hasAttribute",   new HassiumFunction(hasAttribute, 2) },
             { "input",          new HassiumFunction(input, 0) },
             { "inputChar",      new HassiumFunction(inputChar, 0) },
+            { "map",            new HassiumFunction(map, new int[] { 2, 3 }) },
             { "print",          new HassiumFunction(print, -1) },
             { "println",        new HassiumFunction(println, -1) },
             { "range",          new HassiumFunction(range, 2) },
@@ -41,12 +44,32 @@ namespace Hassium.Runtime.StandardLibrary
 
             return list;
         }
+        private static HassiumList filter(VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = args[0].Iter(vm) as HassiumList;
+            HassiumList result = new HassiumList(new HassiumObject[0]);
+
+            foreach (HassiumObject obj in list.Value)
+                if (HassiumBool.Create(args[1].Invoke(vm, new HassiumObject[] { obj })).Value)
+                    result.Value.Add(obj);
+            
+            return result;
+        }
         private static HassiumString format(VirtualMachine vm, HassiumObject[] args)
         {
             string[] objs = new string[args.Length - 1];
             for (int i = 1; i < args.Length; i++)
                 objs[i - 1] = args[i].ToString(vm);
             return new HassiumString(string.Format(HassiumString.Create(args[0]).ToString(), objs));
+        }
+        private static HassiumList get_Globals(VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+
+            foreach (KeyValuePair<string, HassiumObject> entry in vm.Globals)
+                list.Value.Add(new HassiumKeyValuePair(new HassiumString(entry.Key), entry.Value));
+
+            return list;
         }
         private static HassiumObject getAttribute(VirtualMachine vm, HassiumObject[] args)
         {
@@ -66,11 +89,23 @@ namespace Hassium.Runtime.StandardLibrary
         }
         private static HassiumList map(VirtualMachine vm, HassiumObject[] args)
         {
-            HassiumList list = args[0] as HassiumList;
+            HassiumList list = args[0].Iter(vm) as HassiumList;
             HassiumList result = new HassiumList(new HassiumObject[0]);
+
             list.EnumerableReset(vm);
-            while (!HassiumBool.Create(list.EnumerableFull(vm)).Value)
-                result.Value.Add(args[1].Invoke(vm, new HassiumObject[] { list.EnumerableNext(vm) }));
+            if (args.Length == 2)
+                while (!HassiumBool.Create(list.EnumerableFull(vm)).Value)
+                    result.Value.Add(args[1].Invoke(vm, new HassiumObject[] { list.EnumerableNext(vm) }));
+            else
+            {
+                while (!HassiumBool.Create(list.EnumerableFull(vm)).Value)
+                {
+                    HassiumObject obj = list.EnumerableNext(vm);
+                    if (HassiumBool.Create(args[2].Invoke(vm, new HassiumObject[] { obj })).Value)
+                        result.Value.Add(args[1].Invoke(vm, new HassiumObject[] { obj }));
+                }
+            }
+            
             list.EnumerableReset(vm);
 
             return result;
