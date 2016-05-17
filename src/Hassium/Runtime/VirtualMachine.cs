@@ -148,7 +148,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                throw new InternalException("Cannot find global identifier!");
+                                throw new InternalException(string.Format("Cannot find global identifier {0}!", module.ConstantPool[argumentInt]));
                             }
                             break;
                         case InstructionType.Load_Global_Variable:
@@ -317,7 +317,10 @@ namespace Hassium.Runtime
                     stack.Push(left.Contains(this, right));
                     break;
                 case 22:
-                    stack.Push(new HassiumBool(left.Types.Contains(right.Type())));
+                    if (right is HassiumTrait)
+                        stack.Push(new HassiumBool(((HassiumTrait)right).MatchesTrait(this, left)));
+                    else
+                        stack.Push(new HassiumBool(left.Types.Contains(right.Type())));
                     break;
                 case 23:
                     stack.Push(GlobalFunctions.FunctionList["range"].Invoke(this, new HassiumObject[] { left, right }));
@@ -367,12 +370,17 @@ namespace Hassium.Runtime
         private void gatherGlobals(List<HassiumObject> constantPool)
         {
             for (int i = 0; i < constantPool.Count; i++)
+            {
                 if (GlobalFunctions.FunctionList.ContainsKey(constantPool[i].ToString(this)))
                     globals.Add(constantPool[i].ToString(this), GlobalFunctions.FunctionList[constantPool[i].ToString(this)]);
                 else if (module.Attributes.ContainsKey(constantPool[i].ToString(this)))
                     globals.Add(constantPool[i].ToString(this), module.Attributes[constantPool[i].ToString(this)]);
-                else if (HassiumTypesModule.Instance.Attributes.ContainsKey(constantPool[i].ToString(this)))
-                    globals.Add(constantPool[i].ToString(this), HassiumTypesModule.Instance.Attributes[constantPool[i].ToString(this)]);
+            }
+
+            // Import default types
+            foreach (var type in HassiumTypesModule.Instance.Attributes)
+                if (!globals.ContainsKey(type.Key))
+                    globals.Add(type.Key, type.Value);
             List<int> keys = new List<int>(module.Globals.Keys);
             foreach (int key in keys)
                 module.Globals[key] = module.Globals[key].Invoke(this, new HassiumObject[0]);

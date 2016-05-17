@@ -149,6 +149,8 @@
     <Compile Include="HassiumArgumentConfig.cs" />
     <Compile Include="Runtime\HassiumTypeDefinition.cs" />
     <Compile Include="Runtime\StandardLibrary\Types\HassiumTypesModule.cs" />
+    <Compile Include="Parser\Ast\TraitNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\HassiumTrait.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

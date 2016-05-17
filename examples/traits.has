@@ -1,0 +1,22 @@
+func main () {
+	println (PartialClass is Operable);
+	println (CompleteClass is Operable);
+}
+
+trait Operable {
+	func add;
+	func sub;
+	func mul;
+	func div;
+}
+
+class CompleteClass {
+	func add (x, y) { return x + y; }
+	func sub (x, y) { return x - y; }
+	func mul (x, y) { return x * y; }
+	func div (x, y) { return x / y; }
+}
+
+class PartialClass {
+	func add (x, y) { return x + y; }
+}

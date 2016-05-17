@@ -94,6 +94,7 @@ namespace Hassium.SemanticAnalysis
         }
         public void Accept(TernaryOperationNode node) {}
         public void Accept(ThisNode node) {}
+        public void Accept(TraitNode node) {}
         public void Accept(TryCatchNode node)
         {
             node.VisitChildren(this);

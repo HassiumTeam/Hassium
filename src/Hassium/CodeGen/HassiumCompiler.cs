@@ -61,8 +61,13 @@ namespace Hassium.CodeGen
                 {
                     HassiumObject enumerator = new HassiumObject();
                     for (int i = 0; i < child.Children.Count; i++)
-                        enumerator.Attributes.Add(((IdentifierNode)child.Children[i]).Identifier, new HassiumDouble(i));
+                        enumerator.Attributes.Add(((IdentifierNode)child.Children[i]).Identifier, new HassiumInt(i));
                     module.Attributes.Add(((EnumNode)child).Name, enumerator);
+                }
+                else if (child is TraitNode)
+                {
+                    string traitName = ((TraitNode)child).Name;
+                    module.Attributes.Add(traitName, compileTrait(child as TraitNode));
                 }
                 else if (child is UseNode)
                 {
@@ -306,6 +311,11 @@ namespace Hassium.CodeGen
         }
         public void Accept(ClassNode node)
         {
+            module.Attributes.Add(node.Name, compileClass(node));
+        }
+        private HassiumClass compileClass(ClassNode node)
+        {
+
             if (!containsStringConstant(node.Name))
                 module.ConstantPool.Add(new HassiumString(node.Name));
             HassiumClass clazz = new HassiumClass();
@@ -315,14 +325,19 @@ namespace Hassium.CodeGen
 
             foreach (AstNode child in node.Body.Children)
             {
-                child.Visit(this);
                 if (child is FuncNode)
                 {
+                    child.Visit(this);
                     currentMethod.Parent = clazz;
                     clazz.Attributes.Add(currentMethod.Name, currentMethod);
                 }
-                if (child is PropertyNode)
+                else if (child is ClassNode)
+                    clazz.Attributes.Add(((ClassNode)child).Name, compileClass(child as ClassNode));
+                else if (child is TraitNode)
+                    clazz.Attributes.Add(((TraitNode)child).Name, compileTrait(child as TraitNode));
+                else if (child is PropertyNode)
                 {
+                    child.Visit(this);
                     PropertyNode propNode = child as PropertyNode;
                     if (!containsStringConstant(propNode.Identifier))
                         module.ConstantPool.Add(new HassiumString(propNode.Identifier));
@@ -351,7 +366,7 @@ namespace Hassium.CodeGen
                     clazz.Attributes.Add(propNode.Identifier, property);
                 }
             }
-            module.Attributes.Add(node.Name, clazz);
+            return clazz;
         }
         public void Accept(CodeBlockNode node)
         {
@@ -582,6 +597,9 @@ namespace Hassium.CodeGen
         {
             currentMethod.Emit(node.SourceLocation, InstructionType.Self_Reference, findIndex(currentMethod));
         }
+        public void Accept(TraitNode node)
+        {
+        }
         public void Accept(TryCatchNode node)
         {
             double endLabel = generateSymbol();
@@ -742,6 +760,14 @@ namespace Hassium.CodeGen
                         return true;
             }
             return false;
+        }
+
+        private HassiumTrait compileTrait(TraitNode trait)
+        {
+            HassiumTrait hassiumTrait = new HassiumTrait(trait.Traits);
+            if (!containsStringConstant(trait.Name))
+                module.ConstantPool.Add(new HassiumString(trait.Name));
+            return hassiumTrait;
         }
 
         private double nextSymbol = 0;
