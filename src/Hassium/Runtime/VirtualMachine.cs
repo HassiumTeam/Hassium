@@ -142,14 +142,13 @@ namespace Hassium.Runtime
                                 stack.Push(attrib);
                             break;
                         case InstructionType.Load_Global:
-                            try
-                            {
-                                stack.Push(globals[module.ConstantPool[argumentInt].ToString(this)]);
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                throw new InternalException(string.Format("Cannot find global identifier {0}!", module.ConstantPool[argumentInt]));
-                            }
+                            string global_ = module.ConstantPool[argumentInt].ToString(this);
+                            if (globals.ContainsKey(global_))
+                                stack.Push(globals[global_]);
+                            else if (method.Parent.Attributes.ContainsKey(global_))
+                                stack.Push(method.Parent.Attributes[global_]);
+                            else
+                                throw new InternalException(string.Format("Cannot find global identifier {0}!", global_));
                             break;
                         case InstructionType.Load_Global_Variable:
                             stack.Push(module.Globals[argumentInt]);

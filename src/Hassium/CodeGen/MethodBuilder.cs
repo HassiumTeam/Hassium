@@ -24,7 +24,6 @@ namespace Hassium.CodeGen
         public string SourceRepresentation { get; set; }
         public bool IsConstructor { get { return Name == "new"; } }
 
-
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {
             if (name != "__lambda__" && name != "__catch__")

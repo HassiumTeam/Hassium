@@ -454,6 +454,7 @@ namespace Hassium.CodeGen
                 module.ConstantPool.Add(new HassiumString(node.Name));
 
             currentMethod = new MethodBuilder();
+            currentMethod.Parent = new HassiumClass();
             currentMethod.Name = node.Name;
             currentMethod.SourceRepresentation = node.SourceRepresentation;
 
@@ -765,6 +766,9 @@ namespace Hassium.CodeGen
         private HassiumTrait compileTrait(TraitNode trait)
         {
             HassiumTrait hassiumTrait = new HassiumTrait(trait.Traits);
+            hassiumTrait.TypeDefinition = new Hassium.Runtime.HassiumTypeDefinition(trait.Name);
+            hassiumTrait.AddType(hassiumTrait.TypeDefinition);
+
             if (!containsStringConstant(trait.Name))
                 module.ConstantPool.Add(new HassiumString(trait.Name));
             return hassiumTrait;

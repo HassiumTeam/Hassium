@@ -11,7 +11,7 @@ namespace Hassium.Parser
         {
             public string Type { get; private set; }
             public string Name { get; private set; }
-            public Trait(string type, string name)
+            public Trait(string name, string type)
             {
                 Type = type;
                 Name = name;
@@ -35,7 +35,10 @@ namespace Hassium.Parser
             List<Trait> traits = new List<Trait>();
             while (!parser.AcceptToken(TokenType.RightBrace))
             {
-                traits.Add(new Trait(parser.ExpectToken(TokenType.Identifier).Value, parser.ExpectToken(TokenType.Identifier).Value));
+                string type = parser.ExpectToken(TokenType.Identifier).Value;
+                parser.ExpectToken(TokenType.Colon);
+                string attributeName = parser.ExpectToken(TokenType.Identifier).Value;
+                traits.Add(new Trait(type, attributeName));
                 parser.AcceptToken(TokenType.Semicolon);
             }
 

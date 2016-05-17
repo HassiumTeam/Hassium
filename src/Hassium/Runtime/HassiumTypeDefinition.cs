@@ -8,6 +8,13 @@ namespace Hassium.Runtime
     {
         public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("TypeDefinition");
 
+        public static HassiumTypeDefinition Create(HassiumObject obj)
+        {
+            if (!(obj is HassiumTypeDefinition))
+                throw new InternalException(string.Format("Cannot convert from {0} to TypeDefinition!", obj.Type()));
+            return (HassiumTypeDefinition)obj;
+        }
+
         public string TypeString { get; private set; }
         public HassiumTypeDefinition(string type)
         {
