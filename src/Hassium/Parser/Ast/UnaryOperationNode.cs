@@ -26,13 +26,14 @@ namespace Hassium.Parser
 
     public enum UnaryOperation
     {
+        BitwiseComplement,
+        Negate,
         Not,
         PostDecrement,
         PostIncrement,
         PreDecrement,
         PreIncrement,
-        BitwiseComplement,
-        Negate
+        Skip
     }
 }
 

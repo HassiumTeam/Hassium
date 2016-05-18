@@ -153,6 +153,17 @@ namespace Hassium.CodeGen
                     return;
                 }
             }
+            else if (node.Expression is UnaryOperationNode)
+            {
+                UnaryOperationNode unop = node.Expression as UnaryOperationNode;
+                if (unop.UnaryOperation == UnaryOperation.Skip)
+                {
+                    node.Target.Visit(this);
+                    unop.Body.Visit(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Skip);
+                    return;
+                }
+            }
             node.VisitChildren(this);
             currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element);
         }
@@ -639,6 +650,14 @@ namespace Hassium.CodeGen
         {
             switch (node.UnaryOperation)
             {
+                case UnaryOperation.BitwiseComplement:
+                    node.Body.Visit(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 1);
+                    break;
+                case UnaryOperation.Negate:
+                    node.Body.Visit(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 2);
+                    break;
                 case UnaryOperation.Not:
                     node.Body.Visit(this);
                     currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 0);
@@ -671,14 +690,6 @@ namespace Hassium.CodeGen
                         if (node.UnaryOperation == UnaryOperation.PreDecrement || node.UnaryOperation == UnaryOperation.PreIncrement)
                             currentMethod.Instructions.Add(loadInstruction);
                     }
-                    break;
-                case UnaryOperation.BitwiseComplement:
-                    node.Body.Visit(this);
-                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 1);
-                    break;
-                case UnaryOperation.Negate:
-                    node.Body.Visit(this);
-                    currentMethod.Emit(node.SourceLocation, InstructionType.Unary_Operation, 2);
                     break;
             }
         }

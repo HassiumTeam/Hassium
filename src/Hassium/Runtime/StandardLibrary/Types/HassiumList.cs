@@ -43,6 +43,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION,  new HassiumFunction(__storeindex__, 2));
             Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
             Attributes.Add(HassiumObject.SLICE_FUNCTION,        new HassiumFunction(slice, 2));
+            Attributes.Add(HassiumObject.SKIP_FUNCTION,         new HassiumFunction(skip, 1));
             Attributes.Add(HassiumObject.ADD_FUNCTION,          new HassiumFunction(__add__, 1));
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
@@ -129,11 +130,25 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 elements[i] = Value[Value.Count - (i + 1)];
             return new HassiumList(elements);
         }
+        private HassiumList skip(VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+
+            int step = (int)HassiumInt.Create(args[0]).Value;
+            if (step == -1)
+                return reverse(vm, args);
+            for (int i = 0; (i + step) < Value.Count; i += step)
+                list.Value.Add(Value[i]);
+
+            return list;
+        }
         private HassiumList slice(VirtualMachine vm, HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
             int max = args.Length == 2 ? (int)HassiumInt.Create(args[1]).Value : list.Value.Count;
+            if (max == -1)
+                max = list.Value.Count - 2;
             for (int i = (int)HassiumInt.Create(args[0]).Value; i < max; i++)
                 list.Add(vm, Value[i]);
             return list;

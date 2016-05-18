@@ -60,8 +60,14 @@ namespace Hassium.Lexer
                         readChar();
                         break;
                     case ':':
-                        result.Add(new Token(TokenType.Colon, ":", location));
                         readChar();
+                        if ((char)peekChar() == ':')
+                        {
+                            readChar();
+                            result.Add(new Token(TokenType.UnaryOperation, "::", location));
+                        }
+                        else
+                            result.Add(new Token(TokenType.Colon, ":", location));
                         break;
                     case ',':
                         result.Add(new Token(TokenType.Comma, ",", location));

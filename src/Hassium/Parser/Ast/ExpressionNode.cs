@@ -304,6 +304,9 @@ namespace Hassium.Parser
                     case "~":
                         parser.ExpectToken(TokenType.UnaryOperation);
                         return new UnaryOperationNode(UnaryOperation.BitwiseComplement, parseUnary(parser), parser.Location);
+                    case "::":
+                        parser.ExpectToken(TokenType.UnaryOperation);
+                        return new UnaryOperationNode(UnaryOperation.Skip, parseUnary(parser), parser.Location);
                 }
             }
             else if (parser.MatchToken(TokenType.BinaryOperation))

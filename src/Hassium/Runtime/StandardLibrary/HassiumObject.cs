@@ -25,6 +25,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public const string STORE_INDEX_FUNCTION =      "__storeindex__";
         public const string ITER_FUNCTION =             "__iter__";
         public const string SLICE_FUNCTION =            "__slice__";
+        public const string SKIP_FUNCTION =             "__skip__";
         public const string ENUMERABLE_FULL =           "__enumerablefull__";
         public const string ENUMERABLE_NEXT =           "__enumerablenext__";
         public const string ENUMERABLE_RESET =          "__enumerableReset__";
@@ -151,6 +152,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public virtual HassiumObject Slice(VirtualMachine vm, HassiumObject left, HassiumObject right)
         {
             return Attributes[SLICE_FUNCTION].Invoke(vm, new HassiumObject[] { left, right });
+        }
+        public virtual HassiumObject Skip(VirtualMachine vm, HassiumObject skip)
+        {
+            return Attributes[SKIP_FUNCTION].Invoke(vm, new HassiumObject[] { skip });
         }
         public virtual HassiumObject EnumerableFull(VirtualMachine vm)
         {

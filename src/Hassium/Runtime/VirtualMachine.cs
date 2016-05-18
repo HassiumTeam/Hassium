@@ -189,6 +189,10 @@ namespace Hassium.Runtime
                         case InstructionType.Self_Reference:
                             stack.Push(method.Parent);
                             break;
+                        case InstructionType.Skip:
+                            right = stack.Pop();
+                            stack.Push(stack.Pop().Iter(this).Skip(this, right));
+                            break;
                         case InstructionType.Slice:
                             right = stack.Pop();
                             left = stack.Pop();

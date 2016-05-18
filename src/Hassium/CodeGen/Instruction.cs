@@ -47,6 +47,7 @@ namespace Hassium.CodeGen
         Raise,
         Return,
         Self_Reference,
+        Skip,
         Slice,
         Store_Attribute,
         Store_Global_Variable,
