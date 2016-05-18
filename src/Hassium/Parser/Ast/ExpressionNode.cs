@@ -242,7 +242,7 @@ namespace Hassium.Parser
         private static AstNode parseMultiplicative(Parser parser)
         {
             AstNode left = parseUnary(parser);
-            while (parser.MatchToken(TokenType.BinaryOperation))
+            while (parser.MatchToken(TokenType.BinaryOperation) || parser.MatchToken(TokenType.Colon))
             {
                 switch (parser.GetToken().Value)
                 {
@@ -273,6 +273,10 @@ namespace Hassium.Parser
                     case "%":
                         parser.AcceptToken(TokenType.BinaryOperation);
                         left = new BinaryOperationNode(BinaryOperation.Modulus, left, parseMultiplicative(parser), parser.Location);
+                        continue;
+                    case ":":
+                        parser.AcceptToken(TokenType.Colon);
+                        left = new BinaryOperationNode(BinaryOperation.Slice, left, parseMultiplicative(parser), parser.Location);
                         continue;
                      default:
                         break;

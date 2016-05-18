@@ -51,6 +51,7 @@ namespace Hassium.Parser
         OR,
         Power,
         Range,
+        Slice,
         Swap,
         XOR,
         XAnd

@@ -142,9 +142,18 @@ namespace Hassium.CodeGen
         }
         public void Accept(ArrayAccessNode node)
         {
+            if (node.Expression is BinaryOperationNode)
+            {
+                BinaryOperationNode binop = node.Expression as BinaryOperationNode;
+                if (binop.BinaryOperation == BinaryOperation.Slice)
+                {
+                    node.Target.Visit(this);
+                    binop.VisitChildren(this);
+                    currentMethod.Emit(node.SourceLocation, InstructionType.Slice);
+                    return;
+                }
+            }
             node.VisitChildren(this);
-            /*if(node.Expression == null)
-                currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element_Last);*/
             currentMethod.Emit(node.SourceLocation, InstructionType.Load_List_Element);
         }
         public void Accept(ArrayDeclarationNode node)

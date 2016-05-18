@@ -189,6 +189,11 @@ namespace Hassium.Runtime
                         case InstructionType.Self_Reference:
                             stack.Push(method.Parent);
                             break;
+                        case InstructionType.Slice:
+                            right = stack.Pop();
+                            left = stack.Pop();
+                            stack.Push(stack.Pop().Iter(this).Slice(this, left, right));
+                            break;
                         case InstructionType.Store_Attribute:
                             location = stack.Pop();
                             attribute = module.ConstantPool[argumentInt].ToString(this);

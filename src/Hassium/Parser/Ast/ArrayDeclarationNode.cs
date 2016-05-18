@@ -19,8 +19,14 @@ namespace Hassium.Parser
             while(!parser.AcceptToken(TokenType.RightSquare))
             {
                 var item = ExpressionNode.Parse(parser);
-                if(parser.AcceptToken(TokenType.Colon))
-                    ret.Children.Add(new KeyValuePairNode(item, ExpressionNode.Parse(parser), parser.Location));
+                if (item is BinaryOperationNode)
+                {
+                    BinaryOperationNode binop = item as BinaryOperationNode;
+                    if (binop.BinaryOperation == BinaryOperation.Slice)
+                        ret.Children.Add(new KeyValuePairNode(binop.Left, binop.Right, parser.Location));
+                    else
+                        ret.Children.Add(item);
+                }
                 else
                     ret.Children.Add(item);
                 parser.AcceptToken(TokenType.Comma);

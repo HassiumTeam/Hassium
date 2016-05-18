@@ -34,7 +34,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("length",        new HassiumProperty(get_Length));
             Attributes.Add("remove",        new HassiumFunction(remove, -1));
             Attributes.Add("reverse",       new HassiumFunction(reverse, 0));
-            Attributes.Add("split",         new HassiumFunction(split, new int[] { 1, 2 }));
+            Attributes.Add("slice",         new HassiumFunction(slice, new int[] { 1, 2 }));
             Attributes.Add(HassiumObject.CONTAINS,              new HassiumFunction(contains, 1));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,       new HassiumFunction(__equals__, 1));
@@ -42,6 +42,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add(HassiumObject.INDEX_FUNCTION,        new HassiumFunction(__index__, 1));
             Attributes.Add(HassiumObject.STORE_INDEX_FUNCTION,  new HassiumFunction(__storeindex__, 2));
             Attributes.Add(HassiumObject.ITER_FUNCTION,         new HassiumFunction(__iter__, 0));
+            Attributes.Add(HassiumObject.SLICE_FUNCTION,        new HassiumFunction(slice, 2));
             Attributes.Add(HassiumObject.ADD_FUNCTION,          new HassiumFunction(__add__, 1));
             Attributes.Add(HassiumObject.ENUMERABLE_FULL,       new HassiumFunction(__enumerablefull__, 0));
             Attributes.Add(HassiumObject.ENUMERABLE_NEXT,       new HassiumFunction(__enumerablenext__, 0));
@@ -128,7 +129,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 elements[i] = Value[Value.Count - (i + 1)];
             return new HassiumList(elements);
         }
-        private HassiumList split(VirtualMachine vm, HassiumObject[] args)
+        private HassiumList slice(VirtualMachine vm, HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
