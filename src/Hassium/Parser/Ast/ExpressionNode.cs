@@ -50,10 +50,17 @@ namespace Hassium.Parser
 
             while (parser.AcceptToken(TokenType.Question))
             {
-                var ifBody = parseConditional(parser);
-                parser.ExpectToken(TokenType.Colon);
-                var elseBody = parseConditional(parser);
-                left = new TernaryOperationNode(left, ifBody, elseBody, parser.Location);
+                var body = Parse(parser);
+                if (body is BinaryOperationNode)
+                {
+                    var binop = body as BinaryOperationNode;
+                    if (binop.BinaryOperation == BinaryOperation.Slice)
+                        left = new TernaryOperationNode(left, binop.Left, binop.Right, parser.Location);
+                    else
+                        throw new ParserException("Expected conditions after ? !", parser.Location);
+                }
+                else
+                    throw new ParserException("Expected conditions after ? !", parser.Location);
             }
 
             return left;

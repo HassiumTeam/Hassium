@@ -72,6 +72,8 @@ namespace Hassium.Parser
             for (int i = 1; i < parameters.Count; i++)
                 sourceRepresentation.Append(", " + parameters[i].ToString());
             sourceRepresentation.Append(")");
+            if (returnType != "")
+                sourceRepresentation.Append(" : " + returnType);
 
             return new FuncNode(name, parameters, body, sourceRepresentation.ToString(), returnType, parser.Location);
         }
