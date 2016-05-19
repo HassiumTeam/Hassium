@@ -31,12 +31,14 @@ namespace Hassium.Parser
         }
 
         public string Name { get; private set; }
+        public string ReturnType { get; private set; }
         public List<Parameter> Parameters { get; private set; }
         public string SourceRepresentation { get; private set; }
 
-        public FuncNode(string name, List<Parameter> parameters, AstNode body, string sourceRepresentation, SourceLocation location)
+        public FuncNode(string name, List<Parameter> parameters, AstNode body, string sourceRepresentation, string returnType, SourceLocation location)
         {
             Name = name;
+            ReturnType = returnType;
             Parameters = parameters;
             Children.Add(body);
             SourceRepresentation = sourceRepresentation;
@@ -62,6 +64,8 @@ namespace Hassium.Parser
                     parser.AcceptToken(TokenType.Comma);
                 }
             }
+            string returnType = parser.AcceptToken(TokenType.Colon) ? parser.ExpectToken(TokenType.Identifier).Value : "";
+                
             AstNode body = StatementNode.Parse(parser);
 
             StringBuilder sourceRepresentation = new StringBuilder(string.Format("func {0} ({1}", name, parameters.Count != 0 ? parameters[0].ToString() : ""));
@@ -69,7 +73,7 @@ namespace Hassium.Parser
                 sourceRepresentation.Append(", " + parameters[i].ToString());
             sourceRepresentation.Append(")");
 
-            return new FuncNode(name, parameters, body, sourceRepresentation.ToString(), parser.Location);
+            return new FuncNode(name, parameters, body, sourceRepresentation.ToString(), returnType, parser.Location);
         }
 
         public override void Visit(IVisitor visitor)

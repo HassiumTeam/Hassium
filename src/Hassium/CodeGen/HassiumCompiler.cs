@@ -481,6 +481,7 @@ namespace Hassium.CodeGen
             currentMethod = new MethodBuilder();
             currentMethod.Parent = new HassiumClass();
             currentMethod.Name = node.Name;
+            currentMethod.ReturnType = node.ReturnType;
             currentMethod.SourceRepresentation = node.SourceRepresentation;
 
             table.EnterScope();

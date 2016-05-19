@@ -8,7 +8,7 @@ func foo () {
 		bar();
 		println ("You can't see me");
 	} catch {
-		println("Caught: " + value.toString() + a);
+		println ("Caught: " + value.toString() + a);
 		println ("My time is now");
 	}
 }

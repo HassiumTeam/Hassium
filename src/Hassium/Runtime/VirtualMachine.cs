@@ -58,7 +58,7 @@ namespace Hassium.Runtime
                 int argumentInt = Convert.ToInt32(argument);
                 sourceLocation = method.Instructions[position].SourceLocation;
                 string attribute;
-     //          Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, method.Name);
+            //   Console.WriteLine("{0}\t{1}\t\t{2}", method.Instructions[position].InstructionType, argument, method.Name);
        
                 try
                 {

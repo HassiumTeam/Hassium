@@ -1,8 +1,14 @@
 func main () {
 	println (add (4, 5)); # This works since 4 and 5 are ints.
 	println (add (4, "5")); # This throws an exception since "5" is a string.
+
+	enforcedReturn (); # This throws an exception since it should return an int but instead returns a string.
 }
 
 func add (x : int, y : int) {
 	return x + y;
+}
+
+func enforcedReturn () : int {
+	return "Hello, there.";
 }

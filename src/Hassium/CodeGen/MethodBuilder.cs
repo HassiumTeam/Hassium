@@ -13,6 +13,7 @@ namespace Hassium.CodeGen
         public HassiumClass Parent { get; set; }
         public string Name { get { return name; } set { name = value; AddType(HassiumFunction.TypeDefinition); } }
         private string name = "";
+        public string ReturnType { get; set; }
 
         public Dictionary<FuncNode.Parameter, int> Parameters = new Dictionary<FuncNode.Parameter, int>();
         public List<Instruction> Instructions = new List<Instruction>();
@@ -23,6 +24,11 @@ namespace Hassium.CodeGen
 
         public string SourceRepresentation { get; set; }
         public bool IsConstructor { get { return Name == "new"; } }
+
+        public MethodBuilder()
+        {
+            ReturnType = "";
+        }
 
         public override HassiumObject Invoke(VirtualMachine vm, HassiumObject[] args)
         {
@@ -37,12 +43,17 @@ namespace Hassium.CodeGen
                 if (param.Key.IsEnforced)
                 {
                     if (!argument.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type]))
-                        throw new InternalException(string.Format("Expected type {0} to {1}, instead got {2}!", param.Key.Type, SourceRepresentation, argument.Type()));
+                        throw new InternalException(string.Format("Expected type {0} to {1}, instead got {2}!", param.Key.Type, param.Key.Name, argument.Type().ToString(vm)));
                 }
                 
                 vm.StackFrame.Add(param.Value, argument);
             }
             HassiumObject returnValue = vm.ExecuteMethod(this);
+            if (ReturnType != "")
+            {
+                if (returnValue.Type() != vm.Globals[ReturnType])
+                    throw new InternalException(string.Format("Expected return type of {0}. Instead got {1}!", ReturnType, returnValue.Type().ToString(vm)));
+            }
             if (name != "__lambda__" && name != "__catch__")
             vm.StackFrame.PopFrame();
 
