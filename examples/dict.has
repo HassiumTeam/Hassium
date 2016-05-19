@@ -1,0 +1,8 @@
+func main () {
+	dict = { "US" : "United States", "DE" : "Germany" }
+
+	println (dict ["US"]);
+	dict ["RO"] = "Romania";
+
+	println (dict ["RO"]);
+}

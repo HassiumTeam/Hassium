@@ -45,6 +45,16 @@ namespace Hassium.Parser
                 return TryCatchNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "raise"))
                 return RaiseNode.Parse(parser);
+            else if (parser.AcceptToken(TokenType.LeftBrace))
+            {
+                CodeBlockNode block = new CodeBlockNode(parser.Location);
+                while (!parser.AcceptToken(TokenType.RightBrace))
+                {
+                    block.Children.Add(StatementNode.Parse(parser));
+                    parser.AcceptToken(TokenType.Semicolon);
+                }
+                return block;
+            }
             else if (parser.MatchToken(TokenType.Identifier) && parser.GetToken(1).TokenType == TokenType.LeftBrace)
                 return PropertyNode.Parse(parser);
             else

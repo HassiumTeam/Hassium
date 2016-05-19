@@ -79,6 +79,12 @@ namespace Hassium.Runtime
                                 args[i] = stack.Pop();
                             stack.Push(target.Invoke(this, args));
                             break;
+                        case InstructionType.Create_Dict:
+                            HassiumKeyValuePair[] dictElements = new HassiumKeyValuePair[argumentInt];
+                            for (int i = argumentInt - 1; i >= 0; i--)
+                                dictElements[i] = stack.Pop() as HassiumKeyValuePair;
+                            stack.Push(new HassiumDictionary(dictElements));
+                            break;
                         case InstructionType.Create_List:
                             HassiumObject[] listElements = new HassiumObject[argumentInt];
                             for (int i = argumentInt - 1; i >= 0; i--)

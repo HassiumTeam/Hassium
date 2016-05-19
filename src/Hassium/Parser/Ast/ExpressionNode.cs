@@ -381,15 +381,7 @@ namespace Hassium.Parser
                 return expression;
             }
             else if (parser.AcceptToken(TokenType.LeftBrace))
-            {
-                CodeBlockNode block = new CodeBlockNode(parser.Location);
-                while (!parser.AcceptToken(TokenType.RightBrace))
-                {
-                    block.Children.Add(StatementNode.Parse(parser));
-                    parser.AcceptToken(TokenType.Semicolon);
-                }
-                return block;
-            }
+                return DictionaryNode.Parse(parser);
             else if (parser.MatchToken(TokenType.LeftSquare))
                 return ArrayDeclarationNode.Parse(parser);
             else if (parser.AcceptToken(TokenType.Semicolon))

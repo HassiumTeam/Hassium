@@ -6,6 +6,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
     {
         public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("KeyValuePair");
 
+        public static HassiumKeyValuePair Create(HassiumObject obj)
+        {
+            if (!(obj is HassiumKeyValuePair))
+                throw new InternalException(string.Format("Cannot convert from {0} to KeyValuePair", obj.Type()));
+            return (HassiumKeyValuePair)obj;
+        }
+
         public HassiumObject Key { get; set; }
         public new HassiumObject Value { get; set; }
         public HassiumKeyValuePair(HassiumObject key, HassiumObject value)

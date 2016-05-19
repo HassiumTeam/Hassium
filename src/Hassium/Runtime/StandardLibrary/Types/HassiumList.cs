@@ -25,8 +25,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 Value.Add(obj);
             Attributes.Add("add",           new HassiumFunction(_add, -1));
             Attributes.Add("contains",      new HassiumFunction(contains, -1));
-            Attributes.Add("containsKey",   new HassiumFunction(containsKey, 1));
-            Attributes.Add("containsValue", new HassiumFunction(containsValue, 1));
             Attributes.Add("copy",          new HassiumFunction(copy, 1));
             Attributes.Add("getString",     new HassiumFunction(getString, 0));
             Attributes.Add("indexOf",       new HassiumFunction(indexOf, 1));
@@ -63,26 +61,6 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 if (!Value.Any(x => x.Equals(vm, obj).Value))
                     return new HassiumBool(false);
             return new HassiumBool(true);
-        }
-        private HassiumBool containsKey(VirtualMachine vm, HassiumObject[] args)
-        {
-            foreach (HassiumObject obj in Value)
-            {
-                if (obj is HassiumKeyValuePair)
-                if (args[0].Equals(vm, ((HassiumKeyValuePair)obj).Key).Value)
-                    return new HassiumBool(true);
-            }
-            return new HassiumBool(false);
-        }
-        private HassiumBool containsValue(VirtualMachine vm, HassiumObject[] args)
-        {
-            foreach (HassiumObject obj in Value)
-            {
-                if (obj is HassiumKeyValuePair)
-                if (args[0].Equals(vm, ((HassiumKeyValuePair)obj).Value).Value)
-                    return new HassiumBool(true);
-            }
-            return new HassiumBool(false);
         }
         private HassiumNull copy(VirtualMachine vm, HassiumObject[] args)
         {
@@ -176,55 +154,22 @@ namespace Hassium.Runtime.StandardLibrary.Types
         private HassiumObject __index__ (VirtualMachine vm, HassiumObject[] args)
         {
             HassiumObject obj = args[0];
-            foreach (HassiumObject entry in Value)
-                if (entry is HassiumKeyValuePair)
-                {
-                    var pair = entry as HassiumKeyValuePair;
-                    try
-                    {
-                        if (pair.Key.Equals(vm, obj).Value)
-                            return pair.Value;
-                    }
-                    catch
-                    {
-                    }
-                }
             if (obj is HassiumDouble)
                 return Value[((HassiumDouble)obj).ValueInt];
             else if (obj is HassiumInt)
                 return Value[(int)((HassiumInt)obj).Value];
-            throw new InternalException("Cannot index list with " + obj.GetType().Name);
+            throw new InternalException("Cannot index list with " + obj.Type().ToString(vm));
         }
         private HassiumObject __storeindex__ (VirtualMachine vm, HassiumObject[] args)
         {
-            HassiumObject index = args[0];
-            foreach (HassiumObject entry in Value)
-                if (entry is HassiumKeyValuePair)
-                {
-                    var pair = entry as HassiumKeyValuePair;
-                    try
-                    {
-                        if (pair.Key.Equals(vm, index).Value)
-                        {
-                            pair.Value = args[1];
-                            return args[1];
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-
-            if (index is HassiumInt || index is HassiumDouble)
-            {
-                int indexer = Convert.ToInt32(index.ToString(vm));
-                if (indexer < Value.Count)
-                    Value[indexer] = args[1];
-                else
-                    Value.Add(new HassiumKeyValuePair(index, args[1]));
-            }
+            int index;
+            if (args[0] is HassiumInt)
+                index = (int)((HassiumInt)args[0]).Value;
+            else if (args[0] is HassiumDouble)
+                index = ((HassiumDouble)args[0]).ValueInt;
             else
-                Value.Add(new HassiumKeyValuePair(index, args[1]));
+                throw new InternalException("Cannot index list with " + args[0].Type().ToString(vm));
+            Value[index] = args[1];
             return args[1];
         }
         private HassiumList __add__ (VirtualMachine vm, HassiumObject[] args)

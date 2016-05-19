@@ -415,6 +415,11 @@ namespace Hassium.CodeGen
         {
             currentMethod.Emit(node.SourceLocation, InstructionType.Push, node.Number);
         }
+        public void Accept(DictionaryNode node)
+        {
+            node.VisitChildren(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Create_Dict, node.Children.Count);
+        }
         public void Accept(EnumNode node)
         {
         }

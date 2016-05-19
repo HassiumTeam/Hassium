@@ -21,6 +21,7 @@ namespace Hassium.CodeGen
         Binary_Operation,
         Build_Closure,
         Call,
+        Create_Dict,
         Create_List,
         Create_Tuple,
         Dup,
