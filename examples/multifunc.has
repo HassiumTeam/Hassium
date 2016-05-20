@@ -1,0 +1,13 @@
+MultiFunc add {
+	lambda (x, y) {
+		return x + y;
+	}
+	lambda (x, y, z) {
+		return x + y + z;
+	}
+}
+
+func main () {
+	println (add (4, 5));
+	println (add (4, 5, 6));
+}

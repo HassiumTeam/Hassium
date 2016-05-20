@@ -69,6 +69,8 @@ namespace Hassium.CodeGen
                     string traitName = ((TraitNode)child).Name;
                     module.Attributes.Add(traitName, compileTrait(child as TraitNode));
                 }
+                else if (child is MultiFuncNode)
+                    module.Attributes.Add(((MultiFuncNode)child).Name, compileMultiFunc(child as MultiFuncNode));
                 else if (child is UseNode)
                 {
                     UseNode use = child as UseNode;
@@ -355,6 +357,8 @@ namespace Hassium.CodeGen
                     clazz.Attributes.Add(((ClassNode)child).Name, compileClass(child as ClassNode));
                 else if (child is TraitNode)
                     clazz.Attributes.Add(((TraitNode)child).Name, compileTrait(child as TraitNode));
+                else if (child is MultiFuncNode)
+                    clazz.Attributes.Add(((MultiFuncNode)child).Name, compileMultiFunc(child as MultiFuncNode));
                 else if (child is PropertyNode)
                 {
                     child.Visit(this);
@@ -530,6 +534,16 @@ namespace Hassium.CodeGen
         public void Accept(LambdaNode node)
         {
             MethodBuilder previousMethod = currentMethod;
+            // Swap from the lambda method to the current method
+            MethodBuilder lambda = compileLambda(node);
+            currentMethod = previousMethod;
+            module.ConstantPool.Add(lambda);
+
+            currentMethod.Emit(node.SourceLocation, InstructionType.Push_Object, findIndex(lambda));
+            currentMethod.Emit(node.SourceLocation, InstructionType.Build_Closure);
+        }
+        private MethodBuilder compileLambda(LambdaNode node)
+        {
             currentMethod = new MethodBuilder();
             currentMethod.Name = "__lambda__";
             table.EnterScope();
@@ -542,14 +556,22 @@ namespace Hassium.CodeGen
 
             node.Children[0].VisitChildren(this);
             table.PopScope();
-            // Swap from the lambda method to the current method
-            MethodBuilder lambda = currentMethod;
-            currentMethod = previousMethod;
-            module.ConstantPool.Add(lambda);
-
-            currentMethod.Emit(node.SourceLocation, InstructionType.Push_Object, findIndex(lambda));
-            currentMethod.Emit(node.SourceLocation, InstructionType.Build_Closure);
+            return currentMethod;
         }
+        public void Accept(MultiFuncNode node)
+        {
+        }
+
+        private HassiumMultiFunc compileMultiFunc(MultiFuncNode node)
+        {
+            List<MethodBuilder> methods = new List<MethodBuilder>();
+            foreach (AstNode child in node.Children)
+                methods.Add(compileLambda(child as LambdaNode));
+            HassiumMultiFunc multiFunc = new HassiumMultiFunc(methods);
+            module.ConstantPool.Add(multiFunc);
+            return multiFunc;
+        }
+
         public void Accept(NewNode node)
         {
             node.Call.IsConstructorCall = true;
