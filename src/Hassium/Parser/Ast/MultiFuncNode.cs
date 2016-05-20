@@ -16,7 +16,7 @@ namespace Hassium.Parser
 
         public static MultiFuncNode Parse(Parser parser)
         {
-            parser.ExpectToken(TokenType.Identifier, "MultiFunc");
+            parser.ExpectToken(TokenType.Identifier, "multifunc");
             MultiFuncNode multiFunc = new MultiFuncNode(parser.ExpectToken(TokenType.Identifier).Value, parser.Location);
             parser.ExpectToken(TokenType.LeftBrace);
             while (!parser.AcceptToken(TokenType.RightBrace))

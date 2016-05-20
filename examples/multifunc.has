@@ -1,4 +1,4 @@
-MultiFunc add {
+multifunc add {
 	lambda (x, y) {
 		return x + y;
 	}
