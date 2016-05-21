@@ -39,10 +39,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
 
         public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
 
-        private static HassiumTypeDefinition defaultTypeDefinition = new HassiumTypeDefinition("object");
+        public static HassiumTypeDefinition DefaultTypeDefinition = new HassiumTypeDefinition("object");
         public List<HassiumTypeDefinition> Types = new List<HassiumTypeDefinition>()
         {
-            defaultTypeDefinition
+            DefaultTypeDefinition
         };
 
         public object Value { get; set; }

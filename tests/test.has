@@ -1,0 +1,74 @@
+use Math;
+use Util;
+
+passed = 0;
+failed = 0;
+
+func main () {
+	assertEq ("string", "string", "string equals itself");
+	assertEq (5, 5, "int equals itself");
+	assertEq ('f', 'f', "char equals itself");
+	assertEq (5.5, 5.5, "double equals itself");
+	assertEq (true, true, "bool equals itself");
+	assertEq ([1, 2, 3], [3, 2, 1].reverse (), "list equals itself");
+	l = [ 1, 2, 5 ];
+	assertEq (l[1], 2, "list indexing");
+	assertEq (l.length, 3, "list length");
+	assertEq (add (4, 5), 9, "multifunc with 2 arguments");
+	assertEq (add (4, 5, 6), 15, "multifunc with 3 arguments");
+	dict = { "US" : "America", "DE" : "Germany" };
+	assertEq (dict ["US"], "America", "dictionary indexing");
+	dict ["RO"] = "Romania";
+	assertEq (dict ["RO"], "Romania", "dictionary adding");
+	assertEq (dict is object, true, "everything is object");
+	assertEq (dict is dictionary, true, "dict is a dictionary");
+	assertEq (dict is list, false, "dict is not a list");
+	c = new InheritingClass ();
+	assertEq (c.firstMethod (), 1, "Inherited func was overridden");
+	assertEq (c.secondMethod (), 2, "func returns correctly");
+	assertEq (map ([1, 2, 3], lambda (i) { return i + 1; }), [ 2, 3, 4], "map works correctly");
+
+	try {
+		a = 0 / 0;
+		assertEq (1, 2, "try failed!");
+	} catch {
+		assertEq (0, 0, "caught exception");
+	}
+
+	displayResults ();
+}
+
+class InheritedClass {
+	func new () {}
+	func firstMethod () {
+		return 0;
+	}
+}
+class InheritingClass {
+	func new () {}
+	func firstMethod () {
+		return 1;
+	}
+	func secondMethod () {
+		return 2;
+	}
+}
+
+func add (x, y) {
+	return x + y;
+}
+func add (x, y, z) {
+	return x + y + z;
+}
+
+func assertEq (left, right, type) {
+	if (left == right) {
+		println (format ("Passed {0}, test number {1}", type, (failed + passed++)));
+	} else {
+		println (format ("Failed {0}, test number {1}", type, (passed + failed++)));
+	}
+}
+
+func displayResults () {
+	println (format ("You passed {0} tests and failed {1} tests!", passed, failed));
+}

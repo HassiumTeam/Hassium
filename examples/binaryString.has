@@ -1,0 +1,16 @@
+func main () {
+	println (computeBinary ("00000110"));
+}
+
+func computeBinary (b : string) : int {
+	int total = 0;
+	int addAmount = 1;
+
+	foreach (c in b.reverse ()) {
+		if (c == '1') {
+			total += addAmount;
+		}
+		addAmount *= 2;
+	}
+	return total;
+}

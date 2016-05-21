@@ -122,23 +122,25 @@ namespace Hassium.CodeGen
                     ClassNode clazz = child as ClassNode;
                     foreach (string inherit in clazz.Inherits)
                     {
-                        Dictionary<string, HassiumObject> inheritedAttributes = MethodBuilder.CloneDictionary(module.Attributes[inherit].Attributes);
+                        var inheritedAttributes = MethodBuilder.CloneDictionary(module.Attributes[inherit].Attributes);
                         foreach (KeyValuePair<string, HassiumObject> attribute in inheritedAttributes)
                         {
                             if (!module.Attributes[clazz.Name].Attributes.ContainsKey(attribute.Key))
-                            if (attribute.Value is MethodBuilder)
                             {
-                                MethodBuilder newMethod = (MethodBuilder)attribute.Value;
-                                newMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
-                                module.Attributes[clazz.Name].Attributes.Add(attribute.Key, newMethod);
-                            }
-                            if (attribute.Value is UserDefinedProperty)
-                            {
-                                UserDefinedProperty property = attribute.Value as UserDefinedProperty;
-                                property.GetMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
-                                if (property.SetMethod != null)
-                                    property.SetMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
-                                module.Attributes[clazz.Name].Attributes.Add(attribute.Key, property);
+                                if (attribute.Value is MethodBuilder)
+                                {
+                                    MethodBuilder newMethod = attribute.Value as MethodBuilder;
+                                    newMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
+                                    module.Attributes[clazz.Name].Attributes.Add(attribute.Key, newMethod);
+                                }
+                                if (attribute.Value is UserDefinedProperty)
+                                {
+                                    UserDefinedProperty property = attribute.Value as UserDefinedProperty;
+                                    property.GetMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
+                                    if (property.SetMethod != null)
+                                        property.SetMethod.Parent = module.Attributes[clazz.Name] as HassiumClass;
+                                    module.Attributes[clazz.Name].Attributes.Add(attribute.Key, property);
+                                }
                             }
                         }
                     }
