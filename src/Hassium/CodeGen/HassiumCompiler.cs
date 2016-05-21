@@ -57,6 +57,8 @@ namespace Hassium.CodeGen
                 }
                 else if (child is ClassNode)
                     child.Visit(this);
+                else if (child is ExtendNode)
+                    child.Visit(this);
                 else if (child is EnumNode)
                 {
                     HassiumObject enumerator = new HassiumObject();
@@ -337,7 +339,6 @@ namespace Hassium.CodeGen
         }
         private HassiumClass compileClass(ClassNode node)
         {
-
             if (!containsStringConstant(node.Name))
                 module.ConstantPool.Add(new HassiumString(node.Name));
             HassiumClass clazz = new HassiumClass();
@@ -355,6 +356,8 @@ namespace Hassium.CodeGen
                 }
                 else if (child is ClassNode)
                     clazz.Attributes.Add(((ClassNode)child).Name, compileClass(child as ClassNode));
+                else if (child is ExtendNode)
+                    clazz.Attributes.Add("__extend__" + generateSymbol(), compileExtend(child as ExtendNode));
                 else if (child is TraitNode)
                     clazz.Attributes.Add(((TraitNode)child).Name, compileTrait(child as TraitNode));
                 else if (child is MultiFuncNode)
@@ -436,6 +439,22 @@ namespace Hassium.CodeGen
             node.VisitChildren(this);
             if (popExpressionStatementsFromStack)
                 currentMethod.Emit(node.SourceLocation, InstructionType.Pop);
+        }
+        public void Accept(ExtendNode node)
+        {
+            module.Attributes.Add("__extend__" + generateSymbol(), compileExtend(node));
+        }
+        private HassiumExtend compileExtend(ExtendNode node)
+        {
+            var previousMethod = currentMethod;
+            currentMethod = new MethodBuilder();
+            currentMethod.Name = "__extend__";
+            node.Target.Visit(this);
+            currentMethod.Emit(node.SourceLocation, InstructionType.Return);
+            HassiumExtend extend = new HassiumExtend(currentMethod, compileClass(node.Class));
+            currentMethod = previousMethod;
+
+            return extend;
         }
         public void Accept(ForNode node)
         {

@@ -48,6 +48,7 @@ namespace Hassium.SemanticAnalysis
         public void Accept(ContinueNode node) {}
         public void Accept(DoubleNode node) {}
         public void Accept(DictionaryNode node) {}
+        public void Accept(ExtendNode node) {}
         public void Accept(FuncNode node)
         {
             node.VisitChildren(this);

@@ -34,6 +34,7 @@ namespace Hassium.Runtime
             stackFrame = new StackFrame();
             this.module = module;
             gatherGlobals(module.ConstantPool);
+            preformExtensions();
 
             callStack.Push("func main ()");
             stackFrame.EnterFrame();
@@ -398,6 +399,27 @@ namespace Hassium.Runtime
             List<int> keys = new List<int>(module.Globals.Keys);
             foreach (int key in keys)
                 module.Globals[key] = module.Globals[key].Invoke(this, new HassiumObject[0]);
+        }
+
+        private void preformExtensions()
+        {
+            foreach (string key in module.Attributes.Keys)
+            {
+                if (key.StartsWith("__extend__"))
+                {
+                    HassiumExtend extend = module.Attributes[key] as HassiumExtend;
+                    HassiumObject target = extend.Target.Invoke(this, new HassiumObject[0]);
+                    foreach (var attrib in extend.Additions.Attributes)
+                    {
+                        if (target.Attributes.ContainsKey(attrib.Key))
+                            target.Attributes.Remove(attrib.Key);
+                        target.Attributes.Add(attrib.Key, attrib.Value);
+                    }
+                    if (globals.ContainsKey(key))
+                        globals.Remove(key);
+                    globals.Add(key, target);
+                }
+            }
         }
     }
 }

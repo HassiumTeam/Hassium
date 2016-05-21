@@ -19,6 +19,8 @@ namespace Hassium.Parser
                 return MultiFuncNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "class"))
                 return ClassNode.Parse(parser);
+            else if (parser.MatchToken(TokenType.Identifier, "extend"))
+                return ExtendNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "trait"))
                 return TraitNode.Parse(parser);
             else if (parser.MatchToken(TokenType.Identifier, "if"))

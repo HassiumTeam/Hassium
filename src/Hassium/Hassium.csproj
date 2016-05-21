@@ -155,6 +155,8 @@
     <Compile Include="Runtime\StandardLibrary\Types\HassiumDictionary.cs" />
     <Compile Include="Parser\Ast\MultiFuncNode.cs" />
     <Compile Include="Runtime\StandardLibrary\HassiumMultiFunc.cs" />
+    <Compile Include="Parser\Ast\ExtendNode.cs" />
+    <Compile Include="Runtime\StandardLibrary\HassiumExtend.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
