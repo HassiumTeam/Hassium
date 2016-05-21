@@ -53,7 +53,16 @@ namespace Hassium.CodeGen
                 if (child is FuncNode)
                 {
                     child.Visit(this);
-                    module.Attributes.Add(currentMethod.Name, currentMethod);
+                    if (module.Attributes.ContainsKey(currentMethod.Name))
+                    {
+                        HassiumObject method = module.Attributes[currentMethod.Name];
+                        if (method is MethodBuilder)
+                            module.Attributes[currentMethod.Name] = new HassiumMultiFunc(new List<MethodBuilder>() { (MethodBuilder)method, currentMethod });
+                        else if (method is HassiumMultiFunc)
+                            ((HassiumMultiFunc)method).Lambdas.Add(currentMethod);
+                    }
+                    else
+                        module.Attributes.Add(currentMethod.Name, currentMethod);
                 }
                 else if (child is ClassNode)
                     child.Visit(this);
@@ -71,8 +80,6 @@ namespace Hassium.CodeGen
                     string traitName = ((TraitNode)child).Name;
                     module.Attributes.Add(traitName, compileTrait(child as TraitNode));
                 }
-                else if (child is MultiFuncNode)
-                    module.Attributes.Add(((MultiFuncNode)child).Name, compileMultiFunc(child as MultiFuncNode));
                 else if (child is UseNode)
                 {
                     UseNode use = child as UseNode;
@@ -352,7 +359,16 @@ namespace Hassium.CodeGen
                 {
                     child.Visit(this);
                     currentMethod.Parent = clazz;
-                    clazz.Attributes.Add(currentMethod.Name, currentMethod);
+                    if (clazz.Attributes.ContainsKey(currentMethod.Name))
+                    {
+                        HassiumObject method = clazz.Attributes[currentMethod.Name];
+                        if (method is MethodBuilder)
+                            clazz.Attributes[currentMethod.Name] = new HassiumMultiFunc(new List<MethodBuilder>() { (MethodBuilder)method, currentMethod });
+                        else if (method is HassiumMultiFunc)
+                            ((HassiumMultiFunc)method).Lambdas.Add(currentMethod);
+                    }
+                    else
+                        clazz.Attributes.Add(currentMethod.Name, currentMethod);
                 }
                 else if (child is ClassNode)
                     clazz.Attributes.Add(((ClassNode)child).Name, compileClass(child as ClassNode));
@@ -360,8 +376,6 @@ namespace Hassium.CodeGen
                     clazz.Attributes.Add("__extend__" + generateSymbol(), compileExtend(child as ExtendNode));
                 else if (child is TraitNode)
                     clazz.Attributes.Add(((TraitNode)child).Name, compileTrait(child as TraitNode));
-                else if (child is MultiFuncNode)
-                    clazz.Attributes.Add(((MultiFuncNode)child).Name, compileMultiFunc(child as MultiFuncNode));
                 else if (child is PropertyNode)
                 {
                     child.Visit(this);
@@ -577,20 +591,6 @@ namespace Hassium.CodeGen
             table.PopScope();
             return currentMethod;
         }
-        public void Accept(MultiFuncNode node)
-        {
-        }
-
-        private HassiumMultiFunc compileMultiFunc(MultiFuncNode node)
-        {
-            List<MethodBuilder> methods = new List<MethodBuilder>();
-            foreach (AstNode child in node.Children)
-                methods.Add(compileLambda(child as LambdaNode));
-            HassiumMultiFunc multiFunc = new HassiumMultiFunc(methods);
-            module.ConstantPool.Add(multiFunc);
-            return multiFunc;
-        }
-
         public void Accept(NewNode node)
         {
             node.Call.IsConstructorCall = true;
