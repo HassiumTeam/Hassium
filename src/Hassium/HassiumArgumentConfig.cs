@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
@@ -9,6 +10,7 @@ namespace Hassium
         public bool CreatePackage { get; set; }
         public string PackageFile { get; set; }
         public string SourceFile { get; set; }
+        public List<string> HassiumArgs { get; set; }
 
         public static void ExecuteConfig(HassiumArgumentConfig config)
         {
@@ -27,11 +29,11 @@ namespace Hassium
                     Directory.CreateDirectory(path);
                     ZipFile.ExtractToDirectory(config.SourceFile, path);
                     Directory.SetCurrentDirectory(path);
-                    HassiumExecuter.FromFilePath(File.ReadAllText("manifest.conf"));
+                    HassiumExecuter.FromFilePath(File.ReadAllText("manifest.conf"), config.HassiumArgs);
                     Directory.Delete(path, true);
                 }
                 else
-                    HassiumExecuter.FromFilePath(config.SourceFile);
+                    HassiumExecuter.FromFilePath(config.SourceFile, config.HassiumArgs);
             }
         }
     }

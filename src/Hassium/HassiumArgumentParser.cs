@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Hassium
@@ -7,6 +8,7 @@ namespace Hassium
     {
         private string[] args;
         private int position;
+        private List<string> hassiumArgs = new List<string>();
 
         public HassiumArgumentParser(string[] args)
         {
@@ -32,8 +34,13 @@ namespace Hassium
                             result.CreatePackage = true;
                             result.PackageFile = expectData("package file");
                             break;
+                        default:
+                            hassiumArgs.Add(args[position]);
+                            break;
                     }
             }
+
+            result.HassiumArgs = hassiumArgs;
 
             return result;
         }

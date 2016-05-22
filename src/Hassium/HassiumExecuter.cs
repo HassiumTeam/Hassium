@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Hassium.CodeGen;
@@ -12,12 +13,12 @@ namespace Hassium
     public class HassiumExecuter
     {
         public static VirtualMachine vm;
-        public static HassiumModule FromFilePath(string filePath, bool executeVM = true)
+        public static HassiumModule FromFilePath(string filePath, List<string> hassiumArgs, bool executeVM = true)
         {
-            return FromString(File.ReadAllText(filePath), executeVM);
+            return FromString(File.ReadAllText(filePath), hassiumArgs, executeVM);
         }
 
-        public static HassiumModule FromString(string source, bool executeVM = true)
+        public static HassiumModule FromString(string source, List<string> hassiumArgs, bool executeVM = true)
         {
             HassiumModule module = null;
             try
@@ -35,7 +36,7 @@ namespace Hassium
                     vm = new VirtualMachine();
                     try
                     {
-                        vm.Execute(module);
+                        vm.Execute(module, hassiumArgs);
                     }
                     catch (RuntimeException ex)
                     {

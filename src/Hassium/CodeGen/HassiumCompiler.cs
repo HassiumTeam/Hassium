@@ -104,7 +104,7 @@ namespace Hassium.CodeGen
                         }
                         else
                         {
-                            HassiumModule compiledModule = HassiumExecuter.FromFilePath(path, false);
+                            HassiumModule compiledModule = HassiumExecuter.FromFilePath(path, null, false);
                             foreach (KeyValuePair<string, HassiumObject> attribute in compiledModule.Attributes)
                                 if (!module.Attributes.ContainsKey(attribute.Key))
                                     module.Attributes.Add(attribute.Key, attribute.Value);

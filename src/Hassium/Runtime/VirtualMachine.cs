@@ -27,13 +27,14 @@ namespace Hassium.Runtime
         private SourceLocation sourceLocation;
         private Dictionary<MethodBuilder, int> exceptionReturns = new Dictionary<MethodBuilder, int>(); 
 
-        public void Execute(HassiumModule module)
+        public void Execute(HassiumModule module, List<string> args)
         {
             globals = new Dictionary<string, HassiumObject>();
             stack = new Stack<HassiumObject>();
             stackFrame = new StackFrame();
             this.module = module;
             gatherGlobals(module.ConstantPool);
+            addArgs(args);
             preformExtensions();
 
             callStack.Push("func main ()");
@@ -420,6 +421,14 @@ namespace Hassium.Runtime
                     globals.Add(key, target);
                 }
             }
+        }
+
+        private void addArgs(List<string> args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+            foreach (string arg in args)
+                list.Value.Add(new HassiumString(arg));
+            globals.Add("args", list);
         }
     }
 }

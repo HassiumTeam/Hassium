@@ -59,7 +59,7 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
             if (path.EndsWith(".dll"))
                 module = HassiumCompiler.LoadModulesFromDLL(path)[0];
             else
-                module = HassiumExecuter.FromFilePath(path, false);
+                module = HassiumExecuter.FromFilePath(path, null, false);
 
             return create(module);
         }

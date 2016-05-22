@@ -16,7 +16,7 @@ namespace Hassium.Runtime.StandardLibrary.Util
 
         public HassiumNull eval(VirtualMachine vm, HassiumObject[] args)
         {
-            HassiumExecuter.FromString(HassiumString.Create(args[0]).Value);
+            HassiumExecuter.FromString(HassiumString.Create(args[0]).Value, new System.Collections.Generic.List<string>());
             return HassiumObject.Null;
         }
     }
