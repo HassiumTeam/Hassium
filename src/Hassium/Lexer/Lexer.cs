@@ -266,7 +266,7 @@ namespace Hassium.Lexer
             var str = new StringBuilder();
             var sep = false;
             while (peekChar() != -1 &&
-                   (char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains((char)peekChar()) || "xo._".Contains((char) peekChar())))
+                   (char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains((char)peekChar()) || "xo-._".Contains((char) peekChar())))
             {
                 var cchar = (char)readChar();
                 if(cchar == '_')
