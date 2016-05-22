@@ -139,7 +139,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                throw new InternalException(location + " does not contain a definition for " + attribute);
+                                throw new InternalException(location.Type().ToString(this) + " does not contain a definition for " + attribute);
                             }
                             if (attrib is HassiumProperty)
                                 stack.Push(((HassiumProperty)attrib).GetValue(this, new HassiumObject[0]));

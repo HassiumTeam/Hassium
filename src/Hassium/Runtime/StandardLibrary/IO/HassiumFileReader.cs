@@ -85,15 +85,11 @@ namespace Hassium.Runtime.StandardLibrary.IO
             StringBuilder sb = new StringBuilder();
             while (true)
             {
-                char one = readChar(vm, args).Value;
-                char two = readChar(vm, args).Value;
-                if (one == '\r' && two == '\n')
-                    return new HassiumString(sb.ToString() + "\n");
+                char ch = readChar(vm, args).Value;
+                if (ch != '\n')
+                    sb.Append(ch);
                 else
-                {
-                    sb.Append(one);
-                    sb.Append(two);
-                }
+                    return new HassiumString(sb.ToString());
             }
         }
         public HassiumString readString(VirtualMachine vm, HassiumObject[] args)

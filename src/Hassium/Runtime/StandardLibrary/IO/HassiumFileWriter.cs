@@ -25,6 +25,7 @@ namespace Hassium.Runtime.StandardLibrary.IO
                 hassiumFileWriter.BinaryWriter = new BinaryWriter(new StreamWriter(HassiumString.Create(args[0]).Value).BaseStream);
             else if (args[0] is HassiumStream)
                 hassiumFileWriter.BinaryWriter = new BinaryWriter(((HassiumStream)args[0]).Stream);
+            hassiumFileWriter.Attributes.Add("flush",       new HassiumFunction(hassiumFileWriter.flush, 0));
             hassiumFileWriter.Attributes.Add("position",    new HassiumProperty(hassiumFileWriter.get_Position));
             hassiumFileWriter.Attributes.Add("write",       new HassiumFunction(hassiumFileWriter.write, 1));
             hassiumFileWriter.Attributes.Add("writeBool",   new HassiumFunction(hassiumFileWriter.writeBool, 1));
@@ -38,6 +39,12 @@ namespace Hassium.Runtime.StandardLibrary.IO
             hassiumFileWriter.Attributes.Add("writeString", new HassiumFunction(hassiumFileWriter.writeString, 1));
 
             return hassiumFileWriter;
+        }
+
+        public HassiumNull flush(VirtualMachine vm, HassiumObject[] args)
+        {
+            BinaryWriter.Flush();
+            return HassiumObject.Null;
         }
         public HassiumInt get_Position(VirtualMachine vm, HassiumObject[] args)
         {
@@ -93,8 +100,11 @@ namespace Hassium.Runtime.StandardLibrary.IO
         }
         public HassiumNull writeLine(VirtualMachine vm, HassiumObject[] args)
         {
-            write(vm, args);
-            write(vm, new HassiumObject[] { new HassiumString("\r\n") });
+            string str = HassiumString.Create(args[0]).Value;
+            foreach (char c in str)
+                BinaryWriter.Write(c);
+            BinaryWriter.Write('\r');
+            BinaryWriter.Write('\n');
             return HassiumObject.Null;
         }
         public HassiumNull writeList(VirtualMachine vm, HassiumObject[] args)

@@ -21,10 +21,13 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             Value = value;
             Attributes.Add("contains",      new HassiumFunction(contains, 1));
+            Attributes.Add("endsWith",      new HassiumFunction(endsWith, 1));
             Attributes.Add("getBytes",      new HassiumFunction(getBytes, 0));
             Attributes.Add("length",        new HassiumProperty(get_Length));
+            Attributes.Add("replace",       new HassiumFunction(replace, 2));
             Attributes.Add("reverse",       new HassiumFunction(reverse, 0));
             Attributes.Add("split",         new HassiumFunction(split, 1));
+            Attributes.Add("startsWith",    new HassiumFunction(startsWith, 1));
             Attributes.Add("stripChars",    new HassiumFunction(stripChars, 1));
             Attributes.Add("substring",     new HassiumFunction(substring, new int[] { 1, 2 }));
             Attributes.Add("toBool",        new HassiumFunction(toBool, 0));
@@ -52,6 +55,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             return new HassiumBool(Value.Contains(HassiumString.Create(args[0]).Value));
         }
+        private HassiumBool endsWith(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumBool(Value.EndsWith(HassiumString.Create(args[0]).Value));
+        }
         private HassiumList getBytes(VirtualMachine vm, HassiumObject[] args)
         {
             byte[] bytes = Encoding.ASCII.GetBytes(Value);
@@ -72,6 +79,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
         {
             return new HassiumDouble(Value.Length);
         }
+        private HassiumString replace(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumString(Value.Replace(HassiumString.Create(args[0]).Value, HassiumString.Create(args[1]).Value));
+        }
         private HassiumString reverse(VirtualMachine vm, HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
@@ -87,6 +98,10 @@ namespace Hassium.Runtime.StandardLibrary.Types
             for (int i = 0; i < elements.Length; i++)
                 elements[i] = new HassiumString(strings[i]);
             return new HassiumList(elements);
+        }
+        private HassiumBool startsWith(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumBool(Value.StartsWith(HassiumString.Create(args[0]).Value));
         }
         private HassiumString stripChars(VirtualMachine vm, HassiumObject[] args)
         {
