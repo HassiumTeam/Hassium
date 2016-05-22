@@ -57,6 +57,7 @@
     <Compile Include="Parser\Ast\CharNode.cs" />
     <Compile Include="Parser\Ast\FunctionCallNode.cs" />
     <Compile Include="Runtime\StandardLibrary\IO\HassiumStream.cs" />
+    <Compile Include="Runtime\StandardLibrary\Net\HassiumCGI.cs" />
     <Compile Include="Runtime\StandardLibrary\Net\HassiumDns.cs" />
     <Compile Include="Runtime\StandardLibrary\Reflection\HassiumAssembly.cs" />
     <Compile Include="Runtime\StandardLibrary\Reflection\HassiumReflectionModule.cs" />

@@ -14,6 +14,7 @@ namespace Hassium.Runtime.StandardLibrary.Net
             Attributes.Add("NetConnection",         new HassiumNetConnection());
             Attributes.Add("Socket",                new HassiumSocket());
             Attributes.Add("WebClient",             new HassiumWebClient());
+            Attributes.Add("CGI", new HassiumCGI());
         }
     }
 }
