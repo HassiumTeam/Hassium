@@ -18,6 +18,7 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
             hassiumAssembly.Attributes.Add("getAttributes", new HassiumFunction(hassiumAssembly.getAttributes, 0));
             hassiumAssembly.Attributes.Add("getClasses",    new HassiumFunction(hassiumAssembly.getClasses, 0));
             hassiumAssembly.Attributes.Add("getFunctions",  new HassiumFunction(hassiumAssembly.getFunctions, 0));
+            hassiumAssembly.Attributes.Add("getImports",    new HassiumFunction(hassiumAssembly.getImports, 0));
 
             return hassiumAssembly;
         }
@@ -83,6 +84,13 @@ namespace Hassium.Runtime.StandardLibrary.Reflection
             foreach (HassiumObject obj in Module.Attributes.Values)
                 if (obj is HassiumFunction)
                     list.Value.Add(obj);
+            return list;
+        }
+        public HassiumList getImports(VirtualMachine vm, HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+            foreach (string import in ((HassiumModule)Module).Imports)
+                list.Value.Add(new HassiumString(import));
             return list;
         }
     }

@@ -25,7 +25,12 @@ namespace Hassium
             for (position = 0; position < args.Length; position++)
             {
                 if (File.Exists(args[position]))
-                    result.SourceFile = args[position];
+                {
+                    if (result.SourceFile == null)
+                        result.SourceFile = args[position];
+                    else
+                        hassiumArgs.Add(args[position]);
+                }
                 else
                     switch (args[position])
                     {

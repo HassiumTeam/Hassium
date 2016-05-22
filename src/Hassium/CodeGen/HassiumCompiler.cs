@@ -90,6 +90,7 @@ namespace Hassium.CodeGen
                             if (internalModule.Name.ToLower() == identifier.ToLower())
                                 foreach (KeyValuePair<string, HassiumObject> attribute in internalModule.Attributes)
                                     module.Attributes.Add(attribute.Key, attribute.Value);
+                        module.Imports.Add(identifier);
                     }
                     else if (use.Target is StringNode)
                     {
@@ -112,6 +113,7 @@ namespace Hassium.CodeGen
                                 if (!module.ConstantPool.Contains(constant))
                                     module.ConstantPool.Add(constant);
                         }
+                        module.Imports.Add(path);
                     }
                 }
             }
