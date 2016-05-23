@@ -18,6 +18,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("int",               HassiumInt.TypeDefinition);
             Attributes.Add("KeyValuePair",      HassiumKeyValuePair.TypeDefinition);
             Attributes.Add("list",              HassiumList.TypeDefinition);
+            Attributes.Add("null",              HassiumObject.Null);
             Attributes.Add("object",            HassiumObject.DefaultTypeDefinition);
             Attributes.Add("property",          HassiumProperty.TypeDefinition);
             Attributes.Add("string",            HassiumString.TypeDefinition);
