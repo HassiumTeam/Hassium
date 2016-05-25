@@ -26,6 +26,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("add",           new HassiumFunction(_add, -1));
             Attributes.Add("contains",      new HassiumFunction(contains, -1));
             Attributes.Add("copy",          new HassiumFunction(copy, 1));
+            Attributes.Add("Event",         new HassiumEvent());
             Attributes.Add("getString",     new HassiumFunction(getString, 0));
             Attributes.Add("indexOf",       new HassiumFunction(indexOf, 1));
             Attributes.Add("lastIndexOf",   new HassiumFunction(lastIndexOf, 1));
@@ -33,6 +34,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
             Attributes.Add("remove",        new HassiumFunction(remove, -1));
             Attributes.Add("reverse",       new HassiumFunction(reverse, 0));
             Attributes.Add("slice",         new HassiumFunction(slice, new int[] { 1, 2 }));
+            Attributes.Add("Thread",        new HassiumThread());
             Attributes.Add(HassiumObject.CONTAINS,              new HassiumFunction(contains, 1));
             Attributes.Add(HassiumObject.TOSTRING_FUNCTION,     new HassiumFunction(__tostring__, 0));
             Attributes.Add(HassiumObject.EQUALS_FUNCTION,       new HassiumFunction(__equals__, 1));

@@ -10,7 +10,7 @@ namespace Hassium.Runtime.StandardLibrary.Types
         public static HassiumInt Create(HassiumObject obj)
         {
             if (!(obj is HassiumInt))
-                throw new InternalException(string.Format("Cannot convert from {0} to int!", obj.Type()));
+                throw new InternalException(string.Format("Cannot convert from {0} to int!", obj.Type().ToString(null)));
             return (HassiumInt)obj;
         }
 

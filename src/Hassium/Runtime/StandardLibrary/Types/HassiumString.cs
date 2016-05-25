@@ -75,9 +75,9 @@ namespace Hassium.Runtime.StandardLibrary.Types
                 argString[i] = args[i].ToString(vm);
             return new HassiumString(string.Format(Value, argString)); 
         }
-        private HassiumDouble get_Length(VirtualMachine vm, HassiumObject[] args)
+        private HassiumInt get_Length(VirtualMachine vm, HassiumObject[] args)
         {
-            return new HassiumDouble(Value.Length);
+            return new HassiumInt(Value.Length);
         }
         private HassiumString replace(VirtualMachine vm, HassiumObject[] args)
         {

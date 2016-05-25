@@ -20,8 +20,6 @@ namespace Hassium.CodeGen
         {
             this.table = table;
             module = new HassiumModule(name);
-            module.Attributes.Add("Event", new HassiumEvent());
-            module.Attributes.Add("Thread", new HassiumThread());
 
             foreach (AstNode child in ast.Children)
             {
