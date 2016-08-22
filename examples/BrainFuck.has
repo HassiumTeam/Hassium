@@ -12,7 +12,7 @@ func main () {
 class Brainfuck {
 	func new () {
 		# init ram
-		this.ram = fillList([], 20000);
+		this.ram = [].fill(2000, 0);
 	}
 
 	func execute (source) {

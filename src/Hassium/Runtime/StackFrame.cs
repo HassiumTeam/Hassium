@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-using Hassium.Runtime.StandardLibrary.Types;
+using Hassium.Runtime.Objects;
 
 namespace Hassium.Runtime
 {
@@ -34,7 +34,7 @@ namespace Hassium.Runtime
             Frames = new Stack<Frame>();
         }
 
-        public void EnterFrame()
+        public void PushFrame()
         {
             Frames.Push(new Frame());
         }
@@ -59,11 +59,11 @@ namespace Hassium.Runtime
         {
             Frames.Peek().Modify(index, value);
         }
-        public HassiumObject GetVariable(int index)
+        public HassiumObject GetVariable(VirtualMachine vm, int index)
         {
             if (Frames.Peek().ContainsVariable(index))
                 return Frames.Peek().GetVariable(index);
-            throw new InternalException("Variable was not found inside the stack frame! Index " + index);
+            throw new InternalException(vm, "Variable was not found inside the stack frame! Index " + index);
         }
     }
 }

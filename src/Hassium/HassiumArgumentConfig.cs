@@ -1,40 +1,42 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
+
+using Hassium.Compiler;
+using Hassium.Runtime;
 
 namespace Hassium
 {
     public class HassiumArgumentConfig
     {
-        public bool CreatePackage { get; set; }
-        public string PackageFile { get; set; }
-        public string SourceFile { get; set; }
-        public List<string> HassiumArgs { get; set; }
+        public List<string> Arguments { get; private set; }
+        public string FilePath { get; set; }
 
         public static void ExecuteConfig(HassiumArgumentConfig config)
         {
-            if (config.CreatePackage)
+            try
             {
-                File.WriteAllText("manifest.conf", config.SourceFile);
-                ZipFile.CreateFromDirectory(Directory.GetCurrentDirectory(), Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "/" + config.PackageFile);
+                var module = Compiler.CodeGen.Compiler.CompileModuleFromSource(File.ReadAllText(config.FilePath));
+                new VirtualMachine().Execute(module, config.Arguments.ToArray());
             }
-            else
+            catch (CompileException ex)
             {
-                if (config.SourceFile.EndsWith(".pkg"))
-                {
-                    string path = Directory.GetCurrentDirectory() + "/.pkg";
-                    if (Directory.Exists(path))
-                        Directory.Delete(path, true);
-                    Directory.CreateDirectory(path);
-                    ZipFile.ExtractToDirectory(config.SourceFile, path);
-                    Directory.SetCurrentDirectory(path);
-                    HassiumExecuter.FromFilePath(File.ReadAllText("manifest.conf"), config.HassiumArgs);
-                    Directory.Delete(path, true);
-                }
-                else
-                    HassiumExecuter.FromFilePath(config.SourceFile, config.HassiumArgs);
+                Console.WriteLine("At {0}:", ex.SourceLocation);
+                Console.WriteLine(ex.Message);
             }
+            catch (InternalException ex)
+            {
+                Console.WriteLine("At location {0}:", ex.VM.CurrentSourceLocation);
+                Console.WriteLine("{0} at:", ex.Message);
+                while (ex.VM.CallStack.Count > 0)
+                    Console.WriteLine(ex.VM.CallStack.Pop());
+            }
+        }
+
+        public HassiumArgumentConfig()
+        {
+            Arguments = new List<string>();
         }
     }
 }
+

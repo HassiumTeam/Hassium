@@ -1,11 +1,4 @@
-using System;
-using System.IO;
-
-using Hassium.CodeGen;
-using Hassium.Lexer;
-using Hassium.Parser;
-using Hassium.SemanticAnalysis;
-using Hassium.Runtime;
+﻿using System;
 
 namespace Hassium
 {
@@ -13,7 +6,7 @@ namespace Hassium
     {
         public static void Main(string[] args)
         {
-            HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser(args).Parse());
+            HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser().Parse(args));
         }
     }
 }

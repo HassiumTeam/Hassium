@@ -4,10 +4,10 @@ func main () {
 }
 
 trait Operable {
-	func add;
-	func sub;
-	func mul;
-	func div;
+	add : func,
+	sub : func,
+	mul : func,
+	div : func
 }
 
 class CompleteClass {

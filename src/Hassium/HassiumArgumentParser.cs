@@ -1,63 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 
 namespace Hassium
 {
     public class HassiumArgumentParser
     {
-        private string[] args;
-        private int position;
-        private List<string> hassiumArgs = new List<string>();
-
-        public HassiumArgumentParser(string[] args)
+        public static void DisplayHelp()
         {
-            this.args = args;
+            Console.WriteLine("Usage: Hassium.exe [PATH] [ARGS]");
+            Console.WriteLine("[PATH]: The Hassium source file to execute.");
+            Console.WriteLine("[ARGS]: The arguments to pass to the Hassium VM.");
+            Environment.Exit(0);
         }
 
-        public HassiumArgumentConfig Parse()
+        private string[] args;
+        private int position;
+
+        public HassiumArgumentConfig Parse(string[] args)
         {
-            var result = new HassiumArgumentConfig()
-            {
-                CreatePackage = false
-            };
+            this.args = args;
+            position = 0;
+            HassiumArgumentConfig config = new HassiumArgumentConfig();
 
-            for (position = 0; position < args.Length; position++)
-            {
-                if (File.Exists(args[position]))
-                {
-                    if (result.SourceFile == null)
-                        result.SourceFile = args[position];
-                    else
-                        hassiumArgs.Add(args[position]);
-                }
-                else
-                    switch (args[position])
-                    {
-                        case "-p":
-                        case "--package":
-                            result.CreatePackage = true;
-                            result.PackageFile = expectData("package file");
-                            break;
-                        default:
-                            hassiumArgs.Add(args[position]);
-                            break;
-                    }
-            }
+            if (args.Length == 0)
+                DisplayHelp();
+            if (args[0] == "-h" || args[0].ToLower() == "--help")
+                DisplayHelp();
+            config.FilePath = expectData("[PATH]");
 
-            result.HassiumArgs = hassiumArgs;
-
-            return result;
+            for (int i = 1; i < args.Length; i++)
+                config.Arguments.Add(args[i]);
+            
+            return config;
         }
 
         private string expectData(string type)
         {
-            if (args[++position].StartsWith("-"))
-            {
-                Console.WriteLine("Expected {0} instead of flag {1}!", type, args[position]);
-                Environment.Exit(0);
-            }
-            return args[position];
+            if (!args[position].StartsWith("-"))
+                return args[position++];
+            Console.WriteLine("Expected data {0}, not flag {1}!", type, args[position]);
+            Environment.Exit(0);
+            return string.Empty;
         }
     }
 }
+

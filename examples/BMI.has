@@ -6,10 +6,10 @@ func calculateBMI (height, weight) {
 
 func main () {
 	print("How tall are you? ");
-	height = input().toDouble();
+	height = input().toFloat();
 	
-	print("Hoe much to you weight? ");
-	weight = input().toDouble();
+	print("How much to you weigh? ");
+	weight = input().toFloat();
 
 	println("BMI: " + calculateBMI(height, weight));
 }
