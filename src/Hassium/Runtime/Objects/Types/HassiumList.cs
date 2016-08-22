@@ -73,6 +73,8 @@ namespace Hassium.Runtime.Objects.Types
         public override HassiumObject EqualTo(VirtualMachine vm, params HassiumObject[] args)
         {
             var list = args[0].ToList(vm);
+            if (list.List.Count != List.Count)
+                return new HassiumBool(false);
             for (int i = 0; i < list.List.Count; i++)
                 if (!list.List[i].EqualTo(vm, List[i]).ToBool(vm).Bool)
                     return new HassiumBool(false);
