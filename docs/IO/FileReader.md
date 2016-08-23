@@ -1,8 +1,9 @@
 ## ```go
-class FileReader```
+class FileReader
+```
 
-### ```go
-func new (path : stream)```
+### ```go func new (path : stream)
+```
 Creates a new instance of the FileReader class using the specified stream.
 ### ```go
 func new (path : string)```
