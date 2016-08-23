@@ -56,8 +56,8 @@ namespace Hassium.Runtime.Objects.Types
         {
             HassiumObject[] formatArgs = new HassiumObject[args.Length + 1];
             formatArgs[0] = this;
-            for (int i = 1; i < formatArgs.Length; i++)
-                formatArgs[i] = args[i - 1];
+            for (int i = 0; i < args.Length; i++)
+                formatArgs[i + 1] = args[i];
             return GlobalFunctions.format(vm, formatArgs);
         }
         public HassiumInt indexOf(VirtualMachine vm, params HassiumObject[] args)

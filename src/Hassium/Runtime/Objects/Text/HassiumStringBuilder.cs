@@ -40,10 +40,7 @@ namespace Hassium.Runtime.Objects.Text
         }
         public HassiumStringBuilder appendFormat(VirtualMachine vm, params HassiumObject[] args)
         {
-            string[] strings = new string[args.Length - 1];
-            for (int i = 1; i < args.Length; i++)
-                strings[i] = args[i].ToString(vm).String;
-            StringBuilder.AppendFormat(args[0].ToString(vm).String, strings);
+            StringBuilder.Append(GlobalFunctions.format(vm, args));
             return this;
         }
         public HassiumStringBuilder appendLine(VirtualMachine vm, params HassiumObject[] args)

@@ -25,8 +25,8 @@ namespace Hassium.Runtime
         public static HassiumString format(VirtualMachine vm, params HassiumObject[] args)
         {
             string[] elements = new string[args.Length - 1];
-            for (int i = 1; i < elements.Length; i++)
-                elements[i - 1] = args[i].ToString(vm).String;
+            for (int i = 0; i < elements.Length; i++)
+                elements[i] = args[i + 1].ToString(vm).String;
             return new HassiumString(string.Format(args[0].ToString(vm).String, elements));
         }
         public static HassiumString input(VirtualMachine vm, params HassiumObject[] args)
