@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using Hassium.Compiler;
 using Hassium.Compiler.CodeGen;
@@ -245,6 +246,14 @@ namespace Hassium.Runtime
                     }
                 }
                 catch (DivideByZeroException ex)
+                {
+                    RaiseException(new HassiumString(ex.Message), method, ref pos);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    RaiseException(new HassiumString(ex.Message), method, ref pos);
+                }
+                catch (IOException ex)
                 {
                     RaiseException(new HassiumString(ex.Message), method, ref pos);
                 }
