@@ -4,7 +4,7 @@ namespace Hassium.Runtime.Objects.Types
 {
     public class HassiumEvent: HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("event");
+        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Event");
 
         public HassiumList Handlers { get; set; }
 

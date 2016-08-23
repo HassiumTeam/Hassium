@@ -34,7 +34,8 @@ namespace Hassium.Runtime.Objects.Types
         public HassiumTuple split(VirtualMachine vm, params HassiumObject[] args)
         {
             int start = (int)args[0].ToInt(vm).Int;
-            int end = args.Length == 2 ? (int)args[0].ToInt(vm).Int : Elements.Length;
+            int end = args.Length == 2 ? (int)args[1].ToInt(vm).Int : Elements.Length;
+
             int length = end - start;
             HassiumObject[] elements = new HassiumObject[length];
             for (int i = 0; i < length; i++)
