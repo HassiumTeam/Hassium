@@ -20,6 +20,9 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("contains",        contains,   1);
             AddAttribute("fill",            fill,    1, 2);
             AddAttribute("length",          new HassiumProperty(get_length));
+            AddAttribute("peek",            peek,       0);
+            AddAttribute("pop",             pop,        0);
+            AddAttribute("push",            push,       1);
             AddAttribute("split",           split,   1, 2);
             AddAttribute("remove",          remove,    -1);
             AddAttribute("reverse",         reverse,    0);
@@ -56,6 +59,21 @@ namespace Hassium.Runtime.Objects.Types
         public HassiumInt get_length(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumInt(List.Count);
+        }
+        public HassiumObject peek(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return List[List.Count - 1];
+        }
+        public HassiumObject pop(VirtualMachine vm, params HassiumObject[] args)
+        {
+            var ret = peek(vm, args);
+            List.Remove(ret);
+            return ret;
+        }
+        public HassiumObject push(VirtualMachine vm, params HassiumObject[] args)
+        {
+            List.Add(args[0]);
+            return args[0];
         }
         public HassiumList split(VirtualMachine vm, params HassiumObject[] args)
         {

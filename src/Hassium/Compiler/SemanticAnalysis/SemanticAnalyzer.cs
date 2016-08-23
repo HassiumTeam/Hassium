@@ -50,6 +50,7 @@ namespace Hassium.Compiler.SemanticAnalysis
             node.VisitChildren(this);
         }
         public void Accept(FunctionCallNode node) {}
+        public void Accept(GlobalNode node) {}
         public void Accept(IdentifierNode node) {}
         public void Accept(IfNode node) {}
         public void Accept(IntegerNode node) {}

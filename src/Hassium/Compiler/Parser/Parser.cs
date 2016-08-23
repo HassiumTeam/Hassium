@@ -55,6 +55,8 @@ namespace Hassium.Compiler.Parser
                 return parseForeach();
             else if (MatchToken(TokenType.Identifier, "func"))
                 return parseFunc();
+            else if (MatchToken(TokenType.Identifier, "global"))
+                return parseGlobal();
             else if (MatchToken(TokenType.Identifier, "if"))
                 return parseIf();
             else if (AcceptToken(TokenType.Identifier, "raise"))
@@ -180,6 +182,14 @@ namespace Hassium.Compiler.Parser
                 return new FuncNode(Location, name, parameters, parseStatement(), returnType);
             }
             return new FuncNode(Location, name, parameters, parseStatement());
+        }
+        private GlobalNode parseGlobal()
+        {
+            ExpectToken(TokenType.Identifier, "global");
+            string variable = ExpectToken(TokenType.Identifier).Value;
+            ExpectToken(TokenType.Assignment, "=");
+            AstNode value = parseExpression();
+            return new GlobalNode(Location, variable, value);
         }
         private IfNode parseIf()
         {

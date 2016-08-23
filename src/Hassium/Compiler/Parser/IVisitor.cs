@@ -23,6 +23,7 @@ namespace Hassium.Compiler.Parser
         void Accept(ForNode node);
         void Accept(FuncNode node);
         void Accept(FunctionCallNode node);
+        void Accept(GlobalNode node);
         void Accept(IdentifierNode node);
         void Accept(IfNode node);
         void Accept(KeyValuePairNode node);

@@ -321,6 +321,14 @@ namespace Hassium.Compiler.CodeGen
             node.Target.Visit(this);
             method.Emit(node.SourceLocation, InstructionType.Call, node.Parameters.Children.Count);
         }
+        public void Accept(GlobalNode node)
+        {
+            if (!table.ContainsGlobalSymbol(node.Variable))
+                table.AddGlobalSymbol(node.Variable);
+            node.Value.Visit(this);
+            module.Globals.Add(table.GetGlobalSymbol(node.Variable), HassiumObject.Null);
+            method.Emit(node.SourceLocation, InstructionType.StoreGlobalVariable, table.GetGlobalSymbol(node.Variable));
+        }
         public void Accept(IdentifierNode node)
         {
             if (node.Identifier == "this")
