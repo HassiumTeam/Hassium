@@ -22,7 +22,7 @@ namespace Hassium.Runtime.Objects
 
         public override HassiumObject Invoke(VirtualMachine vm, params HassiumObject[] args)
         {
-            vm.Execute(this, new string[0]);
+            new VirtualMachine().Execute(this, new string[0]);
             return HassiumObject.Null;
         }
     }
