@@ -140,6 +140,8 @@ namespace Hassium.Runtime.Objects.Net
                     var accept = new HassiumObject();
                     accept.Attributes.Add("mimeType",
                         new HassiumProperty((vm2, args2) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_ACCEPT") ?? "undefined")));
+                    accept.Attributes.Add("charset",
+                        new HassiumProperty((vm2, args2) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_ACCEPT_CHARSET") ?? "undefined")));
                     accept.Attributes.Add("encoding",
                         new HassiumProperty((vm2, args2) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_ACCEPT_ENCODING") ?? "undefined")));
                     accept.Attributes.Add("language",
@@ -157,7 +159,7 @@ namespace Hassium.Runtime.Objects.Net
                 http.Attributes.Add("doNotTrack",
                     new HassiumProperty((vm1, args1) => new HassiumBool(Environment.GetEnvironmentVariable("HTTP_DNT") == "1")));
                 http.Attributes.Add("userMail",
-                    new HassiumProperty((vm1, args1) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_FORM") ?? "undefined")));
+                    new HassiumProperty((vm1, args1) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_FROM") ?? "undefined")));
                 http.Attributes.Add("host",
                     new HassiumProperty((vm1, args1) => new HassiumString(Environment.GetEnvironmentVariable("HTTP_HOST") ?? "undefined")));
                 http.Attributes.Add("referer",
