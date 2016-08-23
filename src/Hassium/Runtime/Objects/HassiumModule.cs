@@ -9,11 +9,21 @@ namespace Hassium.Runtime.Objects
         public Dictionary<int, string> ConstantPool { get; private set; }
         public Dictionary<int, HassiumObject> Globals { get; private set; }
 
+        public List<string> Imports { get; private set; }
+
         public HassiumModule()
         {
             ObjectPool = new Dictionary<int, HassiumObject>();
             ConstantPool = new Dictionary<int, string>();
             Globals = new Dictionary<int, HassiumObject>();
+
+            Imports = new List<string>();
+        }
+
+        public override HassiumObject Invoke(VirtualMachine vm, params HassiumObject[] args)
+        {
+            vm.Execute(this, new string[0]);
+            return HassiumObject.Null;
         }
     }
 }

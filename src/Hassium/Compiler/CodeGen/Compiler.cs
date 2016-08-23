@@ -578,7 +578,10 @@ namespace Hassium.Compiler.CodeGen
             if (path != string.Empty)
                 mod = CompileModuleFromSource(File.ReadAllText(path));
             else if (InternalModule.InternalModules.ContainsKey(name))
+            {
                 mod = InternalModule.InternalModules[name];
+                module.Imports.Add(name);
+            }
             else
                 throw new CompileException(node.SourceLocation, "Could not find path or module for use \"{0}\"!", name);
 

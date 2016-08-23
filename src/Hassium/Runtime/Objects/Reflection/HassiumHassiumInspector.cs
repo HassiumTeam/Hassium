@@ -32,8 +32,9 @@ namespace Hassium.Runtime.Objects.Reflection
         {
             HassiumHassiumInspector hassiumInspector = new HassiumHassiumInspector();
             hassiumInspector.HassiumObject = args[0];
-            hassiumInspector.AddAttribute("getObjectsByType", getObjectsByType, 1);
-            hassiumInspector.AddAttribute("getParent", getParent, 0);
+            hassiumInspector.AddAttribute("getObjectsByType",   getObjectsByType,   1);
+            hassiumInspector.AddAttribute("getImports",         getImports,         0);
+            hassiumInspector.AddAttribute("getParent",          getParent,          0);
 
             return hassiumInspector;
         }
@@ -44,6 +45,16 @@ namespace Hassium.Runtime.Objects.Reflection
             foreach (HassiumObject obj in HassiumObject.Attributes.Values)
                 if (obj.Types.Contains(args[0].Type()))
                     result.add(vm, obj);
+            return result;
+        }
+        public HassiumList getImports(VirtualMachine vm, params HassiumObject[] args)
+        {
+            HassiumList result = new HassiumList(new HassiumObject[0]);
+            if (HassiumObject is HassiumModule)
+            {
+                foreach (string import in ((HassiumModule)HassiumObject).Imports)
+                    result.add(vm, new HassiumString(import));
+            }
             return result;
         }
         public HassiumObject getParent(VirtualMachine vm, params HassiumObject[] args)
