@@ -1,0 +1,6 @@
+{
+  "name": "Hassium",
+  "tagline": "Programming Language in C#",
+  "body": "[![Unit tests status](https://travis-ci.org/HassiumTeam/Hassium.svg?branch=master)](https://travis-ci.org/HassiumTeam/Hassium) ![Downloads](https://img.shields.io/github/downloads/HassiumTeam/Hassium/total.svg) ![Release](https://img.shields.io/github/release/HassiumTeam/Hassium.svg)\r\n\r\n# Hassium\r\n \r\n### Hassium Website\r\nVisit our website at: http://HassiumLang.com\r\n### [Run Hassium Online](http://HassiumLang.com/Hassium)\r\n### [YouTube Video](https://www.youtube.com/watch?v=9lFGvJAjJ2g&feature=youtu.be)\r\n\r\nHassium is a programming language written in C# for the heck of it.\r\nThe syntax is a lot like C# mixed with Python and it is very easy to\r\nlearn to program in it.\r\n\r\nHassium HelloWorld.has:\r\n```go\r\nfunc main() {\r\n\tprint(\"Hello, World!\");\r\n}\r\n```\r\n\r\nAny questions can be directed to myself at misiriansoft@gmail.com\r\nor on irc.int0x10.com:6697 as Reagan, or to zdimension at zippedfire (@) free.fr or on irc.int0x10.com:6697 as zdimension.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
