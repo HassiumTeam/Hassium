@@ -11,6 +11,7 @@ namespace Hassium.Runtime.Objects.IO
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("FileWriter");
 
         public BinaryWriter BinaryWriter { get; set; }
+        public HassiumStream BaseStream { get; set; }
 
         public HassiumFileWriter()
         {
@@ -26,22 +27,47 @@ namespace Hassium.Runtime.Objects.IO
                 fileWriter.BinaryWriter = new BinaryWriter(new StreamWriter(args[0].ToString(vm).String).BaseStream);
             else if (args[0] is HassiumStream)
                 fileWriter.BinaryWriter = new BinaryWriter(((HassiumStream)args[0]).Stream);
-            fileWriter.AddAttribute("flush",       fileWriter.flush, 0);
-            fileWriter.AddAttribute("position",    new HassiumProperty(fileWriter.get_Position));
-            fileWriter.AddAttribute("write",       fileWriter.write, 1);
-            fileWriter.AddAttribute("writeBool",   fileWriter.writeBool, 1);
-            fileWriter.AddAttribute("writeChar",   fileWriter.writeChar, 1);
-            fileWriter.AddAttribute("writeDouble", fileWriter.writeDouble, 1);
-            fileWriter.AddAttribute("writeInt16",  fileWriter.writeInt16, 1);
-            fileWriter.AddAttribute("writeInt32",  fileWriter.writeInt32, 1);
-            fileWriter.AddAttribute("writeInt64",  fileWriter.writeInt64, 1);
-            fileWriter.AddAttribute("writeLine",   fileWriter.writeLine, 1);
-            fileWriter.AddAttribute("writeList",   fileWriter.writeList, 1);
-            fileWriter.AddAttribute("writeString", fileWriter.writeString, 1);
+            fileWriter.BaseStream = new HassiumStream(fileWriter.BinaryWriter.BaseStream);
+            fileWriter.AddAttribute("baseStream",   new HassiumProperty(get_baseStream));
+            fileWriter.AddAttribute("endOfFile",    new HassiumProperty(get_endOfFile));
+            fileWriter.AddAttribute("flush",        fileWriter.flush, 0);
+            fileWriter.AddAttribute("length",       new HassiumProperty(get_length));
+            fileWriter.AddAttribute("position",     new HassiumProperty(get_position, set_position));
+            fileWriter.AddAttribute("write",        fileWriter.write, 1);
+            fileWriter.AddAttribute("writeBool",    fileWriter.writeBool, 1);
+            fileWriter.AddAttribute("writeChar",    fileWriter.writeChar, 1);
+            fileWriter.AddAttribute("writeDouble",  fileWriter.writeDouble, 1);
+            fileWriter.AddAttribute("writeInt16",   fileWriter.writeInt16, 1);
+            fileWriter.AddAttribute("writeInt32",   fileWriter.writeInt32, 1);
+            fileWriter.AddAttribute("writeInt64",   fileWriter.writeInt64, 1);
+            fileWriter.AddAttribute("writeLine",    fileWriter.writeLine, 1);
+            fileWriter.AddAttribute("writeList",    fileWriter.writeList, 1);
+            fileWriter.AddAttribute("writeString",  fileWriter.writeString, 1);
 
             return fileWriter;
         }
 
+        public HassiumStream get_baseStream(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return BaseStream;
+        }
+        public HassiumBool get_endOfFile(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool(BinaryWriter.BaseStream.Position < BinaryWriter.BaseStream.Length);
+        }
+        public HassiumInt get_length(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumInt(BinaryWriter.BaseStream.Length);
+        }
+        public HassiumInt get_position(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumInt(BinaryWriter.BaseStream.Position);
+        }
+        public HassiumNull set_position(VirtualMachine vm, params HassiumObject[] args)
+        {
+            BinaryWriter.BaseStream.Position = args[0].ToInt(vm).Int;
+            return HassiumObject.Null;
+        }
         public HassiumNull flush(VirtualMachine vm, HassiumObject[] args)
         {
             BinaryWriter.Flush();
