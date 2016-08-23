@@ -1,22 +1,17 @@
-## ```go
-class FileReader
-```
+## ```class FileReader```
 
-### ```go func new (path : stream)
-```
+### ```func new (path : stream)```
 Creates a new instance of the FileReader class using the specified stream.
-### ```go
-func new (path : string)```
+### ```go func new (path : string)```
 Creates a new instance of the FileReader class on the specified file path.
 
-### ```C#
-baseStream { get { return this.baseStream; } } ```
+### ```baseStream { get { return this.baseStream; } } ```
 Returns a Stream object that is the base of the FileReader instance.
 
-### ```C# endOfFile { get { return this.endOfFile; } }```
+### ```endOfFile { get { return this.endOfFile; } }```
 Returns a bool indicating whether or not the stream has read to the end.
 
-### ```C# length { get { return this.length; } }```
+### ```length { get { return this.length; } }```
 Returns an integer value of how long the stream can be read.
 
 ### ```C# position { get { return this.position; } set { this.position = value; } }```
