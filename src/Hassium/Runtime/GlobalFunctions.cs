@@ -17,6 +17,8 @@ namespace Hassium.Runtime
             { "print",      new HassiumFunction(print,     -1) },
             { "println",    new HassiumFunction(println,   -1) },
             { "range",      new HassiumFunction(range, new int[] { 1, 2 }) },
+            { "readChar",   new HassiumFunction(readChar,   0) },
+            { "readKey",    new HassiumFunction(readKey, new int[] { 0, 1 }) },
             { "sleep",      new HassiumFunction(sleep,      1) },
             { "type",       new HassiumFunction(type,       1) },
             { "types",      new HassiumFunction(types,      1) }
@@ -39,8 +41,7 @@ namespace Hassium.Runtime
             HassiumList result = new HassiumList(new HassiumObject[0]);
 
             for (int i = 0; i < list.List.Count; i++)
-                if (args[1].Invoke(vm, list.List[i]).ToBool(vm).Bool)
-                    result.add(vm, list.List[i]);
+                result.add(vm, args[1].Invoke(vm, list.List[i]));
 
             return result;
         }
@@ -74,6 +75,14 @@ namespace Hassium.Runtime
             while (start < end)
                 result.add(vm, new HassiumInt(start++));
             return result;
+        }
+        public static HassiumChar readChar(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)Console.Read());
+        }
+        public static HassiumChar readKey(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)Console.ReadKey(args.Length == 1 ? args[0].ToBool(vm).Bool : false).KeyChar);
         }
         public static HassiumNull sleep(VirtualMachine vm, params HassiumObject[] args)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 using Hassium.Compiler.Parser;
 using Hassium.Compiler.Parser.Ast;
@@ -573,9 +574,16 @@ namespace Hassium.Compiler.CodeGen
         public void Accept(UseNode node)
         {
             string name = node.GetName();
-            string path = locateFile(name);
+            string path = locateFile(name, ".has");
+            if (path == string.Empty)
+                path = locateFile(name, ".dll");
             HassiumObject mod;
-            if (path != string.Empty)
+            if (path.EndsWith(".dll"))
+            {
+                importModules(path);
+                return;
+            }
+            else if (path != string.Empty)
                 mod = CompileModuleFromSource(File.ReadAllText(path));
             else if (InternalModule.InternalModules.ContainsKey(name))
             {
@@ -622,12 +630,12 @@ namespace Hassium.Compiler.CodeGen
             method.EmitLabel(node.SourceLocation, endLabel);
         }
 
-        private string locateFile(string path)
+        private string locateFile(string path, string extension)
         {
             if (File.Exists(path))
                 return path;
-            if (File.Exists(path + ".has"))
-                return path + ".has";
+            if (File.Exists(path + extension))
+                return path + extension;
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                               Environment.OSVersion.Platform == PlatformID.MacOSX)
                 ? Environment.GetEnvironmentVariable("HOME")
@@ -635,14 +643,28 @@ namespace Hassium.Compiler.CodeGen
             string homeFilePath = Path.Combine(homePath, path);
             if (File.Exists(homeFilePath))
                 return homeFilePath;
-            if (File.Exists(homeFilePath + ".has"))
-                return homeFilePath + ".has";
+            if (File.Exists(homeFilePath + extension))
+                return homeFilePath + extension;
             homeFilePath = Path.Combine(Path.Combine(homePath, ".Hassium"), path);
             if (File.Exists(homeFilePath))
                 return homeFilePath;
-            if (File.Exists(homeFilePath + ".has"))
-                return homeFilePath + ".has";
+            if (File.Exists(homeFilePath + extension))
+                return homeFilePath + extension;
             return string.Empty;
+        }
+
+        private void importModules(string path)
+        {
+            var ass = Assembly.LoadFrom(path);
+
+            foreach (var type in ass.GetTypes())
+                if (type.IsSubclassOf(typeof(InternalModule)))
+                    foreach (var pair in ((InternalModule)Activator.CreateInstance(type)).Attributes)
+                    {
+                        if (module.Attributes.ContainsKey(pair.Key))
+                            module.Attributes.Remove(pair.Key);
+                        module.Attributes.Add(pair.Key, pair.Value);
+                    }
         }
 
         private void preformInherits(HassiumObject obj)

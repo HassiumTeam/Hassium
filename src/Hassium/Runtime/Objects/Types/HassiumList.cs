@@ -15,12 +15,13 @@ namespace Hassium.Runtime.Objects.Types
             AddType(TypeDefinition);
             List = new List<HassiumObject>(elements);
 
-            AddAttribute("add",             add,        -1);
+            AddAttribute("add",             add,       -1);
             AddAttribute("clear",           clear,      0);
             AddAttribute("contains",        contains,   1);
             AddAttribute("fill",            fill,    1, 2);
             AddAttribute("length",          new HassiumProperty(get_length));
-            AddAttribute("remove",          remove,     -1);
+            AddAttribute("split",           split,   1, 2);
+            AddAttribute("remove",          remove,    -1);
             AddAttribute("reverse",         reverse,    0);
             AddAttribute(HassiumObject.TOLIST,      ToList,         0);
             AddAttribute(HassiumObject.TOSTRING,    ToString,    0, 1);
@@ -55,6 +56,15 @@ namespace Hassium.Runtime.Objects.Types
         public HassiumInt get_length(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumInt(List.Count);
+        }
+        public HassiumList split(VirtualMachine vm, params HassiumObject[] args)
+        {
+            HassiumList result = new HassiumList(new HassiumObject[0]);
+            int start = (int)args[0].ToInt(vm).Int;
+            int end = args.Length == 2 ? (int)args[1].ToInt(vm).Int : List.Count;
+            while (start < end)
+                result.add(vm, List[start++]);
+            return result;
         }
         public HassiumObject remove(VirtualMachine vm, params HassiumObject[] args)
         {
