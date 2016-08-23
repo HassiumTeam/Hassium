@@ -32,6 +32,7 @@ namespace Hassium.Runtime
             Globals = new Dictionary<string, HassiumObject>() { { "true", new HassiumBool(true) }, { "false", new HassiumBool(false) } };
             CurrentModule = module;
             importGlobals();
+            importInitials();
             importArgs(args);
 
             StackFrame.PushFrame();
@@ -379,6 +380,12 @@ namespace Hassium.Runtime
             }
             foreach (var pair in InternalModule.InternalModules["Types"].Attributes)
                 Globals.Add(pair.Key, pair.Value);
+        }
+
+        private void importInitials()
+        {
+            foreach (var pair in CurrentModule.InitialVariables)
+                CurrentModule.Globals.Add(pair.Key, pair.Value.Invoke(this));
         }
 
         private void importLabels(HassiumMethod method)

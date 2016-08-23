@@ -130,6 +130,9 @@ namespace Hassium.Compiler.Scanner
                         case '#':
                             scanSingleLineComment();
                             break;
+                        case '$':
+                            scanMultiLineComment();
+                            break;
                         default:
                             if (peekChar() == -1)
                                 break;
@@ -291,6 +294,13 @@ namespace Hassium.Compiler.Scanner
             readChar(); // #
             while (peekChar() != -1 && (char)peekChar() != '\n')
                 readChar();
+        }
+        private void scanMultiLineComment()
+        {
+            readChar(); // $
+            while (peekChar() != -1 && (char)peekChar() != '&')
+                readChar();
+            readChar(); // $
         }
 
         private void whiteSpace()

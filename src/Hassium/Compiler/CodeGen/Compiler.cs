@@ -63,6 +63,26 @@ namespace Hassium.Compiler.CodeGen
                     clazz.Parent = globalParent;
                     module.Attributes.Add(clazz.Name, clazz);
                 }
+                else if (child is ExpressionStatementNode)
+                {
+                    if (child.Children[0] is BinaryOperationNode)
+                    {
+                        var binop = child.Children[0] as BinaryOperationNode;
+                        if (binop.BinaryOperation == BinaryOperation.Assignment)
+                        {
+                            string variable = ((IdentifierNode)binop.Left).Identifier;
+                            table.AddGlobalSymbol(variable);
+                            var temp = method;
+                            method = new HassiumMethod();
+                            method.Name = variable;
+                            method.SourceRepresentation = string.Format("set_{0}", variable);
+                            binop.Right.Visit(this);
+                            method.Emit(child.SourceLocation, InstructionType.Return);
+                            module.InitialVariables.Add(table.GetGlobalSymbol(variable), method);
+                            method = temp;
+                        }
+                    }
+                }
                 else if (child is TraitNode || child is PropertyNode || child is UseNode || child is EnumNode)
                     child.Visit(this);
             }
