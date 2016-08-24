@@ -14,6 +14,11 @@ namespace Hassium
 
         public static void ExecuteConfig(HassiumArgumentConfig config)
         {
+            if (!File.Exists(config.FilePath))
+            {
+                Console.WriteLine("File {0} does not exist!", config.FilePath);
+                Environment.Exit(0);
+            }
             try
             {
                 var module = Compiler.CodeGen.Compiler.CompileModuleFromSource(File.ReadAllText(config.FilePath));

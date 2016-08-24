@@ -1,0 +1,41 @@
+## ```class DateTime```
+
+### ```now { get { return this.now; } set { this.now = value; } }```
+Returns a DateTime instance of the current date and time.
+
+### ```func parse (dateStr : string) : DateTime```
+Parses a date time string and returns a new DateTime instance.
+
+### ```func new (year : int, month : int, day : int)```
+Creates a new instance of the DateTime class using the specified year, month, and day.
+### ```func new (year : int, month : int, day : int, hour : int, minute : int, second : int)```
+Creates a new instance of the DateTime class using the specified year, month, day, hour, minute, and second.
+### ```func new (year : int, month : int, day : int, hour : int, minute : int, second : int, millisecond : int)```
+Creates a new instance of the DateTime class using the specified year, month, day, hour, minute, second, and millisecond.
+
+### ```day { get { return this.day; } }```
+Gets the integer value of the day.
+
+### ```dayOfWeek { get { return this.dayOfWeek; } }```
+Gets the string value of the day of the week.
+
+### ```dayOfYear { get { return this.dayOfYear; } }```
+Gets the string value of the day of the year.
+
+### ```hour { get { return this.hour; } }```
+Gets the integer hour.
+
+### ```millisecond { get { return this.millisecond; } }```
+Gets the integer millisecond.
+
+### ```minute { get { return this.minute; } }```
+Gets the integer minute.
+
+### ```month { get { return this.month; } }```
+Gets the integer month.
+
+### ```second { get { return this.second; } }```
+Gets the integer second.
+
+### ```year { get { return this.year; } }```
+Gets the integer year.

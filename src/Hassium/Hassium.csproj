@@ -147,6 +147,11 @@
     <Compile Include="HassiumArgumentConfig.cs" />
     <Compile Include="HassiumArgumentParser.cs" />
     <Compile Include="Compiler\Parser\Ast\GlobalNode.cs" />
+    <Compile Include="HassiumBuilder\ModuleBuilder.cs" />
+    <Compile Include="HassiumBuilder\MethodBuilder.cs" />
+    <Compile Include="HassiumBuilder\ExpressionBuilder.cs" />
+    <Compile Include="Runtime\Objects\IO\HassiumFileInfo.cs" />
+    <Compile Include="Runtime\Objects\Util\HassiumDateTime.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -165,5 +170,6 @@
     <Folder Include="Runtime\Objects\Net\" />
     <Folder Include="Runtime\Objects\Util\" />
     <Folder Include="Runtime\Objects\Reflection\" />
+    <Folder Include="HassiumBuilder\" />
   </ItemGroup>
 </Project>

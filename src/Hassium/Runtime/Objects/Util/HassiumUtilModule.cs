@@ -6,6 +6,7 @@ namespace Hassium.Runtime.Objects.Util
     {
         public HassiumUtilModule() : base("Util")
         {
+            AddAttribute("DateTime",        new HassiumDateTime());
             AddAttribute("OS",              new HassiumOS());
             AddAttribute("Process",         new HassiumProcess());
             AddAttribute("ProcessContext",  new HassiumProcessContext());
