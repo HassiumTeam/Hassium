@@ -40,7 +40,6 @@ namespace Hassium.Compiler.CodeGen
             method = new HassiumMethod();
 
             var globalParent = new HassiumClass();
-
             foreach (AstNode child in ast.Children)
             {
                 if (child is FuncNode)

@@ -6,6 +6,7 @@ namespace Hassium.Runtime.Objects.Types
     {
         public HassiumTypesModule() : base("types")
         {
+            AddAttribute("BitArray",        new HassiumBitArray());
             AddAttribute("bool",            HassiumBool.TypeDefinition);
             AddAttribute("char",            HassiumChar.TypeDefinition);
             AddAttribute("closure",         HassiumClosure.TypeDefinition);

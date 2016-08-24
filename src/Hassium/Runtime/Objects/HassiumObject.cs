@@ -54,6 +54,7 @@ namespace Hassium.Runtime.Objects
         };
         public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
 
+
         public HassiumTypeDefinition Type()
         {
             return Types[Types.Count - 1];
@@ -74,6 +75,27 @@ namespace Hassium.Runtime.Objects
         public void AddType(HassiumTypeDefinition typeDefinition)
         {
             Types.Add(typeDefinition);
+        }
+
+        public HassiumObject getAttribute(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return Attributes[args[0].ToString(vm).String];
+        }
+        public HassiumBool hasAttribute(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool(Attributes.ContainsKey(args[0].ToString(vm).String));
+        }
+        public HassiumObject removeAttribute(VirtualMachine vm, params HassiumObject[] args)
+        {
+            string attrib = args[0].ToString(vm).String;
+            var ret = Attributes[attrib];
+            Attributes.Remove(attrib);
+            return ret;
+        }
+        public HassiumObject setAttribute(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Attributes[args[0].ToString(vm).String] = args[1];
+            return args[1];
         }
 
         public virtual HassiumObject Invoke(VirtualMachine vm, params HassiumObject[] args)

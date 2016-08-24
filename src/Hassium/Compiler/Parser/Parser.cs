@@ -82,13 +82,8 @@ namespace Hassium.Compiler.Parser
                     block.Children.Add(parseStatement());
                 return block;
             }
-            else if (MatchToken(TokenType.Identifier) && Tokens.Count < Position + 1)
-            {
-                if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
-                    return parseProperty();
-                else
-                    return parseExpressionStatement();
-            }
+            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
+                return parseProperty();
             else
                 return parseExpressionStatement();
         }

@@ -12,6 +12,7 @@ namespace Hassium
     {
         public static void Main(string[] args)
         {
+            /*
             try
             {
             ModuleBuilder module = new ModuleBuilder();
@@ -23,8 +24,8 @@ namespace Hassium
             {
                 Console.WriteLine(ex.SourceLocation);
                 Console.WriteLine(ex.Message);
-            }
-            //HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser().Parse(args));
+            }*/
+            HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser().Parse(args));
         }
     }
 }
