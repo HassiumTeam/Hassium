@@ -203,6 +203,15 @@ namespace Hassium.Runtime
                         case InstructionType.SelfReference:
                             Stack.Push(method.Parent);
                             break;
+                        case InstructionType.SetInitialAttribute:
+                            attrib = Stack.Pop().ToString(this).String;
+                            val = Stack.Pop();
+                            var obj = Stack.Pop();
+                            if (obj.Attributes.ContainsKey(attrib))
+                                obj.Attributes.Remove(attrib);
+                            obj.Attributes.Add(attrib, val);
+                            Stack.Push(obj);
+                            break;
                         case InstructionType.StoreAttribute:
                             val = Stack.Pop();
                             attrib = CurrentModule.ConstantPool[arg];

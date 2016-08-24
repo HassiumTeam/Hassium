@@ -35,6 +35,7 @@ namespace Hassium.Compiler.CodeGen
         Reference,
         Return,
         SelfReference,
+        SetInitialAttribute,
         StoreAttribute,
         StoreGlobalVariable,
         StoreListElement,

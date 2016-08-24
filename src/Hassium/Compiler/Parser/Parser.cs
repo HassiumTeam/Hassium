@@ -576,7 +576,7 @@ namespace Hassium.Compiler.Parser
         private AstNode parseAccess(AstNode left)
         {
             if (MatchToken(TokenType.OpenParentheses))
-                return parseAccess(new FunctionCallNode(Location, left, parseArgList()));
+                return parseAccess(new FunctionCallNode(Location, left, parseArgList(), parseFuncInitialList()));
             else if (AcceptToken(TokenType.OpenSquare))
             {
                 AstNode expression = parseExpression();
@@ -640,6 +640,23 @@ namespace Hassium.Compiler.Parser
                 return new StatementNode(Location);
             else
                 throw new CompileException(Location, "Unexpected token type {0} with value {1}!", Tokens[Position].TokenType, Tokens[Position].Value);
+        }
+
+        private List<BinaryOperationNode> parseFuncInitialList()
+        {
+            var result = new List<BinaryOperationNode>();
+            if (AcceptToken(TokenType.OpenBracket))
+            {
+                while (!AcceptToken(TokenType.CloseBracket))
+                {
+                    string identifier = ExpectToken(TokenType.Identifier).Value;
+                    ExpectToken(TokenType.Assignment);
+                    AstNode value = parseExpression();
+                    result.Add(new BinaryOperationNode(Location, BinaryOperation.Assignment, new IdentifierNode(Location, identifier), value));
+                    AcceptToken(TokenType.Comma);
+                }
+            }
+            return result;
         }
 
         public bool MatchToken(TokenType tokenType)

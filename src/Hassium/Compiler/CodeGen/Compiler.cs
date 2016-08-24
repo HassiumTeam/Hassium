@@ -319,6 +319,15 @@ namespace Hassium.Compiler.CodeGen
                 param.Visit(this);
             node.Target.Visit(this);
             method.Emit(node.SourceLocation, InstructionType.Call, node.Parameters.Children.Count);
+            foreach (var binop in node.InitialAttributes)
+            {
+                string id = ((IdentifierNode)binop.Left).Identifier;
+                if (!module.ConstantPool.ContainsKey(id.GetHashCode()))
+                    module.ConstantPool.Add(id.GetHashCode(), id);
+                binop.Right.Visit(this);
+                method.Emit(node.SourceLocation, InstructionType.PushConstant, id.GetHashCode());
+                method.Emit(node.SourceLocation, InstructionType.SetInitialAttribute);
+            }
         }
         public void Accept(GlobalNode node)
         {

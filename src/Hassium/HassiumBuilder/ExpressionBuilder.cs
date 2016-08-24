@@ -38,7 +38,7 @@ namespace Hassium.HassiumBuilder
             List<AstNode> parameterList = new List<AstNode>();
             foreach (var parameter in parameters)
                 parameterList.Add(parameter);
-            return new FunctionCallNode(ModuleBuilder.SourceLocation, call, new ArgumentListNode(ModuleBuilder.SourceLocation, parameterList));
+            return new FunctionCallNode(ModuleBuilder.SourceLocation, call, new ArgumentListNode(ModuleBuilder.SourceLocation, parameterList), new List<BinaryOperationNode>());
         }
         public static FunctionCallNode CreateFunctionCall(string call, params AstNode[] parameters)
         {
