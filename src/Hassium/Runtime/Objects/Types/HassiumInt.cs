@@ -12,12 +12,27 @@ namespace Hassium.Runtime.Objects.Types
         {
             Int = val;
             AddType(TypeDefinition);
-
+            AddAttribute("getBit",      getBit,     1);
+            AddAttribute("setBit",      setBit,     2);
             AddAttribute(HassiumObject.TOBOOL,  ToBool,     0);
             AddAttribute(HassiumObject.TOCHAR,  ToChar,     0);
             AddAttribute(HassiumObject.TOFLOAT, ToFloat,    0);
             AddAttribute(HassiumObject.TOINT,   ToInt,      0);
             AddAttribute(HassiumObject.TOSTRING,ToString,   0);
+        }
+
+        public HassiumBool getBit(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool((Int & (1 << (int)args[0].ToInt(vm).Int - 1)) != 0);
+        }
+        public HassiumInt setBit(VirtualMachine vm, params HassiumObject[] args)
+        {
+            int index = (int)args[0].ToInt(vm).Int;
+            bool val = args[1].ToBool(vm).Bool;
+            if (val)
+                return new HassiumInt((int)Int | 1 << index);
+            else
+                return new HassiumInt(Int & ~(1 << index));
         }
 
         public override HassiumObject Add(VirtualMachine vm, params HassiumObject[] args)
