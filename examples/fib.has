@@ -1,5 +1,10 @@
+use Util;
+
 func main () {
-    print (fib (10));
+    watch = new StopWatch ();
+    watch.start ();
+    println (fib (32));
+    println (watch.milliseconds);
 }
 
 # Recursive fib function

@@ -13,6 +13,7 @@ namespace Hassium.Runtime.Objects.Types
             Char = c;
             AddType(TypeDefinition);
 
+            AddAttribute("getBit",              getBit,             1);
             AddAttribute("isControl",           isControl,          0);
             AddAttribute("isDigit",             isDigit,            0);
             AddAttribute("isLetter",            isLetter,           0);
@@ -21,6 +22,7 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("isSymbol",            isSymbol,           0);
             AddAttribute("isUpper",             isUpper,            0);
             AddAttribute("isWhiteSpace",        isWhiteSpace,       0);
+            AddAttribute("setBit",              setBit,             2);
             AddAttribute("toLower",             toLower,            0);
             AddAttribute("toUpper",             toUpper,            0);
             AddAttribute(HassiumObject.TOCHAR,  ToChar,             0);
@@ -29,6 +31,10 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute(HassiumObject.TOSTRING,ToString,           0);
         }
 
+        public HassiumBool getBit(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool(((byte)Char & (1 << (int)args[0].ToInt(vm).Int - 1)) != 0);
+        }
         public HassiumBool isControl(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumBool(char.IsControl(Char));
@@ -60,6 +66,15 @@ namespace Hassium.Runtime.Objects.Types
         public HassiumBool isWhiteSpace(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumBool(char.IsWhiteSpace(Char));
+        }
+        public HassiumChar setBit(VirtualMachine vm, params HassiumObject[] args)
+        {
+            int index = (int)args[0].ToInt(vm).Int;
+            bool val = args[1].ToBool(vm).Bool;
+            if (val)
+                return new HassiumChar((char)(Char | 1 << index));
+            else
+                return new HassiumChar((char)(Char & ~(1 << index)));
         }
         public HassiumChar toLower(VirtualMachine vm, params HassiumObject[] args)
         {

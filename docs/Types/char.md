@@ -1,5 +1,8 @@
 ## ```class char```
 
+### ```func getBit (index : int) : char```
+Returns the value of the bit at the specified index.
+
 ### ```func isControl () : bool```
 Returns a bool if the char is a control character.
 
@@ -23,6 +26,9 @@ Returns a bool if the char is an uppercase letter.
 
 ### ```func isWhiteSpace () : bool```
 Returns a bool if the char is a whitespace character.
+
+### ```func setBit (index : int, value : bool) : char```
+Returns a new char with the bit at the specified index set to the specified value.
 
 ### ```func toLower () : char```
 Returns the char converted to lowercase.
