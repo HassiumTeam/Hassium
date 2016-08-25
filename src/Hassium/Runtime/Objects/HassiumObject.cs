@@ -286,7 +286,8 @@ namespace Hassium.Runtime.Objects
         {
             if (Attributes.ContainsKey(TOSTRING))
                 return Attributes[TOSTRING].Invoke(vm, args).ToString(vm, args);
-            return Type().ToString(vm);
+            throw new InternalException(vm, InternalException.ATTRIBUTE_NOT_FOUND, TOSTRING, Type());
+            //return Type().ToString(vm);
         }
         public virtual HassiumTuple ToTuple(VirtualMachine vm, params HassiumObject[] args)
         {

@@ -31,9 +31,16 @@ namespace Hassium.Runtime
 
         public static HassiumString format(VirtualMachine vm, params HassiumObject[] args)
         {
-            string[] elements = new string[args.Length - 1];
+            object[] elements = new object[args.Length - 1];
             for (int i = 0; i < elements.Length; i++)
-                elements[i] = args[i + 1].ToString(vm).String;
+            {
+                if (args[i + 1] is HassiumInt)
+                    elements[i] = args[i + 1].ToInt(vm).Int;
+                else if (args[i + 1] is HassiumFloat)
+                    elements[i] = args[i + 1].ToFloat(vm).Float;
+                else
+                    elements[i] = args[i + 1].ToString(vm).String;
+            }
             return new HassiumString(string.Format(args[0].ToString(vm).String, elements));
         }
         public static HassiumObject getAttribute(VirtualMachine vm, params HassiumObject[] args)
