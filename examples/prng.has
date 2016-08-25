@@ -15,19 +15,19 @@ class Prng {
 		this.d = 0xDC3F & 0xFF;
 		this.x = 0;
 		foreach (i in range (0, seed))
-			this.x = (this.x + i) & 0xFF;
+			this.x = this.x + i & 0xFF;
 	}
-	# Returns a pseudo-random byte (as a char) using the specified source byte.
-	func next (bl) : char {
+	# Returns a pseudo-random byte (as an integer) using the specified source byte.
+	func next (bl) : int {
 		this.a = this.shiftLeft(bl, this.x);
 		this.b = (this.b ^ bl) - this.x;
 		this.c = (this.a + this.b) & this.x;
 		this.d ^= this.x - this.b;
 		this.x ^= this.d;
-		return (((this.a * this.c) + this.b - this.x * this.d ^ bl) & 0xFF).toChar ();
+		return (this.a * this.c + this.b - this.x * this.d ^ bl) & 0xFF;
 	}
 	# Shifts the specified byte back by the specified amount of bits and returns the result.
 	func shiftLeft (b : int, bits : int) : int {
-		return ((b << bits | b >> 32 - bits));
+		return b << bits | b >> 32 - bits;
 	}
 }
