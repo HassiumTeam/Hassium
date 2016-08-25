@@ -3,7 +3,7 @@ use Util;
 func main () {
     watch = new StopWatch ();
     watch.start ();
-    println (fib (29));
+    println (fib (20));
     println (watch.milliseconds);
 }
 

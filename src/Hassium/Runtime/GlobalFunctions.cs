@@ -11,21 +11,22 @@ namespace Hassium.Runtime
     {
         public static Dictionary<string, HassiumObject> Functions = new Dictionary<string, HassiumObject>()
         {
-            { "format",         new HassiumFunction(format,    -1)      },
-            { "getAttribute",   new HassiumFunction(getAttribute, 2)    },
-            { "getAttributes",  new HassiumFunction(getAttributes, 1)   },
-            { "hasAttribute",   new HassiumFunction(hasAttribute, 2)    },
-            { "input",          new HassiumFunction(input,      0)      },
-            { "map",            new HassiumFunction(map,        2)      },
-            { "print",          new HassiumFunction(print,     -1)      },
-            { "println",        new HassiumFunction(println,   -1)      },
+            { "format",         new HassiumFunction(format,        -1) },
+            { "getAttribute",   new HassiumFunction(getAttribute,   2) },
+            { "getAttributes",  new HassiumFunction(getAttributes,  1) },
+            { "hasAttribute",   new HassiumFunction(hasAttribute,   2) },
+            { "input",          new HassiumFunction(input,          0) },
+            { "map",            new HassiumFunction(map,            2) },
+            { "print",          new HassiumFunction(print,         -1) },
+            { "printf",         new HassiumFunction(printf,        -1) },
+            { "println",        new HassiumFunction(println,       -1) },
             { "range",          new HassiumFunction(range, new int[] { 1, 2 }) },
-            { "readChar",       new HassiumFunction(readChar,   0)      },
+            { "readChar",       new HassiumFunction(readChar,       0)      },
             { "readKey",        new HassiumFunction(readKey, new int[] { 0, 1 }) },
-            { "setAttribute",   new HassiumFunction(setAttribute, 3)    },
-            { "sleep",          new HassiumFunction(sleep,      1)      },
-            { "type",           new HassiumFunction(type,       1)      },
-            { "types",          new HassiumFunction(types,      1)      }
+            { "setAttribute",   new HassiumFunction(setAttribute,   3) },
+            { "sleep",          new HassiumFunction(sleep,          1) },
+            { "type",           new HassiumFunction(type,           1) },
+            { "types",          new HassiumFunction(types,          1) }
         };
 
         public static HassiumString format(VirtualMachine vm, params HassiumObject[] args)
@@ -64,13 +65,18 @@ namespace Hassium.Runtime
 
             return result;
         }
-        public static HassiumObject print(VirtualMachine vm, params HassiumObject[] args)
+        public static HassiumNull print(VirtualMachine vm, params HassiumObject[] args)
         {
             foreach (var arg in args)
                 Console.Write(arg.ToString(vm).String);
             return HassiumObject.Null;
         }
-        public static HassiumObject println(VirtualMachine vm, params HassiumObject[] args)
+        public static HassiumNull printf(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Console.Write(format(vm, args).ToString(vm).String);
+            return HassiumObject.Null;
+        }
+        public static HassiumNull println(VirtualMachine vm, params HassiumObject[] args)
         {
             foreach (var arg in args)
                 Console.WriteLine(arg.ToString(vm).String);

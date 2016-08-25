@@ -44,7 +44,6 @@ namespace Hassium.Runtime
 
         public HassiumObject ExecuteMethod(HassiumMethod method)
         {
-            //importLabels(method);
             for (int pos = 0; pos < method.Instructions.Count; pos++)
             {
                 if (ExceptionReturns.ContainsKey(method))
@@ -405,17 +404,6 @@ namespace Hassium.Runtime
         {
             foreach (var pair in CurrentModule.InitialVariables)
                 CurrentModule.Globals.Add(pair.Key, pair.Value.Invoke(this));
-        }
-
-        private void importLabels(HassiumMethod method)
-        {
-            for (int i = 0; i < method.Instructions.Count; i++)
-                if (method.Instructions[i].InstructionType == InstructionType.Label)
-                {
-                    if (method.Labels.ContainsKey(method.Instructions[i].Argument))
-                        method.Labels.Remove(method.Instructions[i].Argument);
-                    method.Labels.Add(method.Instructions[i].Argument, i);
-                }
         }
     }
 }
