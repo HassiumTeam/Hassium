@@ -230,6 +230,8 @@ namespace Hassium.Runtime
                                 {
                                     if (val.Attributes[attrib] is HassiumProperty)
                                     {
+                                        if (((HassiumProperty)val.Attributes[attrib]).Set == null)
+                                            throw new InternalException(this, InternalException.ATTRIBUTE_NOT_FOUND, string.Format("set_{0}", attrib), val.Type());
                                         ((HassiumProperty)val.Attributes[attrib]).Set.Invoke(this, Stack.Pop());
                                         break;
                                     }
