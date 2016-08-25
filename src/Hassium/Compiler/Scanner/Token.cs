@@ -14,6 +14,11 @@ namespace Hassium.Compiler.Scanner
             Value = value;
             SourceLocation = location;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Token: TokenType={0}, Value={1}, SourceLocation={2}]", TokenType, Value, SourceLocation);
+        }
     }
 }
 

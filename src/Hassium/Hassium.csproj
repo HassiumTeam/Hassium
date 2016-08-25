@@ -153,6 +153,7 @@
     <Compile Include="Runtime\Objects\IO\HassiumFileInfo.cs" />
     <Compile Include="Runtime\Objects\Util\HassiumDateTime.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumBitArray.cs" />
+    <Compile Include="Compiler\Parser\Ast\EnforcedAssignmentNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

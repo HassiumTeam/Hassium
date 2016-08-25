@@ -106,6 +106,16 @@ namespace Hassium.Runtime
                         case InstructionType.Duplicate:
                             Stack.Push(Stack.Peek());
                             break;
+                        case InstructionType.EnforcedAssignment:
+                            var type = Globals[Stack.Pop().ToString(this).String].Type();
+                            val = Stack.Pop();
+                            if (!val.Types.Contains(type))
+                                throw new InternalException(this, "Expcted assignment type {0}, got {1}!", type, val.Type());
+                            if (StackFrame.Contains(arg))
+                                StackFrame.Modify(arg, val);
+                            else
+                                StackFrame.Add(arg, val);
+                            break;
                         case InstructionType.Iter:
                             Stack.Push(Stack.Pop().Iter(this));
                             break;

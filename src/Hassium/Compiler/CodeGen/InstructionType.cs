@@ -13,6 +13,7 @@ namespace Hassium.Compiler.CodeGen
         Call,
         Dereference,
         Duplicate,
+        EnforcedAssignment,
         Iter,
         IterableFull,
         IterableNext,

@@ -84,6 +84,8 @@ namespace Hassium.Compiler.Parser
             }
             else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
                 return parseProperty();
+            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
+                return parseEnforcedAssignment();
             else
                 return parseExpressionStatement();
         }
@@ -112,6 +114,14 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
 
             return new ClassNode(Location, name, inherits, body);
+        }
+        private EnforcedAssignmentNode parseEnforcedAssignment()
+        {
+            string type = ExpectToken(TokenType.Identifier).Value;
+            string variable = ExpectToken(TokenType.Identifier).Value;
+            ExpectToken(TokenType.Assignment);
+            AstNode value = parseExpression();
+            return new EnforcedAssignmentNode(Location, type, variable, value);
         }
         private EnumNode parseEnum()
         {

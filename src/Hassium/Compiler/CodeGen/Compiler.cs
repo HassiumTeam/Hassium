@@ -219,10 +219,15 @@ namespace Hassium.Compiler.CodeGen
             node.VisitChildren(this);
             method.Emit(node.SourceLocation, InstructionType.BuildDictionary, node.Children.Count);
         }
-        public void Accept(ExpressionStatementNode node)
+        public void Accept(EnforcedAssignmentNode node)
         {
-            node.VisitChildren(this);
-            method.Emit(node.SourceLocation, InstructionType.Pop);
+            node.Value.Visit(this);
+            if (!module.ConstantPool.ContainsKey(node.Type.GetHashCode()))
+                module.ConstantPool.Add(node.Type.GetHashCode(), node.Type);
+            method.Emit(node.SourceLocation, InstructionType.PushConstant, node.Type.GetHashCode());
+            if (!table.ContainsSymbol(node.Variable))
+                table.AddSymbol(node.Variable);
+            method.Emit(node.SourceLocation, InstructionType.EnforcedAssignment, table.GetSymbol(node.Variable));
         }
         public void Accept(EnumNode node)
         {
@@ -237,6 +242,11 @@ namespace Hassium.Compiler.CodeGen
                 _enum.AddAttribute(((StringNode)op.Left).String, new HassiumInt(((IntegerNode)op.Right).Number));
             }
             return _enum;
+        }
+        public void Accept(ExpressionStatementNode node)
+        {
+            node.VisitChildren(this);
+            method.Emit(node.SourceLocation, InstructionType.Pop);
         }
         public void Accept(ExtendNode node)
         {
