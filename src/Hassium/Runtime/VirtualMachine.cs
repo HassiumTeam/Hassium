@@ -363,6 +363,12 @@ namespace Hassium.Runtime
                 case (int)BinaryOperation.NotEqualTo:
                     Stack.Push(left.NotEqualTo(this, right));
                     break;
+                case (int)BinaryOperation.NullCoalescing:
+                    if (left == HassiumObject.Null || left == null)
+                        Stack.Push(right);
+                    else
+                        Stack.Push(left);
+                    break;
                 case (int)BinaryOperation.Power:
                     Stack.Push(left.Power(this, right));
                     break;

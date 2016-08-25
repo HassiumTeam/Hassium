@@ -49,6 +49,7 @@ namespace Hassium.Compiler.Parser.Ast
         Modulus,
         Multiplication,
         NotEqualTo,
+        NullCoalescing,
         Power,
         Subraction,
     }
