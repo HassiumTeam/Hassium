@@ -17,7 +17,7 @@ namespace Hassium.Runtime.Objects
         public HassiumProperty(HassiumFunctionDelegate get_, HassiumFunctionDelegate set_ = null)
         {
             Get = new HassiumFunction(get_, 0);
-            Set = set_ != null ? new HassiumFunction(set_, 0) : null;
+            Set = set_ != null ? new HassiumFunction(set_, 1) : null;
         }
     }
 }

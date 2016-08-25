@@ -30,7 +30,7 @@ namespace Hassium.Runtime.Objects
                 foreach (int len in ParameterLengths)
                     if (len == args.Length)
                         return Target(vm, args);
-                throw new InternalException(vm, "Expected argument length of {0}, got {1}!", ParameterLengths[0], args.Length);
+                throw new InternalException(vm, "Expected argument length of {0}, got {1} in {2}!", ParameterLengths[0], args.Length, Target.Method.Name);
             }
             return Target(vm, args);
         }

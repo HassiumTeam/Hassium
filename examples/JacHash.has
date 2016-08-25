@@ -1,8 +1,9 @@
+use IO;
 use Text;
 
 func main () {
 	JacHash hash = new JacHash ();
-	println (hash.computeHash ("apple".toList ()));
+	println (hash.computeHashFromStream (new FileReader (args [0])));
 }
 
 # Constants for hashing.
@@ -13,8 +14,26 @@ FILLER_BYTE = 0xF;
 class JacHash {
 	# Blank constructor
 	func new () {}
+	# Computes a hash string from the given stream reader.
+	func computeHashFromStream (reader : FileReader) : string {
+		this.init ();
+		int length = reader.length;
+		int appendToStream = 0;
+		if (length < MAX_LENGTH)
+			appendToStream = MAX_LENGTH;
+		while (reader.position < reader.length)
+			this.x += reader.readByte ();
+		reader.position = 0;
+		foreach (i in range (0, appendToStream))
+			this.x += FILLER_BYTE;
+		list result = [];
+		result.fill (MAX_LENGTH);
+		while (reader.position < reader.length)
+			result [reader.position % MAX_LENGTH] = next (reader.readByte ());
+		return this.getHexString (result);
+	}
 	# Computes a hash string from the given list of bytes.
-	func computeHash (bytes : list) : string {
+	func computeHashFromBytes (bytes : list) : string {
 		this.init ();
 		bytes = this.pad (bytes);
 		result = [];
@@ -23,10 +42,8 @@ class JacHash {
 		StringBuilder sb = new StringBuilder ();
 		for (int i = 0; i < bytes.length; i++)
 			bytes [i % MAX_LENGTH] = this.next (bytes [i].toChar ());
-		for (int i = 0; i < MAX_LENGTH; i++)
-			sb.appendFormat ("{0:x2}", bytes [i]);
 		
-		return sb.toString ();
+		return this.getHexString (bytes);
 	}
 	# Generates a pseudo-random number from the specified byte.
 	func next (bl : char) : int {
@@ -54,5 +71,12 @@ class JacHash {
 		this.c = 0xA4Ad & 0xFF;
 		this.d = 0xDC3F & 0xFF;
 		this.x = 0;
+	}
+
+	func getHexString (bytes : list) : string {
+		StringBuilder sb = new StringBuilder ();
+		foreach (b in bytes)
+			sb.appendFormat ("{0:x2}", b);
+		return sb.toString ();
 	}
 }

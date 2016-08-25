@@ -57,7 +57,7 @@ namespace Hassium.Runtime.Objects
             {
                 var arg = args[i++];
                 if (param.Key.IsEnforced)
-                if (!arg.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type]))
+                if (!arg.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type].Type()))
                     throw new InternalException(vm, InternalException.PARAMETER_ERROR, param.Key.Type, arg.Type());
                 vm.StackFrame.Add(param.Value, arg);
             }

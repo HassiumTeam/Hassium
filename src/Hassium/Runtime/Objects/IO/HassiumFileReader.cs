@@ -30,7 +30,7 @@ namespace Hassium.Runtime.Objects.IO
             fileReader.AddAttribute("baseStream",   new HassiumProperty(get_baseStream, set_baseStream));
             fileReader.AddAttribute("endOfFile",    new HassiumProperty(fileReader.get_endOfFile));
             fileReader.AddAttribute("length",       new HassiumProperty(fileReader.get_length));
-            fileReader.AddAttribute("position",     new HassiumProperty(fileReader.get_position));
+            fileReader.AddAttribute("position",     new HassiumProperty(fileReader.get_position, fileReader.set_position));
             fileReader.AddAttribute("readBool",     fileReader.readBool,    0);
             fileReader.AddAttribute("readByte",     fileReader.readByte,    0);
             fileReader.AddAttribute("readChar",     fileReader.readChar,    0);
@@ -63,6 +63,11 @@ namespace Hassium.Runtime.Objects.IO
         public HassiumInt get_position(VirtualMachine vm, HassiumObject[] args)
         {
             return new HassiumInt(BinaryReader.BaseStream.Position);
+        }
+        public HassiumNull set_position(VirtualMachine vm, params HassiumObject[] args)
+        {
+            BinaryReader.BaseStream.Position = args[0].ToInt(vm).Int;
+            return HassiumObject.Null;
         }
         public HassiumBool readBool(VirtualMachine vm, HassiumObject[] args)
         {

@@ -280,6 +280,10 @@ namespace Hassium.Runtime
                 {
                     RaiseException(new HassiumString(ex.Message), method, ref pos);
                 }
+                catch (Exception ex)
+                {
+                    RaiseException(new HassiumString(ex.ToString()), method, ref pos);
+                }
             }
             return HassiumObject.Null;
         }
