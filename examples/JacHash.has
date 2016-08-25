@@ -5,12 +5,16 @@ func main () {
 	println (hash.computeHash ("apple".toList ()));
 }
 
+# Constants for hashing.
 MAX_LENGTH = 16;
 FILLER_BYTE = 0xF;
 
+# Class used to generate hashes from bytes.
 class JacHash {
+	# Blank constructor
 	func new () {}
-	func computeHash (bytes : list) {
+	# Computes a hash string from the given list of bytes.
+	func computeHash (bytes : list) : string {
 		this.init ();
 		bytes = this.pad (bytes);
 		result = [];
@@ -18,14 +22,14 @@ class JacHash {
 			this.x += bytes [i];
 		StringBuilder sb = new StringBuilder ();
 		for (int i = 0; i < bytes.length; i++)
-			bytes [i % MAX_LENGTH] = this.next (bytes [i].toInt ());
+			bytes [i % MAX_LENGTH] = this.next (bytes [i].toChar ());
 		for (int i = 0; i < MAX_LENGTH; i++)
-			sb.appendFormat ("{0:x2}", bytes [i].toInt ());
+			sb.appendFormat ("{0:x2}", bytes [i]);
 		
 		return sb.toString ();
 	}
-
-	func next (bl : int) : int {
+	# Generates a pseudo-random number from the specified byte.
+	func next (bl : char) : int {
 		this.a = this.shiftLeft(bl, this.x);
 		this.b = (this.b ^ bl) - this.x;
 		this.c = (this.a + this.b) & this.x;
@@ -33,17 +37,17 @@ class JacHash {
 		this.x ^= this.d;
 		return (this.a * this.c + this.b - this.x * this.d ^ bl) & 0xFF;
 	}
-
-	func shiftLeft (b : int, bits : int) : int {
+	# Shifts the specified byte left by the specified number of bits and returns the result.
+	func shiftLeft (b : char, bits : int) : int {
 		return b << bits | b >> 32 - bits;
 	}
-
+	# Pads the given list of bytes so that it is at least MAX_LENGTH long.
 	func pad (bytes : list) : list {
 		for (int i = bytes.length; i < MAX_LENGTH; i++)
 			bytes.add (FILLER_BYTE);
 		return bytes;
 	}
-
+	# Sets the initial constant values for a, b, c, d, and x.
 	func init () {
 		this.a = 0x6B87 & 0xFF;
 		this.b = 0x7F43 & 0xFF;
