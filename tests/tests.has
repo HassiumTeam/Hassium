@@ -1,11 +1,10 @@
 use Math;
 use Util;
 
-class Data { }
+passed = 0;
+failed = 0;
 
 func main () {
-	Data.passed = 0;
-	Data.failed = 0;
 	assertEq (9 > 2, true, "greater than, true");
 	assertEq (2 > 9, false, "greater than, false");
 	assertEq (9 >= 2, true, "greater than or equal, true, different");
@@ -80,12 +79,12 @@ func add (x, y, z) {
 
 func assertEq (left, right, type) {
 	if (left == right) {
-		println (format ("Passed {0}, test number {1}", type, (Data.failed + Data.passed = Data.passed + 1)));
+		println (format ("Passed {0}, test number {1}", type, (failed + passed++)));
 	} else {
-		println (format ("Failed {0}, test number {1}", type, (Data.passed + Data.failed = Data.failed + 1)));
+		println (format ("Failed {0}, test number {1}", type, (passed + failed++)));
 	}
 }
 
 func displayResults () {
-	println (format ("You passed {0} tests and failed {1} tests!", Data.passed, Data.failed));
+	println (format ("You passed {0} tests and failed {1} tests!", passed, failed));
 }

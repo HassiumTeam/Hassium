@@ -44,7 +44,7 @@ namespace Hassium.Runtime
 
         public HassiumObject ExecuteMethod(HassiumMethod method)
         {
-            importLabels(method);
+            //importLabels(method);
             for (int pos = 0; pos < method.Instructions.Count; pos++)
             {
                 if (ExceptionReturns.ContainsKey(method))
