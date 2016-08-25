@@ -1,5 +1,0 @@
-use "lib/lib.has"
-
-func main () {
-	new ImportedClass().mainMethod();
-}

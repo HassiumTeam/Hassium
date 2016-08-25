@@ -1,12 +1,14 @@
 func main () {
-	prng = new Prng (13);
+	Prng prng = new Prng (13);
 
 	foreach (i in range (0, 100))
 		println (prng.next (i));
 }
 
+# This class will be used to generate pseudo-random bytes.
 class Prng {
-	func new (seed) {
+	# Initializes the Prng class using the specified seed integer.
+	func new (seed : int) {
 		this.a = 0x6B87 & 0xFF;
 		this.b = 0x7F43 & 0xFF;
 		this.c = 0xA4Ad & 0xFF;
@@ -15,17 +17,17 @@ class Prng {
 		foreach (i in range (0, seed))
 			this.x = (this.x + i) & 0xFF;
 	}
-
-	func next (bl) {
+	# Returns a pseudo-random byte (as a char) using the specified source byte.
+	func next (bl) : char {
 		this.a = this.shiftLeft(bl, this.x);
 		this.b = (this.b ^ bl) - this.x;
 		this.c = (this.a + this.b) & this.x;
 		this.d ^= this.x - this.b;
 		this.x ^= this.d;
-		return ((this.a * this.c) + this.b - this.x * this.d ^ bl) & 0xFF;
+		return (((this.a * this.c) + this.b - this.x * this.d ^ bl) & 0xFF).toChar ();
 	}
-
-	func shiftLeft (b, bits) {
+	# Shifts the specified byte back by the specified amount of bits and returns the result.
+	func shiftLeft (b : int, bits : int) : int {
 		return ((b << bits | b >> 32 - bits));
 	}
 }

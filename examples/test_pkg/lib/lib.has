@@ -1,6 +1,0 @@
-class ImportedClass {
-	func new () {}
-	func mainMethod () {
-		println ("Hello from the main method!");
-	}
-}
