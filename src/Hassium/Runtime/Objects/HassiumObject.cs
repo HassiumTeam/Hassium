@@ -28,6 +28,7 @@ namespace Hassium.Runtime.Objects
         public static string LESSERTHANOREQUAL =    "__lesserthanorequal__";
         public static string BITWISEAND =           "__bitwiseand__";
         public static string BITWISEOR =            "__bitwiseor__";
+        public static string BITWISEXOR =           "__bitwisexor__";
         public static string BITWISENOT =           "__bitwisenot__";
         public static string LOGICALAND =           "__logicaland__";
         public static string LOGICALOR =            "__logicalor__";
@@ -184,6 +185,12 @@ namespace Hassium.Runtime.Objects
             if (Attributes.ContainsKey(BITWISEOR))
                 return Attributes[BITWISEOR].Invoke(vm, args);
             throw new InternalException(vm, InternalException.OPERATOR_ERROR, "|", Type());
+        }
+        public virtual HassiumObject BitwiseXor(VirtualMachine vm, params HassiumObject[] args)
+        {
+            if (Attributes.ContainsKey(BITWISEXOR))
+                return Attributes[BITWISEXOR].Invoke(vm, args);
+            throw new InternalException(vm, InternalException.OPERATOR_ERROR, "^", Type());
         }
         public virtual HassiumObject BitwiseNot(VirtualMachine vm, params HassiumObject[] args)
         {

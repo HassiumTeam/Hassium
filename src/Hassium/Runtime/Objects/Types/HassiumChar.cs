@@ -109,6 +109,10 @@ namespace Hassium.Runtime.Objects.Types
         {
             return new HassiumInt(Char | args[0].ToInt(vm).Int);
         }
+        public override HassiumObject BitwiseXor(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)((byte)Char ^ (byte)args[0].ToChar(vm).Char));
+        }
         public override HassiumObject Divide(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumInt(Char / args[0].ToInt(vm).Int);

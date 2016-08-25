@@ -1,0 +1,31 @@
+func main () {
+	prng = new Prng (13);
+
+	foreach (i in range (0, 100))
+		println (prng.next (i));
+}
+
+class Prng {
+	func new (seed) {
+		this.a = 0x6B87 & 0xFF;
+		this.b = 0x7F43 & 0xFF;
+		this.c = 0xA4Ad & 0xFF;
+		this.d = 0xDC3F & 0xFF;
+		this.x = 0;
+		foreach (i in range (0, seed))
+			this.x = (this.x + i) & 0xFF;
+	}
+
+	func next (bl) {
+		this.a = this.shiftLeft(bl, this.x);
+		this.b = (this.b ^ bl) - this.x;
+		this.c = (this.a + this.b) & this.x;
+		this.d ^= this.x - this.b;
+		this.x ^= this.d;
+		return ((this.a * this.c) + this.b - this.x * this.d ^ bl) & 0xFF;
+	}
+
+	func shiftLeft (b, bits) {
+		return ((b << bits | b >> 32 - bits));
+	}
+}

@@ -312,6 +312,9 @@ namespace Hassium.Runtime
                 case (int)BinaryOperation.BitwiseOr:
                     Stack.Push(left.BitwiseOr(this, right));
                     break;
+                case (int)BinaryOperation.BitwiseXor:
+                    Stack.Push(left.BitwiseXor(this, right));
+                    break;
                 case (int)BinaryOperation.Division:
                     Stack.Push(left.Divide(this, right));
                     break;

@@ -35,6 +35,7 @@ namespace Hassium.Compiler.Parser.Ast
         BitshiftRight,
         BitwiseAnd,
         BitwiseOr,
+        BitwiseXor,
         Division,
         EqualTo,
         GreaterThan,

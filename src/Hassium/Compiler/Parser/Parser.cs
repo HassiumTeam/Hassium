@@ -383,6 +383,9 @@ namespace Hassium.Compiler.Parser
                     case "|=":
                         AcceptToken(TokenType.Assignment);
                         return new BinaryOperationNode(Location, BinaryOperation.Assignment, left, new BinaryOperationNode(Location, BinaryOperation.LogicalOr, left, parseAssignment()));
+                    case "^=":
+                        AcceptToken(TokenType.Assignment);
+                        return new BinaryOperationNode(Location, BinaryOperation.Assignment, left, new BinaryOperationNode(Location, BinaryOperation.BitwiseXor, left, parseAssignment()));
                     default:
                         break;
                 }
@@ -464,9 +467,16 @@ namespace Hassium.Compiler.Parser
         }
         private AstNode parseOr()
         {
-            AstNode left = parseAnd();
+            AstNode left = parseXor();
             while (AcceptToken(TokenType.Operation, "|"))
                 left = new BinaryOperationNode(Location, BinaryOperation.BitwiseOr, left, parseOr());
+            return left;
+        }
+        private AstNode parseXor()
+        {
+            AstNode left = parseAnd();
+            while (AcceptToken(TokenType.Operation, "^"))
+                left = new BinaryOperationNode(Location, BinaryOperation.BitwiseXor, left, parseXor());
             return left;
         }
         private AstNode parseAnd()

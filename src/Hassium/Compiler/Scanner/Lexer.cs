@@ -120,6 +120,13 @@ namespace Hassium.Compiler.Scanner
                             else
                                 add(TokenType.Operation, c.ToString());
                             break;
+                        case '^':
+                            c = (char)readChar();
+                            if ((char)peekChar() == '=')
+                                add(TokenType.Assignment, c + "" + (char)readChar());
+                            else
+                                add(TokenType.Operation, "^");
+                            break;
                         case '=':
                             readChar();
                             if ((char)peekChar() == '=')

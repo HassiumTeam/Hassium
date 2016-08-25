@@ -61,6 +61,10 @@ namespace Hassium.Runtime.Objects.Types
         {
             return new HassiumInt(Int | args[0].ToInt(vm, args).Int);
         }
+        public override HassiumObject BitwiseXor(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumInt(Int ^ args[0].ToInt(vm, args).Int);
+        }
         public override HassiumObject Divide(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumFloat(Int / args[0].ToInt(vm, args).Int);
@@ -95,7 +99,7 @@ namespace Hassium.Runtime.Objects.Types
         }
         public override HassiumObject Multiply(VirtualMachine vm, params HassiumObject[] args)
         {
-            return new HassiumFloat(Int * args[0].ToFloat(vm, args).Float);
+            return new HassiumInt(Int * args[0].ToInt(vm, args).Int);
         }
         public override HassiumObject Negate(VirtualMachine vm, params HassiumObject[] args)
         {
