@@ -65,6 +65,13 @@ namespace Hassium.Runtime.Objects.Types
         {
             return Dictionary[args[0]] = args[1];
         }
+        public override HassiumObject Iter(VirtualMachine vm, params HassiumObject[] args)
+        {
+            List<HassiumKeyValuePair> pairs = new List<HassiumKeyValuePair>();
+            foreach (var pair in Dictionary)
+                pairs.Add(new HassiumKeyValuePair(pair.Key, pair.Value));
+            return new HassiumList(pairs.ToArray());
+        }
     }
 }
 
