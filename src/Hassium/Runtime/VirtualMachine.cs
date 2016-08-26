@@ -29,7 +29,7 @@ namespace Hassium.Runtime
             CallStack = new Stack<string>();
             Handlers = new Stack<HassiumExceptionHandler>();
             ExceptionReturns = new Dictionary<HassiumMethod, int>();
-            Globals = new Dictionary<string, HassiumObject>() { { "true", new HassiumBool(true) }, { "false", new HassiumBool(false) } };
+            Globals = new Dictionary<string, HassiumObject>();
             CurrentModule = module;
             importGlobals();
             importInitials();

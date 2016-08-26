@@ -12,6 +12,7 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("closure",         HassiumClosure.TypeDefinition);
             AddAttribute("dictionary",      HassiumDictionary.TypeDefinition);
             AddAttribute("Event",           new HassiumEvent());
+            AddAttribute("false",           new HassiumBool(false));
             AddAttribute("float",           HassiumFloat.TypeDefinition);
             AddAttribute("func",            HassiumFunction.TypeDefinition);
             AddAttribute("keyValuePair",    HassiumKeyValuePair.TypeDefinition);
@@ -23,6 +24,7 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("string",          HassiumString.TypeDefinition);
             AddAttribute("thread",          HassiumThread.TypeDefinition);
             AddAttribute("trait",           HassiumTrait.TypeDefinition);
+            AddAttribute("true",            new HassiumBool(true));
             AddAttribute("TypeDefinition",  HassiumTypeDefinition.TypeDefinition);
         }
     }
