@@ -1,6 +1,16 @@
 [![Unit tests status](https://travis-ci.org/HassiumTeam/Hassium.svg?branch=master)](https://travis-ci.org/HassiumTeam/Hassium) ![Downloads](https://img.shields.io/github/downloads/HassiumTeam/Hassium/total.svg) ![Release](https://img.shields.io/github/release/HassiumTeam/Hassium.svg)
 
 # Hassium
+
+Hassium is a dynamic scripting programming language written in C#. The syntax is similar to Python, Ruby, and C#.
+The language is easy to learn from the wiki, and the standard library has been documented in the docs/ folder included in the repo.
+
+Hello World example:
+```go
+func main () {
+    println ("Hello, World!");
+}
+```
  
 ### Hassium Website
 Visit our website at: http://HassiumLang.com
@@ -15,17 +25,6 @@ On our Wiki you can find specific documentation on Hassium classes and functions
 as well as a general programming in Hassium guide found [here](https://github.com/HassiumTeam/Hassium/wiki/General-Guide).
 ### [YouTube Video](https://www.youtube.com/watch?v=9lFGvJAjJ2g&feature=youtu.be)
 
-
-Hassium is a programming language written in C# for the heck of it.
-The syntax is a lot like C mixed with Python and it is very easy to
-learn to program in it.
-
-Hassium HelloWorld.has:
-```go
-func main() {
-	print("Hello, World!");
-}
-```
 
 Any questions can be directed to myself at misiriansoft@gmail.com
 or on irc.int0x10.com:6697 as Reagan, or to zdimension at zippedfire (@) free.fr or on irc.int0x10.com:6697 as zdimension.
