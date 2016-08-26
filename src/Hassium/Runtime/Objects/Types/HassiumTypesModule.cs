@@ -17,10 +17,11 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("keyValuePair",    HassiumKeyValuePair.TypeDefinition);
             AddAttribute("int",             HassiumInt.TypeDefinition);
             AddAttribute("list",            HassiumList.TypeDefinition);
+            AddAttribute("null",            HassiumObject.Null);
             AddAttribute("object",          HassiumObject.TypeDefinition);
             AddAttribute("property",        HassiumProperty.TypeDefinition);
-            AddAttribute("null",            HassiumObject.Null);
             AddAttribute("string",          HassiumString.TypeDefinition);
+            AddAttribute("thread",          HassiumThread.TypeDefinition);
             AddAttribute("trait",           HassiumTrait.TypeDefinition);
             AddAttribute("TypeDefinition",  HassiumTypeDefinition.TypeDefinition);
         }

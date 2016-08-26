@@ -529,6 +529,17 @@ namespace Hassium.Compiler.CodeGen
             node.FalseStatement.Visit(this);
             method.EmitLabel(node.SourceLocation, endLabel);
         }
+        public void Accept(ThreadNode node)
+        {
+            var temp = method;
+            method = new HassiumMethod();
+            method.Name = "thread";
+            node.Body.Visit(this);
+            if (!module.ObjectPool.ContainsKey(method.GetHashCode()))
+                module.ObjectPool.Add(method.GetHashCode(), method);
+            temp.Emit(node.SourceLocation, InstructionType.BuildThread, method.GetHashCode());
+            method = temp;
+        }
         public void Accept(TraitNode node)
         {
             int hash = node.Name.GetHashCode();

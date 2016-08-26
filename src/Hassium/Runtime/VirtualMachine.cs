@@ -10,17 +10,17 @@ using Hassium.Runtime.Objects.Types;
 
 namespace Hassium.Runtime
 {
-    public class VirtualMachine
+    public class VirtualMachine : ICloneable
     {
         public Stack<string> CallStack { get; private set; }
         public HassiumMethod CurrentMethod { get; private set; }
         public HassiumModule CurrentModule { get; private set; }
         public SourceLocation CurrentSourceLocation { get; private set; }
-        public Dictionary<HassiumMethod, int> ExceptionReturns { get; private set; }
+        public Dictionary<HassiumMethod, int> ExceptionReturns { get; set; }
         public Dictionary<string, HassiumObject> Globals { get; private set; }
-        public Stack<HassiumExceptionHandler> Handlers { get; private set; }
-        public Stack<HassiumObject> Stack { get; private set; }
-        public StackFrame StackFrame { get; private set; }
+        public Stack<HassiumExceptionHandler> Handlers { get; set; }
+        public Stack<HassiumObject> Stack { get; set; }
+        public StackFrame StackFrame { get; set; }
 
         public void Execute(HassiumModule module, string[] args)
         {
@@ -85,6 +85,9 @@ namespace Hassium.Runtime
                             for (int i = elements.Length - 1; i >= 0; i--)
                                 elements[i] = Stack.Pop();
                             Stack.Push(new HassiumList(elements));
+                            break;
+                        case InstructionType.BuildThread:
+                            Stack.Push(new HassiumThread(this, CurrentModule.ObjectPool[arg] as HassiumMethod, StackFrame.Frames.Peek()));
                             break;
                         case InstructionType.BuildTuple:
                             HassiumObject[] tupleElements = new HassiumObject[arg];
@@ -419,6 +422,11 @@ namespace Hassium.Runtime
         {
             foreach (var pair in CurrentModule.InitialVariables)
                 CurrentModule.Globals.Add(pair.Key, pair.Value.Invoke(this));
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

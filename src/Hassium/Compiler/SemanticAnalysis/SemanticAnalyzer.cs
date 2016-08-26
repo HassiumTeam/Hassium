@@ -66,6 +66,7 @@ namespace Hassium.Compiler.SemanticAnalysis
         public void Accept(StringNode node) {}
         public void Accept(SwitchNode node) {}
         public void Accept(TernaryOperationNode node) {}
+        public void Accept(ThreadNode node) {}
         public void Accept(TraitNode node) {}
         public void Accept(TryCatchNode node) {}
         public void Accept(TupleNode node) {}

@@ -48,46 +48,64 @@ namespace Hassium.Runtime.Objects
            // Instructions.Add(new Instruction(location, InstructionType.Label, label));
         }
 
+        public HassiumObject Invoke(VirtualMachine vm, StackFrame.Frame frame)
+        {
+            vm.StackFrame.Frames.Push(frame);
+            return Invoke(vm);
+        }
+
         public override HassiumObject Invoke(VirtualMachine vm, params HassiumObject[] args)
         {
-            if (Name != "lambda" && Name != "catch") vm.StackFrame.PushFrame();
-            vm.CallStack.Push(SourceRepresentation);
-            int i = 0;
-            foreach (var param in Parameters)
+            try
             {
-                var arg = args[i++];
-                if (param.Key.IsEnforced)
-                if (!arg.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type].Type()))
-                    throw new InternalException(vm, InternalException.PARAMETER_ERROR, param.Key.Type, arg.Type());
-                vm.StackFrame.Add(param.Value, arg);
-            }
-            if (IsConstructor)
-            {
-                HassiumClass ret = new HassiumClass();
-                ret.Attributes = CloneDictionary(Parent.Attributes);
-                foreach (var type in Parent.Types)
-                    ret.AddType(type);
-                foreach (var attrib in ret.Attributes.Values)
-                    attrib.Parent = ret;
-                vm.ExecuteMethod(ret.Attributes["new"] as HassiumMethod);
-                vm.StackFrame.PopFrame();
-                vm.CallStack.Pop();
-                return ret;
-            }
-            else
-            {
-                var val = vm.ExecuteMethod(this);
-                if (Name == "catch")
+                if (Name != "lambda" && Name != "catch" && Name != "thread") vm.StackFrame.PushFrame();
+                vm.CallStack.Push(SourceRepresentation);
+                int i = 0;
+                foreach (var param in Parameters)
                 {
+                    var arg = args[i++];
+                    if (param.Key.IsEnforced)
+                    if (!arg.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type].Type()))
+                        throw new InternalException(vm, InternalException.PARAMETER_ERROR, param.Key.Type, arg.Type());
+                    vm.StackFrame.Add(param.Value, arg);
+                }
+                if (IsConstructor)
+                {
+                    HassiumClass ret = new HassiumClass();
+                    ret.Attributes = CloneDictionary(Parent.Attributes);
+                    foreach (var type in Parent.Types)
+                        ret.AddType(type);
+                    foreach (var attrib in ret.Attributes.Values)
+                        attrib.Parent = ret;
+                    vm.ExecuteMethod(ret.Attributes["new"] as HassiumMethod);
+                    vm.StackFrame.PopFrame();
+                    vm.CallStack.Pop();
+                    return ret;
+                }
+                else
+                {
+                    var val = vm.ExecuteMethod(this);
+                    if (Name == "catch")
+                    {
+                        vm.CallStack.Pop();
+                        return val;
+                    }
+                    if (ReturnType != "" && ReturnType != null)
+                    if (val.Type() != vm.Globals[ReturnType])
+                        throw new InternalException(vm, InternalException.RETURN_ERROR, ReturnType, val.Type());
+                    if (Name != "lambda") vm.StackFrame.PopFrame();
                     vm.CallStack.Pop();
                     return val;
                 }
-                if (ReturnType != "" && ReturnType != null)
-                if (val.Type() != vm.Globals[ReturnType])
-                    throw new InternalException(vm, InternalException.RETURN_ERROR, ReturnType, val.Type());
-                if (Name != "lambda") vm.StackFrame.PopFrame();
-                vm.CallStack.Pop();
-                return val;
+            }
+            catch (InternalException ex)
+            {
+                Console.WriteLine("At location {0}:", ex.VM.CurrentSourceLocation);
+                Console.WriteLine("{0} at:", ex.Message);
+                while (ex.VM.CallStack.Count > 0)
+                    Console.WriteLine(ex.VM.CallStack.Pop());
+                Environment.Exit(0);
+                return null;
             }
         }
 

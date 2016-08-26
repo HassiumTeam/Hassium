@@ -82,7 +82,7 @@ namespace Hassium.Compiler.Parser
                     block.Children.Add(parseStatement());
                 return block;
             }
-            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
+            else if (MatchToken(TokenType.Identifier) && !MatchToken(TokenType.Identifier, "thread") && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
                 return parseProperty();
             else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
                 return parseEnforcedAssignment();
@@ -621,6 +621,8 @@ namespace Hassium.Compiler.Parser
                 return parseExpression();
             else if (MatchToken(TokenType.Identifier, "lambda"))
                 return parseLambda();
+            else if (AcceptToken(TokenType.Identifier, "thread"))
+                return new ThreadNode(Location, parseStatement());
             else if (MatchToken(TokenType.OpenSquare))
                 return parseListDeclaration();
             else if (AcceptToken(TokenType.OpenBracket))

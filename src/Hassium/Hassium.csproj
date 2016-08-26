@@ -154,6 +154,9 @@
     <Compile Include="Runtime\Objects\Util\HassiumDateTime.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumBitArray.cs" />
     <Compile Include="Compiler\Parser\Ast\EnforcedAssignmentNode.cs" />
+    <Compile Include="Compiler\Parser\Ast\ThreadNode.cs" />
+    <Compile Include="Runtime\Objects\Types\HassiumThread.cs" />
+    <Compile Include="Runtime\VirtualMachineContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

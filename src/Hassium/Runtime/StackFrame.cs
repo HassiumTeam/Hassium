@@ -7,7 +7,7 @@ namespace Hassium.Runtime
 {
     public class StackFrame
     {
-        public class Frame
+        public class Frame : ICloneable
         {
             public Dictionary<int, HassiumObject> variables = new Dictionary<int, HassiumObject>();
             public void Add(int index, HassiumObject value)
@@ -25,6 +25,10 @@ namespace Hassium.Runtime
             public HassiumObject GetVariable(int index)
             {
                 return variables[index];
+            }
+            public object Clone()
+            {
+                return this.MemberwiseClone();
             }
         }
         public Stack<Frame> Frames;
