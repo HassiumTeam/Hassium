@@ -1,9 +1,36 @@
 use IO;
 use Text;
+use Util;
 
 func main () {
 	JacHash hash = new JacHash ();
-	println (hash.computeHashFromStream (new FileReader (args [0])));
+
+	if (args.length <= 0) {
+		displayHelp ();
+	}
+
+	switch (args [0]) {
+		case "-h", "--help" {
+			displayHelp ();
+		}
+                case "-f", "--file" {
+                        println (hash.computeHashFromStream (new FileReader (args [1])));
+                }
+		case "-s", "--string" {
+			println (hash.computeHashFromBytes (args [1].toList ()));
+		}
+		default {
+			printf ("Unknown flag {0}\n", args [0]);
+		}
+	}
+}
+
+func displayHelp () {
+	println ("Usage: JacHash.has [FLAG] [DATA]");
+        println ("-h --help              Displays this help and exits.");
+        println ("-f --file [PATH]       Calculates the hash of the file at [PATH].");
+	println ("-s --string [STRING]   Calculates the hash of the [STRING].");
+	OS.exit (-1);
 }
 
 # Constants for hashing.
