@@ -14,7 +14,7 @@ func main () {
 			displayHelp ();
 		}
                 case "-f", "--file" {
-                        println (hash.computeHashFromStream (new FileReader (args [1])));
+                        println (hash.computeHashFromFile (args [1]));
                 }
 		case "-s", "--string" {
 			println (hash.computeHashFromBytes (args [1].toList ()));
@@ -41,24 +41,7 @@ FILLER_BYTE = 0xF;
 class JacHash {
 	# Blank constructor
 	func new () {}
-	# Computes a hash string from the given stream reader.
-	func computeHashFromStream (reader : FileReader) : string {
-		this.init ();
-		int length = reader.length;
-		int appendToStream = 0;
-		if (length < MAX_LENGTH)
-			appendToStream = MAX_LENGTH;
-		while (reader.position < reader.length)
-			this.x += reader.readByte ();
-		reader.position = 0;
-		foreach (i in range (0, appendToStream))
-			this.x += FILLER_BYTE;
-		list result = [];
-		result.fill (MAX_LENGTH);
-		while (reader.position < reader.length)
-			result [reader.position % MAX_LENGTH] = next (reader.readByte ());
-		return this.getHexString (result);
-	}
+
 	# Computes a hash string from the given list of bytes.
 	func computeHashFromBytes (bytes : list) : string {
 		this.init ();
@@ -72,6 +55,31 @@ class JacHash {
 		
 		return this.getHexString (bytes);
 	}
+
+	# Computes a hash string from the given file path.
+	func computeHashFromFile (path : string) : string {
+		return computeHashFromStream (new FileReader (path));
+	}
+
+        # Computes a hash string from the given stream reader.
+        func computeHashFromStream (reader : FileReader) : string {
+                this.init ();
+                int length = reader.length;
+                int appendToStream = 0;
+                if (length < MAX_LENGTH)
+                        appendToStream = MAX_LENGTH;
+                while (reader.position < reader.length)
+                        this.x += reader.readByte ();
+                reader.position = 0;
+                foreach (i in range (0, appendToStream))
+                        this.x += FILLER_BYTE;
+                list result = [];
+                result.fill (MAX_LENGTH);
+                while (reader.position < reader.length)
+                        result [reader.position % MAX_LENGTH] = next (reader.readByte ());
+                return this.getHexString (result);
+        }
+
 	# Generates a pseudo-random number from the specified byte.
 	func next (bl : char) : int {
 		this.a = this.shiftLeft(bl, this.x);
@@ -81,16 +89,19 @@ class JacHash {
 		this.x ^= this.d;
 		return (this.a * this.c + this.b - this.x * this.d ^ bl) & 0xFF;
 	}
+
 	# Shifts the specified byte left by the specified number of bits and returns the result.
 	func shiftLeft (b : char, bits : int) : int {
 		return b << bits | b >> 32 - bits;
 	}
+
 	# Pads the given list of bytes so that it is at least MAX_LENGTH long.
 	func pad (bytes : list) : list {
 		for (int i = bytes.length; i < MAX_LENGTH; i++)
 			bytes.add (FILLER_BYTE);
 		return bytes;
 	}
+
 	# Sets the initial constant values for a, b, c, d, and x.
 	func init () {
 		this.a = 0x6B87 & 0xFF;
@@ -100,6 +111,7 @@ class JacHash {
 		this.x = 0;
 	}
 
+	# Returns a hex string representation of the specified list of bytes.
 	func getHexString (bytes : list) : string {
 		StringBuilder sb = new StringBuilder ();
 		foreach (b in bytes)

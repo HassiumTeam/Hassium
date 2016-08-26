@@ -44,7 +44,7 @@ namespace Hassium.Compiler.CodeGen
             {
                 if (child is FuncNode)
                 {
-                    child.Visit(this);
+                    compileFunc(child as FuncNode);
                     method.Parent = new HassiumClass();
                     if (module.Attributes.ContainsKey(method.Name))
                     {
@@ -183,7 +183,7 @@ namespace Hassium.Compiler.CodeGen
             {
                 if (child is FuncNode)
                 {
-                    child.Visit(this);
+                    compileFunc(child as FuncNode);
                     method.Parent = clazz;
                     if (clazz.Attributes.ContainsKey(method.Name))
                     {
@@ -306,6 +306,18 @@ namespace Hassium.Compiler.CodeGen
         }
         public void Accept(FuncNode node)
         {
+            var temp = method;
+            compileFunc(node);
+            if (!module.ObjectPool.ContainsKey(method.GetHashCode()))
+                module.ObjectPool.Add(method.GetHashCode(), method);
+            if (!table.ContainsSymbol(method.Name))
+                table.AddSymbol(method.Name);
+            temp.Emit(node.SourceLocation, InstructionType.PushObject, method.GetHashCode());
+            temp.Emit(node.SourceLocation, InstructionType.StoreLocal, table.GetSymbol(method.Name));
+            method = temp;
+        }
+        private HassiumMethod compileFunc(FuncNode node)
+        {
             if (!module.ConstantPool.ContainsKey(node.Name.GetHashCode()))
                 module.ConstantPool.Add(node.Name.GetHashCode(), node.Name);
 
@@ -322,6 +334,7 @@ namespace Hassium.Compiler.CodeGen
 
             node.Children[0].VisitChildren(this);
             table.PopScope();
+            return method;
         }
         public void Accept(FunctionCallNode node)
         {
