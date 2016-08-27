@@ -149,7 +149,7 @@ namespace Hassium.Runtime
                                 if (attribute.IsPrivate)
                                 {
                                     if (method.Parent != val)
-                                        throw new InternalException(this, InternalException.ATTRIBUTE_ACCESS, ((HassiumMethod)attribute).Name, attribute.Parent.Name);     
+                                        throw new InternalException(this, InternalException.ATTRIBUTE_ACCESS);    
                                 }
                                 if (attribute is HassiumProperty)
                                     Stack.Push(((HassiumProperty)attribute).Get.Invoke(this));
