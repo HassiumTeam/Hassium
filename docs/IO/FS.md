@@ -1,6 +1,6 @@
 ## ```class FS```
 
-### ```func combinePath (str1 : string, str2 : string, str3 : string ...) : string```
+### ```func combinePath (params paths) : string```
 Combines the string paths given and returns the combined path.
 
 ### ```func createDirectory (path : string) : null```

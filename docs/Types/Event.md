@@ -3,7 +3,7 @@
 ### ```func new ()```
 Creates a new instance of the Event class.
 
-### ```func new (func1 : func, func2 : func, func3 : func, ...)```
+### ```func new (params funcs)```
 Creates a new instance of the Event class, using the given invokables.
 
 ### ```func add (f : func) : func```

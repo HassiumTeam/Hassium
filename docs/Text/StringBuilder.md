@@ -8,7 +8,7 @@ Creates a new instance of the StringBuilder class, using the specified string as
 ### ```func append (str : string) : StringBuilder```
 Appends the specified string to the StringBuilder, then returns the current instance.
 
-### ```func appendFormat (formatStr : string, str1 : string, str2 : string, str3 : string ...)```
+### ```func appendFormat (formatStr : string, params objects)```
 Appends the specified format string to the StringBuilder, then returns the current instance.
 
 ### ```func appendLine () : StringBuilder```

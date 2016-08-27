@@ -1,4 +1,4 @@
-### ```func format (formatStr : string, obj1 : object, obj2 : object, obj3 : object, ...) : string```
+### ```func format (formatStr : string, params objects) : string```
 Returns a new string formatted based on the format string and the object arguments given.
 
 ### ```func getAttribute (obj : object, attrib : string) : object```
@@ -16,10 +16,13 @@ Returns a line from standard input.
 ### ```func map (l : list, f : func) : list```
 Loops through each item in list, and calls the specified func on the element, adding it to a list to get returned.
 
-### ```func print (str : string) : null```
+### ```func print (params strings) : null```
 Writes the string to the console.
 
-### ```func println (str : string) : null```
+### ```func printf (formatString : string, params objects)```
+Formats the given string and objects and writes it to the console.
+
+### ```func println (params strings) : null```
 Writes the string to the console followed by a newline.
 
 ### ```func range (count : int) : list```

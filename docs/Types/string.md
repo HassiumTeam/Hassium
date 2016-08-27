@@ -6,7 +6,7 @@ Returns a bool if the string contains the specified string.
 ### ```func endsWith (str : string) : bool```
 Returns a bool if the string ends with the specified string.
 
-### ```func format (obj1 : object, obj2 : object, obj3 : object, ...) : string```
+### ```func format (params objects) : string```
 Returns a string, using the string as a format string and the given arguments as format args.
 
 ### ```func indexOf (c : char) : int```
