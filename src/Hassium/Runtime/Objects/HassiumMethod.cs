@@ -67,7 +67,7 @@ namespace Hassium.Runtime.Objects
                     var arg = args[i++];
                     if (param.Key.IsVariadic)
                     {
-                        if (arg is HassiumList)
+                        if (arg is HassiumList || arg is HassiumTuple)
                             vm.StackFrame.Add(param.Value, arg);
                         else
                         {

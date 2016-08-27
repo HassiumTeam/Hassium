@@ -11,6 +11,7 @@ namespace Hassium.Runtime
     {
         public static Dictionary<string, HassiumObject> Functions = new Dictionary<string, HassiumObject>()
         {
+            { "clone",          new HassiumFunction(clone,          1) },
             { "format",         new HassiumFunction(format,        -1) },
             { "getAttribute",   new HassiumFunction(getAttribute,   2) },
             { "getAttributes",  new HassiumFunction(getAttributes,  1) },
@@ -29,6 +30,10 @@ namespace Hassium.Runtime
             { "types",          new HassiumFunction(types,          1) }
         };
 
+        public static HassiumObject clone(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return args[0].Clone() as HassiumObject;
+        }
         public static HassiumString format(VirtualMachine vm, params HassiumObject[] args)
         {
             object[] elements = new object[args.Length - 1];
