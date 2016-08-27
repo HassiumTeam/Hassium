@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 using Hassium.Compiler;
@@ -12,6 +13,7 @@ namespace Hassium
     {
         public List<string> Arguments { get; private set; }
         public string FilePath { get; set; }
+        public bool ShowTime { get; set; }
         public bool ShowTokens { get; set; }
 
         public static void ExecuteConfig(HassiumArgumentConfig config)
@@ -30,7 +32,11 @@ namespace Hassium
                     return;
                 }
                 var module = Compiler.CodeGen.Compiler.CompileModuleFromSource(File.ReadAllText(config.FilePath));
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
                 new VirtualMachine().Execute(module, config.Arguments.ToArray());
+                if (config.ShowTime)
+                    Console.WriteLine("Execution Time: {0} milliseconds.", watch.ElapsedMilliseconds);
             }
             catch (CompileException ex)
             {
@@ -50,6 +56,7 @@ namespace Hassium
         {
             Arguments = new List<string>();
             ShowTokens = false;
+            ShowTime = false;
         }
     }
 }

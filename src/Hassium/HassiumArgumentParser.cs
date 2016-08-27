@@ -11,6 +11,7 @@ namespace Hassium
             Console.WriteLine("[ARGS]: The arguments to pass to the Hassium VM.");
             Console.WriteLine("-h --help                    Displays this help and exits.");
             Console.WriteLine("-s --show-tokens [PATH]      Scans and outputs the tokens in the source file.");
+            Console.WriteLine("-t --time                    Shows the execution time of the program at completion.");
             Environment.Exit(0);
         }
 
@@ -36,6 +37,10 @@ namespace Hassium
                     case "-s":
                     case "--show-tokens":
                         config.ShowTokens = true;
+                        break;
+                    case "-t":
+                    case "--time":
+                        config.ShowTime = true;
                         break;
                     default:
                         position--;
