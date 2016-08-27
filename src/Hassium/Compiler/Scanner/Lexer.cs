@@ -160,7 +160,7 @@ namespace Hassium.Compiler.Scanner
             var str = new StringBuilder();
             var sep = false;
             while (peekChar() != -1 &&
-                (char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains(((char)peekChar()).ToString()) || "xo-._".Contains(((char)peekChar()).ToString())))
+                ((char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains(((char)peekChar()).ToString()) || "xo-._".Contains(((char)peekChar()).ToString()))) && ((char)peekChar() != '.' && !char.IsLetter((char)peekChar(1))))
             {
                 var cchar = (char)readChar();
                 if(cchar == '_')

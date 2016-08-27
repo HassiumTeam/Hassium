@@ -6,9 +6,11 @@ namespace Hassium
     {
         public static void DisplayHelp()
         {
-            Console.WriteLine("Usage: Hassium.exe [PATH] [ARGS]");
+            Console.WriteLine("Usage: Hassium.exe ([FLAGS]) [PATH] [ARGS]");
             Console.WriteLine("[PATH]: The Hassium source file to execute.");
             Console.WriteLine("[ARGS]: The arguments to pass to the Hassium VM.");
+            Console.WriteLine("-h --help                    Displays this help and exits.");
+            Console.WriteLine("-s --show-tokens [PATH]      Scans and outputs the tokens in the source file.");
             Environment.Exit(0);
         }
 
@@ -23,13 +25,26 @@ namespace Hassium
 
             if (args.Length == 0)
                 DisplayHelp();
-            if (args[0] == "-h" || args[0].ToLower() == "--help")
-                DisplayHelp();
-            config.FilePath = expectData("[PATH]");
-
-            for (int i = 1; i < args.Length; i++)
-                config.Arguments.Add(args[i]);
-            
+            while (position < args.Length)
+            {
+                switch (args[position++].ToLower())
+                {
+                    case "-h":
+                    case "--help":
+                        DisplayHelp();
+                        break;
+                    case "-s":
+                    case "--show-tokens":
+                        config.ShowTokens = true;
+                        break;
+                    default:
+                        position--;
+                        config.FilePath = expectData("[PATH]");
+                        for (int i = 1; i < args.Length; i++)
+                            config.Arguments.Add(args[i]);
+                        return config;
+                }
+            }
             return config;
         }
 

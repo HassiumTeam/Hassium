@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Hassium.Compiler;
+using Hassium.Compiler.Scanner;
 using Hassium.Runtime;
 
 namespace Hassium
@@ -11,6 +12,7 @@ namespace Hassium
     {
         public List<string> Arguments { get; private set; }
         public string FilePath { get; set; }
+        public bool ShowTokens { get; set; }
 
         public static void ExecuteConfig(HassiumArgumentConfig config)
         {
@@ -21,6 +23,12 @@ namespace Hassium
             }
             try
             {
+                if (config.ShowTokens)
+                {
+                    foreach (var token in new Lexer().Scan(File.ReadAllText(config.FilePath)))
+                        Console.WriteLine(token.ToString());
+                    return;
+                }
                 var module = Compiler.CodeGen.Compiler.CompileModuleFromSource(File.ReadAllText(config.FilePath));
                 new VirtualMachine().Execute(module, config.Arguments.ToArray());
             }
@@ -41,6 +49,7 @@ namespace Hassium
         public HassiumArgumentConfig()
         {
             Arguments = new List<string>();
+            ShowTokens = false;
         }
     }
 }
