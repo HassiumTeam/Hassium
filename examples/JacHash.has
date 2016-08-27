@@ -30,7 +30,7 @@ func displayHelp () {
         println ("-h --help              Displays this help and exits.");
         println ("-f --file [PATH]       Calculates the hash of the file at [PATH].");
 	println ("-s --string [STRING]   Calculates the hash of the [STRING].");
-	OS.exit (-1);
+	OS.exit (-0);
 }
 
 # Constants for hashing.
@@ -81,7 +81,7 @@ class JacHash {
         }
 
 	# Generates a pseudo-random number from the specified byte.
-	func next (bl : char) : int {
+	priv func next (bl : char) : int {
 		this.a = this.shiftLeft(bl, this.x);
 		this.b = (this.b ^ bl) - this.x;
 		this.c = (this.a + this.b) & this.x;
@@ -91,19 +91,19 @@ class JacHash {
 	}
 
 	# Shifts the specified byte left by the specified number of bits and returns the result.
-	func shiftLeft (b : char, bits : int) : int {
+	priv func shiftLeft (b : char, bits : int) : int {
 		return b << bits | b >> 32 - bits;
 	}
 
 	# Pads the given list of bytes so that it is at least MAX_LENGTH long.
-	func pad (bytes : list) : list {
+	priv func pad (bytes : list) : list {
 		for (int i = bytes.length; i < MAX_LENGTH; i++)
 			bytes.add (FILLER_BYTE);
 		return bytes;
 	}
 
 	# Sets the initial constant values for a, b, c, d, and x.
-	func init () {
+	priv func init () {
 		this.a = 0x6B87 & 0xFF;
 		this.b = 0x7F43 & 0xFF;
 		this.c = 0xA4Ad & 0xFF;
@@ -112,7 +112,7 @@ class JacHash {
 	}
 
 	# Returns a hex string representation of the specified list of bytes.
-	func getHexString (bytes : list) : string {
+	priv func getHexString (bytes : list) : string {
 		StringBuilder sb = new StringBuilder ();
 		foreach (b in bytes)
 			sb.appendFormat ("{0:x2}", b);
