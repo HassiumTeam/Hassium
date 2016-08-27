@@ -49,18 +49,21 @@ namespace Hassium.Compiler.Parser.Ast
     public class FuncParameter
     {
         public bool IsEnforced { get { return Type != string.Empty; } }
+        public bool IsVariadic { get; private set; }
         public string Name { get; private set; }
         public string Type { get; private set; }
 
-        public FuncParameter(string name)
+        public FuncParameter(string name, bool isVariadic = false)
         {
             Name = name;
             Type = string.Empty;
+            IsVariadic = isVariadic;
         }
         public FuncParameter(string name, string type)
         {
             Name = name;
             Type = type;
+            IsVariadic = false;
         }
 
         public string GetSourceRepresentation()

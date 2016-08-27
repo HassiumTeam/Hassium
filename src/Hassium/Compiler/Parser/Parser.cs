@@ -241,6 +241,8 @@ namespace Hassium.Compiler.Parser
         private FuncParameter parseParameter()
         {
             string name = ExpectToken(TokenType.Identifier).Value;
+            if (name == "params")
+                return new FuncParameter(ExpectToken(TokenType.Identifier).Value, true);
             if (AcceptToken(TokenType.Colon))
                 return new FuncParameter(name, ExpectToken(TokenType.Identifier).Value);
             return new FuncParameter(name);

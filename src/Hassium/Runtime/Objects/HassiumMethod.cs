@@ -5,6 +5,7 @@ using System.Text;
 using Hassium.Compiler;
 using Hassium.Compiler.CodeGen;
 using Hassium.Compiler.Parser.Ast;
+using Hassium.Runtime.Objects.Types;
 
 namespace Hassium.Runtime.Objects
 {
@@ -64,6 +65,19 @@ namespace Hassium.Runtime.Objects
                 foreach (var param in Parameters)
                 {
                     var arg = args[i++];
+                    if (param.Key.IsVariadic)
+                    {
+                        if (arg is HassiumList)
+                            vm.StackFrame.Add(param.Value, arg);
+                        else
+                        {
+                            HassiumList list = new HassiumList(new HassiumObject[0]);
+                            for (; i < args.Length; i++)
+                                list.add(vm, args[i]);
+                            vm.StackFrame.Add(param.Value, list);
+                        }
+                        break;
+                    }
                     if (param.Key.IsEnforced)
                     if (!arg.Types.Contains((HassiumTypeDefinition)vm.Globals[param.Key.Type].Type()))
                         throw new InternalException(vm, InternalException.PARAMETER_ERROR, param.Key.Type, arg.Type());
