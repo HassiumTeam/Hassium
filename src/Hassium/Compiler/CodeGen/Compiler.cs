@@ -331,9 +331,10 @@ namespace Hassium.Compiler.CodeGen
 
             method = new HassiumMethod();
             method.Parent = new HassiumClass();
+            method.IsPrivate = node.IsPrivate;
             method.Name = node.Name;
-            method.SourceRepresentation = node.GetSourceRepresentation();
             method.ReturnType = node.ReturnType;
+            method.SourceRepresentation = node.GetSourceRepresentation();
 
             table.PushScope();
 

@@ -296,6 +296,8 @@ namespace Hassium.Runtime.Objects
             throw new InternalException(vm, InternalException.ATTRIBUTE_NOT_FOUND, TOTUPLE, Type());
         }
 
+        public bool IsPrivate = false;
+
         public object Clone()
         {
             return this.MemberwiseClone();

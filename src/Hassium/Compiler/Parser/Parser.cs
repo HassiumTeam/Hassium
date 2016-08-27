@@ -59,6 +59,8 @@ namespace Hassium.Compiler.Parser
                 return parseGlobal();
             else if (MatchToken(TokenType.Identifier, "if"))
                 return parseIf();
+            else if (AcceptToken(TokenType.Identifier, "priv"))
+                return parseFunc(true);
             else if (AcceptToken(TokenType.Identifier, "raise"))
                 return new RaiseNode(Location, parseExpression());
             else if (AcceptToken(TokenType.Identifier, "return"))
@@ -175,7 +177,7 @@ namespace Hassium.Compiler.Parser
 
             return new ForeachNode(Location, variable, target, body);
         }
-        private FuncNode parseFunc()
+        private FuncNode parseFunc(bool isPrivate = false)
         {
             ExpectToken(TokenType.Identifier, "func");
             string name = ExpectToken(TokenType.Identifier).Value;
@@ -189,9 +191,9 @@ namespace Hassium.Compiler.Parser
             if (AcceptToken(TokenType.Colon))
             {
                 string returnType = ExpectToken(TokenType.Identifier).Value;
-                return new FuncNode(Location, name, parameters, parseStatement(), returnType);
+                return new FuncNode(Location, name, parameters, parseStatement(), returnType, isPrivate);
             }
-            return new FuncNode(Location, name, parameters, parseStatement());
+            return new FuncNode(Location, name, parameters, parseStatement(), string.Empty, isPrivate);
         }
         private GlobalNode parseGlobal()
         {

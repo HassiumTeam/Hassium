@@ -1,3 +1,6 @@
+### ```func clone (obj : object) : object```
+Clones the specified object and returns the clone.
+
 ### ```func format (formatStr : string, params objects) : string```
 Returns a new string formatted based on the format string and the object arguments given.
 

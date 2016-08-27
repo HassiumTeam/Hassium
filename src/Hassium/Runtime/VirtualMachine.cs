@@ -146,6 +146,11 @@ namespace Hassium.Runtime
                             try
                             {
                                 var attribute = val.Attributes[CurrentModule.ConstantPool[arg]];
+                                if (attribute.IsPrivate)
+                                {
+                                    if (method.Parent != val)
+                                        throw new InternalException(this, InternalException.ATTRIBUTE_ACCESS, ((HassiumMethod)attribute).Name, attribute.Parent.Name);     
+                                }
                                 if (attribute is HassiumProperty)
                                     Stack.Push(((HassiumProperty)attribute).Get.Invoke(this));
                                 else
