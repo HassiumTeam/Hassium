@@ -6,12 +6,14 @@ namespace Hassium.Compiler.Parser.Ast
     public class TraitNode: AstNode
     {
         public string Name { get; private set; }
+        public bool IsPrivate { get; set; }
         public List<Trait> Traits { get; private set; }
 
         public TraitNode(SourceLocation location, string name, List<Trait> traits)
         {
             this.SourceLocation = location;
             Name = name;
+            IsPrivate = false;
             Traits = traits;
         }
 

@@ -571,7 +571,7 @@ namespace Hassium.Compiler.CodeGen
             int hash = node.Name.GetHashCode();
             if (!module.ConstantPool.ContainsKey(hash))
                 module.ConstantPool.Add(hash, node.Name);
-            module.Attributes.Add(node.Name, new HassiumTrait(node.Traits));
+            module.Attributes.Add(node.Name, new HassiumTrait(node.Traits) { IsPrivate = true });
         }
         public void Accept(TryCatchNode node)
         {

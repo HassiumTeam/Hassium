@@ -253,14 +253,16 @@ namespace Hassium.Compiler.Parser
         {
             ExpectToken(TokenType.Identifier, "priv");
             AstNode statement = parseStatement();
-            if (statement is FuncNode)
-                ((FuncNode)statement).IsPrivate = true;
-            else if (statement is ClassNode)
+            if (statement is ClassNode)
                 ((ClassNode)statement).IsPrivate = true;
-            else if (statement is PropertyNode)
-                ((PropertyNode)statement).IsPrivate = true;
             else if (statement is EnumNode)
                 ((EnumNode)statement).IsPrivate = true;
+            else if (statement is FuncNode)
+                ((FuncNode)statement).IsPrivate = true;
+            else if (statement is PropertyNode)
+                ((PropertyNode)statement).IsPrivate = true;
+            else if (statement is TraitNode)
+                ((TraitNode)statement).IsPrivate = true;
             return statement;
         }
         private PropertyNode parseProperty()

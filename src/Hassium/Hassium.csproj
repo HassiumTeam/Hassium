@@ -76,7 +76,6 @@
     <Compile Include="Runtime\Objects\HassiumClass.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumFloat.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumInt.cs" />
-    <Compile Include="Runtime\VirtualMachine.cs" />
     <Compile Include="Runtime\StackFrame.cs" />
     <Compile Include="Runtime\GlobalFunctions.cs" />
     <Compile Include="Runtime\Objects\HassiumFunction.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="Compiler\Parser\Ast\ThreadNode.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumThread.cs" />
     <Compile Include="Runtime\Objects\IO\HassiumDirectoryInfo.cs" />
+    <Compile Include="Runtime\VirtualMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
