@@ -162,6 +162,7 @@ namespace Hassium.Compiler.Scanner
             while (peekChar() != -1 &&
                 ((char.IsDigit((char) peekChar()) || "abcdefABCDEF".Contains(((char)peekChar()).ToString()) || "xo-._".Contains(((char)peekChar()).ToString()))))
             {
+                if ((char) peekChar() == '.' && char.IsLetter((char) peekChar(1))) break;
                 var cchar = (char)readChar();
                 if(cchar == '_')
                 {
