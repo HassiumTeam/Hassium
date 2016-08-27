@@ -22,7 +22,7 @@ namespace Hassium.Runtime
         public Stack<HassiumObject> Stack { get; set; }
         public StackFrame StackFrame { get; set; }
 
-        public void Execute(HassiumModule module, string[] args)
+        public void Execute(HassiumModule module, string[] args, StackFrame.Frame frame = null)
         {
             Stack = new Stack<HassiumObject>();
             StackFrame = new StackFrame();
@@ -35,7 +35,10 @@ namespace Hassium.Runtime
             importInitials();
             importArgs(args);
 
-            StackFrame.PushFrame();
+            if (frame != null)
+                StackFrame.Frames.Push(frame);
+            else
+                StackFrame.PushFrame();
             CallStack.Push(((HassiumMethod)module.Attributes["main"]).SourceRepresentation);
             ExecuteMethod((HassiumMethod)module.Attributes["main"]);
             CallStack.Pop();

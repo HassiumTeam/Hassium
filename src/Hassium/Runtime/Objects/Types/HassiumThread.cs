@@ -9,6 +9,7 @@ namespace Hassium.Runtime.Objects.Types
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("thread");
 
         public Thread Thread { get; private set; }
+        public HassiumObject ReturnValue { get; private set; }
 
         public HassiumThread(VirtualMachine vm, HassiumMethod method, StackFrame.Frame frame)
         {
@@ -17,17 +18,22 @@ namespace Hassium.Runtime.Objects.Types
             newVM.Handlers = new Stack<HassiumExceptionHandler>();
             newVM.Stack = new Stack<HassiumObject>();
             newVM.StackFrame = new StackFrame();
-            Thread = new Thread(() => method.Invoke(newVM, frame));
+            Thread = new Thread(() => ReturnValue = method.Invoke(newVM, frame));
 
             AddType(TypeDefinition);
-            AddAttribute("isAlive", new HassiumProperty(get_isAlive));
-            AddAttribute("start",   start,  0);
-            AddAttribute("stop",    stop,   0);
+            AddAttribute("isAlive",     new HassiumProperty(get_isAlive));
+            AddAttribute("returnValue", new HassiumProperty(get_returnValue));
+            AddAttribute("start",       start,  0);
+            AddAttribute("stop",        stop,   0);
         }
 
         public HassiumBool get_isAlive(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumBool(Thread.IsAlive);
+        }
+        public HassiumObject get_returnValue(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return ReturnValue;
         }
         public HassiumNull start(VirtualMachine vm, params HassiumObject[] args)
         {
