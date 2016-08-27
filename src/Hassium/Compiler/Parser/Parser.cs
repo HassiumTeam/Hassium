@@ -59,8 +59,8 @@ namespace Hassium.Compiler.Parser
                 return parseGlobal();
             else if (MatchToken(TokenType.Identifier, "if"))
                 return parseIf();
-            else if (AcceptToken(TokenType.Identifier, "priv"))
-                return parseFunc(true);
+            else if (MatchToken(TokenType.Identifier, "priv"))
+                return parsePriv();
             else if (AcceptToken(TokenType.Identifier, "raise"))
                 return new RaiseNode(Location, parseExpression());
             else if (AcceptToken(TokenType.Identifier, "return"))
@@ -177,7 +177,7 @@ namespace Hassium.Compiler.Parser
 
             return new ForeachNode(Location, variable, target, body);
         }
-        private FuncNode parseFunc(bool isPrivate = false)
+        private FuncNode parseFunc()
         {
             ExpectToken(TokenType.Identifier, "func");
             string name = ExpectToken(TokenType.Identifier).Value;
@@ -191,9 +191,9 @@ namespace Hassium.Compiler.Parser
             if (AcceptToken(TokenType.Colon))
             {
                 string returnType = ExpectToken(TokenType.Identifier).Value;
-                return new FuncNode(Location, name, parameters, parseStatement(), returnType, isPrivate);
+                return new FuncNode(Location, name, parameters, parseStatement(), returnType);
             }
-            return new FuncNode(Location, name, parameters, parseStatement(), string.Empty, isPrivate);
+            return new FuncNode(Location, name, parameters, parseStatement(), string.Empty);
         }
         private GlobalNode parseGlobal()
         {
@@ -248,6 +248,20 @@ namespace Hassium.Compiler.Parser
             if (AcceptToken(TokenType.Colon))
                 return new FuncParameter(name, ExpectToken(TokenType.Identifier).Value);
             return new FuncParameter(name);
+        }
+        private AstNode parsePriv()
+        {
+            ExpectToken(TokenType.Identifier, "priv");
+            AstNode statement = parseStatement();
+            if (statement is FuncNode)
+                ((FuncNode)statement).IsPrivate = true;
+            else if (statement is ClassNode)
+                ((ClassNode)statement).IsPrivate = true;
+            else if (statement is PropertyNode)
+                ((PropertyNode)statement).IsPrivate = true;
+            else if (statement is EnumNode)
+                ((EnumNode)statement).IsPrivate = true;
+            return statement;
         }
         private PropertyNode parseProperty()
         {

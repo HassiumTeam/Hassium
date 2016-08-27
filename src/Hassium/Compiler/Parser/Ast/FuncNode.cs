@@ -8,18 +8,18 @@ namespace Hassium.Compiler.Parser.Ast
     {
         public AstNode Body { get { return Children[0]; } }
         public bool EnforcesReturn { get { return ReturnType != string.Empty; } }
-        public bool IsPrivate { get; private set; }
+        public bool IsPrivate { get; set; }
         public string Name { get; private set; }
         public List<FuncParameter> Parameters { get; private set; }
         public string ReturnType { get; private set; }
 
-        public FuncNode(SourceLocation location, string name, List<FuncParameter> parameters, AstNode body, string returnType = "", bool isPrivate = false)
+        public FuncNode(SourceLocation location, string name, List<FuncParameter> parameters, AstNode body, string returnType = "")
         {
             this.SourceLocation = location;
             Name = name;
             Parameters = parameters;
             Children.Add(body);
-            IsPrivate = isPrivate;
+            IsPrivate = false;
             ReturnType = returnType;
         }
 

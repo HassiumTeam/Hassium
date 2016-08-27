@@ -7,6 +7,7 @@ namespace Hassium.Compiler.Parser.Ast
     {
         public string Name { get; private set; }
         public List<string> Inherits { get; private set; }
+        public bool IsPrivate { get; set; }
         public AstNode Body { get { return Children[0]; } }
 
         public ClassNode(SourceLocation location, string name, List<string> inherits, AstNode body)
@@ -14,6 +15,7 @@ namespace Hassium.Compiler.Parser.Ast
             this.SourceLocation = location;
             Name = name;
             Inherits = inherits;
+            IsPrivate = false;
             Children.Add(body);
         }
 

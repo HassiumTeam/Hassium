@@ -7,6 +7,7 @@ namespace Hassium.Compiler.Parser.Ast
         public string Variable { get; private set; }
         public AstNode GetBody { get { return Children[0]; } }
         public AstNode SetBody { get { return Children[1]; } }
+        public bool IsPrivate { get; set; }
 
         public PropertyNode(SourceLocation location, string variable, AstNode getBody, AstNode setBody)
         {
@@ -14,6 +15,7 @@ namespace Hassium.Compiler.Parser.Ast
             Variable = variable;
             Children.Add(getBody);
             Children.Add(setBody);
+            IsPrivate = false;
         }
 
         public override void Visit(IVisitor visitor)

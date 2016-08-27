@@ -184,6 +184,7 @@ namespace Hassium.Compiler.CodeGen
             HassiumClass clazz = new HassiumClass();
             clazz.Name = node.Name;
             clazz.Inherits = node.Inherits;
+            clazz.IsPrivate = node.IsPrivate;
             clazz.TypeDefinition = new HassiumTypeDefinition(clazz.Name);
             clazz.AddType(clazz.TypeDefinition);
 
@@ -244,6 +245,7 @@ namespace Hassium.Compiler.CodeGen
         private HassiumEnum compileEnum(EnumNode node)
         {
             HassiumEnum _enum = new HassiumEnum(node.Name);
+            _enum.IsPrivate = node.IsPrivate;
             foreach (AstNode child in node.Children)
             {
                 var op = child as BinaryOperationNode;
@@ -467,6 +469,7 @@ namespace Hassium.Compiler.CodeGen
             var temp = method;
             method = new HassiumMethod();
             method.Name = string.Format("get_{0}", node.Variable);
+            method.IsPrivate = node.IsPrivate;
             method.SourceRepresentation = string.Format("{0} ()", method.Name);
             table.PushScope();
             node.GetBody.Visit(this);
@@ -476,6 +479,7 @@ namespace Hassium.Compiler.CodeGen
             getBody.ReturnType = "";
             method = new HassiumMethod();
             method.Name = string.Format("set_{0}", node.Variable);
+            method.IsPrivate = node.IsPrivate;
             method.SourceRepresentation = string.Format("{0} (value)", method.Name);
             table.PushScope();
             if (!table.ContainsSymbol("value"))
