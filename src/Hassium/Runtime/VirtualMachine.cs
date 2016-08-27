@@ -412,10 +412,10 @@ namespace Hassium.Runtime
         {
             foreach (string constant in CurrentModule.ConstantPool.Values)
             {
-                    if (GlobalFunctions.Functions.ContainsKey(constant))
-                        Globals.Add(constant, GlobalFunctions.Functions[constant]);
-                    else if (CurrentModule.Attributes.ContainsKey(constant))
-                        Globals.Add(constant, CurrentModule.Attributes[constant]);
+                if (GlobalFunctions.Functions.ContainsKey(constant))
+                    Globals.Add(constant, GlobalFunctions.Functions[constant]);
+                else if (CurrentModule.Attributes.ContainsKey(constant))
+                    Globals.Add(constant, CurrentModule.Attributes[constant]);
             }
             foreach (var pair in InternalModule.InternalModules["Types"].Attributes)
                 Globals.Add(pair.Key, pair.Value);

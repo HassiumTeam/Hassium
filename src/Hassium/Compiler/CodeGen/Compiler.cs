@@ -167,7 +167,15 @@ namespace Hassium.Compiler.CodeGen
         }
         public void Accept(ClassNode node)
         {
-            module.Attributes.Add(node.Name, compileClass(node));
+            var temp = method;
+            var clazz = compileClass(node);
+            if (!module.ObjectPool.ContainsKey(clazz.GetHashCode()))
+                module.ObjectPool.Add(clazz.GetHashCode(), clazz);
+            temp.Emit(node.SourceLocation, InstructionType.PushObject, clazz.GetHashCode());
+            if (!table.ContainsSymbol(node.Name))
+                table.AddSymbol(node.Name);
+            temp.Emit(node.SourceLocation, InstructionType.StoreLocal, table.GetSymbol(node.Name));
+            method = temp;
         }
         private HassiumClass compileClass(ClassNode node)
         {
