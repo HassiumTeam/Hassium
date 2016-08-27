@@ -131,4 +131,3 @@ namespace Hassium.Runtime.Objects
         }
     }
 }
-

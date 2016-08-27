@@ -83,7 +83,7 @@ namespace Hassium.Runtime
                         case InstructionType.BuildKeyValuePair:
                             Stack.Push(new HassiumKeyValuePair(Stack.Pop(), Stack.Pop()));
                             break;
-                        case InstructionType.BuildList:
+                           case InstructionType.BuildList:
                             elements = new HassiumObject[arg];
                             for (int i = elements.Length - 1; i >= 0; i--)
                                 elements[i] = Stack.Pop();
