@@ -6,10 +6,11 @@ namespace Hassium.Runtime.Objects.IO
     {
         public HassiumIOModule() : base("IO")
         {
-            AddAttribute("FileInfo",    new HassiumFileInfo());
-            AddAttribute("FileReader",  new HassiumFileReader());
-            AddAttribute("FileWriter",  new HassiumFileWriter());
-            AddAttribute("FS",          new HassiumFS());
+            AddAttribute("DirectoryInfo",   new HassiumDirectoryInfo());
+            AddAttribute("FileInfo",        new HassiumFileInfo());
+            AddAttribute("FileReader",      new HassiumFileReader());
+            AddAttribute("FileWriter",      new HassiumFileWriter());
+            AddAttribute("FS",              new HassiumFS());
         }
     }
 }
