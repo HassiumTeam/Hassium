@@ -33,15 +33,16 @@ namespace Hassium.Runtime
             CurrentModule = module;
             importGlobals();
             importInitials();
-            importArgs(args);
+
+            HassiumList parameters = new HassiumList(new HassiumObject[0]);
+            foreach (string arg in args)
+                parameters.add(this, new HassiumString(arg));
 
             if (frame != null)
                 StackFrame.Frames.Push(frame);
             else
                 StackFrame.PushFrame();
-            CallStack.Push(((HassiumMethod)module.Attributes["main"]).SourceRepresentation);
-            ExecuteMethod((HassiumMethod)module.Attributes["main"]);
-            CallStack.Pop();
+            module.Attributes["main"].Invoke(this, parameters);
             StackFrame.PopFrame();
         }
 
@@ -295,7 +296,7 @@ namespace Hassium.Runtime
                 }
                 catch (Exception ex)
                 {
-                    RaiseException(new HassiumString(ex.ToString()), method, ref pos);
+                    RaiseException(new HassiumString(ex.Message), method, ref pos);
                 }
             }
             return HassiumObject.Null;
@@ -403,14 +404,6 @@ namespace Hassium.Runtime
                     Stack.Push(target.Negate(this));
                     break;
             }
-        }
-
-        private void importArgs(string[] args)
-        {
-            HassiumList list = new HassiumList(new HassiumObject[0]);
-            foreach (string arg in args)
-                list.add(this, new HassiumString(arg));
-            Globals.Add("args", list);
         }
 
         private void importGlobals()

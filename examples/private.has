@@ -1,0 +1,16 @@
+func main () {
+	c = new MyClass ();
+	c.publicFunc ();
+	c.privateFunc ();
+}
+
+class MyClass {
+	func new () {}
+	func publicFunc () {
+		println ("Public!");
+		this.privateFunc ();
+	}
+	priv func privateFunc () {
+		println ("Private!");
+	}
+}

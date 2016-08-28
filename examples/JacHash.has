@@ -1,8 +1,6 @@
-use IO;
-use Text;
-use Util;
+use IO; use Text; use Util;
 
-func main () {
+func main (args) {
 	JacHash hash = new JacHash ();
 
 	if (args.length <= 0) {
