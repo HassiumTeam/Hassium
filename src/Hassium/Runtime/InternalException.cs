@@ -4,7 +4,7 @@ namespace Hassium.Runtime
 {
     public class InternalException : Exception
     {
-        public static string ATTRIBUTE_ACCESS =     "Could not access private member!";
+        public static string ATTRIBUTE_ACCESS =     "Could not access private member {0} from type {1}!";
         public static string ATTRIBUTE_NOT_FOUND =  "Could not find attribute {0} in {1}!";
         public static string CONVERSION_ERROR =     "Could not convert {0} to {1}!";
         public static string KEY_NOT_FOUND_ERROR =  "Could not find key \"{0}\"!";
