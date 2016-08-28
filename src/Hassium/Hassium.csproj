@@ -33,6 +33,7 @@
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -157,6 +158,9 @@
     <Compile Include="Runtime\Objects\Types\HassiumThread.cs" />
     <Compile Include="Runtime\Objects\IO\HassiumDirectoryInfo.cs" />
     <Compile Include="Runtime\VirtualMachine.cs" />
+    <Compile Include="Runtime\Objects\Drawing\HassiumColor.cs" />
+    <Compile Include="Runtime\Objects\Drawing\HassiumBitmap.cs" />
+    <Compile Include="Runtime\Objects\Drawing\HassiumDrawingModule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -176,5 +180,6 @@
     <Folder Include="Runtime\Objects\Util\" />
     <Folder Include="Runtime\Objects\Reflection\" />
     <Folder Include="HassiumBuilder\" />
+    <Folder Include="Runtime\Objects\Drawing\" />
   </ItemGroup>
 </Project>
