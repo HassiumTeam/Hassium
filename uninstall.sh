@@ -1,6 +1,9 @@
 #!/bin/bash
 
-echo "Make sure to run as sudo or root"
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
 echo "Removing /usr/bin/Hassium.exe"
 rm /usr/bin/Hassium.exe
