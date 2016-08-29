@@ -30,11 +30,13 @@ namespace Hassium.Compiler.Parser.Ast
 
     public class Case
     {
+        public BinaryOperation Operation { get; private set; }
         public List<AstNode> Expressions { get; private set; }
         public AstNode Body { get; private set; }
 
-        public Case(List<AstNode> expressions, AstNode body)
+        public Case(BinaryOperation operation, List<AstNode> expressions, AstNode body)
         {
+            Operation = operation;
             Expressions = expressions;
             Body = body;
         }

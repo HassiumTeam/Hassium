@@ -301,13 +301,16 @@ namespace Hassium.Compiler.Parser
                     ExpectToken(TokenType.CloseBracket);
                     return ret;
                 }
+                BinaryOperation operation = BinaryOperation.EqualTo;
                 ExpectToken(TokenType.Identifier, "case");
+                if (MatchToken(TokenType.Comparison))
+                    operation = stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value);
                 var expressions = new List<AstNode>();
                 expressions.Add(parseExpression());
                 while (AcceptToken(TokenType.Comma))
                     expressions.Add(parseExpression());
                 AstNode caseBody = parseStatement();
-                cases.Add(new Case(expressions, caseBody));
+                cases.Add(new Case(operation, expressions, caseBody));
             }
             return new SwitchNode(Location, expression, cases, new StatementNode(Location));
         }
@@ -739,6 +742,25 @@ namespace Hassium.Compiler.Parser
             if (MatchToken(tokenType, value))
                 return Tokens[Position++];
             throw new CompileException(Location, "Expected token type {0} with value {1}!", tokenType, value);
+        }
+
+        private BinaryOperation stringToBinaryOperation(string operation)
+        {
+            switch (operation)
+            {
+                case ">":
+                    return BinaryOperation.GreaterThan;
+                case ">=":
+                    return BinaryOperation.GreaterThanOrEqual;
+                case "<":
+                    return BinaryOperation.LesserThan;
+                case "<=":
+                    return BinaryOperation.LesserThanOrEqual;
+                case "!=":
+                    return BinaryOperation.NotEqualTo;
+                default:
+                    return BinaryOperation.EqualTo;
+            }
         }
     }
 }

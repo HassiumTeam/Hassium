@@ -531,7 +531,7 @@ namespace Hassium.Compiler.CodeGen
                 {
                     method.Emit(node.SourceLocation, InstructionType.LoadLocal, tmp);
                     expression.Visit(this);
-                    method.Emit(node.SourceLocation, InstructionType.BinaryOperation, (int)BinaryOperation.EqualTo);
+                    method.Emit(node.SourceLocation, InstructionType.BinaryOperation, (int)case_.Operation);
                     method.Emit(node.SourceLocation, InstructionType.JumpIfTrue, trueLabel);
                 }
                 method.Emit(node.SourceLocation, InstructionType.Jump, falseLabel);
