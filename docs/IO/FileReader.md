@@ -8,6 +8,9 @@ Creates a new instance of the FileReader class on the specified file path.
 ### ```baseStream { get { return this.baseStream; } } ```
 Returns a Stream object that is the base of the FileReader instance.
 
+### ```func dispose () null```
+Disposes the current object.
+
 ### ```endOfFile { get { return this.endOfFile; } }```
 Returns a bool indicating whether or not the stream has read to the end.
 

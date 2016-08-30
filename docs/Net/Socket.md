@@ -18,6 +18,9 @@ Closes the socket.
 ### ```func connect (ip : string, port : int) : null```
 Connects the socket to the specified ip and port.
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```func listen (port : int) : null```
 Tells the socket to listen on the specified port.
 

@@ -8,6 +8,9 @@ Creates a new instance of the FileWriter class on the specified file path.
 ### ```baseStream { get { return this.baseStream; } }```
 Returns a Stream object that is the base of the FileWriter instance.
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```endOfFile { get { return this.endOfFile; } }```
 Returns a bool indicating whether or not the stream has been written to the end.
 

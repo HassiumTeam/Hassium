@@ -1,5 +1,8 @@
 ## ```class Process```
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```func getProcessByID (id : int) : Process```
 Returns a process that has the specified id value.
 

@@ -5,6 +5,9 @@ Creates a new instance of the Bitmap class from the specified file path.
 ### ```func new (height : int, width : int)```
 Creates a new instance of the Bitmap class from the specified height and width integers.
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```func getPixel (x : int, y : int) : Color```
 Returns the Color at the specified x and y coordinates.
 

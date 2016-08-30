@@ -9,6 +9,9 @@ Clears the list of all elements.
 ### ```func contains (obj : object) : bool```
 Returns a bool if the list contains the specified object.
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```func fill (amount : int) : list```
 Fills the list from index 0 for the amount specified with a null value, then
 returns the current list instance.

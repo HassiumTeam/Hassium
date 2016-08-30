@@ -9,6 +9,9 @@ Returns a bool if the dictionary contains the specified key.
 ### ```func containsValue (value : object) : bool```
 Returns a bool if the dictionary contains the specified value.
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```func getKeyByValue (value : object) : object```
 Returns the key for the given value.
 

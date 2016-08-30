@@ -1,5 +1,8 @@
 ## ```class Stream```
 
+### ```func dispose () : null```
+Disposes the current object.
+
 ### ```length { get { return this.length; } }```
 Returns the length of the stream.
 
