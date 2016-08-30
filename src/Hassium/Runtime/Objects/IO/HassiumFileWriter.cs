@@ -28,6 +28,7 @@ namespace Hassium.Runtime.Objects.IO
             else if (args[0] is HassiumStream)
                 fileWriter.BinaryWriter = new BinaryWriter(((HassiumStream)args[0]).Stream);
             fileWriter.BaseStream = new HassiumStream(fileWriter.BinaryWriter.BaseStream);
+            fileWriter.AddAttribute(HassiumObject.DISPOSE, fileWriter.Dispose, 0);
             fileWriter.AddAttribute("baseStream",   new HassiumProperty(get_baseStream));
             fileWriter.AddAttribute("endOfFile",    new HassiumProperty(get_endOfFile));
             fileWriter.AddAttribute("flush",        fileWriter.flush, 0);
@@ -143,6 +144,12 @@ namespace Hassium.Runtime.Objects.IO
         public HassiumNull writeString(VirtualMachine vm, HassiumObject[] args)
         {
             BinaryWriter.Write(args[0].ToString(vm).String);
+            return HassiumObject.Null;
+        }
+
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            BinaryWriter.Dispose();
             return HassiumObject.Null;
         }
     }

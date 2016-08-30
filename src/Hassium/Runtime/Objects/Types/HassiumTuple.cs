@@ -42,7 +42,7 @@ namespace Hassium.Runtime.Objects.Types
                 elements[i] = Elements[start + i];
             return new HassiumTuple(elements);
         }
-
+        
         public override HassiumObject EqualTo(VirtualMachine vm, params HassiumObject[] args)
         {
             var tuple = args[0].ToTuple(vm);

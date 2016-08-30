@@ -342,8 +342,10 @@ namespace Hassium.Compiler.CodeGen
 
             foreach (var param in node.Parameters)
                 method.Parameters.Add(param, table.AddSymbol(param.Name));
-
-            node.Children[0].VisitChildren(this);
+            if (node.Children[0] is CodeBlockNode)
+                node.Children[0].VisitChildren(this);
+            else
+                node.Children[0].Visit(this);
             table.PopScope();
             return method;
         }
@@ -697,6 +699,22 @@ namespace Hassium.Compiler.CodeGen
                     module.ObjectPool.Add(obj.Key, obj.Value);
                 }
             }
+        }
+        public void Accept(UsingNode node)
+        {
+            table.PushScope();
+            node.Expression.Visit(this);
+            var symbol = nextLabel();
+            if (table.ContainsSymbol(symbol.ToString()))
+                table.AddSymbol(symbol.ToString());
+            method.Emit(node.SourceLocation, InstructionType.StoreLocal, table.GetSymbol(symbol.ToString()));
+            if (node.Children[0] is CodeBlockNode)
+                node.Children[0].VisitChildren(this);
+            else
+                node.Children[0].Visit(this);
+            method.Emit(node.SourceLocation, InstructionType.LoadLocal, table.GetSymbol(symbol.ToString()));
+            method.Emit(node.SourceLocation, InstructionType.Dispose);
+            table.PopScope();
         }
         public void Accept(WhileNode node)
         {

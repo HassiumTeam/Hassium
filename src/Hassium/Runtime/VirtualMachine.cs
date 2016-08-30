@@ -109,6 +109,9 @@ namespace Hassium.Runtime
                         case InstructionType.Dereference:
                             Stack.Push(((HassiumPointer)Stack.Pop()).Dereference());
                             break;
+                        case InstructionType.Dispose:
+                            Stack.Pop().Dispose(this);
+                            break;
                         case InstructionType.Duplicate:
                             Stack.Push(Stack.Peek());
                             break;
@@ -121,6 +124,7 @@ namespace Hassium.Runtime
                                 StackFrame.Modify(arg, val);
                             else
                                 StackFrame.Add(arg, val);
+                            Stack.Push(val);
                             break;
                         case InstructionType.Iter:
                             Stack.Push(Stack.Pop().Iter(this));

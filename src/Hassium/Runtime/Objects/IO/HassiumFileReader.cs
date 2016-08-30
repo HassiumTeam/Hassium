@@ -27,6 +27,7 @@ namespace Hassium.Runtime.Objects.IO
             else if (args[0] is HassiumStream)
                 fileReader.BinaryReader = new BinaryReader(((HassiumStream)args[0]).Stream);
             fileReader.BaseStream = new HassiumStream(fileReader.BinaryReader.BaseStream);
+            fileReader.AddAttribute(HassiumObject.DISPOSE, fileReader.Dispose, 0);
             fileReader.AddAttribute("baseStream",   new HassiumProperty(get_baseStream, set_baseStream));
             fileReader.AddAttribute("endOfFile",    new HassiumProperty(fileReader.get_endOfFile));
             fileReader.AddAttribute("length",       new HassiumProperty(fileReader.get_length));
@@ -112,6 +113,12 @@ namespace Hassium.Runtime.Objects.IO
         public HassiumString readString(VirtualMachine vm, HassiumObject[] args)
         {
             return new HassiumString(BinaryReader.ReadString());
+        }
+
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            BinaryReader.Dispose();
+            return HassiumObject.Null;
         }
     }
 }

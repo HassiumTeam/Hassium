@@ -39,6 +39,7 @@ namespace Hassium.Runtime.Objects
         public static string ITER =                 "__iter__";
         public static string ITERABLEFULL =         "__iterablefull__";
         public static string ITERABLENEXT =         "__iterablenext__";
+        public static string DISPOSE =              "dispose";
         public static string TOBOOL =               "toBool";
         public static string TOCHAR =               "toChar";
         public static string TOINT =                "toInt";
@@ -251,6 +252,12 @@ namespace Hassium.Runtime.Objects
             if (Attributes.ContainsKey(ITERABLENEXT))
                 return Attributes[ITERABLENEXT].Invoke(vm, args);
             throw new InternalException(vm, InternalException.OPERATOR_ERROR, "foreach", Type());
+        }
+        public virtual HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            if (Attributes.ContainsKey(DISPOSE))
+                return Attributes[DISPOSE].Invoke(vm, args);
+            throw new InternalException(vm, InternalException.ATTRIBUTE_NOT_FOUND, DISPOSE, Type());
         }
         public virtual HassiumBool ToBool(VirtualMachine vm, params HassiumObject[] args)
         {

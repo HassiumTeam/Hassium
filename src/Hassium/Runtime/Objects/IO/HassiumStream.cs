@@ -91,6 +91,12 @@ namespace Hassium.Runtime.Objects.IO
 
             return HassiumObject.Null;
         }
+
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Stream.Dispose();
+            return HassiumObject.Null;
+        }
     }
 }
 

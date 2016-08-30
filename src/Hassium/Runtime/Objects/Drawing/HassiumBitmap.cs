@@ -29,6 +29,7 @@ namespace Hassium.Runtime.Objects.Drawing
                     bitmap.Bitmap = new Bitmap((int)args[0].ToInt(vm).Int, (int)args[1].ToInt(vm).Int);
                     break;
             }
+            bitmap.AddAttribute(HassiumObject.DISPOSE,  bitmap.Dispose,         0);
             bitmap.AddAttribute("getPixel",             bitmap.getPixel,        2);
             bitmap.AddAttribute("height",               new HassiumProperty(bitmap.get_height));
             bitmap.AddAttribute("horizontalResolution", new HassiumProperty(bitmap.get_horizontalResolution));
@@ -40,7 +41,7 @@ namespace Hassium.Runtime.Objects.Drawing
             bitmap.AddAttribute("width",                new HassiumProperty(bitmap.get_width));
             return bitmap;
         }
-
+        
         public HassiumColor getPixel(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumColor()._new(vm, new HassiumInt(Bitmap.GetPixel((int)args[0].ToInt(vm).Int, (int)args[1].ToInt(vm).Int).ToArgb()));
@@ -81,5 +82,11 @@ namespace Hassium.Runtime.Objects.Drawing
         {
             return new HassiumInt(Bitmap.Width);
         }
-	}
+
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Bitmap.Dispose();
+            return HassiumObject.Null;
+        }
+    }
 }

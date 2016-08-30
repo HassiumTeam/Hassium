@@ -20,7 +20,6 @@ namespace Hassium.Runtime.Objects.Net
         public HassiumConnectionListener _new(VirtualMachine vm, HassiumObject[] args)
         {
             HassiumConnectionListener connectionListener = new HassiumConnectionListener();
-
             connectionListener.TcpListener = new TcpListener(IPAddress.Parse(args[0].ToString(vm).String), (int)args[0].ToInt(vm).Int);
             connectionListener.AddAttribute("acceptConnection",    connectionListener.acceptConnection, 0);
             connectionListener.AddAttribute("pending",             connectionListener.pending, 0);

@@ -27,6 +27,7 @@ namespace Hassium.Runtime.Objects.Net
             HassiumNetConnection netConnection = new HassiumNetConnection();
 
             netConnection.TcpClient = client;
+            netConnection.AddAttribute(HassiumObject.DISPOSE, netConnection.Dispose, 0);
             netConnection.AddAttribute("close",        netConnection.close,                      0);
             netConnection.AddAttribute("connected",    new HassiumProperty(netConnection.connected));
             netConnection.AddAttribute("getStream",    netConnection.getStream, new int[] { 0, 1 });
@@ -56,6 +57,12 @@ namespace Hassium.Runtime.Objects.Net
             if (args[0].ToBool(vm).Bool)
                 return new HassiumStream(new SslStream(TcpClient.GetStream(), false, new RemoteCertificateValidationCallback((sender, certificate, chain, sslPolicyErrors) => true), null));
             return new HassiumStream(TcpClient.GetStream());
+        }
+
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            TcpClient.Close();
+            return HassiumObject.Null;
         }
     }
 }

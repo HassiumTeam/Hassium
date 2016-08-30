@@ -26,6 +26,7 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("split",           split,   1, 2);
             AddAttribute("remove",          remove,    -1);
             AddAttribute("reverse",         reverse,    0);
+            AddAttribute(HassiumObject.DISPOSE, Dispose, 0);
             AddAttribute(HassiumObject.TOLIST,      ToList,         0);
             AddAttribute(HassiumObject.TOSTRING,    ToString,    0, 1);
             AddAttribute(HassiumObject.TOTUPLE,     ToTuple,        0);
@@ -98,6 +99,11 @@ namespace Hassium.Runtime.Objects.Types
             return result;
         }
 
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            List.Clear();
+            return HassiumObject.Null;
+        }
         public override HassiumObject EqualTo(VirtualMachine vm, params HassiumObject[] args)
         {
             var list = args[0].ToList(vm);

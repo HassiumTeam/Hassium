@@ -13,6 +13,7 @@ namespace Hassium.Compiler.CodeGen
         BuildTuple,
         Call,
         Dereference,
+        Dispose,
         Duplicate,
         EnforcedAssignment,
         Iter,

@@ -96,6 +96,12 @@ namespace Hassium.Runtime.Objects.Net
             return HassiumObject.Null;
         }
 
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Socket.Dispose();
+            return HassiumObject.Null;
+        }
+
         private static T parseEnum<T>(string value)
         {
             return (T) Enum.Parse(typeof(T), value, true);

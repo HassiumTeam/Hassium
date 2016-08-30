@@ -27,6 +27,7 @@ namespace Hassium.Runtime.Objects.Util
             AddType(TypeDefinition);
             HassiumProcess process = new HassiumProcess();
             process.Process = proc;
+            process.AddAttribute(HassiumObject.DISPOSE, process.Dispose, 0);
             process.AddAttribute("ID",     new HassiumProperty(process.get_ID));
             process.AddAttribute("kill",   process.kill,                     0);
             process.AddAttribute("name",   new HassiumProperty(process.get_Name));
@@ -112,6 +113,11 @@ namespace Hassium.Runtime.Objects.Util
             return HassiumObject.Null;
         }
 
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Process.Dispose();
+            return HassiumObject.Null;
+        }
         public override HassiumString ToString(VirtualMachine vm, params HassiumObject[] args)
         {
             return get_Name(vm, args);

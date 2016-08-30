@@ -75,6 +75,8 @@ namespace Hassium.Compiler.Parser
                 return parseWhile(true);
             else if (MatchToken(TokenType.Identifier, "use"))
                 return parseUse();
+            else if (MatchToken(TokenType.Identifier, "using"))
+                return parseUsing();
             else if (MatchToken(TokenType.Identifier, "while"))
                 return parseWhile();
             else if (AcceptToken(TokenType.OpenBracket))
@@ -86,8 +88,6 @@ namespace Hassium.Compiler.Parser
             }
             else if (MatchToken(TokenType.Identifier) && !MatchToken(TokenType.Identifier, "thread") && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
                 return parseProperty();
-            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
-                return parseEnforcedAssignment();
             else
                 return parseExpressionStatement();
         }
@@ -286,6 +286,15 @@ namespace Hassium.Compiler.Parser
             while (AcceptToken(TokenType.Operation, "/") || AcceptToken(TokenType.Dot))
                 parts.Add(ExpectToken(TokenType.Identifier).Value);
             return new UseNode(Location, parts);
+        }
+        private UsingNode parseUsing()
+        {
+            ExpectToken(TokenType.Identifier, "using");
+            ExpectToken(TokenType.OpenParentheses);
+            AstNode expression = parseExpression();
+            ExpectToken(TokenType.CloseParentheses);
+            AstNode body = parseStatement();
+            return new UsingNode(Location, body, expression);
         }
         private SwitchNode parseSwitch()
         {
@@ -646,6 +655,8 @@ namespace Hassium.Compiler.Parser
                 return parseLambda();
             else if (AcceptToken(TokenType.Identifier, "thread"))
                 return new ThreadNode(Location, parseStatement());
+            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
+                return parseEnforcedAssignment();
             else if (MatchToken(TokenType.OpenSquare))
                 return parseListDeclaration();
             else if (AcceptToken(TokenType.OpenBracket))

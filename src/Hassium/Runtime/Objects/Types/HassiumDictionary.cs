@@ -15,12 +15,13 @@ namespace Hassium.Runtime.Objects.Types
             foreach (var pair in initial)
                 Dictionary.Add(pair.Key, pair.Value);
 
-            AddAttribute("add",             add, 2);
-            AddAttribute("containsKey",     containsKey, 1);
-            AddAttribute("containsValue",   containsValue, 1);
-            AddAttribute("getKeyByValue",   getKeyByValue, 1);
-            AddAttribute("getValueByKey",   getValueByKey, 1);
+            AddAttribute("add",             add,            2);
+            AddAttribute("containsKey",     containsKey,    1);
+            AddAttribute("containsValue",   containsValue,  1);
+            AddAttribute("getKeyByValue",   getKeyByValue,  1);
+            AddAttribute("getValueByKey",   getValueByKey,  1);
             AddAttribute("remove",          remove, 1);
+            AddAttribute(HassiumObject.DISPOSE, Dispose, 0);
         }
 
         public HassiumObject add(VirtualMachine vm, params HassiumObject[] args)
@@ -54,6 +55,11 @@ namespace Hassium.Runtime.Objects.Types
             return args[0];
         }
 
+        public override HassiumObject Dispose(VirtualMachine vm, params HassiumObject[] args)
+        {
+            Dictionary.Clear();
+            return HassiumObject.Null;
+        }
         public override HassiumObject Index(VirtualMachine vm, params HassiumObject[] args)
         {
             foreach (var pair in Dictionary)
