@@ -93,6 +93,13 @@ namespace Hassium.Runtime.Objects.Types
         {
             return new HassiumBool(Int <= args[0].ToInt(vm, args).Int);
         }
+        public override HassiumObject LogicalNot(VirtualMachine vm, params HassiumObject[] args)
+        {
+            int total = 1;
+            for (int i = 2; i <= Int; i++)
+                total *= i;
+            return new HassiumInt(total);
+        }
         public override HassiumObject Modulus(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumInt(Int % args[0].ToInt(vm, args).Int);
