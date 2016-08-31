@@ -25,10 +25,12 @@ namespace Hassium.Compiler.Parser
         void Accept(FuncNode node);
         void Accept(FunctionCallNode node);
         void Accept(GlobalNode node);
+        void Accept(GotoNode node);
         void Accept(IdentifierNode node);
         void Accept(IfNode node);
         void Accept(KeyValuePairNode node);
         void Accept(IntegerNode node);
+        void Accept(LabelNode node);
         void Accept(LambdaNode node);
         void Accept(ListAccessNode node);
         void Accept(ListDeclarationNode node);

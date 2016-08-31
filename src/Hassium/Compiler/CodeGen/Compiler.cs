@@ -373,6 +373,11 @@ namespace Hassium.Compiler.CodeGen
             module.Globals.Add(table.GetGlobalSymbol(node.Variable), HassiumObject.Null);
             method.Emit(node.SourceLocation, InstructionType.StoreGlobalVariable, table.GetGlobalSymbol(node.Variable));
         }
+        public void Accept(GotoNode node)
+        {
+            node.Expression.Visit(this);
+            method.Emit(node.SourceLocation, InstructionType.Goto);
+        }
         public void Accept(IdentifierNode node)
         {
             if (node.Identifier == "this")
@@ -417,6 +422,15 @@ namespace Hassium.Compiler.CodeGen
             node.Value.Visit(this);
             node.Key.Visit(this);
             method.Emit(node.SourceLocation, InstructionType.BuildKeyValuePair);
+        }
+        public void Accept(LabelNode node)
+        {
+            if (!table.ContainsSymbol(node.Identifier))
+                table.AddSymbol(node.Identifier);
+            method.Instructions.Reverse();
+            method.Emit(node.SourceLocation, InstructionType.StoreLocal, table.GetSymbol(node.Identifier));
+            method.Emit(node.SourceLocation, InstructionType.BuildLabel);
+            method.Instructions.Reverse();
         }
         public void Accept(LambdaNode node)
         {

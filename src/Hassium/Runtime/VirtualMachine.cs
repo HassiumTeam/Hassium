@@ -84,7 +84,10 @@ namespace Hassium.Runtime
                         case InstructionType.BuildKeyValuePair:
                             Stack.Push(new HassiumKeyValuePair(Stack.Pop(), Stack.Pop()));
                             break;
-                           case InstructionType.BuildList:
+                        case InstructionType.BuildLabel:
+                            Stack.Push(new HassiumLabel(pos + 1));
+                            break;
+                        case InstructionType.BuildList:
                             elements = new HassiumObject[arg];
                             for (int i = elements.Length - 1; i >= 0; i--)
                                 elements[i] = Stack.Pop();
@@ -125,6 +128,9 @@ namespace Hassium.Runtime
                             else
                                 StackFrame.Add(arg, val);
                             Stack.Push(val);
+                            break;
+                        case InstructionType.Goto:
+                            pos = (int)Stack.Pop().ToInt(this).Int;
                             break;
                         case InstructionType.Iter:
                             Stack.Push(Stack.Pop().Iter(this));

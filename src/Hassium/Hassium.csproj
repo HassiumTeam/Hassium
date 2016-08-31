@@ -36,6 +36,8 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\Parser\Ast\GotoNode.cs" />
+    <Compile Include="Compiler\Parser\Ast\LabelNode.cs" />
     <Compile Include="Compiler\Parser\Ast\UsingNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Runtime\Objects\HassiumClass.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumFloat.cs" />
     <Compile Include="Runtime\Objects\Types\HassiumInt.cs" />
+    <Compile Include="Runtime\Objects\Types\HassiumLabel.cs" />
     <Compile Include="Runtime\StackFrame.cs" />
     <Compile Include="Runtime\GlobalFunctions.cs" />
     <Compile Include="Runtime\Objects\HassiumFunction.cs" />

@@ -57,6 +57,8 @@ namespace Hassium.Compiler.Parser
                 return parseFunc();
             else if (MatchToken(TokenType.Identifier, "global"))
                 return parseGlobal();
+            else if (AcceptToken(TokenType.Identifier, "goto"))
+                return new GotoNode(Location, parseExpression());
             else if (MatchToken(TokenType.Identifier, "if"))
                 return parseIf();
             else if (MatchToken(TokenType.Identifier, "priv"))
@@ -86,8 +88,14 @@ namespace Hassium.Compiler.Parser
                     block.Children.Add(parseStatement());
                 return block;
             }
-            else if (MatchToken(TokenType.Identifier) && !MatchToken(TokenType.Identifier, "thread") && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
+            else if (MatchToken(TokenType.Identifier) && !MatchToken(TokenType.Identifier, "thread") && !MatchToken(TokenType.Identifier, "new") && !MatchToken(TokenType.Identifier, "return") && Tokens[Position + 1].TokenType == TokenType.OpenBracket)
                 return parseProperty();
+            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Colon)
+            {
+                var ret = new LabelNode(Location, ExpectToken(TokenType.Identifier).Value);
+                ExpectToken(TokenType.Colon);
+                return ret;
+            }
             else
                 return parseExpressionStatement();
         }

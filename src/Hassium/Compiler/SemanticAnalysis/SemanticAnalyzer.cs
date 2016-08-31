@@ -52,10 +52,12 @@ namespace Hassium.Compiler.SemanticAnalysis
         }
         public void Accept(FunctionCallNode node) {}
         public void Accept(GlobalNode node) {}
+        public void Accept(GotoNode node) {}
         public void Accept(IdentifierNode node) {}
         public void Accept(IfNode node) {}
         public void Accept(IntegerNode node) {}
         public void Accept(KeyValuePairNode node) {}
+        public void Accept(LabelNode node) {}
         public void Accept(LambdaNode node) {}
         public void Accept(ListAccessNode node) {}
         public void Accept(ListDeclarationNode node) {}
