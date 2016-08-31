@@ -85,7 +85,7 @@ namespace Hassium.Runtime
                             Stack.Push(new HassiumKeyValuePair(Stack.Pop(), Stack.Pop()));
                             break;
                         case InstructionType.BuildLabel:
-                            Stack.Push(new HassiumLabel(pos + 1));
+                            Stack.Push(new HassiumLabel(arg));
                             break;
                         case InstructionType.BuildList:
                             elements = new HassiumObject[arg];

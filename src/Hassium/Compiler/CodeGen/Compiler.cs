@@ -429,7 +429,7 @@ namespace Hassium.Compiler.CodeGen
                 table.AddSymbol(node.Identifier);
             method.Instructions.Reverse();
             method.Emit(node.SourceLocation, InstructionType.StoreLocal, table.GetSymbol(node.Identifier));
-            method.Emit(node.SourceLocation, InstructionType.BuildLabel);
+            method.Emit(node.SourceLocation, InstructionType.BuildLabel, method.Instructions.Count);
             method.Instructions.Reverse();
         }
         public void Accept(LambdaNode node)
