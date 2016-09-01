@@ -97,7 +97,15 @@ namespace Hassium.Compiler.Scanner
                         case '<':
                             c = (char)readChar();
                             if ((char)peekChar() == '=')
-                                add(TokenType.Comparison, c + "" + (char)readChar());
+                            {
+                                if ((char)peekChar(1) == '>')
+                                {
+                                    readChar();readChar();
+                                    add(TokenType.Assignment, "<=>");
+                                }
+                                else
+                                    add(TokenType.Comparison, c + "" + (char)readChar());
+                            }
                             else if ((char)peekChar() == c)
                                 add(TokenType.Operation, c + "" + (char)readChar());
                             else

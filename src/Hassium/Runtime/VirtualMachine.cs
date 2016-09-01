@@ -283,6 +283,13 @@ namespace Hassium.Runtime
                         case InstructionType.StoreReference:
                             Stack.Push(((HassiumPointer)Stack.Pop()).StoreReference(Stack.Pop()));
                             break;
+                        case InstructionType.Swap:
+                            int index = (int)Stack.Pop().ToInt(this).Int;
+                            val = StackFrame.GetVariable(this, index);
+                            StackFrame.Modify(index, StackFrame.GetVariable(this, arg));
+                            StackFrame.Modify(arg, val);
+                            Stack.Push(val);
+                            break;
                         case InstructionType.UnaryOperation:
                             interpretUnaryOperation(Stack.Pop(), arg);
                             break;

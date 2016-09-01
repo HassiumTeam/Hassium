@@ -426,6 +426,9 @@ namespace Hassium.Compiler.Parser
                     case "^=":
                         AcceptToken(TokenType.Assignment);
                         return new BinaryOperationNode(Location, BinaryOperation.Assignment, left, new BinaryOperationNode(Location, BinaryOperation.BitwiseXor, left, parseAssignment()));
+                    case "<=>":
+                        AcceptToken(TokenType.Assignment);
+                        return new BinaryOperationNode(Location, BinaryOperation.Swap, left, parseExpression());
                     default:
                         break;
                 }

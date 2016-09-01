@@ -52,6 +52,7 @@ namespace Hassium.Compiler.Parser.Ast
         NullCoalescing,
         Power,
         Subraction,
+        Swap
     }
 }
 

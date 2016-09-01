@@ -46,6 +46,7 @@ namespace Hassium.Compiler.CodeGen
         StoreListElement,
         StoreLocal,
         StoreReference,
+        Swap,
         UnaryOperation
     }
 }

@@ -148,6 +148,10 @@ namespace Hassium.Compiler.CodeGen
                         }
                     }
                     break;
+                case BinaryOperation.Swap:
+                    method.Emit(node.SourceLocation, InstructionType.Push, table.GetSymbol(((IdentifierNode)node.Left).Identifier));
+                    method.Emit(node.SourceLocation, InstructionType.Swap, table.GetSymbol(((IdentifierNode)node.Right).Identifier));
+                    break;
                 default:
                     node.VisitChildren(this);
                     method.Emit(node.SourceLocation, InstructionType.BinaryOperation, (int)node.BinaryOperation);
