@@ -45,6 +45,8 @@ namespace Hassium.Compiler.Parser
                 return parseClass();
             else if (AcceptToken(TokenType.Identifier, "continue"))
                 return new ContinueNode(Location);
+            else if (MatchToken(TokenType.Identifier, "do"))
+                return parseDoWhile();
             else if (MatchToken(TokenType.Identifier, "enum"))
                 return parseEnum();
             else if (MatchToken(TokenType.Identifier, "extend"))
@@ -124,6 +126,16 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
 
             return new ClassNode(Location, name, inherits, body);
+        }
+        private DoWhileNode parseDoWhile()
+        {
+            ExpectToken(TokenType.Identifier, "do");
+            AstNode body = parseStatement();
+            ExpectToken(TokenType.Identifier, "while");
+            ExpectToken(TokenType.OpenParentheses);
+            AstNode expression = parseExpression();
+            ExpectToken(TokenType.CloseParentheses);
+            return new DoWhileNode(Location, body, expression);
         }
         private EnforcedAssignmentNode parseEnforcedAssignment()
         {

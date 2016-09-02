@@ -232,6 +232,14 @@ namespace Hassium.Compiler.CodeGen
             node.VisitChildren(this);
             method.Emit(node.SourceLocation, InstructionType.BuildDictionary, node.Children.Count);
         }
+        public void Accept(DoWhileNode node)
+        {
+            var doLabel = nextLabel();
+            method.EmitLabel(node.SourceLocation, doLabel);
+            node.Body.Visit(this);
+            node.Expression.Visit(this);
+            method.Emit(node.SourceLocation, InstructionType.JumpIfTrue, doLabel);
+        }
         public void Accept(EnforcedAssignmentNode node)
         {
             node.Value.Visit(this);

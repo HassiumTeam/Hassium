@@ -36,6 +36,7 @@ namespace Hassium.Compiler.SemanticAnalysis
         }
         public void Accept(ContinueNode node) {}
         public void Accept(DictionaryDeclarationNode node) {}
+        public void Accept(DoWhileNode node) {}
         public void Accept(EnforcedAssignmentNode node) {}
         public void Accept(EnumNode node) {}
         public void Accept(ExpressionStatementNode node)

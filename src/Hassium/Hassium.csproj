@@ -36,6 +36,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiler\Parser\Ast\DoWhileNode.cs" />
     <Compile Include="Compiler\Parser\Ast\GotoNode.cs" />
     <Compile Include="Compiler\Parser\Ast\LabelNode.cs" />
     <Compile Include="Compiler\Parser\Ast\UsingNode.cs" />
