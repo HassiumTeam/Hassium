@@ -677,7 +677,7 @@ namespace Hassium.Compiler.Parser
             else if (MatchToken(TokenType.Identifier, "lambda"))
                 return parseLambda();
             else if (AcceptToken(TokenType.Identifier, "thread"))
-                return new ThreadNode(Location, parseStatement());
+                return new ThreadNode(Location, AcceptToken(TokenType.Identifier, "do"), parseStatement());
             else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
                 return parseEnforcedAssignment();
             else if (MatchToken(TokenType.OpenSquare))

@@ -592,6 +592,14 @@ namespace Hassium.Compiler.CodeGen
             if (!module.ObjectPool.ContainsKey(method.GetHashCode()))
                 module.ObjectPool.Add(method.GetHashCode(), method);
             temp.Emit(node.SourceLocation, InstructionType.BuildThread, method.GetHashCode());
+            if (node.RunImmediately)
+            {
+                int hash = "start".GetHashCode();
+                if (!module.ConstantPool.ContainsKey(hash))
+                    module.ConstantPool.Add(hash, "start");
+                temp.Emit(node.SourceLocation, InstructionType.LoadAttribute, hash);
+                temp.Emit(node.SourceLocation, InstructionType.Call);
+            }
             method = temp;
         }
         public void Accept(TraitNode node)
