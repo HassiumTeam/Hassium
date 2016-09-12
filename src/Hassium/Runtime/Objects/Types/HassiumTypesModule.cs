@@ -25,6 +25,7 @@ namespace Hassium.Runtime.Objects.Types
             AddAttribute("thread",          HassiumThread.TypeDefinition);
             AddAttribute("trait",           HassiumTrait.TypeDefinition);
             AddAttribute("true",            new HassiumBool(true));
+            AddAttribute("TypeConverter",   new HassiumTypeConverter());
             AddAttribute("TypeDefinition",  HassiumTypeDefinition.TypeDefinition);
         }
     }
