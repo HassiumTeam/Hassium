@@ -21,6 +21,14 @@ namespace Hassium.Runtime.Objects.Types
         {
             return new HassiumBool(Bool == args[0].ToBool(vm, args).Bool);
         }
+        public override HassiumObject LogicalAnd(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool(Bool && args[0].ToBool(vm).Bool);
+        }
+        public override HassiumObject LogicalOr(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumBool(Bool || args[0].ToBool(vm).Bool);
+        }
         public override HassiumObject LogicalNot(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumBool(!Bool);

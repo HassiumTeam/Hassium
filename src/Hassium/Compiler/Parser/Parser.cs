@@ -477,16 +477,23 @@ namespace Hassium.Compiler.Parser
         private AstNode parseEquality()
         {
             AstNode left = parseComparison();
+            AstNode expr;
             while (MatchToken(TokenType.Comparison))
             {
                 switch (Tokens[Position].Value)
                 {
                     case "==":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.EqualTo, left, parseEquality());
+                        expr = parseComparison();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.EqualTo, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.EqualTo, left, expr);
                     case "!=":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.NotEqualTo, left, parseEquality());
+                        expr = parseComparison();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.NotEqualTo, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.NotEqualTo, left, expr);
                     default:
                         break;
                 }
@@ -497,22 +504,35 @@ namespace Hassium.Compiler.Parser
         private AstNode parseComparison()
         {
             AstNode left = parseOr();
+            AstNode expr;
             while (MatchToken(TokenType.Comparison))
             {
                 switch (Tokens[Position].Value)
                 {
                     case ">":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.GreaterThan, left, parseComparison());
+                        expr = parseOr();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.GreaterThan, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.GreaterThan, left, expr);
                     case ">=":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.GreaterThanOrEqual, left, parseComparison());
+                        expr = parseOr();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.GreaterThanOrEqual, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.GreaterThanOrEqual, left, expr);
                     case "<":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.LesserThan, left, parseComparison());
+                        expr = parseOr();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.LesserThan, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.LesserThan, left, expr);
                     case "<=":
                         AcceptToken(TokenType.Comparison);
-                        return new BinaryOperationNode(Location, BinaryOperation.LesserThanOrEqual, left, parseComparison());
+                        expr = parseOr();
+                        if (MatchToken(TokenType.Comparison))
+                            return new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, new BinaryOperationNode(Location, BinaryOperation.LesserThanOrEqual, left, expr), new BinaryOperationNode(Location, stringToBinaryOperation(ExpectToken(TokenType.Comparison).Value), expr, parseOr()));
+                        return new BinaryOperationNode(Location, BinaryOperation.LesserThanOrEqual, left, expr);
                     default:
                         break;
                 }
