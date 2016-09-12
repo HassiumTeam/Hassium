@@ -462,7 +462,7 @@ namespace Hassium.Compiler.Parser
         }
         private AstNode parseLogicalOr()
         {
-            AstNode left = parseEquality();
+            AstNode left = parseLogicalAnd();
             while (AcceptToken(TokenType.Operation, "||"))
                 left = new BinaryOperationNode(Location, BinaryOperation.LogicalOr, left, parseLogicalOr());
             return left;
