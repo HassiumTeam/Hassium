@@ -44,6 +44,8 @@ namespace Hassium.Compiler.Parser.Ast
                     sb.AppendFormat(", {0}", Parameters[i].GetSourceRepresentation());
             }
             sb.Append(")");
+            if (ReturnType != string.Empty)
+                sb.AppendFormat(" : {0}", ReturnType);
             return sb.ToString();
         }
     }
