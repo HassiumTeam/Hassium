@@ -45,7 +45,7 @@ namespace Hassium.Runtime.Objects.Types
                     throw new InternalException(vm, "Non-convertable type: {0}!", args[0].Type().TypeName);
             }
             foreach (byte b in bytes)
-                result.add(vm, new HassiumChar((char)b));
+                result.add(vm, new HassiumInt((char)b));
 			return result;
 		}
 

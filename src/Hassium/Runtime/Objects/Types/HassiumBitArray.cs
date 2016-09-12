@@ -30,6 +30,7 @@ namespace Hassium.Runtime.Objects.Types
                 bitArray.BitArray = new BitArray((int)args[0].ToInt(vm).Int);
             bitArray.AddAttribute("and",    bitArray.and,       1);
             bitArray.AddAttribute("get",    bitArray.get,       1);
+            bitArray.AddAttribute("length", new HassiumProperty(bitArray.get_length));
             bitArray.AddAttribute("not",    bitArray.not,       0);
             bitArray.AddAttribute("or",     bitArray.or,        1);
             bitArray.AddAttribute("set",    bitArray.set,       2);
@@ -45,6 +46,10 @@ namespace Hassium.Runtime.Objects.Types
         public HassiumBool get(VirtualMachine vm, params HassiumObject[] args)
         {
             return new HassiumBool(BitArray.Get((int)args[0].ToInt(vm).Int));
+        }
+        public HassiumInt get_length(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumInt(BitArray.Length);
         }
         public HassiumBitArray not(VirtualMachine vm, params HassiumObject[] args)
         {
@@ -65,6 +70,14 @@ namespace Hassium.Runtime.Objects.Types
         {
             BitArray.SetAll(args[0].ToBool(vm).Bool);
             return this;
+        }
+
+        public override HassiumObject Iter(VirtualMachine vm, params HassiumObject[] args)
+        {
+            HassiumList result = new HassiumList(new HassiumObject[0]);
+            for (int i = 0; i < BitArray.Length; i++)
+                result.add(vm, new HassiumBool(BitArray.Get(i)));
+            return result;
         }
     }
 }

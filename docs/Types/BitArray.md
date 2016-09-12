@@ -11,6 +11,9 @@ Preforms bitwise and using the elements in the BitArray instance and the specifi
 ### ```func get (index : int) : bool```
 Returns the value of the bit at the specified index.
 
+### ```length { get { return this.length; } }```
+Returns the length of the BitArray.
+
 ### ```func not () : BitArray```
 Preforms bitwise not on each element in the BitArray instance and returns the result.
 
