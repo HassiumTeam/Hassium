@@ -67,7 +67,7 @@ namespace Hassium.Runtime.Objects.Types
         }
         public override HassiumObject Divide(VirtualMachine vm, params HassiumObject[] args)
         {
-            return new HassiumFloat(Int / args[0].ToInt(vm, args).Int);
+            return new HassiumFloat(Int / args[0].ToFloat(vm, args).Float);
         }
         public override HassiumObject EqualTo(VirtualMachine vm, params HassiumObject[] args)
         {
