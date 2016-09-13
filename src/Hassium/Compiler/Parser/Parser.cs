@@ -203,11 +203,13 @@ namespace Hassium.Compiler.Parser
             string name = ExpectToken(TokenType.Identifier).Value;
             List<FuncParameter> parameters = new List<FuncParameter>();
             ExpectToken(TokenType.OpenParentheses);
+            scanCommas = false;
             while (!AcceptToken(TokenType.CloseParentheses))
             {
                 parameters.Add(parseParameter());
                 AcceptToken(TokenType.Comma);
             }
+            scanCommas = true;
             if (AcceptToken(TokenType.Colon))
             {
                 string returnType = ExpectToken(TokenType.Identifier).Value;
@@ -688,7 +690,12 @@ namespace Hassium.Compiler.Parser
         private AstNode parseAccess(AstNode left)
         {
             if (MatchToken(TokenType.OpenParentheses))
-                return parseAccess(new FunctionCallNode(Location, left, parseArgList(), parseFuncInitialList()));
+            {
+                scanCommas = false;
+                AstNode expression = parseAccess(new FunctionCallNode(Location, left, parseArgList(), parseFuncInitialList()));
+                scanCommas = true;
+                return expression;
+            }
             else if (AcceptToken(TokenType.OpenSquare))
             {
                 AstNode expression = parseExpression();
@@ -762,6 +769,7 @@ namespace Hassium.Compiler.Parser
 
         private List<BinaryOperationNode> parseFuncInitialList()
         {
+            scanCommas = false;
             var result = new List<BinaryOperationNode>();
             if (AcceptToken(TokenType.OpenBracket))
             {
@@ -774,6 +782,7 @@ namespace Hassium.Compiler.Parser
                     AcceptToken(TokenType.Comma);
                 }
             }
+            scanCommas = true;
             return result;
         }
 
