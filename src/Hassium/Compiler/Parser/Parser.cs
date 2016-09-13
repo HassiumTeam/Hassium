@@ -260,6 +260,20 @@ namespace Hassium.Compiler.Parser
             }
             return new ListDeclarationNode(Location, initial);
         }
+        private bool scanCommas = true;
+        private MultiAssignmentNode parseMultiAssignment()
+        {
+            List<AstNode> left = new List<AstNode>();
+            scanCommas = false;
+            left.Add(new IdentifierNode(Location, ExpectToken(TokenType.Identifier).Value));
+            while (AcceptToken(TokenType.Comma))
+                left.Add(new IdentifierNode(Location, ExpectToken(TokenType.Identifier).Value));
+            scanCommas = true;
+            ExpectToken(TokenType.Assignment);
+            AstNode value = parseExpression();
+            value.SourceLocation = Location;
+            return new MultiAssignmentNode(left, value);
+        }
         private FuncParameter parseParameter()
         {
             string name = ExpectToken(TokenType.Identifier).Value;
@@ -700,6 +714,8 @@ namespace Hassium.Compiler.Parser
                 return new ThreadNode(Location, AcceptToken(TokenType.Identifier, "do"), parseStatement());
             else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Identifier)
                 return parseEnforcedAssignment();
+            else if (MatchToken(TokenType.Identifier) && Tokens[Position + 1].TokenType == TokenType.Comma && scanCommas)
+                return parseMultiAssignment();
             else if (MatchToken(TokenType.OpenSquare))
                 return parseListDeclaration();
             else if (AcceptToken(TokenType.OpenBracket))

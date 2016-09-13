@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Hassium.Runtime.Objects.Types;
+
 namespace Hassium.Runtime.Objects
 {
 
@@ -21,6 +23,13 @@ namespace Hassium.Runtime.Objects
             AddType(TypeDefinition);
             Target = target;
             ParameterLengths = paramLengths;
+        }
+
+        public HassiumList get_parameterLengths(VirtualMachine vm, params HassiumObject[] args)
+        {
+            HassiumList result = new HassiumList(new HassiumObject[0]);
+
+            return result;
         }
 
         public override HassiumObject Invoke(VirtualMachine vm, params HassiumObject[] args)

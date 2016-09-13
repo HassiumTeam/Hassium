@@ -39,6 +39,7 @@
     <Compile Include="Compiler\Parser\Ast\DoWhileNode.cs" />
     <Compile Include="Compiler\Parser\Ast\GotoNode.cs" />
     <Compile Include="Compiler\Parser\Ast\LabelNode.cs" />
+    <Compile Include="Compiler\Parser\Ast\MultiAssignmentNode.cs" />
     <Compile Include="Compiler\Parser\Ast\UsingNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

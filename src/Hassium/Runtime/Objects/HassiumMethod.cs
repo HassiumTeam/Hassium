@@ -26,12 +26,18 @@ namespace Hassium.Runtime.Objects
         public HassiumMethod()
         {
             AddType(TypeDefinition);
+            AddAttribute("parameterLengths", new HassiumProperty(get_parameterLengths));
 
             BreakLabels = new Stack<int>();
             ContinueLabels = new Stack<int>();
             Instructions = new List<Instruction>();
             Labels = new Dictionary<int, int>();
             Parameters = new Dictionary<FuncParameter, int>();
+        }
+
+        public HassiumList get_parameterLengths(VirtualMachine vm, params HassiumObject[] args)
+        {
+            return new HassiumList(new HassiumObject[] { new HassiumInt(Parameters.Count) });
         }
 
         public void Emit(SourceLocation location, InstructionType instructionType, int argument = 0)

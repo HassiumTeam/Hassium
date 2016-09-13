@@ -488,6 +488,11 @@ namespace Hassium.Compiler.CodeGen
                 val.Visit(this);
             method.Emit(node.SourceLocation, InstructionType.BuildList, node.InitialValues.Count);
         }
+        public void Accept(MultiAssignmentNode node)
+        {
+            foreach (var assign in node.Assignments)
+                assign.Visit(this);
+        }
         public void Accept(PropertyNode node)
         {
             module.Attributes.Add(node.Variable, compileProperty(node, method.Parent));
@@ -775,6 +780,8 @@ namespace Hassium.Compiler.CodeGen
                               Environment.OSVersion.Platform == PlatformID.MacOSX)
                 ? Environment.GetEnvironmentVariable("HOME")
                 : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            if (homePath == null)
+                return string.Empty;
             string homeFilePath = Path.Combine(homePath, path);
             if (File.Exists(homeFilePath))
                 return homeFilePath;

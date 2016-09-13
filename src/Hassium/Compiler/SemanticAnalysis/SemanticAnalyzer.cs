@@ -62,6 +62,7 @@ namespace Hassium.Compiler.SemanticAnalysis
         public void Accept(LambdaNode node) {}
         public void Accept(ListAccessNode node) {}
         public void Accept(ListDeclarationNode node) {}
+        public void Accept(MultiAssignmentNode node) {}
         public void Accept(PropertyNode node) {}
         public void Accept(RaiseNode node) {}
         public void Accept(ReturnNode node) {}
