@@ -36,7 +36,8 @@ namespace Hassium.Compiler.Parser
                 code.Children.Add(parseStatement());
             return code;
         }
-
+        // Statements: break, class, continue, do-while, enum, extend, for, foreach, func, global, goto, if, priv func, raise, return, switch
+        // trait, try catch, until, use, using, while, property.
         private AstNode parseStatement()
         {
             if (AcceptToken(TokenType.Identifier, "break"))
@@ -101,6 +102,7 @@ namespace Hassium.Compiler.Parser
             else
                 return parseExpressionStatement();
         }
+        // (<arg>, <arg>, <arg>, ...)
         private ArgumentListNode parseArgList()
         {
             ExpectToken(TokenType.OpenParentheses);
@@ -112,6 +114,7 @@ namespace Hassium.Compiler.Parser
             }
             return new ArgumentListNode(Location, elements);
         }
+        // class <name> [: <inherit>, <inherit>, <inherit>, ...] <body>
         private ClassNode parseClass()
         {
             ExpectToken(TokenType.Identifier, "class");
@@ -127,6 +130,7 @@ namespace Hassium.Compiler.Parser
 
             return new ClassNode(Location, name, inherits, body);
         }
+        // do <body> while (<expression>)
         private DoWhileNode parseDoWhile()
         {
             ExpectToken(TokenType.Identifier, "do");
@@ -137,6 +141,7 @@ namespace Hassium.Compiler.Parser
             ExpectToken(TokenType.CloseParentheses);
             return new DoWhileNode(Location, body, expression);
         }
+        // <type> <name> = <value>
         private EnforcedAssignmentNode parseEnforcedAssignment()
         {
             string type = ExpectToken(TokenType.Identifier).Value;
@@ -145,6 +150,7 @@ namespace Hassium.Compiler.Parser
             AstNode value = parseExpression();
             return new EnforcedAssignmentNode(Location, type, variable, value);
         }
+        // enum <name> { <name> [= <value>], <name> [= <value>], <name> [= <value>], ... }
         private EnumNode parseEnum()
         {
             ExpectToken(TokenType.Identifier, "enum");
@@ -161,6 +167,7 @@ namespace Hassium.Compiler.Parser
             }
             return node;
         }
+        // extend <class> { <body> }
         private ExtendNode parseExtend()
         {
             ExpectToken(TokenType.Identifier, "extend");
@@ -171,6 +178,7 @@ namespace Hassium.Compiler.Parser
                 node.Children.Add(parseStatement());
             return node;
         }
+        // for (<initialStatement>; <expression>; <repeatStatement>) <body>
         private ForNode parseFor()
         {
             ExpectToken(TokenType.Identifier, "for");
@@ -185,6 +193,7 @@ namespace Hassium.Compiler.Parser
 
             return new ForNode(Location, startStatement, predicate, repeatStatement, body);
         }
+        // foreach (<var> in <iterable>) <body>
         private ForeachNode parseForeach()
         {
             ExpectToken(TokenType.Identifier, "foreach");
@@ -197,6 +206,7 @@ namespace Hassium.Compiler.Parser
 
             return new ForeachNode(Location, variable, target, body);
         }
+        // func <name> (<param> [: <type>], <param> [: <type>], <param> [: <type>], ...) [returnType] <body>
         private FuncNode parseFunc()
         {
             ExpectToken(TokenType.Identifier, "func");
@@ -217,6 +227,7 @@ namespace Hassium.Compiler.Parser
             }
             return new FuncNode(Location, name, parameters, parseStatement(), string.Empty);
         }
+        // global <var> = <value>
         private GlobalNode parseGlobal()
         {
             ExpectToken(TokenType.Identifier, "global");
@@ -225,6 +236,7 @@ namespace Hassium.Compiler.Parser
             AstNode value = parseExpression();
             return new GlobalNode(Location, variable, value);
         }
+        // if (<condition>) <body> [else <elseBody>]
         private IfNode parseIf()
         {
             ExpectToken(TokenType.Identifier, "if");
@@ -236,6 +248,7 @@ namespace Hassium.Compiler.Parser
                 return new IfNode(Location, predicate, body, parseStatement());
             return new IfNode(Location, predicate, body);
         }
+        // <expression> : <value>
         private KeyValuePairNode parseKeyValuePair()
         {
             AstNode key = parseExpression();
@@ -244,6 +257,7 @@ namespace Hassium.Compiler.Parser
             AcceptToken(TokenType.Comma);
             return new KeyValuePairNode(Location, key, value);
         }
+        // lambda (<param>, <param>, <param>, ...) <body>
         private LambdaNode parseLambda()
         {
             ExpectToken(TokenType.Identifier, "lambda");
@@ -251,6 +265,7 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
             return new LambdaNode(Location, parameters, body);
         }
+        // [ <value>, <value>, <value>, ...]
         private ListDeclarationNode parseListDeclaration()
         {
             ExpectToken(TokenType.OpenSquare);
@@ -263,6 +278,7 @@ namespace Hassium.Compiler.Parser
             return new ListDeclarationNode(Location, initial);
         }
         private bool scanCommas = true;
+        // <var>, <var>, <var>, ... = <value>
         private MultiAssignmentNode parseMultiAssignment()
         {
             List<AstNode> left = new List<AstNode>();
@@ -276,6 +292,7 @@ namespace Hassium.Compiler.Parser
             value.SourceLocation = Location;
             return new MultiAssignmentNode(left, value);
         }
+        // <name> [: <type>]
         private FuncParameter parseParameter()
         {
             string name = ExpectToken(TokenType.Identifier).Value;
@@ -285,6 +302,7 @@ namespace Hassium.Compiler.Parser
                 return new FuncParameter(name, ExpectToken(TokenType.Identifier).Value);
             return new FuncParameter(name);
         }
+        // priv [<class>] [<enum>] [<func>] [<property>] [<trait>]
         private AstNode parsePriv()
         {
             ExpectToken(TokenType.Identifier, "priv");
@@ -301,6 +319,7 @@ namespace Hassium.Compiler.Parser
                 ((TraitNode)statement).IsPrivate = true;
             return statement;
         }
+        // <name> { get { <body> } set { <body> } }
         private PropertyNode parseProperty()
         {
             string variable = ExpectToken(TokenType.Identifier).Value;
@@ -312,6 +331,7 @@ namespace Hassium.Compiler.Parser
             ExpectToken(TokenType.CloseBracket);
             return new PropertyNode(Location, variable, getBody, setBody);
         }
+        // use [<module>] [<filePath>]
         private UseNode parseUse()
         {
             ExpectToken(TokenType.Identifier, "use");
@@ -323,6 +343,7 @@ namespace Hassium.Compiler.Parser
                 parts.Add(ExpectToken(TokenType.Identifier).Value);
             return new UseNode(Location, parts);
         }
+        // using (<var> = <value>) <body>
         private UsingNode parseUsing()
         {
             ExpectToken(TokenType.Identifier, "using");
@@ -332,6 +353,7 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
             return new UsingNode(Location, body, expression);
         }
+        // switch <expression> { case [> >= < <= == !=] <value> <body> ... default <body> }
         private SwitchNode parseSwitch()
         {
             ExpectToken(TokenType.Identifier, "switch");
@@ -359,6 +381,7 @@ namespace Hassium.Compiler.Parser
             }
             return new SwitchNode(Location, expression, cases, new StatementNode(Location));
         }
+        // trait <name> { <attribute> : <type>, <attribute> : <type>, <attribute> : <type>, ... }
         private TraitNode parseTrait()
         {
             ExpectToken(TokenType.Identifier, "trait");
@@ -376,6 +399,7 @@ namespace Hassium.Compiler.Parser
 
             return new TraitNode(Location, name, traits);
         }
+        // try <body> catch <body>
         private TryCatchNode parseTryCatch()
         {
             ExpectToken(TokenType.Identifier, "try");
@@ -385,6 +409,8 @@ namespace Hassium.Compiler.Parser
 
             return new TryCatchNode(Location, tryBody, catchBody);
         }
+        // while (<expression>) <body> else <elseBody>
+        // until (<expression>) <body> else <elseBody>
         private WhileNode parseWhile(bool until = false)
         {
             ExpectToken(TokenType.Identifier);
@@ -414,6 +440,8 @@ namespace Hassium.Compiler.Parser
         {
             return parseAssignment();
         }
+        // <var> = <value>, <var> += <value>, <var> -= <value>, <var> *= <value>, <var> /= <value>, <var> %= <value>, <var> <<= <value>
+        // <var> >>= <value>, <var> &= <value>, <var> |= <value>, <var> ^= <value>, <var> <=> <var>
         private AstNode parseAssignment()
         {
             AstNode left = parseTernary();
@@ -463,6 +491,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <expression> ? <trueStatement> : <falseStatement>
         private AstNode parseTernary()
         {
             AstNode left = parseLogicalOr();
@@ -476,6 +505,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <left> || <right>
         private AstNode parseLogicalOr()
         {
             AstNode left = parseLogicalAnd();
@@ -483,6 +513,7 @@ namespace Hassium.Compiler.Parser
                 left = new BinaryOperationNode(Location, BinaryOperation.LogicalOr, left, parseLogicalOr());
             return left;
         }
+        // <left> && <right>
         private AstNode parseLogicalAnd()
         {
             AstNode left = parseEquality();
@@ -490,6 +521,7 @@ namespace Hassium.Compiler.Parser
                 left = new BinaryOperationNode(Location, BinaryOperation.LogicalAnd, left, parseLogicalAnd());
             return left;
         }
+        // <left> == <right>, <left> != <right>
         private AstNode parseEquality()
         {
             AstNode left = parseComparison();
@@ -517,6 +549,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <left> > <right>, <left> >= <right>, <left> < <right>, <left> <= <right>
         private AstNode parseComparison()
         {
             AstNode left = parseOr();
@@ -556,6 +589,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <left> | <right>
         private AstNode parseOr()
         {
             AstNode left = parseXor();
@@ -563,6 +597,7 @@ namespace Hassium.Compiler.Parser
                 left = new BinaryOperationNode(Location, BinaryOperation.BitwiseOr, left, parseOr());
             return left;
         }
+        // <left> ^ <right>
         private AstNode parseXor()
         {
             AstNode left = parseAnd();
@@ -570,6 +605,7 @@ namespace Hassium.Compiler.Parser
                 left = new BinaryOperationNode(Location, BinaryOperation.BitwiseXor, left, parseXor());
             return left;
         }
+        // <left> & <right>
         private AstNode parseAnd()
         {
             AstNode left = parseBitshift();
@@ -577,6 +613,7 @@ namespace Hassium.Compiler.Parser
                 left = new BinaryOperationNode(Location, BinaryOperation.BitwiseAnd, left, parseAnd());
             return left;
         }
+        // <left> << <right>, <left> >> <right>
         private AstNode parseBitshift()
         {
             AstNode left = parseAdditive();
@@ -597,6 +634,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <left> + <right>, <left> - <right>
         private AstNode parseAdditive()
         {
             AstNode left = parseMultiplicative();
@@ -617,6 +655,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // <left> * <right>, <left> / <right>, <left> % <right>, <left> ** <right>, <left> // <right>, <left> ?? <right>, <left> is <right>
         private AstNode parseMultiplicative()
         {
             AstNode left = parseUnary();
@@ -652,6 +691,7 @@ namespace Hassium.Compiler.Parser
             }
             return left;
         }
+        // ~<target>, *<target>, !<target>, -<target>, --<target>, ++<target>, &<target>
         private AstNode parseUnary()
         {
             if (MatchToken(TokenType.Operation))
@@ -687,6 +727,8 @@ namespace Hassium.Compiler.Parser
         {
             return parseAccess(parseTerm());
         }
+        // <target> (<param>, <param>, <param>, ...) [ { <attrib> = <value>, <attrib> = <value, <attrib> = <value>, ... } ]
+        // <target>--, <target>++, <target>.<attrib>.<attrib>.<attrib>...
         private AstNode parseAccess(AstNode left)
         {
             if (MatchToken(TokenType.OpenParentheses))
@@ -711,6 +753,7 @@ namespace Hassium.Compiler.Parser
             else
                 return left;
         }
+        // new <expression>, thread [do] <statement>, { <key> : <value>, <key> : <value>, <key> : <value>, ... }, ( <value>, <value>, <value>, ...)
         private AstNode parseTerm()
         {
             if (AcceptToken(TokenType.Identifier, "new"))
@@ -766,7 +809,7 @@ namespace Hassium.Compiler.Parser
             else
                 throw new CompileException(Location, "Unexpected token type {0} with value {1}!", Tokens[Position].TokenType, Tokens[Position].Value);
         }
-
+        // { <attrib> = <value>, <attrib> = <value>, <attrib> = <value>, ... }
         private List<BinaryOperationNode> parseFuncInitialList()
         {
             scanCommas = false;
