@@ -235,10 +235,14 @@ namespace Hassium.Compiler.CodeGen
         public void Accept(DoWhileNode node)
         {
             var doLabel = nextLabel();
+            var endLabel = nextLabel();
+            method.ContinueLabels.Push(doLabel);
+            method.BreakLabels.Push(endLabel);
             method.EmitLabel(node.SourceLocation, doLabel);
             node.Body.Visit(this);
             node.Expression.Visit(this);
             method.Emit(node.SourceLocation, InstructionType.JumpIfTrue, doLabel);
+            method.EmitLabel(node.SourceLocation, endLabel);
         }
         public void Accept(EnforcedAssignmentNode node)
         {
@@ -285,7 +289,7 @@ namespace Hassium.Compiler.CodeGen
             var startLabel = nextLabel();
             var endLabel = nextLabel();
             method.ContinueLabels.Push(startLabel);
-            method.ContinueLabels.Push(endLabel);
+            method.BreakLabels.Push(endLabel);
 
             node.StartStatement.Visit(this);
             method.EmitLabel(node.SourceLocation, startLabel);
