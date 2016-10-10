@@ -709,10 +709,14 @@ namespace Hassium.Compiler.CodeGen
             if (path.EndsWith(".dll"))
             {
                 importModules(path);
+		module.Imports.Add(path);
                 return;
             }
             else if (path != string.Empty)
+            {
                 mod = CompileModuleFromSource(File.ReadAllText(path));
+                module.Imports.Add(path);
+            }
             else if (InternalModule.InternalModules.ContainsKey(name))
             {
                 mod = InternalModule.InternalModules[name];

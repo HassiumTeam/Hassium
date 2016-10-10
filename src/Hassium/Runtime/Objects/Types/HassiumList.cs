@@ -45,7 +45,13 @@ namespace Hassium.Runtime.Objects.Types
         }
         public HassiumBool contains(VirtualMachine vm, params HassiumObject[] args)
         {
-            return new HassiumBool(List.Contains(args[0]));
+            if (List.Contains(args[0]))
+                return new HassiumBool(true);
+            string str = args[0].ToString(vm).String;
+            foreach (HassiumObject obj in List)
+                if (obj.ToString(vm).String == str)
+                    return new HassiumBool(true);
+            return new HassiumBool(false);
         }
         public HassiumList fill(VirtualMachine vm, params HassiumObject[] args)
         {

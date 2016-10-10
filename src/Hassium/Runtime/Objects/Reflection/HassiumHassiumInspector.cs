@@ -32,9 +32,9 @@ namespace Hassium.Runtime.Objects.Reflection
         {
             HassiumHassiumInspector hassiumInspector = new HassiumHassiumInspector();
             hassiumInspector.HassiumObject = args[0];
-            hassiumInspector.AddAttribute("getObjectsByType",   getObjectsByType,   1);
-            hassiumInspector.AddAttribute("getImports",         getImports,         0);
-            hassiumInspector.AddAttribute("getParent",          getParent,          0);
+            hassiumInspector.AddAttribute("getObjectsByType",   hassiumInspector.getObjectsByType,   1);
+            hassiumInspector.AddAttribute("getImports",         hassiumInspector.getImports,         0);
+            hassiumInspector.AddAttribute("getParent",          hassiumInspector.getParent,          0);
 
             return hassiumInspector;
         }
