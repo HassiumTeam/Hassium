@@ -6,7 +6,9 @@ func main () {
 # static class for sorting lists alphabetically.
 class ListSorter {
     # sorts a list alphabetically.
-    func sort (l : list) : list {
+    func sort (li : list) : list {
+	list l = [];
+	foreach (e in li) l.add (e);
         for (int i = 0; i < l.length; i++) {
             for (int j = i + 1; j < l.length; j++) {
                 if (this.compareString (l [i], l [j]) > 0) {
