@@ -10,20 +10,20 @@ namespace Hassium.Runtime.Objects.Types
 
         public HassiumEvent()
         {
-            AddAttribute(HassiumObject.INVOKE, new_, 0, 1);
+            //AddAttribute(HassiumObject.INVOKE, new_, 0, 1);
         }
 
         public HassiumEvent new_(VirtualMachine vm, params HassiumObject[] args)
         {
             var hassiumEvent = new HassiumEvent();
 
-            hassiumEvent.AddType(TypeDefinition);
+            /*hassiumEvent.AddType(TypeDefinition);
             hassiumEvent.Handlers = args.Length == 0 ? new HassiumList(new HassiumObject[0]) : args[0] as HassiumList;
             hassiumEvent.AddAttribute("add",    hassiumEvent.add);
             hassiumEvent.AddAttribute("clear",  hassiumEvent.clear);
             hassiumEvent.AddAttribute("fire",   hassiumEvent.fire);
             hassiumEvent.AddAttribute("remove", hassiumEvent.remove);
-
+*/
             return hassiumEvent;
         }
         public HassiumObject add(VirtualMachine vm, params HassiumObject[] args)

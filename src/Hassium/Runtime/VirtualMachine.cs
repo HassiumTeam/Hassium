@@ -313,6 +313,7 @@ namespace Hassium.Runtime
                 }
                 catch (Exception ex)
                 {
+                    throw ex;
                     RaiseException(new HassiumString(ex.Message), method, ref pos);
                 }
             }
