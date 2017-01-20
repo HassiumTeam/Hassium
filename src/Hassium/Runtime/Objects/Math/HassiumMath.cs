@@ -17,6 +17,7 @@ namespace Hassium.Runtime.Objects.Math
             AddAttribute("acos",    acos,   1);
             AddAttribute("asin",    asin,   1);
             AddAttribute("atan",    atan,   1);
+            AddAttribute("atan2",   atan2,  2);
             AddAttribute("ceil",    ceil,   1);
             AddAttribute("cos",     cos,    1);
             AddAttribute("e", new HassiumProperty(get_e));
@@ -66,6 +67,10 @@ namespace Hassium.Runtime.Objects.Math
             else if (args[0] is HassiumFloat)
                 return new HassiumFloat(System.Math.Atan(args[0].ToFloat(vm).Float));
             return HassiumObject.Null;
+        }
+        private HassiumFloat atan2(VirtualMachine vm, HassiumObject[] args)
+        {
+            return new HassiumFloat(System.Math.Atan2(args[0].ToFloat(vm).Float,args[1].ToFloat(vm).Float));
         }
         private HassiumObject ceil(VirtualMachine vm, HassiumObject[] args)
         {
