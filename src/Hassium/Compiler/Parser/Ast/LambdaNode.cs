@@ -2,16 +2,19 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class LambdaNode: AstNode
+    public class LambdaNode : AstNode
     {
-        public ArgumentListNode Parameters { get { return (ArgumentListNode)Children[0]; } }
-        public AstNode Body { get { return Children[1]; } }
+        public override SourceLocation SourceLocation { get; }
+
+        public ArgumentListNode Parameters { get; private set; }
+        public AstNode Body { get; private set; }
 
         public LambdaNode(SourceLocation location, ArgumentListNode parameters, AstNode body)
         {
-            this.SourceLocation = location;
-            Children.Add(parameters);
-            Children.Add(body);
+            SourceLocation = location;
+
+            Parameters = parameters;
+            Body = body;
         }
 
         public override void Visit(IVisitor visitor)
@@ -20,9 +23,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Parameters.Visit(visitor);
+            Body.Visit(visitor);
         }
     }
 }
-

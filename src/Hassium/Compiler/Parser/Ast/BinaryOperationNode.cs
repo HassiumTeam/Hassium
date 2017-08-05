@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class BinaryOperationNode: AstNode
+    public class BinaryOperationNode : AstNode
     {
+        public override SourceLocation SourceLocation { get; }
+
         public BinaryOperation BinaryOperation { get; private set; }
-        public AstNode Left { get { return Children[0]; } }
-        public AstNode Right { get { return Children[1]; } }
+
+        public AstNode Left { get; private set; }
+        public AstNode Right { get; private set; }
 
         public BinaryOperationNode(SourceLocation location, BinaryOperation operation, AstNode left, AstNode right)
         {
-            this.SourceLocation = location;
+            SourceLocation = location;
+
             BinaryOperation = operation;
-            Children.Add(left);
-            Children.Add(right);
+
+            Left = left;
+            Right = right;
         }
 
         public override void Visit(IVisitor visitor)
@@ -22,8 +30,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Left.Visit(visitor);
+            Right.Visit(visitor);
         }
     }
 
@@ -42,17 +50,16 @@ namespace Hassium.Compiler.Parser.Ast
         GreaterThanOrEqual,
         IntegerDivision,
         Is,
-        LogicalAnd,
-        LogicalOr,
         LesserThan,
         LesserThanOrEqual,
+        LogicalAnd,
+        LogicalOr,
         Modulus,
         Multiplication,
         NotEqualTo,
         NullCoalescing,
         Power,
-        Subraction,
+        Subtraction,
         Swap
     }
 }
-

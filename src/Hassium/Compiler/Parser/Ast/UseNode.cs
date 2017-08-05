@@ -1,26 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class UseNode: AstNode
+    public class UseNode : AstNode
     {
-        public List<string> Parts { get; private set; }
+        public override SourceLocation SourceLocation { get; }
 
-        public UseNode(SourceLocation location, List<string> parts)
+        public string Class { get; private set; }
+        public string Module { get; private set; }
+        
+        public UseNode(SourceLocation location, string clazz, string module)
         {
-            this.SourceLocation = location;
-            Parts = parts;
-        }
+            SourceLocation = location;
 
-        public string GetName()
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < Parts.Count - 1; i++)
-                sb.AppendFormat("{0}/", Parts[i]);
-            sb.Append(Parts[Parts.Count - 1]);
-            return sb.ToString();
+            Class = clazz;
+            Module = module;
         }
 
         public override void Visit(IVisitor visitor)
@@ -29,9 +21,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+
         }
     }
 }
-

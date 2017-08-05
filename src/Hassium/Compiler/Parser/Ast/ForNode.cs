@@ -1,21 +1,24 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class ForNode: AstNode
+    public class ForNode : AstNode
     {
-        public AstNode StartStatement { get { return Children[0]; } }
-        public AstNode Predicate { get { return Children[1]; } }
-        public AstNode RepeatStatement { get { return Children[2]; } }
-        public AstNode Body { get { return Children[3]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public ForNode(SourceLocation location, AstNode startStatement, AstNode predicate, AstNode repeatStatement, AstNode body)
+        public AstNode InitialStatement { get; private set; }
+        public AstNode Condition { get; private set; }
+        public AstNode RepeatStatement { get; private set; }
+
+        public AstNode Body { get; private set; }
+
+        public ForNode(SourceLocation location, AstNode initialStatement, AstNode condition, AstNode repeatStatement, AstNode body)
         {
-            this.SourceLocation = location;
-            Children.Add(startStatement);
-            Children.Add(predicate);
-            Children.Add(repeatStatement);
-            Children.Add(body);
+            SourceLocation = location;
+
+            InitialStatement = initialStatement;
+            Condition = condition;
+            RepeatStatement = repeatStatement;
+
+            Body = body;
         }
 
         public override void Visit(IVisitor visitor)
@@ -24,9 +27,11 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            InitialStatement.Visit(visitor);
+            Condition.Visit(visitor);
+            RepeatStatement.Visit(visitor);
+
+            Body.Visit(visitor);
         }
     }
 }
-

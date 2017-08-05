@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class EnumNode: AstNode
+    public class EnumNode : AstNode
     {
+        public override SourceLocation SourceLocation { get; } 
+
+        public Dictionary<int, string> Attributes { get; private set; }
         public string Name { get; private set; }
-        public bool IsPrivate { get; set; }
 
         public EnumNode(SourceLocation location, string name)
         {
-            this.SourceLocation = location;
+            SourceLocation = location;
+
+            Attributes = new Dictionary<int, string>();
             Name = name;
-            IsPrivate = false;
         }
 
         public override void Visit(IVisitor visitor)
@@ -20,9 +24,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            
         }
     }
 }
-

@@ -1,17 +1,18 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class TryCatchNode: AstNode
+    public class TryCatchNode : AstNode
     {
-        public AstNode TryBody { get { return Children[0]; } }
-        public AstNode CatchBody { get { return Children[1]; } }
+        public override SourceLocation SourceLocation { get; }
+
+        public AstNode TryBody { get; private set; }
+        public AstNode CatchBody { get; private set; }
 
         public TryCatchNode(SourceLocation location, AstNode tryBody, AstNode catchBody)
         {
-            this.SourceLocation = location;
-            Children.Add(tryBody);
-            Children.Add(catchBody);
+            SourceLocation = location;
+
+            TryBody = tryBody;
+            CatchBody = catchBody;
         }
 
         public override void Visit(IVisitor visitor)
@@ -20,9 +21,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            TryBody.Visit(visitor);
+            CatchBody.Visit(visitor);
         }
     }
 }
-

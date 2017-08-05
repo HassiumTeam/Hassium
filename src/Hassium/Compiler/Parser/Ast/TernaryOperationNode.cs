@@ -2,18 +2,21 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class TernaryOperationNode: AstNode
+    public class TernaryOperationNode : AstNode
     {
-        public AstNode Predicate { get { return Children[0]; } }
-        public AstNode TrueStatement { get { return Children[1]; } }
-        public AstNode FalseStatement { get { return Children[2]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public TernaryOperationNode(SourceLocation location, AstNode predicate, AstNode trueStatement, AstNode falseStatement)
+        public AstNode Condition { get; private set; }
+        public AstNode TrueExpression { get; private set; }
+        public AstNode FalseExpression { get; private set; }
+
+        public TernaryOperationNode(SourceLocation location, AstNode condition, AstNode trueExpression, AstNode falseExpression)
         {
-            this.SourceLocation = location;
-            Children.Add(predicate);
-            Children.Add(trueStatement);
-            Children.Add(falseStatement);
+            SourceLocation = location;
+
+            Condition = condition;
+            TrueExpression = trueExpression;
+            FalseExpression = falseExpression;
         }
 
         public override void Visit(IVisitor visitor)
@@ -22,9 +25,9 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Condition.Visit(visitor);
+            TrueExpression.Visit(visitor);
+            FalseExpression.Visit(visitor);
         }
     }
 }
-

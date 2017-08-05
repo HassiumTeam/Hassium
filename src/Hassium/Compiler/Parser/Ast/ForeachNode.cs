@@ -1,19 +1,22 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class ForeachNode: AstNode
+    public class ForeachNode : AstNode
     {
-        public string Variable { get; private set; }
-        public AstNode Target { get { return Children[0]; } }
-        public AstNode Body { get { return Children[1]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public ForeachNode(SourceLocation location, string variable, AstNode target, AstNode body)
+        public string Variable { get; private set; }
+
+        public AstNode Expression { get; private set; }
+        public AstNode Body { get; private set; }
+
+        public ForeachNode(SourceLocation location, string variable, AstNode expression, AstNode body)
         {
-            this.SourceLocation = location;
+            SourceLocation = location;
+
             Variable = variable;
-            Children.Add(target);
-            Children.Add(body);
+
+            Expression = expression;
+            Body = body;
         }
 
         public override void Visit(IVisitor visitor)
@@ -22,9 +25,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Expression.Visit(visitor);
         }
     }
 }
-

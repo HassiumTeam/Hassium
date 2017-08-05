@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class DoWhileNode: AstNode
+    public class DoWhileNode : AstNode
     {
-        public AstNode Body {  get { return Children[0]; } }
-        public AstNode Expression {  get { return Children[1]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public DoWhileNode(SourceLocation location, AstNode body, AstNode expression)
+        public AstNode Condition { get; private set; }
+        public AstNode Body { get; private set; }
+
+        public DoWhileNode(SourceLocation location, AstNode condition, AstNode body)
         {
-            this.SourceLocation = location;
-            Children.Add(body);
-            Children.Add(expression);
+            SourceLocation = location;
+
+            Condition = condition;
+            Body = body;
         }
 
         public override void Visit(IVisitor visitor)
@@ -20,8 +26,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Condition.Visit(visitor);
+            Body.Visit(visitor);
         }
     }
 }

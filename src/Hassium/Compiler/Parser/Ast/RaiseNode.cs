@@ -1,15 +1,16 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class RaiseNode: AstNode
+    public class RaiseNode : AstNode
     {
-        public AstNode Expression { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public RaiseNode(SourceLocation location, AstNode expression)
+        public AstNode Exception { get; private set; }
+
+        public RaiseNode(SourceLocation location, AstNode exception)
         {
-            this.SourceLocation = location;
-            Children.Add(expression);
+            SourceLocation = location;
+
+            Exception = exception;
         }
 
         public override void Visit(IVisitor visitor)
@@ -18,9 +19,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Exception.Visit(visitor);
         }
     }
 }
-

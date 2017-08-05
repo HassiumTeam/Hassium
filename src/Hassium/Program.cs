@@ -1,31 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 
-using Hassium.Compiler;
-using Hassium.Compiler.CodeGen;
-using Hassium.HassiumBuilder;
+using Hassium.Compiler.Emit;
+using Hassium.Compiler.Exceptions;
 using Hassium.Runtime;
+using Hassium.Runtime.Types;
 
 namespace Hassium
 {
-    class MainClass
+    public class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            /*
             try
             {
-            ModuleBuilder module = new ModuleBuilder();
-            var method = module.AddMethod("main", new List<Hassium.Compiler.Parser.Ast.FuncParameter>());
-            method.AddAstNode(ExpressionBuilder.CreateFunctionCall("println", "\"Hello, World!\""));
-            new VirtualMachine().Execute(module.Build(), new string[0]);
+                VirtualMachine vm = new VirtualMachine();
+                var module = HassiumCompiler.CompileModuleFromFilePath(args[0]);
+                HassiumList hargs = new HassiumList(new HassiumObject[0]);
+                foreach (var arg in args)
+                    hargs.add(vm, null, new HassiumString(arg));
+
+                vm.Execute(module, hargs);
             }
-            catch (CompileException ex)
+            catch (CompilerException ex)
             {
-                Console.WriteLine(ex.SourceLocation);
                 Console.WriteLine(ex.Message);
-            }*/
-            HassiumArgumentConfig.ExecuteConfig(new HassiumArgumentParser().Parse(args));
+                Console.WriteLine(ex);
+            }
+            catch (ParserException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
+            }
         }
     }
 }

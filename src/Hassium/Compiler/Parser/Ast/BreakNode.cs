@@ -2,11 +2,13 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class BreakNode: AstNode
+    public class BreakNode : AstNode
     {
+        public override SourceLocation SourceLocation { get; }
+
         public BreakNode(SourceLocation location)
         {
-            this.SourceLocation = location;
+            SourceLocation = location;
         }
 
         public override void Visit(IVisitor visitor)
@@ -15,9 +17,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+
         }
     }
 }
-

@@ -2,16 +2,22 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class UnaryOperationNode: AstNode
+    public class UnaryOperationNode : AstNode
     {
-        public UnaryOperation UnaryOperation { get; private set; }
-        public AstNode Target { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public UnaryOperationNode(SourceLocation location, AstNode target, UnaryOperation unaryOperation)
+        public AstNode Target { get; private set; }
+
+        public UnaryOperation UnaryOperation { get; private set; }
+
+
+        public UnaryOperationNode(SourceLocation location, AstNode target, UnaryOperation operation)
         {
-            this.SourceLocation = location;
-            Children.Add(target);
-            UnaryOperation = unaryOperation;
+            SourceLocation = location;
+
+            Target = target;
+
+            UnaryOperation = operation;
         }
 
         public override void Visit(IVisitor visitor)
@@ -20,22 +26,18 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode node in Children)
-                node.Visit(visitor);
+            Target.Visit(visitor);
         }
     }
 
     public enum UnaryOperation
     {
-        Dereference,
-        LogicalNot,
         BitwiseNot,
+        LogicalNot,
+        Negate,
         PostDecrement,
         PostIncrement,
         PreDecrement,
-        PreIncrement,
-        Reference,
-        Negate
+        PreIncrement
     }
 }
-

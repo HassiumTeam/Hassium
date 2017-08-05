@@ -2,13 +2,17 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class CharNode: AstNode
+    public class CharNode : AstNode
     {
+        public override SourceLocation SourceLocation { get; }
+
         public char Char { get; private set; }
-        public CharNode(SourceLocation location, char c)
+
+        public CharNode(SourceLocation location, string c)
         {
-            this.SourceLocation = location;
-            Char = c;
+            SourceLocation = location;
+
+            Char = Convert.ToChar(c);
         }
 
         public override void Visit(IVisitor visitor)
@@ -17,9 +21,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+
         }
     }
 }
-

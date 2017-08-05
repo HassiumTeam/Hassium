@@ -2,24 +2,32 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class IfNode: AstNode
+    public class IfNode : AstNode
     {
-        public AstNode Predicate { get { return Children[0]; } }
-        public AstNode Body { get { return Children[1]; } }
-        public AstNode ElseBody { get { return Children[2]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public IfNode(SourceLocation location, AstNode predicate, AstNode body)
+        public AstNode Condition { get; private set; }
+        
+        public AstNode IfBody { get; private set; }
+        public AstNode ElseBody { get; private set; }
+
+        public IfNode(SourceLocation location, AstNode condition, AstNode ifBody)
         {
-            this.SourceLocation = location;
-            Children.Add(predicate);
-            Children.Add(body);
+            SourceLocation = location;
+
+            Condition = condition;
+
+            IfBody = ifBody;
+            ElseBody = new CodeBlockNode(ifBody.SourceLocation);
         }
-        public IfNode(SourceLocation location, AstNode predicate, AstNode body, AstNode elseBody)
+        public IfNode(SourceLocation location, AstNode condition, AstNode ifBody, AstNode elseBody)
         {
-            this.SourceLocation = location;
-            Children.Add(predicate);
-            Children.Add(body);
-            Children.Add(elseBody);
+            SourceLocation = location;
+
+            Condition = condition;
+
+            IfBody = ifBody;
+            ElseBody = elseBody;
         }
 
         public override void Visit(IVisitor visitor)
@@ -28,9 +36,10 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Condition.Visit(visitor);
+
+            IfBody.Visit(visitor);
+            ElseBody.Visit(visitor);
         }
     }
 }
-

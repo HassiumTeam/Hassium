@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class FunctionCallNode: AstNode
+    public class FunctionCallNode : AstNode
     {
-        public AstNode Target { get { return Children[0]; } }
-        public ArgumentListNode Parameters { get { return (ArgumentListNode)Children[1]; } }
-        public List<BinaryOperationNode> InitialAttributes { get; private set; }
+        public override SourceLocation SourceLocation { get; }
 
-        public FunctionCallNode(SourceLocation location, AstNode target, ArgumentListNode parameters, List<BinaryOperationNode> initialAttributes)
+        public Dictionary<string, AstNode> InitialAttributes { get; private set; }
+        public AstNode Target { get; private set; }
+        public ArgumentListNode Parameters { get; private set; }
+
+        public FunctionCallNode(SourceLocation location, AstNode target, ArgumentListNode parameters, Dictionary<string, AstNode> initialAttributes)
         {
-            this.SourceLocation = location;
-            Children.Add(target);
-            Children.Add(parameters);
+            SourceLocation = location;
+
             InitialAttributes = initialAttributes;
+            Target = target;
+            Parameters = parameters;
         }
 
         public override void Visit(IVisitor visitor)
@@ -23,9 +25,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode node in Children)
-                node.Visit(visitor);
+            Target.Visit(visitor);
+            Parameters.Visit(visitor);
         }
     }
 }
-

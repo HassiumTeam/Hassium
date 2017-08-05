@@ -1,71 +1,77 @@
-use Math;
-use Util;
+use Math from Math;
 
-passed = 0;
-failed = 0;
+class data { }
 
 func main () {
-	assertEq (9 > 2, true, "greater than, true");
-	assertEq (2 > 9, false, "greater than, false");
-	assertEq (9 >= 2, true, "greater than or equal, true, different");
-	assertEq (2 >= 9, false, "greater tham or equal, false, different");
-	assertEq (9 >= 9, true, "greater than or equal, true, same");
-	assertEq (2 < 9, true, "lesser than, true");
-	assertEq (9 < 2, false, "lesser than, false");
-	assertEq (2 <= 9, true, "lesser than or equal, true, different");
-	assertEq (9 <= 2, false, "lesser than or equal, false, different");
-	assertEq (2 <= 2, true, "lesser than or equal, true, same");
-	assertEq (2 == 2, true, "equal to, true, same");
-	assertEq (2 == 3, false, "equal to, false, different");
-	assertEq (2 != 3, true, "not equal to, true, different");
-	assertEq (2 != 2, false, "not equal to, false, same");
+	data.passed = 0;
+	data.failed = 0;
+	asserteq (9 > 2, true, "greater than, true");
+	asserteq (2 > 9, false, "greater than, false");
+	asserteq (9 >= 2, true, "greater than or equal, true, different");
+	asserteq (2 >= 9, false, "greater tham or equal, false, different");
+	asserteq (9 >= 9, true, "greater than or equal, true, same");
+	asserteq (2 < 9, true, "lesser than, true");
+	asserteq (9 < 2, false, "lesser than, false");
+	asserteq (2 <= 9, true, "lesser than or equal, true, different");
+	asserteq (9 <= 2, false, "lesser than or equal, false, different");
+	asserteq (2 <= 2, true, "lesser than or equal, true, same");
+	asserteq (2 == 2, true, "equal to, true, same");
+	asserteq (2 == 3, false, "equal to, false, different");
+	asserteq (2 != 3, true, "not equal to, true, different");
+	asserteq (2 != 2, false, "not equal to, false, same");
 
-	assertEq (2 + 3, 5, "addition");
-	assertEq (4 - 2, 2, "subtraction");
-	assertEq (5 * 7, 35, "multiplication");
-	assertEq (26 / 2, 13, "division");
-	assertEq (67 % 13, 2, "modulus");
+	asserteq (2 + 3, 5, "addition");
+	asserteq (4 - 2, 2, "subtraction");
+	asserteq (5 * 7, 35, "multiplication");
+	asserteq (26 / 2, 13, "division");
+	asserteq (67 % 13, 2, "modulus");
 
-	assertEq ("string", "string", "string equals itself");
-	assertEq (5, 5, "int equals itself");
-	assertEq ('f', 'f', "char equals itself");
-	assertEq (5.5, 5.5, "double equals itself");
-	assertEq (true, true, "bool equals itself");
-	assertEq ([1, 2, 3], [3, 2, 1].reverse (), "list equals itself");
+	asserteq ("string", "string", "string equals itself");
+	asserteq (5, 5, "int equals itself");
+	asserteq ('f', 'f', "char equals itself");
+	asserteq (5.5, 5.5, "double equals itself");
+	asserteq (true, true, "bool equals itself");
+	asserteq ([1, 2, 3], [3, 2, 1].reverse (), "list equals itself");
 
 	l = [ 1, 2, 5 ];
-	assertEq (l[1], 2, "list indexing");
-	assertEq (l.length, 3, "list length");
-	assertEq (add (4, 5), 9, "multifunc with 2 arguments");
-	assertEq (add (4, 5, 6), 15, "multifunc with 3 arguments");
+	asserteq (l[1], 2, "list indexing");
+	asserteq (l.length, 3, "list length");
+	asserteq (add (4, 5), 9, "multifunc with 2 arguments");
+	asserteq (add (4, 5, 6), 15, "multifunc with 3 arguments");
 	dict = { "US" : "America", "DE" : "Germany" };
-	assertEq (dict ["US"], "America", "dictionary indexing");
+	asserteq (dict ["US"], "America", "dictionary indexing");
 	dict ["RO"] = "Romania";
-	assertEq (dict ["RO"], "Romania", "dictionary adding");
-	assertEq (dict is object, true, "everything is object");
-	assertEq (dict is dictionary, true, "dict is a dictionary");
-	assertEq (dict is list, false, "dict is not a list");
+	asserteq (dict ["RO"], "Romania", "dictionary adding");
+	asserteq (dict is object, true, "everything is object");
+	asserteq (dict is dictionary, true, "dict is a dictionary");
+	asserteq (dict is list, false, "dict is not a list");
 
 	c = new InheritingClass ();
-	assertEq (c.firstMethod (), 1, "Inherited func was overridden");
-	assertEq (c.secondMethod (), 2, "func returns correctly");
-	assertEq (map ([1, 2, 3], lambda (i) { return i + 1; }), [ 2, 3, 4], "map works correctly");
+	asserteq (c.firstmethod (), 1, "Inherited func was overridden");
+	asserteq (c.secondmethod (), 2, "func returns correctly");
 
-	displayResults ();
+	try {
+		a = 0 / 0;
+		asserteq (1, 2, "try failed!");
+	} catch {
+		asserteq (0, 0, "caught exception");
+	}
+
+	displayresults ();
 }
 
 class InheritedClass {
 	func new () {}
-	func firstMethod () {
+	func firstmethod () {
 		return 0;
 	}
 }
 class InheritingClass {
 	func new () {}
-	func firstMethod () {
+	func firstmethod () {
 		return 1;
 	}
-	func secondMethod () {
+	func secondmethod () {
 		return 2;
 	}
 }
@@ -77,14 +83,18 @@ func add (x, y, z) {
 	return x + y + z;
 }
 
-func assertEq (left, right, type) {
+func asserteq (left, right, type) {
 	if (left == right) {
-		println (format ("Passed {0}, test number {1}", type, (failed + passed++)));
+		println ("Passed {0}".format (type));
+		data.passed = data.passed + 1;
 	} else {
-		println (format ("Failed {0}, test number {1}", type, (passed + failed++)));
+		println ("Failed {0}".format (type));
+		data.failed = data.failed + 1;
 	}
 }
 
-func displayResults () {
-	println (format ("You passed {0} tests and failed {1} tests!", passed, failed));
+func displayresults () {
+	println (data.passed);
+	println (data.failed);
+
 }

@@ -1,25 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class WhileNode: AstNode
+    public class WhileNode : AstNode
     {
-        public AstNode Predicate { get { return Children[0]; } }
-        public AstNode Body { get { return Children[1]; } }
-        public AstNode ElseBody { get { return Children[2]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public WhileNode(SourceLocation location, AstNode predicate, AstNode body)
+        public AstNode Condition { get; private set; }
+        public AstNode Body { get; private set; }
+
+        public WhileNode(SourceLocation location, AstNode condition, AstNode body)
         {
-            this.SourceLocation = location;
-            Children.Add(predicate);
-            Children.Add(body);
-        }
-        public WhileNode(SourceLocation location, AstNode predicate, AstNode body, AstNode elseBody)
-        {
-            this.SourceLocation = location;
-            Children.Add(predicate);
-            Children.Add(body);
-            Children.Add(elseBody);
+            SourceLocation = location;
+
+            Condition = condition;
+            Body = body;
         }
 
         public override void Visit(IVisitor visitor)
@@ -28,9 +26,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Condition.Visit(visitor);
+            Body.Visit(visitor);
         }
     }
 }
-

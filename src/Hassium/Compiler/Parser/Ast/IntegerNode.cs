@@ -2,12 +2,17 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class IntegerNode: AstNode
+    public class IntegerNode : AstNode
     {
-        public long Number { get; private set; }
-        public IntegerNode(SourceLocation location, long num)
+        public override SourceLocation SourceLocation { get; }
+
+        public long Integer { get; private set; }
+
+        public IntegerNode(SourceLocation location, string i)
         {
-            Number = num;
+            SourceLocation = location;
+
+            Integer = Convert.ToInt64(i);
         }
 
         public override void Visit(IVisitor visitor)
@@ -16,9 +21,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+
         }
     }
 }
-

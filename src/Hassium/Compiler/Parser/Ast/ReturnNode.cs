@@ -1,14 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class ReturnNode: AstNode
+    public class ReturnNode : AstNode
     {
-        public AstNode Value { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
+
+        public AstNode Value { get; private set; }
 
         public ReturnNode(SourceLocation location, AstNode value)
         {
-            Children.Add(value);
+            SourceLocation = location;
+
+            Value = value;
         }
 
         public override void Visit(IVisitor visitor)
@@ -17,9 +24,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Value.Visit(visitor);
         }
     }
 }
-

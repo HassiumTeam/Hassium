@@ -1,28 +1,28 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class ThreadNode: AstNode
+    public class ThreadNode : AstNode
     {
-        public bool RunImmediately { get; private set; }
-        public AstNode Body { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public ThreadNode(SourceLocation location, bool runImmediately, AstNode body)
+        public AstNode Body { get; private set; }
+        public bool DoImmediately { get; private set; }
+
+        public ThreadNode(SourceLocation location, AstNode body, bool doImmedaitely = false)
         {
-            this.SourceLocation = location;
-            RunImmediately = runImmediately;
-            Children.Add(body);
+            SourceLocation = location;
+
+            Body = body;
+            DoImmediately = doImmedaitely;
         }
 
         public override void Visit(IVisitor visitor)
         {
             visitor.Accept(this);
         }
+
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Body.Visit(visitor);
         }
     }
 }
-

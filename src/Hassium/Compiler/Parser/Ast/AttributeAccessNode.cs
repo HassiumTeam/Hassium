@@ -1,16 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class AttributeAccessNode: AstNode
+    public class AttributeAccessNode : AstNode
     {
-        public AstNode Left { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
+
+        public AstNode Left { get; private set; }
         public string Right { get; private set; }
 
         public AttributeAccessNode(SourceLocation location, AstNode left, string right)
         {
-            this.SourceLocation = location;
-            Children.Add(left);
+            SourceLocation = location;
+
+            Left = left;
             Right = right;
         }
 
@@ -20,9 +26,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode node in Children)
-                node.Visit(visitor);
+            Left.Visit(visitor);
         }
     }
 }
-

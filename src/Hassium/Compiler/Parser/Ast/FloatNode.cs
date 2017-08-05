@@ -2,13 +2,17 @@
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class FloatNode: AstNode
+    public class FloatNode : AstNode
     {
-        public double Number { get; private set; }
-        public FloatNode(SourceLocation location, double number)
+        public override SourceLocation SourceLocation { get; }
+
+        public double Float { get; private set; }
+
+        public FloatNode(SourceLocation location, string f)
         {
-            this.SourceLocation = location;
-            Number = number;
+            SourceLocation = location;
+
+            Float = Convert.ToDouble(f);
         }
 
         public override void Visit(IVisitor visitor)
@@ -17,9 +21,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+
         }
     }
 }
-

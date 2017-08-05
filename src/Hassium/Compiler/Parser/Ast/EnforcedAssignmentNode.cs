@@ -1,19 +1,22 @@
-﻿using System;
-
-namespace Hassium.Compiler.Parser.Ast
+﻿namespace Hassium.Compiler.Parser.Ast
 {
-    public class EnforcedAssignmentNode: AstNode
+    public class EnforcedAssignmentNode : AstNode
     {
-        public string Type { get; private set; }
-        public string Variable { get; private set; }
-        public AstNode Value { get { return Children[0]; } }
+        public override SourceLocation SourceLocation { get; }
 
-        public EnforcedAssignmentNode(SourceLocation location, string type, string variable, AstNode value)
+        public string Variable { get; private set; }
+
+        public AstNode Type { get; private set; }
+        public AstNode Value { get; private set; }
+
+        public EnforcedAssignmentNode(SourceLocation location, AstNode type, string variable, AstNode value)
         {
-            this.SourceLocation = location;
-            Type = type;
+            SourceLocation = location;
+
             Variable = variable;
-            Children.Add(value);
+
+            Type = type;
+            Value = value;
         }
 
         public override void Visit(IVisitor visitor)
@@ -22,9 +25,8 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
+            Type.Visit(visitor);
+            Value.Visit(visitor);
         }
     }
 }
-

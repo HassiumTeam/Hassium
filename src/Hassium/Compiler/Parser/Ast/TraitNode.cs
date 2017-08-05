@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Hassium.Compiler.Parser.Ast
 {
-    public class TraitNode: AstNode
+    public class TraitNode : AstNode
     {
-        public string Name { get; private set; }
-        public bool IsPrivate { get; set; }
-        public List<Trait> Traits { get; private set; }
+        public override SourceLocation SourceLocation { get; }
 
-        public TraitNode(SourceLocation location, string name, List<Trait> traits)
+        public string Name { get; private set; }
+
+        public Dictionary<string, AstNode> Attributes { get; private set; }
+
+        public TraitNode(SourceLocation location, string name)
         {
-            this.SourceLocation = location;
+            SourceLocation = location;
+
             Name = name;
-            IsPrivate = false;
-            Traits = traits;
+
+            Attributes = new Dictionary<string, AstNode>();
         }
 
         public override void Visit(IVisitor visitor)
@@ -23,21 +25,7 @@ namespace Hassium.Compiler.Parser.Ast
         }
         public override void VisitChildren(IVisitor visitor)
         {
-            foreach (AstNode child in Children)
-                child.Visit(visitor);
-        }
-    }
-
-    public class Trait
-    {
-        public string Name { get; private set; }
-        public string Type { get; private set; }
-
-        public Trait(string name, string type)
-        {
-            Name = name;
-            Type = type;
+            
         }
     }
 }
-
