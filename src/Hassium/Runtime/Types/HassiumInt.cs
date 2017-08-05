@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Hassium.Compiler;
+﻿using Hassium.Compiler;
 
 namespace Hassium.Runtime.Types
 {
@@ -39,6 +34,7 @@ namespace Hassium.Runtime.Types
             AddAttribute(POWER, Power, 1);
             AddAttribute("setbit", setbit, 2);
             AddAttribute(SUBTRACT, Subtract, 1);
+            AddAttribute(TOCHAR, ToChar, 0);
             AddAttribute(TOFLOAT, ToFloat, 0);
             AddAttribute(TOINT, ToInt, 0);
             AddAttribute(TOSTRING, ToString, 0);
@@ -49,12 +45,18 @@ namespace Hassium.Runtime.Types
         [FunctionAttribute("func __add__ (num : number) : number")]
         public override HassiumObject Add(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
+            var charArg = args[0] as HassiumChar;
+            if (charArg != null)
+                return new HassiumInt(Int + args[0].ToChar(vm, location).Char);
             var intArg = args[0] as HassiumInt;
             if (intArg != null)
                 return new HassiumInt(Int + args[0].ToInt(vm, location).Int);
             var floatArg = args[0] as HassiumFloat;
             if (floatArg != null)
                 return new HassiumFloat(Int + args[0].ToFloat(vm, location).Float);
+            var strArg = args[0] as HassiumString;
+            if (strArg != null)
+                return new HassiumString(Int.ToString() + args[0].ToString(vm, location).String);
             vm.RaiseException(HassiumConversionFailedException._new(vm, location, args[0], Number));
             return this;
         }

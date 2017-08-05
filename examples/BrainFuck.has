@@ -1,32 +1,32 @@
-use Util;
+use StopWatch from Util;
 
 func main () {
-	watch = new StopWatch();
-	watch.start();
-	bf = new Brainfuck();
+	watch = new StopWatch ();
+	watch.start ();
+	bf = new Brainfuck ();
 	# Hello, World!
-	bf.execute("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
-	println(watch.milliseconds);
+	bf.execute ("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.");
+	println (watch.milliseconds);
 }
 
 class Brainfuck {
 	func new () {
 		# init ram
-		this.ram = [].fill(2000, 0);
+		this.ram = [].fill (2000, 0);
 	}
 
 	func execute (source) {
 		mp = 0;
 		# iterate and run the code
 		for (ip = 0; ip < source.length; ip = ip + 1) {
-			c = source[ip];
+			c = source [ip];
 			if (c == '>')mp = mp + 1;
 			if (c == '<')mp = mp - 1;
-			if (c == '+')this.ram[mp] = this.ram[mp] + 1;
-			if (c == '-')this.ram[mp] = this.ram[mp] - 1;
-			if (c == '.')print(this.ram[mp].toChar());
-			if (c == '[')if (this.ram[mp] == 0) while (source[ip]!=']')ip = ip + 1;
-			if (c == ']')if (this.ram[mp] != 0) while (source[ip]!='[')ip = ip - 1;
+			if (c == '+')this.ram [mp] = this.ram [mp] + 1;
+			if (c == '-')this.ram [mp] = this.ram [mp] - 1;
+			if (c == '.')print (this.ram [mp].tochar ());
+			if (c == '[')if (this.ram [mp] == 0) while (source [ip]!=']')ip = ip + 1;
+			if (c == ']')if (this.ram [mp] != 0) while (source [ip]!='[')ip = ip - 1;
 		}
 	}
 }

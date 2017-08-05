@@ -1,4 +1,4 @@
-use Util;
+use StopWatch from Util;
 
 func main () {
     watch = new StopWatch ();

@@ -19,6 +19,7 @@ namespace Hassium.Runtime.Types
 
             AddAttribute("add", add, -1);
             AddAttribute("contains", contains, 1);
+            AddAttribute("fill", fill, 2);
             AddAttribute(INDEX, Index, 1);
             AddAttribute(ITER, Iter, 0);
             AddAttribute(ITERABLEFULL, IterableFull, 0);
@@ -63,6 +64,18 @@ namespace Hassium.Runtime.Types
                     return False;
 
             return True;
+        }
+
+        [FunctionAttribute("func fill (count : int, val : object) : list")]
+        public HassiumList fill(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+
+            int count = (int)args[0].ToInt(vm, location).Int;
+            for (int i = 0; i < count; i++)
+                list.add(vm, location, args[1]);
+
+            return list;
         }
 
         [FunctionAttribute("func __index__ (i : int) : object")]

@@ -48,6 +48,7 @@ namespace Hassium.Runtime.IO
             AddAttribute("readallbytes", readallbytes, 0);
             AddAttribute("readalllines", readalllines, 0);
             AddAttribute("readalltext", readalltext, 0);
+            AddAttribute("readbyte", readbyte, 0);
             AddAttribute("readlist", readbytes, 1);
             AddAttribute("readint", readint, 0);
             AddAttribute("readline", readline, 0);

@@ -684,7 +684,7 @@ namespace Hassium.Compiler.Parser
         {
             var location = this.location;
             if (matchToken(TokenType.OpenParentheses))
-                return new FunctionCallNode(location, left, parseArgumentList(), parseInitialAttributes());
+                return parseAccess(new FunctionCallNode(location, left, parseArgumentList(), parseInitialAttributes()));
             else if (acceptToken(TokenType.OpenSquareBrace))
             {
                 var index = parseExpression();

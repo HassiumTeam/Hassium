@@ -41,9 +41,14 @@ namespace Hassium.Runtime
             if (args.Length == 1)
                 return args[0].ToString(vm, location);
 
-            string[] fargs = new string[args.Length];
+            object[] fargs = new object[args.Length];
             for (int i = 1; i < args.Length; i++)
-                fargs[i] = args[i].ToString(vm, location).String;
+            {
+                if (args[i].Types.Contains(HassiumObject.Number))
+                    fargs[i - 1] = args[i].ToInt(vm, location).Int;
+                else
+                    fargs[i - 1] = args[i].ToString(vm, location).String;
+            }
             return new HassiumString(string.Format(args[0].ToString(vm, location).String, fargs));
         }
 
@@ -99,7 +104,7 @@ namespace Hassium.Runtime
         [FunctionAttribute("func printf (strf : string, params obj) : null")]
         public static HassiumNull printf(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            Console.Write(format(vm, location, args[0], args[1]).String);
+            Console.Write(format(vm, location, args).String);
             return HassiumObject.Null;
         }
 
@@ -114,7 +119,7 @@ namespace Hassium.Runtime
         [FunctionAttribute("func range (upper : int) : list", "func range (lower : int, upper : int) : list")]
         public static HassiumList range(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            int lower = args.Length == 1 ? 0 : (int)args[1].ToInt(vm, location).Int;
+            int lower = args.Length == 1 ? 0 : (int)args[0].ToInt(vm, location).Int;
             int upper = args.Length == 1 ? (int)args[0].ToInt(vm, location).Int : (int)args[1].ToInt(vm, location).Int;
 
             HassiumList list = new HassiumList(new HassiumObject[0]);

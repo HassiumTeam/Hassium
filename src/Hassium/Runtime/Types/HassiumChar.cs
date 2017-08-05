@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Hassium.Compiler;
+﻿using Hassium.Compiler;
+
+using System;
 
 namespace Hassium.Runtime.Types
 {
@@ -14,6 +12,7 @@ namespace Hassium.Runtime.Types
 
         public HassiumChar(char val)
         {
+            AddType(Number);
             AddType(TypeDefinition);
             Char = val;
 

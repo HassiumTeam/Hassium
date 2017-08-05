@@ -1,40 +1,40 @@
 # base class
 class Dog {
-	func new(name) {
+	func new (name) {
 		# Create attribute inside of class
-		this.Name = name;
+		this.name = name;
 	}
 
-	func showName() {
-		println(this.Name);
+	func showname () {
+		println (this.name);
 	}
 
-	func bark() {
-		println("Woof!");
+	func bark () {
+		println ("Woof!");
 	}
 }
 
 # Inherits all the methods from the base class.
 class BigDog : Dog {
-	func growl() {
-		println("GRRRR");
+	func growl () {
+		println ("GRRRR");
 	}
 	# Overloads the bark() method from the base class.
-	func bark() {
-		println("Big dog bark");
+	func bark () {
+		println ("Big dog bark");
 	}
 }
 
 func main() {
-	fiddo = new Dog("Fiddo");
-	fiddo.showName();
-	fiddo.bark();
+	fiddo = new Dog ("Fiddo");
+	fiddo.showname ();
+	fiddo.bark ();
 
-	bigDog = new BigDog("Charlie");
+	bigDog = new BigDog ("Charlie");
 	# Inherited method
-	bigDog.showName();
+	bigDog.showname ();
 	# Overloaded method
-	bigDog.bark();
+	bigDog.bark ();
 	# Method exclusive to BigDog
-	bigDog.growl();
+	bigDog.growl ();
 }

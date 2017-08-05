@@ -1,10 +1,10 @@
-use Text;
+use * from Text;
 
 func main () {
 	lexer = new Lexer();
-	tokens = lexer.scan(input());
+	tokens = lexer.scan (input ());
 	foreach (token in tokens)
-		println(token.TokenType);
+		printf ("{0} {1}\n", token.tokentype, token.value);
 }
 
 class Lexer {
@@ -14,64 +14,62 @@ class Lexer {
 		this.code = source;
 		this.position = 0;
 		result = [];
-
-		while (this.peekChar() != (0-1)) {
-			this.whitespace();
-			if (this.peekChar().isLetterOrDigit())
-				result.add(this.scanData());
-			else if (this.peekChar() == '"')
-				result.add(this.scanString());
-			else if (this.peekChar() == ';')
-				result.add(new Token(TokenType.Semicolon, this.readChar().toString()));
+		while (this.peekchar () != (-1)) {
+			this.whitespace ();
+			if (this.peekchar ().isletterordigit ())
+				result.add (this.scandata ());
+			else if (this.peekchar () == '"')
+				result.add (this.scanstring ());
+			else if (this.peekchar () == ';')
+				result.add (new Token(TokenType.Semicolon, this.readchar ().tostring ()));
 			else
-				println("Unknown token " + this.readChar().toString());
+				printf ("Unknown token {0}", this.readchar ().tostring ());
 		}
 
 		return result;
 	}
 
-	func scanString () {
-		this.position = this.position + 1;
-		str = 0;
-		while (peekChar() != '"')
-			str = str + this.readChar().toString();
+	func scanstring () {
+		this.position += 1;
+		str = "";
+		while (peekchar () != '"')
+			str = str + this.readchar ().tostring ();
 		this.position = this.position + 1;
 		return new Token(TokenType.String, str);
 	}
 
-	func scanData () {
-		ret = new StringBuilder();
-		while (this.peekChar().isLetterOrDigit() && this.peekChar() != (0-1)) {
-			println(type(ret));
-			ret.append(this.readChar().toString());
+	func scandata () {
+		ret = new StringBuilder ();
+		while (this.peekchar ().tochar ().isletterordigit () && this.peekchar () != (-1)) {
+			ret.append (this.readchar ().tostring ());
 		}
-		return new Token(TokenType.Identifier, ret.toString());
+		return new Token(TokenType.Identifier, ret.tostring ());
 	}
 
 	func whitespace () {
-		while (this.peekChar().isWhitespace() && this.peekChar() != (0-1))
-			this.readChar();
+		while (this.peekchar ().iswhitespace () && this.peekchar () != (-1))
+			this.readchar ();
 	}
 
-	func peekChar () {
+	func peekchar () {
 		if (this.position < this.code.length)
-			return this.code[this.position];
-		return (0-1);
+			return this.code [this.position];
+		return (-1);
 	}
-	func readChar () {
+	func readchar () {
 		if (this.position < this.code.length) {
-			ret = this.code[this.position];
+			ret = this.code [this.position];
 			this.position = this.position + 1;
 			return ret;
 		}
-		return (0-1);
+		return (-1);
 	}
 }
 
 class Token {
 	func new (tokenType, value) {
-		this.TokenType = tokenType;
-		this.Value = value;
+		this.tokentype = tokenType;
+		this.value = value;
 	}
 }
 

@@ -1,5 +1,3 @@
-use Util;
-
 func lpf (x) {
 	factor = 0;
 	if (x % 2 == 0) {

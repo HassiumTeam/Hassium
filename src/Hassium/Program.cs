@@ -31,6 +31,11 @@ namespace Hassium
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex);
             }
+            catch (ScannerException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
+            }
         }
     }
 }

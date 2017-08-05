@@ -432,6 +432,13 @@ namespace Hassium.Runtime
             foreach (var pair in InternalModule.InternalModules["Types"].Attributes)
                 Globals.Add(pair.Key, pair.Value);
 
+            foreach (var pair in CurrentModule.Attributes["__global__"].Attributes)
+            {
+                if (Globals.ContainsKey(pair.Key))
+                    Globals.Remove(pair.Key);
+                Globals.Add(pair.Key, pair.Value);
+            }
+
         }
         public void PushCallStack(string val)
         {

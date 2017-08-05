@@ -1,15 +1,15 @@
 # You define functions with func <funcName>
 
-func calculateBMI (height, weight) {
+func calcbmi (height, weight) {
 	return weight / (height * height);
 }
 
 func main () {
 	print("How tall are you? ");
-	height = input().toFloat();
+	height = input ().tofloat ();
 	
 	print("How much to you weigh? ");
-	weight = input().toFloat();
+	weight = input().tofloat ();
 
-	println("BMI: " + calculateBMI(height, weight));
+	println("BMI: " + calcbmi(height, weight));
 }
