@@ -64,6 +64,8 @@ namespace Hassium.Compiler.Parser
                 return parseRaise();
             else if (matchToken(TokenType.Identifier, "return"))
                 return parseReturn();
+            else if (matchToken(TokenType.Identifier, "switch"))
+                return parseSwitch();
             else if (matchToken(TokenType.Identifier, "trait"))
                 return parseTrait();
             else if (matchToken(TokenType.Identifier, "try"))
@@ -295,6 +297,30 @@ namespace Hassium.Compiler.Parser
             AstNode value = parseExpression();
 
             return new ReturnNode(location, value);
+        }
+
+        private SwitchNode parseSwitch()
+        {
+            var location = this.location;
+            expectToken(TokenType.Identifier, "switch");
+            AstNode value = parseExpression();
+            expectToken(TokenType.OpenCurlyBrace);
+            Dictionary<AstNode, AstNode> cases = new Dictionary<AstNode, AstNode>();
+            do
+            {
+                expectToken(TokenType.Identifier, "case");
+                AstNode c = parseExpression();
+                AstNode body = parseStatement();
+                cases.Add(c, body);
+            } while (!matchToken(TokenType.Identifier, "default") && !matchToken(TokenType.CloseCurlyBrace));
+            AstNode _default;
+            if (acceptToken(TokenType.Identifier, "default"))
+                _default = parseStatement();
+            else
+                _default = new CodeBlockNode(this.location);
+            expectToken(TokenType.CloseCurlyBrace);
+
+            return new SwitchNode(location, cases, _default, value);
         }
 
         private TraitNode parseTrait()

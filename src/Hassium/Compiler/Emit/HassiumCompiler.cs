@@ -434,6 +434,30 @@ namespace Hassium.Compiler.Emit
         {
             emit(node.SourceLocation, InstructionType.PushObject, handleObject(new HassiumString(node.String)));
         }
+        public void Accept(SwitchNode node)
+        {
+            table.EnterScope();
+            var endLabel = nextLabel();
+            node.Value.Visit(this);
+            for (int i = 0; i < node.Cases.Count; i++)
+                emit(node.Value.SourceLocation, InstructionType.Duplicate);
+
+            foreach (var pair in node.Cases)
+            {
+                var falseLabel = nextLabel();
+                pair.Key.Visit(this);
+                emit(pair.Key.SourceLocation, InstructionType.BinaryOperation, (int)BinaryOperation.EqualTo);
+                emit(pair.Key.SourceLocation, InstructionType.JumpIfFalse, falseLabel);
+                pair.Value.Visit(this);
+                emit(node.Value.SourceLocation, InstructionType.Jump, endLabel);
+                emitLabel(pair.Value.SourceLocation, falseLabel);
+            }
+
+            node.Default.Visit(this);
+
+            emitLabel(node.SourceLocation, endLabel);
+            table.LeaveScope();
+        }
         public void Accept(TernaryOperationNode node)
         {
             var falseLabel = nextLabel();

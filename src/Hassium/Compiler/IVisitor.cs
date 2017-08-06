@@ -32,6 +32,7 @@ namespace Hassium.Compiler
         void Accept(RaiseNode node);
         void Accept(ReturnNode node);
         void Accept(StringNode node);
+        void Accept(SwitchNode node);
         void Accept(TernaryOperationNode node);
         void Accept(ThreadNode node);
         void Accept(TraitNode node);

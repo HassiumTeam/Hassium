@@ -82,6 +82,7 @@
     <Compile Include="Compiler\Parser\Ast\RaiseNode.cs" />
     <Compile Include="Compiler\Parser\Ast\ReturnNode.cs" />
     <Compile Include="Compiler\Parser\Ast\StringNode.cs" />
+    <Compile Include="Compiler\Parser\Ast\SwitchNode.cs" />
     <Compile Include="Compiler\Parser\Ast\TernaryOperationNode.cs" />
     <Compile Include="Compiler\Parser\Ast\ThreadNode.cs" />
     <Compile Include="Compiler\Parser\Ast\TraitNode.cs" />
