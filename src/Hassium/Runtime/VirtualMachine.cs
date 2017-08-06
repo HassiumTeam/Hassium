@@ -153,6 +153,11 @@ namespace Hassium.Runtime
                             try
                             {
                                 var attribute = val.Attributes[CurrentModule.ConstantPool[arg]];
+                                if (attribute.IsPrivate)
+                                {
+                                    RaiseException(HassiumPrivateAttributeException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
+                                    return HassiumObject.Null;
+                                }
                                 if (attribute is HassiumProperty)
                                     Stack.Push((attribute as HassiumProperty).Get.Invoke(this, CurrentSourceLocation));
                                 else
@@ -239,6 +244,11 @@ namespace Hassium.Runtime
                         case InstructionType.StoreAttribute:
                             val = Stack.Pop();
                             attrib = CurrentModule.ConstantPool[arg];
+                            if (val.IsPrivate)
+                            {
+                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
+                                return HassiumObject.Null;
+                            }
                             try
                             {
                                 if (val.Attributes.ContainsKey(attrib))
@@ -454,6 +464,8 @@ namespace Hassium.Runtime
         public string UnwindCallStack()
         {
             StringBuilder sb = new StringBuilder();
+            if (CallStack.Count <= 0)
+                return sb.ToString();
             sb.AppendLine("At:");
             var firstLine = CallStack.Peek();
             firstLine = firstLine.Substring(0, firstLine.IndexOf("\t"));

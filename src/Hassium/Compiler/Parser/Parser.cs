@@ -60,6 +60,8 @@ namespace Hassium.Compiler.Parser
                 return parseFunctionDeclaration();
             else if (matchToken(TokenType.Identifier, "if"))
                 return parseIf();
+            else if (matchToken(TokenType.Identifier, "priv"))
+                return parsePriv();
             else if (matchToken(TokenType.Identifier, "raise"))
                 return parseRaise();
             else if (matchToken(TokenType.Identifier, "return"))
@@ -279,6 +281,14 @@ namespace Hassium.Compiler.Parser
             AstNode value = parseExpression();
 
             return new MultipleAssignmentNode(location, targets, value);
+        }
+
+        private AstNode parsePriv()
+        {
+            expectToken(TokenType.Identifier, "priv");
+            AstNode ast = parseStatement();
+            ast.IsPrivate = true;
+            return ast;
         }
 
         private RaiseNode parseRaise()

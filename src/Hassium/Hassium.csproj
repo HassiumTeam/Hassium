@@ -112,6 +112,7 @@
     <Compile Include="Runtime\HassiumModule.cs" />
     <Compile Include="Runtime\HassiumMultiFunc.cs" />
     <Compile Include="Runtime\HassiumObject.cs" />
+    <Compile Include="Runtime\HassiumPrivateAttributeException.cs" />
     <Compile Include="Runtime\HassiumTrait.cs" />
     <Compile Include="Runtime\HassiumTypeDefinition.cs" />
     <Compile Include="Runtime\HassiumVariableNotFoundException.cs" />

@@ -20,6 +20,7 @@
             AddAttribute("null", Null);
             AddAttribute("number", Number);
             AddAttribute("object", HassiumObject.TypeDefinition);
+            AddAttribute("PrivateAttributeException", new HassiumPrivateAttributeException());
             AddAttribute("property", HassiumProperty.TypeDefinition);
             AddAttribute("string", HassiumString.TypeDefinition);
             AddAttribute("true", new HassiumBool(true));

@@ -115,6 +115,7 @@ namespace Hassium.Compiler.Emit
         public void Accept(ClassDeclarationNode node)
         {
             var clazz = new HassiumClass(node.Name);
+            clazz.IsPrivate = node.IsPrivate;
             clazz.Parent = classStack.Peek();
 
             handleConstant(node.Name);
@@ -202,6 +203,7 @@ namespace Hassium.Compiler.Emit
         public void Accept(EnumNode node)
         {
             HassiumEnum enum_ = new HassiumEnum(node.Name);
+            enum_.IsPrivate = node.IsPrivate;
             foreach (var pair in node.Attributes)
                 enum_.AddAttribute(pair.Value, new HassiumInt(pair.Key));
 
@@ -295,6 +297,7 @@ namespace Hassium.Compiler.Emit
         public void Accept(FunctionDeclarationNode node)
         {
             var method = new HassiumMethod(node.Name);
+            method.IsPrivate = node.IsPrivate;
             methodStack.Push(method);
             method.SourceLocation = node.SourceLocation;
             method.SourceRepresentation = node.ToString();
@@ -493,6 +496,7 @@ namespace Hassium.Compiler.Emit
         public void Accept(TraitNode node)
         {
             HassiumTrait trait = new HassiumTrait(node.Name);
+            trait.IsPrivate = node.IsPrivate;
 
             foreach (var pair in node.Attributes)
             {

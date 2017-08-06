@@ -10,7 +10,9 @@ namespace Hassium.Runtime
     {
         public static HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("object");
 
+        public bool IsPrivate = false;
         public static HassiumNull Null = new HassiumNull();
+        public HassiumClass Parent { get; set; }
 
         public HassiumBool False {  get { return InternalModule.InternalModules["Types"].Attributes["false"] as HassiumBool; } }
         public HassiumBool True { get { return InternalModule.InternalModules["Types"].Attributes["true"] as HassiumBool; } }
@@ -55,15 +57,13 @@ namespace Hassium.Runtime
         public static string TOTUPLE = "totuple";
         public static string XOR = "__xor__";
 
-        public HassiumClass Parent { get; set; }
+        public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
 
         public List<HassiumTypeDefinition> Types = new List<HassiumTypeDefinition>()
         {
             TypeDefinition
         };
-
-        public Dictionary<string, HassiumObject> Attributes = new Dictionary<string, HassiumObject>();
-
+        
         public HassiumTypeDefinition Type()
         {
             return Types[Types.Count - 1] as HassiumTypeDefinition;
