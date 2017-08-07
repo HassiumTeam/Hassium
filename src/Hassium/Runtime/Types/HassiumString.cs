@@ -28,6 +28,7 @@ namespace Hassium.Runtime.Types
             AddAttribute(NOTEQUALTO, NotEqualTo, 1);
             AddAttribute(TOFLOAT, ToFloat, 0);
             AddAttribute(TOINT, ToInt, 0);
+            AddAttribute(TOLIST, ToList, 0);
             AddAttribute("tolower", tolower, 0);
             AddAttribute(TOSTRING, ToString, 0);
             AddAttribute("toupper", toupper, 0);
@@ -122,6 +123,12 @@ namespace Hassium.Runtime.Types
                 vm.RaiseException(HassiumConversionFailedException._new(vm, location, this, HassiumInt.TypeDefinition));
                 return new HassiumInt(-1);
             }
+        }
+
+        [FunctionAttribute("func tolist () : list")]
+        public override HassiumList ToList(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return Iter(vm, location, args) as HassiumList;
         }
 
         [FunctionAttribute("func tolower () : string")]

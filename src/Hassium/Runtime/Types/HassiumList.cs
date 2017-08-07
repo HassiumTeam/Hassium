@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -20,6 +21,7 @@ namespace Hassium.Runtime.Types
             AddAttribute("add", add, -1);
             AddAttribute("contains", contains, 1);
             AddAttribute("fill", fill, 2);
+            AddAttribute("format", format, 1);
             AddAttribute(INDEX, Index, 1);
             AddAttribute(ITER, Iter, 0);
             AddAttribute(ITERABLEFULL, IterableFull, 0);
@@ -29,7 +31,9 @@ namespace Hassium.Runtime.Types
             AddAttribute("removeat", removeat, 1);
             AddAttribute("reverse", reverse, 0);
             AddAttribute(STOREINDEX, StoreIndex, 2);
-            AddAttribute("toByteArr", toByteArr, 0);
+            AddAttribute("toascii", toascii, 0);
+            AddAttribute("tobytearr", tobytearr, 0);
+            AddAttribute("tohex", tohex, 0);
             AddAttribute(TOLIST, ToList, 0);
             AddAttribute(TOSTRING, ToString, 0);
         }
@@ -76,6 +80,18 @@ namespace Hassium.Runtime.Types
                 list.add(vm, location, args[1]);
 
             return list;
+        }
+
+        [FunctionAttribute("func format (fmt : string) : string")]
+        public HassiumString format(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            StringBuilder sb = new StringBuilder();
+            string fmt = args[0].ToString(vm, location).String;
+            byte[] bytes = ASCIIEncoding.ASCII.GetBytes(ToString(vm, location).String);
+            foreach (var b in bytes)
+                sb.AppendFormat(fmt, b);
+
+            return new HassiumString(sb.ToString());
         }
 
         [FunctionAttribute("func __index__ (i : int) : object")]
@@ -165,8 +181,17 @@ namespace Hassium.Runtime.Types
             return args[1];
         }
 
-        [FunctionAttribute("func toByteArr () : list")]
-        public HassiumByteArray toByteArr(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        [FunctionAttribute("func toascii () : string")]
+        public HassiumString toascii(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            byte[] bytes = new byte[Values.Count];
+            for (int i = 0; i < Values.Count; i++)
+                bytes[i] = (byte)Values[i].ToChar(vm, location).Char;
+            return new HassiumString(ASCIIEncoding.ASCII.GetString(bytes));
+        }
+
+        [FunctionAttribute("func tobytearr () : list")]
+        public HassiumByteArray tobytearr(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             var arr = new HassiumByteArray(new byte[0], new HassiumObject[0]);
 
@@ -174,6 +199,15 @@ namespace Hassium.Runtime.Types
                 arr.Values.Add((byte)val.ToChar(vm, location).Char);
 
             return arr;
+        }
+
+        [FunctionAttribute("func tohex () : string")]
+        public HassiumString tohex(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            byte[] bytes = new byte[Values.Count];
+            for (int i = 0; i < Values.Count; i++)
+                bytes[i] = (byte)Values[i].ToChar(vm, location).Char;
+            return new HassiumString(BitConverter.ToString(bytes).Replace("-", string.Empty));
         }
 
         [FunctionAttribute("func tolist () : list")]

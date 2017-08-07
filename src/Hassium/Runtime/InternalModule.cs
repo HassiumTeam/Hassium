@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Hassium.Runtime.Drawing;
+using Hassium.Runtime.Crypto;
 using Hassium.Runtime.IO;
 using Hassium.Runtime.Math;
 using Hassium.Runtime.Net;
@@ -25,6 +26,7 @@ namespace Hassium.Runtime
         public static Dictionary<string, InternalModule> InternalModules = new Dictionary<string, InternalModule>()
         {
             { "Drawing",    new HassiumDrawingModule() },
+            { "Crypto",     new HassiumCryptoModule() },
             { "IO",         new HassiumIOModule() },
             { "Math",       new HassiumMathModule() },
             { "Net",        new HassiumNetModule() },

@@ -111,8 +111,8 @@ namespace Hassium.Runtime.Math
             return new HassiumFloat(System.Math.Floor(args[0].ToFloat(vm, location).Float));
         }
 
-        [FunctionAttribute("hash (algo : string, obj : object) : string")]
-        public HassiumString hash(VirtualMachine vm, SourceLocation location, HassiumObject[] args)
+        [FunctionAttribute("hash (algo : string, obj : object) : list")]
+        public HassiumList hash(VirtualMachine vm, SourceLocation location, HassiumObject[] args)
         {
             HassiumList list = args[1].ToList(vm, location);
             byte[] bytes = new byte[list.Values.Count];
@@ -120,7 +120,7 @@ namespace Hassium.Runtime.Math
                 bytes[i] = (byte)list.Values[i].ToChar(vm, location).Char;
 
             byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName(args[0].ToString(vm, location).String.ToUpper())).ComputeHash(bytes);
-            return new HassiumString(BitConverter.ToString(hash).Replace("-", string.Empty).ToLower());
+            return new HassiumByteArray(hash, new HassiumObject[0]);
         }
         
         [FunctionAttribute("func log (num : number, base : number")]
