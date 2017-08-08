@@ -7,6 +7,7 @@
             AddAttribute("ArgumentLengthException", new HassiumArgumentLengthException());
             AddAttribute("AttributeNotFoundException", new HassiumAttributeNotFoundException());
             AddAttribute("bool", HassiumBool.TypeDefinition);
+            AddAttribute("BigInt", new HassiumBigInt());
             AddAttribute("char", HassiumChar.TypeDefinition);
             AddAttribute("closure", HassiumClosure.TypeDefinition);
             AddAttribute("ConversionFailedException", new HassiumConversionFailedException());

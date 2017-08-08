@@ -236,10 +236,10 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
-            HassiumList list = new HassiumList(new HassiumObject[0]);
+            HassiumByteArray list = new HassiumByteArray(new byte[0], new HassiumObject[0]);
 
             while (Reader.BaseStream.Position < Reader.BaseStream.Length)
-                list.add(vm, location, new HassiumChar((char)Reader.ReadBytes(1)[0]));
+                list.Values.Add(Reader.ReadBytes(1)[0]);
 
             return list;
         }

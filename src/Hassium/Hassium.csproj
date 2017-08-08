@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -141,6 +142,7 @@
     <Compile Include="Runtime\Text\HassiumEncoding.cs" />
     <Compile Include="Runtime\Text\HassiumStringBuilder.cs" />
     <Compile Include="Runtime\Text\HassiumTextModule.cs" />
+    <Compile Include="Runtime\Types\HassiumBigInt.cs" />
     <Compile Include="Runtime\Types\HassiumBool.cs" />
     <Compile Include="Runtime\Types\HassiumByteArray.cs" />
     <Compile Include="Runtime\Types\HassiumChar.cs" />

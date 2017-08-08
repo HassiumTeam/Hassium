@@ -352,5 +352,17 @@ namespace Hassium.Runtime
         {
             return this.MemberwiseClone();
         }
+
+        public static byte[] ListToByteArr(VirtualMachine vm, SourceLocation location, HassiumList list)
+        {
+            if (list is HassiumByteArray)
+                return (list as HassiumByteArray).Values.ToArray();
+            byte[] bytes = new byte[list.Values.Count];
+
+            for (int i = 0; i < bytes.Length; i++)
+                bytes[i] = (byte)list.Values[i].ToChar(vm, location).Char;
+
+            return bytes;
+        }
     }
 }

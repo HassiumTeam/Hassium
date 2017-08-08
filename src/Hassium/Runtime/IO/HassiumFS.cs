@@ -171,9 +171,9 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func readbytes (path : string) : list")]
-        public HassiumList readbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumByteArray readbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            HassiumList list = new HassiumList(new HassiumObject[0]);
+            HassiumByteArray list = new HassiumByteArray(new byte[0], new HassiumObject[0]);
 
             var stream = new FileStream(args[0].ToString(vm, location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
             var reader = new BinaryReader(stream);
@@ -181,7 +181,7 @@ namespace Hassium.Runtime.IO
             try
             {
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
-                    list.add(vm, location, new HassiumChar((char)reader.ReadBytes(1)[0]));
+                    list.Values.Add(reader.ReadBytes(1)[0]);
 
                 return list;
             }
@@ -307,8 +307,14 @@ namespace Hassium.Runtime.IO
             else if (type == HassiumInt.TypeDefinition)
                 writer.Write(obj.ToInt(vm, location).Int);
             else if (type == HassiumList.TypeDefinition)
-                foreach (var item in obj.ToList(vm, location).Values)
-                    writeHassiumObject(writer, item, vm, location);
+            {
+                if (obj is HassiumByteArray)
+                    foreach (var b in (obj.ToList(vm, location) as HassiumByteArray).Values)
+                        writer.Write(b);
+                else
+                    foreach (var item in obj.ToList(vm, location).Values)
+                        writeHassiumObject(writer, item, vm, location);
+            }
             else if (type == HassiumString.TypeDefinition)
                 writer.Write(obj.ToString(vm, location).String);
             else if (type == HassiumTuple.TypeDefinition)
