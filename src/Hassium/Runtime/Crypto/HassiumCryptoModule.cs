@@ -5,6 +5,7 @@
         public HassiumCryptoModule() : base("Crypto")
         {
             AddAttribute("AES", new HassiumAES());
+            AddAttribute("RSA", new HassiumRSA());
         }
     }
 }

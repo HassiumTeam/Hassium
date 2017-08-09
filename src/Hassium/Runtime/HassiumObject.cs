@@ -48,6 +48,7 @@ namespace Hassium.Runtime
         public static string ITERABLEFULL = "__iterfull__";
         public static string ITERABLENEXT = "__iternext__";
         public static string DISPOSE = "dispose";
+        public static string TOBIGINT = "tobigint";
         public static string TOBOOL = "tobool";
         public static string TOCHAR = "tochar";
         public static string TOINT = "toint";
@@ -282,6 +283,13 @@ namespace Hassium.Runtime
                 return Attributes[DISPOSE].Invoke(vm, location, args);
             vm.RaiseException(HassiumAttributeNotFoundException._new(vm, location, this, new HassiumString(DISPOSE)));
             return Null;
+        }
+        public virtual HassiumBigInt ToBigInt(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            if (Attributes.ContainsKey(TOBIGINT))
+                return Attributes[TOBIGINT].Invoke(vm, location, args) as HassiumBigInt;
+            vm.RaiseException(HassiumAttributeNotFoundException._new(vm, location, this, new HassiumString(TOBIGINT)));
+            return HassiumBigInt._new(vm, location, new HassiumInt(-1));
         }
         public virtual HassiumBool ToBool(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {

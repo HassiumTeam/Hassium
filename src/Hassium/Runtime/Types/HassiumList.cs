@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 using Hassium.Compiler;
@@ -188,6 +189,12 @@ namespace Hassium.Runtime.Types
             for (int i = 0; i < Values.Count; i++)
                 bytes[i] = (byte)Values[i].ToChar(vm, location).Char;
             return new HassiumString(ASCIIEncoding.ASCII.GetString(bytes));
+        }
+
+        [FunctionAttribute("func tobigint () : BigInt")]
+        public override HassiumBigInt ToBigInt(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return HassiumBigInt.ImportAttribs(new HassiumBigInt() { BigInt = new BigInteger(ListToByteArr(vm, location, this)) });
         }
 
         [FunctionAttribute("func tobytearr () : list")]
