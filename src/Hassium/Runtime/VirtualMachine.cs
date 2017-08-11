@@ -203,7 +203,8 @@ namespace Hassium.Runtime
                                 Stack.Push(GlobalFrame.GetVariable(arg));
                             break;
                         case InstructionType.Pop:
-                            Stack.Pop();
+                            if (Stack.Count > 0)
+                                Stack.Pop();
                             break;
                         case InstructionType.PopHandler:
                             //Handlers.Pop();
@@ -410,6 +411,8 @@ namespace Hassium.Runtime
 
         public void RaiseException(HassiumObject message)
         {
+            Console.WriteLine("Raising exception {0}", message.ToString(this, CurrentSourceLocation).String);
+            Console.WriteLine("\n\n\n");
             if (Handlers.Count == 0)
             {
                 var callStack = UnwindCallStack();
@@ -424,7 +427,8 @@ namespace Hassium.Runtime
             }
             var handler = Handlers.Pop();
             handler.Invoke(this, CurrentSourceLocation, message);
-            ExceptionReturns.Add(handler.Caller, handler.Caller.Labels[handler.Label]);
+            if (!ExceptionReturns.ContainsKey(handler.Caller))
+                ExceptionReturns.Add(handler.Caller, handler.Caller.Labels[handler.Label]);
         }
 
         private void importGlobals()

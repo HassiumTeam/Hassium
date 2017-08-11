@@ -56,6 +56,8 @@ namespace Hassium.Compiler.Parser
                 return parseFor();
             else if (matchToken(TokenType.Identifier, "foreach"))
                 return parseForeach();
+            else if (matchToken(TokenType.Identifier, "from"))
+                return parseFrom();
             else if (matchToken(TokenType.Identifier, "func"))
                 return parseFunctionDeclaration();
             else if (matchToken(TokenType.Identifier, "if"))
@@ -204,6 +206,29 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
 
             return new ForeachNode(location, variable, expression, body);
+        }
+
+        private UseNode parseFrom()
+        {
+            var location = this.location;
+            expectToken(TokenType.Identifier, "from");
+
+            StringBuilder module = new StringBuilder();
+            if (matchToken(TokenType.String))
+                module.Append(expectToken(TokenType.String).Value);
+            else
+            {
+                do
+                {
+                    module.Append(expectToken(TokenType.Identifier).Value);
+                }
+                while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
+            }
+
+            expectToken(TokenType.Identifier, "use");
+            string clazz = tokens[position++].Value;
+
+            return new UseNode(location, clazz, module.ToString());
         }
 
         private FunctionDeclarationNode parseFunctionDeclaration()

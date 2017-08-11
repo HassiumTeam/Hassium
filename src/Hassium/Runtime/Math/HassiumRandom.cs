@@ -53,7 +53,7 @@ namespace Hassium.Runtime.Math
             return new HassiumFloat(Random.NextDouble());
         }
 
-        [FunctionAttribute("func randint () : int", "func randInt (up : int) : int", "func randInt (low : int, up : int) : int")]
+        [FunctionAttribute("func randint () : int", "func randint (up : int) : int", "func randint (low : int, up : int) : int")]
         public HassiumObject randint(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             switch (args.Length)
