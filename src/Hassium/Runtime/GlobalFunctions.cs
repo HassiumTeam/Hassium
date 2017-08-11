@@ -187,12 +187,16 @@ namespace Hassium.Runtime
         [FunctionAttribute("func type (obj : object) : typedef")]
         public static HassiumTypeDefinition type(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
+            if (args[0] is HassiumTypeDefinition)
+                return HassiumTypeDefinition.TypeDefinition;
             return args[0].Type();
         }
 
         [FunctionAttribute("func types (obj : object) : list")]
         public static HassiumList types(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
+            if (args[0] is HassiumTypeDefinition)
+                return new HassiumList(new HassiumObject[] { HassiumObject.TypeDefinition });
             return new HassiumList(args[0].Types);
         }
     }
