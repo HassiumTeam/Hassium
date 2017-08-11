@@ -17,13 +17,14 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 1);
+            AddAttribute("modpow", modpow, 3);
         }
 
         [FunctionAttribute("func new (obj : object) : BigInt")]
         public static HassiumBigInt _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             HassiumBigInt bigint = new HassiumBigInt();
-
+            
             var type = args[0].Type();
             if (type == HassiumFloat.TypeDefinition)
                 bigint.BigInt = new BigInteger(args[0].ToFloat(vm, location).Float);
@@ -39,6 +40,7 @@ namespace Hassium.Runtime.Types
 
         public static HassiumBigInt ImportAttribs(HassiumBigInt bigint)
         {
+            bigint.AddAttribute("abs", bigint.Abs, 0);
             bigint.AddAttribute(ADD, bigint.Add, 1);
             bigint.AddAttribute(DIVIDE, bigint.Divide, 1);
             bigint.AddAttribute(EQUALTO, bigint.EqualTo, 1);
@@ -46,6 +48,7 @@ namespace Hassium.Runtime.Types
             bigint.AddAttribute(GREATERTHANOREQUAL, bigint.GreaterThanOrEqual, 1);
             bigint.AddAttribute(LESSERTHAN, bigint.LesserThan, 1);
             bigint.AddAttribute(LESSERTHANOREQUAL, bigint.LesserThanOrEqual, 1);
+            bigint.AddAttribute("log", bigint.log);
             bigint.AddAttribute(MULTIPLY, bigint.Multiply, 1);
             bigint.AddAttribute(NOTEQUALTO, bigint.NotEqualTo, 1);
             bigint.AddAttribute(SUBTRACT, bigint.Subtract, 1);
@@ -55,6 +58,12 @@ namespace Hassium.Runtime.Types
             bigint.AddAttribute(TOSTRING, bigint.ToString, 0);
 
             return bigint;
+        }
+
+        [FunctionAttribute("func abs () : BigInt")]
+        public HassiumBigInt Abs(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Abs(BigInt) });
         }
 
         [FunctionAttribute("func __add__ (num : number) : number")]
@@ -139,6 +148,18 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(BigInteger.Compare(BigInt, (intarg as HassiumInt).Int) <= 0);
             vm.RaiseException(HassiumConversionFailedException._new(vm, location, args[0], Number));
             return Null;
+        }
+
+        [FunctionAttribute("func log (base : float) : BigInt")]
+        public HassiumBigInt log(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return _new(vm, location, new HassiumFloat(BigInteger.Log(BigInt, args[0].ToFloat(vm, location).Float)));
+        }
+
+        [FunctionAttribute("func modpow (val : BigInt, exp : BigInt, mod : BigInt) : BigInt")]
+        public HassiumBigInt modpow(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.ModPow(args[0].ToBigInt(vm, location).BigInt, args[1].ToBigInt(vm, location).BigInt, args[2].ToBigInt(vm, location).BigInt) });
         }
 
         [FunctionAttribute("func __multiply__ (num : number) : number")]

@@ -14,7 +14,7 @@
         public new void AddAttribute(string name, HassiumObject obj)
         {
             Attributes.Add(name, obj);
-            obj.Types.Add(TypeDefinition);
+            obj.AddType(TypeDefinition);
         }
     }
 }

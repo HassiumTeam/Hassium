@@ -10,21 +10,23 @@ namespace Hassium.Runtime
     {
         public static Dictionary<string, HassiumObject> Functions = new Dictionary<string, HassiumObject>()
         {
-            { "clone",         new HassiumFunction(clone,           1) },
-            { "format",        new HassiumFunction(format,         -1) },
-            { "getattrib",     new HassiumFunction(getattrib,       2) },
-            { "getattribs",    new HassiumFunction(getattribs,      1) },
-            { "hasattrib",     new HassiumFunction(hasattrib,       2) },
-            { "input",         new HassiumFunction(input,           0) },
-            { "map",           new HassiumFunction(map,             2) },
-            { "print",         new HassiumFunction(print,          -1) },
-            { "printf",        new HassiumFunction(printf,         -1) },
-            { "println",       new HassiumFunction(println,        -1) },
-            { "range",         new HassiumFunction(range,        1, 2) },
-            { "setattrib",     new HassiumFunction(setattrib,       3) },
-            { "sleep",         new HassiumFunction(sleep,           1) },
-            { "type",          new HassiumFunction(type,            1) },
-            { "types",         new HassiumFunction(types,           1) }
+            { "clone",           new HassiumFunction(clone,           1) },
+            { "format",          new HassiumFunction(format,         -1) },
+            { "getattrib",       new HassiumFunction(getattrib,       2) },
+            { "getattribs",      new HassiumFunction(getattribs,      1) },
+            { "getparamlengths", new HassiumFunction(getparamlengths, 1) },
+            { "getsourcerep",    new HassiumFunction(getsourcerep,    1) },
+            { "hasattrib",       new HassiumFunction(hasattrib,       2) },
+            { "input",           new HassiumFunction(input,           0) },
+            { "map",             new HassiumFunction(map,             2) },
+            { "print",           new HassiumFunction(print,          -1) },
+            { "printf",          new HassiumFunction(printf,         -1) },
+            { "println",         new HassiumFunction(println,        -1) },
+            { "range",           new HassiumFunction(range,        1, 2) },
+            { "setattrib",       new HassiumFunction(setattrib,       3) },
+            { "sleep",           new HassiumFunction(sleep,           1) },
+            { "type",            new HassiumFunction(type,            1) },
+            { "types",           new HassiumFunction(types,           1) }
         };
 
         [FunctionAttribute("func clone (obj : object) : object")]
@@ -67,6 +69,43 @@ namespace Hassium.Runtime
                 dict.Dictionary.Add(new HassiumString(attrib.Key), attrib.Value);
 
             return dict;
+        }
+
+        [FunctionAttribute("func getparamlengths (obj : object) : list")]
+        public static HassiumList getparamlengths(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+
+            if (args[0] is HassiumFunction)
+                foreach (int len in (args[0] as HassiumFunction).ParameterLengths)
+                    list.add(vm, location, new HassiumInt(len));
+            else if (args[0] is HassiumMethod)
+                list.add(vm, location, new HassiumInt((args[0] as HassiumMethod).Parameters.Count));
+            else if (args[0] is HassiumMultiFunc)
+                foreach (var method in (args[0] as HassiumMultiFunc).Methods)
+                    list.add(vm, location, new HassiumInt(method.Parameters.Count));
+
+            return list;
+        }
+
+        [FunctionAttribute("func getsourcerep (obj : object) : string")]
+        public static HassiumString getsourcerep(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            if (args[0] is HassiumFunction)
+            {
+                var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(FunctionAttribute), false);
+                if (a.Length > 0)
+                {
+                    var reps = (a[0] as FunctionAttribute).SourceRepresentations;
+                    if (reps.Count > 0)
+                        return new HassiumString(reps[0]);
+                }
+            }
+            else if (args[0] is HassiumMethod)
+                return new HassiumString((args[0] as HassiumMethod).SourceRepresentation);
+            else if (args[0] is HassiumMultiFunc)
+                return new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation);
+            return new HassiumString(string.Empty);
         }
 
         [FunctionAttribute("func hasattrib (obj : object, attrib : string) : bool")]
