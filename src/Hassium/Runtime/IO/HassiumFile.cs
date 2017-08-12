@@ -15,8 +15,11 @@ namespace Hassium.Runtime.IO
 
         public FileInfo FileInfo { get; private set; }
 
-        public BinaryReader Reader { get; private set; }
-        public BinaryWriter Writer { get; private set; }
+        public BinaryReader Reader { get; set; }
+        public BinaryWriter Writer { get; set; }
+
+        public StreamReader StreamReader { get; set; }
+        public StreamWriter StreamWriter { get; set; }
 
         private bool closed = false;
         private bool autoFlush = true;
@@ -32,6 +35,9 @@ namespace Hassium.Runtime.IO
             var fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             Reader = new BinaryReader(fs);
             Writer = new BinaryWriter(fs);
+
+            StreamReader = new StreamReader(fs);
+            StreamWriter = new StreamWriter(fs);
 
             AddAttribute("abspath", new HassiumProperty(get_abspath));
             AddAttribute("autoflush", new HassiumProperty(get_autoflush, set_autoflush));
@@ -382,7 +388,7 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
-            return new HassiumString(new StreamReader(Reader.BaseStream).ReadLine());
+            return new HassiumString(StreamReader.ReadLine());
         }
 
         [FunctionAttribute("func readlong () : int")]
@@ -565,10 +571,10 @@ namespace Hassium.Runtime.IO
 
             string str = args[0].ToString(vm, location).String;
 
-            new StreamWriter(Writer.BaseStream).WriteLine(str);
+            StreamWriter.WriteLine(str);
 
             if (autoFlush)
-                Writer.Flush();
+                StreamWriter.Flush();
             return Null;
         }
 
