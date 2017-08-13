@@ -588,6 +588,16 @@ namespace Hassium.Compiler.Emit
                 mod = InternalModule.InternalModules[path];
             else
                 mod = resolveModuleByPath(node.SourceLocation, path);
+            classStack.Peek().Attributes.Add(path.Contains("/") ? Path.GetFileName(path) : path, mod);
+        }
+        public void Accept(UseFromNode node)
+        {
+            string path = node.Module.Replace(".", "/").Replace("\\", "/");
+            HassiumObject mod;
+            if (InternalModule.InternalModules.ContainsKey(path))
+                mod = InternalModule.InternalModules[path];
+            else
+                mod = resolveModuleByPath(node.SourceLocation, path);
 
             if (mod.Attributes.ContainsKey("__global__"))
             {

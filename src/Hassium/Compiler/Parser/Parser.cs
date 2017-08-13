@@ -208,7 +208,7 @@ namespace Hassium.Compiler.Parser
             return new ForeachNode(location, variable, expression, body);
         }
 
-        private UseNode parseFrom()
+        private UseFromNode parseFrom()
         {
             var location = this.location;
             expectToken(TokenType.Identifier, "from");
@@ -220,7 +220,8 @@ namespace Hassium.Compiler.Parser
             {
                 do
                 {
-                    module.Append(expectToken(TokenType.Identifier).Value);
+                    if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                        module.Append(tokens[position].Value);
                 }
                 while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
             }
@@ -228,7 +229,7 @@ namespace Hassium.Compiler.Parser
             expectToken(TokenType.Identifier, "use");
             string clazz = tokens[position++].Value;
 
-            return new UseNode(location, clazz, module.ToString());
+            return new UseFromNode(location, clazz, module.ToString());
         }
 
         private FunctionDeclarationNode parseFunctionDeclaration()
@@ -404,26 +405,40 @@ namespace Hassium.Compiler.Parser
             return new TupleNode(location, elements);
         }
 
-        private UseNode parseUse()
+        private AstNode parseUse()
         {
             var location = this.location;
             expectToken(TokenType.Identifier, "use");
-            string clazz = tokens[position++].Value;
-            expectToken(TokenType.Identifier, "from");
 
-            StringBuilder module = new StringBuilder();
-            if (matchToken(TokenType.String))
-                module.Append(expectToken(TokenType.String).Value);
-            else
+            var first = new StringBuilder();
+            if (acceptToken(TokenType.Operation, "*"))
+                first.Append(expectToken(TokenType.Operation, "*").Value);
+
+            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                first.Append(tokens[position++].Value);
+            do
             {
-                do
-                {
-                    module.Append(expectToken(TokenType.Identifier).Value);
-                }
-                while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
+                first.Append(expectToken(TokenType.Identifier).Value);
+                if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                    first.Append(tokens[position++].Value);
             }
+            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"));
 
-            return new UseNode(location, clazz, module.ToString());
+            if (!acceptToken(TokenType.Identifier, "from"))
+                return new UseNode(location, first.ToString());
+
+            var second = new StringBuilder();
+            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                second.Append(tokens[position++].Value);
+            do
+            {
+                second.Append(expectToken(TokenType.Identifier).Value);
+                if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                    second.Append(tokens[position++].Value);
+            }
+            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"));
+
+            return new UseFromNode(location, first.ToString(), second.ToString());
         }
 
         private WhileNode parseWhile()

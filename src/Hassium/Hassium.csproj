@@ -90,6 +90,7 @@
     <Compile Include="Compiler\Parser\Ast\TryCatchNode.cs" />
     <Compile Include="Compiler\Parser\Ast\TupleNode.cs" />
     <Compile Include="Compiler\Parser\Ast\UnaryOperationNode.cs" />
+    <Compile Include="Compiler\Parser\Ast\UseFromNode.cs" />
     <Compile Include="Compiler\Parser\Ast\UseNode.cs" />
     <Compile Include="Compiler\Parser\Ast\WhileNode.cs" />
     <Compile Include="Compiler\Parser\FunctionParameter.cs" />

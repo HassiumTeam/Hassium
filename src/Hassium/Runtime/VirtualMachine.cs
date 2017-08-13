@@ -440,9 +440,7 @@ namespace Hassium.Runtime
                 else if (CurrentModule.Attributes.ContainsKey(constant))
                     Globals.Add(constant, CurrentModule.Attributes[constant]);
             }
-
-            foreach (var pair in InternalModule.InternalModules)
-                Globals.Add(pair.Key, pair.Value);
+            
             foreach (var pair in InternalModule.InternalModules["Types"].Attributes)
                 Globals.Add(pair.Key, pair.Value);
 
