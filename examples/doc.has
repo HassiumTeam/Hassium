@@ -1,11 +1,14 @@
-from Crypto use AES;
-from Crypto use RSA;
+from Crypto use *;
 
-from IO use FS;
+from Drawing use *;
+
+from IO use *;
+
+from Math use *;
 
 func main () {
-	makedocs ("AES", AES);
-	makedocs ("RSA", RSA);
+	makedocs ("Random", new Random ());
+	makedocs ("Math", Math);
 }
 
 func makedocs (name : string, obj : object) {
@@ -15,7 +18,9 @@ func makedocs (name : string, obj : object) {
 
 	attribs = getattribs (obj);
 	foreach (pair in attribs) {
-		file.writeline ("#### ```{0}```\n".format (getsourcerep (pair [1])));
+		foreach (rep in getsourcereps (pair [1])) {
+			file.writeline ("#### ```{0}```\n".format (rep));
+		}
 	}
 
 	file.close ();

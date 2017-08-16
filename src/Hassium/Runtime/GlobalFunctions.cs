@@ -16,6 +16,7 @@ namespace Hassium.Runtime
             { "getattribs",      new HassiumFunction(getattribs,      1) },
             { "getparamlengths", new HassiumFunction(getparamlengths, 1) },
             { "getsourcerep",    new HassiumFunction(getsourcerep,    1) },
+            { "getsourcereps",   new HassiumFunction(getsourcereps,   1) },
             { "hasattrib",       new HassiumFunction(hasattrib,       2) },
             { "input",           new HassiumFunction(input,           0) },
             { "map",             new HassiumFunction(map,             2) },
@@ -106,6 +107,28 @@ namespace Hassium.Runtime
             else if (args[0] is HassiumMultiFunc)
                 return new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation);
             return new HassiumString(string.Empty);
+        }
+
+        [FunctionAttribute("func getsourcereps (obj : object) : list")]
+        public static HassiumList getsourcereps(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumList list = new HassiumList(new HassiumObject[0]);
+
+            if (args[0] is HassiumFunction)
+            {
+                var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(FunctionAttribute), false);
+                if (a.Length > 0)
+                {
+                    var reps = (a[0] as FunctionAttribute).SourceRepresentations;
+                    foreach (var rep in reps)
+                        list.add(vm, location, new HassiumString(rep));
+                }
+            }
+            else if (args[0] is HassiumMethod)
+                list.add(vm, location, new HassiumString((args[0] as HassiumMethod).SourceRepresentation));
+            else if (args[0] is HassiumMultiFunc)
+                list.add(vm, location, new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation));
+            return list;
         }
 
         [FunctionAttribute("func hasattrib (obj : object, attrib : string) : bool")]
