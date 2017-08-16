@@ -19,7 +19,7 @@ namespace Hassium.Runtime.Net
             AddAttribute(INVOKE, _new, 1, 2);
         }
 
-        [FunctionAttribute("func new (portOrIPAddr : object) : SocketListener", "func new (ip : string, port) : SocketListener")]
+        [FunctionAttribute("func new (portOrIPAddr : object) : SocketListener", "func new (ip : string, port : int) : SocketListener")]
         public static HassiumSocketListener _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             HassiumSocketListener listener = new HassiumSocketListener();

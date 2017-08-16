@@ -90,7 +90,7 @@ namespace Hassium.Runtime
             {
                 if (i >= args.Length)
                 {
-                    vm.RaiseException(HassiumArgumentLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                    vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                     return Null;
                 }
                 var arg = args[i++];
@@ -129,7 +129,7 @@ namespace Hassium.Runtime
 
             if (i < args.Length)
             {
-                vm.RaiseException(HassiumArgumentLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                 return Null;
             }
 

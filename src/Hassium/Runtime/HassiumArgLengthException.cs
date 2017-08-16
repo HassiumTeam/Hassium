@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hassium.Runtime
 {
-    public class HassiumArgumentLengthException : HassiumObject
+    public class HassiumArgLengthException : HassiumObject
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ArgumentLengthException");
 
@@ -13,16 +13,16 @@ namespace Hassium.Runtime
         public HassiumObject Function { get; private set; }
         public HassiumInt GivenLength { get; private set; }
 
-        public HassiumArgumentLengthException()
+        public HassiumArgLengthException()
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 3);
         }
 
         [FunctionAttribute("func new (fn : object, expected : int, given : int) : ArgumentLengthException")]
-        public static HassiumArgumentLengthException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumArgLengthException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            HassiumArgumentLengthException exception = new HassiumArgumentLengthException();
+            HassiumArgLengthException exception = new HassiumArgLengthException();
 
             exception.ExpectedLength = args[1].ToInt(vm, location);
             exception.Function = args[0];

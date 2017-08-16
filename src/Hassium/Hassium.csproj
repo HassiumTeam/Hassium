@@ -112,8 +112,8 @@
     <Compile Include="Runtime\Drawing\HassiumDrawingModule.cs" />
     <Compile Include="Runtime\FunctionAttribute.cs" />
     <Compile Include="Runtime\GlobalFunctions.cs" />
-    <Compile Include="Runtime\HassiumArgumentLengthException.cs" />
-    <Compile Include="Runtime\HassiumAttributeNotFoundException.cs" />
+    <Compile Include="Runtime\HassiumArgLengthException.cs" />
+    <Compile Include="Runtime\HassiumAttribNotFoundException.cs" />
     <Compile Include="Runtime\HassiumClass.cs" />
     <Compile Include="Runtime\HassiumConversionFailedException.cs" />
     <Compile Include="Runtime\HassiumEnum.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="Runtime\HassiumModule.cs" />
     <Compile Include="Runtime\HassiumMultiFunc.cs" />
     <Compile Include="Runtime\HassiumObject.cs" />
-    <Compile Include="Runtime\HassiumPrivateAttributeException.cs" />
+    <Compile Include="Runtime\HassiumPrivateAttribException.cs" />
     <Compile Include="Runtime\HassiumTrait.cs" />
     <Compile Include="Runtime\HassiumTypeDefinition.cs" />
     <Compile Include="Runtime\HassiumVariableNotFoundException.cs" />

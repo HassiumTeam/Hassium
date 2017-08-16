@@ -4,8 +4,8 @@
     {
         public HassiumTypesModule() : base("types")
         {
-            AddAttribute("ArgumentLengthException", new HassiumArgumentLengthException());
-            AddAttribute("AttributeNotFoundException", new HassiumAttributeNotFoundException());
+            AddAttribute("ArgLengthException", new HassiumArgLengthException());
+            AddAttribute("AttribNotFoundException", new HassiumAttribNotFoundException());
             AddAttribute("bool", HassiumBool.TypeDefinition);
             AddAttribute("BigInt", new HassiumBigInt());
             AddAttribute("char", HassiumChar.TypeDefinition);
@@ -21,7 +21,7 @@
             AddAttribute("null", Null);
             AddAttribute("number", Number);
             AddAttribute("object", HassiumObject.TypeDefinition);
-            AddAttribute("PrivateAttributeException", new HassiumPrivateAttributeException());
+            AddAttribute("PrivateAttribException", new HassiumPrivateAttribException());
             AddAttribute("property", HassiumProperty.TypeDefinition);
             AddAttribute("string", HassiumString.TypeDefinition);
             AddAttribute("true", new HassiumBool(true));

@@ -16,7 +16,7 @@ namespace Hassium.Runtime.Util
         public HassiumProcess()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new);
+            AddAttribute(INVOKE, _new, 2);
         }
 
         public HassiumProcess(Process process)
@@ -51,7 +51,14 @@ namespace Hassium.Runtime.Util
             process.StartInfo = new ProcessStartInfo(args[0].ToString(vm, location).String, args[1].ToString(vm, location).String);
             process.Process = new Process();
             process.Process.StartInfo = process.StartInfo;
-            ImportAttribs(process);
+
+            process.AddAttribute("args", new HassiumProperty(process.get_args, process.set_args));
+            process.AddAttribute("createwindow", new HassiumProperty(process.get_createwindow, process.set_createwindow));
+            process.AddAttribute("path", new HassiumProperty(process.get_path, process.set_path));
+            process.AddAttribute("shellexecute", new HassiumProperty(process.get_shellexecute, process.set_shellexecute));
+            process.AddAttribute("start", process.start, 0);
+            process.AddAttribute("stop", process.stop, 0);
+            process.AddAttribute("username", new HassiumProperty(process.get_username, process.set_username));
 
             return process;
         }

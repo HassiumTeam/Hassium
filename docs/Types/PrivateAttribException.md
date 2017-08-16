@@ -1,0 +1,5 @@
+## ```class PrivateAttribException```
+
+
+#### ```func new (```
+

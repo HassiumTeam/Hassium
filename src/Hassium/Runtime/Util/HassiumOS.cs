@@ -38,8 +38,7 @@ namespace Hassium.Runtime.Util
             if (args.Length > 1)
                 arguments.Remove(arguments.Length - 1, 1);
             var proc = new HassiumProcess(Process.Start(args[0].ToString(vm, location).String, arguments.ToString()));
-
-            HassiumProcess.ImportAttribs(proc);
+            
             return proc;
         }
 

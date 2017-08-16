@@ -5,23 +5,23 @@ using System.Text;
 
 namespace Hassium.Runtime
 {
-    public class HassiumAttributeNotFoundException : HassiumObject
+    public class HassiumAttribNotFoundException : HassiumObject
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("AttributeNotFoundException");
 
         public HassiumObject Object { get; private set; }
         public HassiumString Attribute { get; private set; }
 
-        public HassiumAttributeNotFoundException()
+        public HassiumAttribNotFoundException()
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
         }
 
         [FunctionAttribute("func new (obj : object, attrib : string) : AttributeNotFoundException")]
-        public static HassiumAttributeNotFoundException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumAttribNotFoundException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            HassiumAttributeNotFoundException exception = new HassiumAttributeNotFoundException();
+            HassiumAttribNotFoundException exception = new HassiumAttribNotFoundException();
 
             exception.Object = args[0];
             exception.Attribute = args[1].ToString(vm, location);

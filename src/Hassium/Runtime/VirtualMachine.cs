@@ -155,7 +155,7 @@ namespace Hassium.Runtime
                                 var attribute = val.Attributes[CurrentModule.ConstantPool[arg]];
                                 if (attribute.IsPrivate)
                                 {
-                                    RaiseException(HassiumPrivateAttributeException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
+                                    RaiseException(HassiumPrivateAttribException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
                                     return HassiumObject.Null;
                                 }
                                 if (attribute is HassiumProperty)
@@ -165,7 +165,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(CurrentModule.ConstantPool[arg])));
+                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(CurrentModule.ConstantPool[arg])));
                             }
                             break;
                         case InstructionType.LoadGlobal:
@@ -179,10 +179,10 @@ namespace Hassium.Runtime
                                 if (method.Parent.Attributes.ContainsKey(attrib))
                                     Stack.Push(method.Parent.Attributes[attrib]);
                                 else
-                                    RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, method.Parent, new HassiumString(attrib)));
+                                    RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, method.Parent, new HassiumString(attrib)));
                             }
                             else
-                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(attrib)));
+                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(attrib)));
                             break;
                         case InstructionType.LoadGlobalVariable:
                             try
@@ -191,7 +191,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(arg.ToString())));
+                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(arg.ToString())));
                             }
                             break;
                         case InstructionType.LoadIterableElement:
@@ -249,7 +249,7 @@ namespace Hassium.Runtime
                             attrib = CurrentModule.ConstantPool[arg];
                             if (val.IsPrivate)
                             {
-                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
+                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
                                 return HassiumObject.Null;
                             }
                             try
@@ -273,7 +273,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttributeNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(attrib)));
+                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(attrib)));
                             }
                             break;
                         case InstructionType.StoreGlobalVariable:

@@ -24,8 +24,8 @@ namespace Hassium.Runtime.Math
             HassiumRandom rand = new HassiumRandom();
 
             rand.Random = args.Length == 0 ? new Random() : new Random((int)args[0].ToInt(vm, location).Int);
-            rand.AddAttribute("randfloat", rand.randfloat, 0);
             rand.AddAttribute("randbytes", rand.randbytes, 1);
+            rand.AddAttribute("randfloat", rand.randfloat, 0);
             rand.AddAttribute("randint", rand.randint, 0, 1, 2);
 
             return rand;

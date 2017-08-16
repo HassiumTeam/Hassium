@@ -5,9 +5,9 @@
 
 #### ```func new (seed : int) : Random```
 
-#### ```func randfloat () : float```
-
 #### ```func randbytes (count : int) : list```
+
+#### ```func randfloat () : float```
 
 #### ```func randint () : int```
 

@@ -4,6 +4,7 @@
     {
         public HassiumUtilModule() : base("Util")
         {
+            AddAttribute("ColorNotFoundException", new HassiumColorNotFoundException());
             AddAttribute("DateTime", new HassiumDateTime());
             AddAttribute("OS", new HassiumOS());
             AddAttribute("Process", new HassiumProcess());

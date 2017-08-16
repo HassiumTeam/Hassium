@@ -12,7 +12,7 @@ namespace Hassium.Runtime
         public HassiumVariableNotFoundException()
         {
             AddType(TypeDefinition);
-
+            AddAttribute(INVOKE, _new, 0);
         }
 
         [FunctionAttribute("func new () : VariableNotFoundException")]

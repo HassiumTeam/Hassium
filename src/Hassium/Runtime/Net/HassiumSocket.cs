@@ -39,7 +39,7 @@ namespace Hassium.Runtime.Net
             {
                 case 0:
                     socket.Client = new TcpClient();
-                    stream = socket.Client.GetStream();
+                    stream = new MemoryStream();
                     break;
                 case 1:
                     if (args[0] is HassiumIPAddr)

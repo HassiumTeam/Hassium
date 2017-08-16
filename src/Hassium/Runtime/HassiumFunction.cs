@@ -32,18 +32,19 @@ namespace Hassium.Runtime
             {
                 var reps = (a[0] as FunctionAttribute).SourceRepresentations;
                 if (reps.Count > 1)
-                    vm.CallStack.Push(string.Format("{0}\t[{1}]", reps[new List<int>(ParameterLengths).IndexOf(args.Length)], location));
+                    vm.PushCallStack(string.Format("{0}\t[{1}]", reps[new List<int>(ParameterLengths).IndexOf(args.Length)], location));
                 else if (reps.Count == 0)
-                    vm.CallStack.Push(string.Format("{0}\t[{1}]", reps[0]));
+                    vm.PushCallStack(string.Format("{0}\t[{1}]", reps[0]));
             }
             if (ParameterLengths[0] != -1)
             {
                 foreach (int len in ParameterLengths)
                     if (len == args.Length)
                         return Target(vm, location, args);
-                vm.RaiseException(HassiumArgumentLengthException._new(vm, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
+                vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
                 return Null;
             }
+            
             return Target(vm, location, args);
         }
     }
