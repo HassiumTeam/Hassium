@@ -28,6 +28,9 @@ namespace Hassium.Runtime.Types
             AddAttribute(ITERABLEFULL, IterableFull, 0);
             AddAttribute(ITERABLENEXT, IterableNext, 0);
             AddAttribute("length", new HassiumProperty(get_length));
+            AddAttribute("peek", peek, 0);
+            AddAttribute("pop", pop, 0);
+            AddAttribute("push", push, 1);
             AddAttribute("remove", remove, 1);
             AddAttribute("removeat", removeat, 1);
             AddAttribute("reverse", reverse, 0);
@@ -131,6 +134,32 @@ namespace Hassium.Runtime.Types
         public HassiumInt get_length(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Values.Count);
+        }
+
+        [FunctionAttribute("func peek () : object")]
+        public HassiumObject peek(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return Values[Values.Count - 1];
+        }
+
+        [FunctionAttribute("func pop () : object")]
+        public HassiumObject pop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            try
+            {
+                return Values[Values.Count - 1];
+            }
+            finally
+            {
+                Values.Remove(Values[Values.Count - 1]);
+            }
+        }
+
+        [FunctionAttribute("func push (obj : object) : null")]
+        public HassiumNull push(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            Values.Add(args[0]);
+            return Null;
         }
 
         [FunctionAttribute("func remove (obj : object) : null")]
