@@ -1,0 +1,22 @@
+from Crypto use AES;
+from Crypto use RSA;
+
+from IO use FS;
+
+func main () {
+	makedocs ("AES", AES);
+	makedocs ("RSA", RSA);
+}
+
+func makedocs (name : string, obj : object) {
+	file = FS.open ("{0}.md".format (name));
+
+	file.writeline ("## ```class {0}```\n\n".format (name));
+
+	attribs = getattribs (obj);
+	foreach (pair in attribs) {
+		file.writeline ("#### ```{0}```\n".format (getsourcerep (pair [1])));
+	}
+
+	file.close ();
+}
