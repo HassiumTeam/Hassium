@@ -9,10 +9,13 @@ namespace Hassium
 {
     public class Program
     {
+        public static string MasterPath = string.Empty;
+
         static void Main(string[] args)
         {
             try
             {
+                MasterPath = System.IO.Directory.GetCurrentDirectory();
                 VirtualMachine vm = new VirtualMachine();
                 var module = HassiumCompiler.CompileModuleFromFilePath(args[0]);
                 HassiumList hargs = new HassiumList(new HassiumObject[0]);

@@ -213,23 +213,37 @@ namespace Hassium.Compiler.Parser
             var location = this.location;
             expectToken(TokenType.Identifier, "from");
 
-            StringBuilder module = new StringBuilder();
-            if (matchToken(TokenType.String))
-                module.Append(expectToken(TokenType.String).Value);
+            var first = new StringBuilder();
+
+            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                first.Append(tokens[position++].Value);
+            do
+            {
+                first.Append(expectToken(TokenType.Identifier).Value);
+                if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                    first.Append("/");
+            }
+            while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
+
+            expectToken(TokenType.Identifier, "use");
+
+            var second = new StringBuilder();
+            if (matchToken(TokenType.Operation, "*"))
+                second.Append(expectToken(TokenType.Operation, "*").Value);
             else
             {
+                while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                    second.Append(tokens[position++].Value);
                 do
                 {
+                    second.Append(expectToken(TokenType.Identifier).Value);
                     if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
-                        module.Append(tokens[position].Value);
+                        second.Append("/");
                 }
                 while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
             }
 
-            expectToken(TokenType.Identifier, "use");
-            string clazz = tokens[position++].Value;
-
-            return new UseFromNode(location, clazz, module.ToString());
+            return new UseFromNode(location, second.ToString(), first.ToString());
         }
 
         private FunctionDeclarationNode parseFunctionDeclaration()
@@ -411,19 +425,20 @@ namespace Hassium.Compiler.Parser
             expectToken(TokenType.Identifier, "use");
 
             var first = new StringBuilder();
-            if (acceptToken(TokenType.Operation, "*"))
+            if (matchToken(TokenType.Operation, "*"))
                 first.Append(expectToken(TokenType.Operation, "*").Value);
-
-            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
-                first.Append(tokens[position++].Value);
-            do
+            else
             {
-                first.Append(expectToken(TokenType.Identifier).Value);
-                if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
                     first.Append(tokens[position++].Value);
+                do
+                {
+                    first.Append(expectToken(TokenType.Identifier).Value);
+                    if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
+                        first.Append("/");
+                }
+                while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
             }
-            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"));
-
             if (!acceptToken(TokenType.Identifier, "from"))
                 return new UseNode(location, first.ToString());
 
@@ -434,10 +449,10 @@ namespace Hassium.Compiler.Parser
             {
                 second.Append(expectToken(TokenType.Identifier).Value);
                 if (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"))
-                    second.Append(tokens[position++].Value);
+                    second.Append("/");
             }
-            while (matchToken(TokenType.Dot) || matchToken(TokenType.Operation, "/"));
-
+            while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
+            
             return new UseFromNode(location, first.ToString(), second.ToString());
         }
 

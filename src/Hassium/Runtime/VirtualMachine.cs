@@ -170,7 +170,9 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.LoadGlobal:
                             attrib = CurrentModule.ConstantPool[arg];
-                            if (Globals.ContainsKey(attrib))
+                            if (method.Module.Attributes["__global__"].Attributes.ContainsKey(attrib))
+                                Stack.Push(method.Module.Attributes["__global__"].Attributes[attrib]);
+                            else if (Globals.ContainsKey(attrib))
                                 Stack.Push(Globals[attrib]);
                             else if (method.Parent != null)
                             {
@@ -411,8 +413,6 @@ namespace Hassium.Runtime
 
         public void RaiseException(HassiumObject message)
         {
-            Console.WriteLine("Raising exception {0}", message.ToString(this, CurrentSourceLocation).String);
-            Console.WriteLine("\n\n\n");
             if (Handlers.Count == 0)
             {
                 var callStack = UnwindCallStack();

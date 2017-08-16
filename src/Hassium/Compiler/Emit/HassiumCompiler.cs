@@ -37,7 +37,7 @@ namespace Hassium.Compiler.Emit
             module = new HassiumModule();
 
             classStack.Push(new HassiumClass("__global__"));
-            methodStack.Push(new HassiumMethod("__init__") { Parent = classStack.Peek() });
+            methodStack.Push(new HassiumMethod(module, "__init__") { Parent = classStack.Peek() });
 
             ast.Visit(this);
 
@@ -122,7 +122,7 @@ namespace Hassium.Compiler.Emit
 
             foreach (var inherit in node.Inherits)
             {
-                methodStack.Push(new HassiumMethod() { Parent = classStack.Peek() });
+                methodStack.Push(new HassiumMethod(module) { Parent = classStack.Peek() });
                 inherit.Visit(this);
                 emit(inherit.SourceLocation, InstructionType.Return);
                 clazz.Inherits.Add(methodStack.Pop());
@@ -178,7 +178,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(EnforcedAssignmentNode node)
         {
-            methodStack.Push(new HassiumMethod());
+            methodStack.Push(new HassiumMethod(module));
             methodStack.Peek().Parent = classStack.Peek();
             node.Type.Visit(this);
             emit(node.Type.SourceLocation, InstructionType.Return);
@@ -296,7 +296,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(FunctionDeclarationNode node)
         {
-            var method = new HassiumMethod(node.Name);
+            var method = new HassiumMethod(module, node.Name);
             method.IsPrivate = node.IsPrivate;
             methodStack.Push(method);
             method.SourceLocation = node.SourceLocation;
@@ -311,7 +311,7 @@ namespace Hassium.Compiler.Emit
             {
                 if (param.FunctionParameterType == FunctionParameterType.Enforced)
                 {
-                    methodStack.Push(new HassiumMethod());
+                    methodStack.Push(new HassiumMethod(module));
                     methodStack.Peek().Parent = classStack.Peek();
                     param.Type.Visit(this);
                     emit(param.Type.SourceLocation, InstructionType.Return);
@@ -327,7 +327,7 @@ namespace Hassium.Compiler.Emit
 
             if (node.EnforcedReturnType != null)
             {
-                methodStack.Push(new HassiumMethod());
+                methodStack.Push(new HassiumMethod(module));
                 node.EnforcedReturnType.Visit(this);
                 emit(node.EnforcedReturnType.SourceLocation, InstructionType.Return);
                 method.ReturnType = methodStack.Pop();
@@ -389,7 +389,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(LambdaNode node)
         {
-            var lambda = new HassiumMethod();
+            var lambda = new HassiumMethod(module);
             methodStack.Push(lambda);
             lambda.Parent = classStack.Peek();
 
@@ -477,7 +477,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(ThreadNode node)
         {
-            var method = new HassiumMethod();
+            var method = new HassiumMethod(module);
             methodStack.Push(method);
             method.Parent = classStack.Peek();
 
@@ -500,7 +500,7 @@ namespace Hassium.Compiler.Emit
 
             foreach (var pair in node.Attributes)
             {
-                methodStack.Push(new HassiumMethod());
+                methodStack.Push(new HassiumMethod(module));
                 pair.Value.Visit(this);
                 emit(pair.Value.SourceLocation, InstructionType.Return);
                 var type = methodStack.Pop();
@@ -514,7 +514,7 @@ namespace Hassium.Compiler.Emit
         {
             var endLabel = nextLabel();
             var temp = methodStack.Peek();
-            methodStack.Push(new HassiumMethod("catch"));
+            methodStack.Push(new HassiumMethod(module, "catch"));
             methodStack.Peek().Parent = classStack.Peek();
             table.EnterScope();
             methodStack.Peek().Parameters.Add(new FunctionParameter(FunctionParameterType.Normal, "value"), table.HandleSymbol("value"));
@@ -602,14 +602,16 @@ namespace Hassium.Compiler.Emit
             if (mod.Attributes.ContainsKey("__global__"))
             {
                 var globalClass = mod.Attributes["__global__"];
+                foreach (var attrib in globalClass.Attributes)
+                    if (attrib.Key == "__init__")
+                        foreach (var instruction in (attrib.Value as HassiumMethod).Instructions)
+                            methodStack.Peek().Instructions.Add(instruction);
+
                 if (node.Class == "*")
                 {
                     foreach (var attrib in globalClass.Attributes)
                     {
-                        if (attrib.Key == "__init__")
-                            foreach (var instruction in (attrib.Value as HassiumMethod).Instructions)
-                                methodStack.Peek().Instructions.Add(instruction);
-                        else if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
+                        if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
                         {
                             var value = attrib.Value.Clone() as HassiumObject;
                             value.Parent = classStack.Peek();
@@ -726,7 +728,7 @@ namespace Hassium.Compiler.Emit
             return CompileModuleFromFilePath(filePath);
         }
 
-        private string locateFile(string path, string extension)
+        private string locateFile(string path, string extension, bool pass = false)
         {
             if (File.Exists(path))
                 return path;
@@ -748,6 +750,8 @@ namespace Hassium.Compiler.Emit
                 return homeFilePath;
             if (File.Exists(homeFilePath + extension))
                 return homeFilePath + extension;
+            if (!pass)
+                return locateFile(Path.Combine(Program.MasterPath, path), extension, true);
             return string.Empty;
         }
     }

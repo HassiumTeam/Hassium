@@ -22,7 +22,8 @@ namespace Hassium.Runtime
         public new void AddAttribute(string name, HassiumObject obj)
         {
             obj.Parent = this;
-            Attributes.Add(name, obj);
+            if (!Attributes.ContainsKey(name))
+                Attributes.Add(name, obj);
         }
 
         public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)

@@ -14,22 +14,25 @@ namespace Hassium.Runtime
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("func");
 
-        public string Name { get; set; }
-        public bool IsConstructor { get { return Name == "new"; } }
-
-        public SourceLocation SourceLocation { get; set; }
-        public string SourceRepresentation { get; set; }
-
         public Stack<int> BreakLabels { get; private set; }
         public Stack<int> ContinueLabels { get; private set; }
-        public Dictionary<int, int> Labels { get; private set; }
 
         public List<HassiumInstruction> Instructions { get; private set; }
+
+        public bool IsConstructor { get { return Name == "new"; } }
+
+        public Dictionary<int, int> Labels { get; private set; }
+
+        public HassiumModule Module { get; private set; }
+        public string Name { get; set; }
 
         public Dictionary<FunctionParameter, int> Parameters { get; private set; }
         public HassiumMethod ReturnType { get; set; }
 
-        public HassiumMethod()
+        public SourceLocation SourceLocation { get; set; }
+        public string SourceRepresentation { get; set; }
+        
+        public HassiumMethod(HassiumModule module)
         {
             BreakLabels = new Stack<int>();
             ContinueLabels = new Stack<int>();
@@ -37,20 +40,22 @@ namespace Hassium.Runtime
             Labels = new Dictionary<int, int>();
             Parameters = new Dictionary<FunctionParameter, int>();
 
+            Module = module;
             Name = string.Empty;
             SourceRepresentation = string.Empty;
 
             AddAttribute(INVOKE, Invoke);
             AddType(TypeDefinition);
         }
-        public HassiumMethod(string name)
+        public HassiumMethod(HassiumModule module, string name)
         {
             BreakLabels = new Stack<int>();
             ContinueLabels = new Stack<int>();
             Instructions = new List<HassiumInstruction>();
             Labels = new Dictionary<int, int>();
             Parameters = new Dictionary<FunctionParameter, int>();
-            
+
+            Module = module;
             Name = name;
             SourceRepresentation = string.Empty;
 
