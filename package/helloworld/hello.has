@@ -1,0 +1,5 @@
+class Hello {
+	func main () : null {
+		println ("Hello from the example package!");
+	}
+}
