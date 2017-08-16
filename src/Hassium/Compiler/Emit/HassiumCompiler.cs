@@ -15,6 +15,8 @@ namespace Hassium.Compiler.Emit
     {
         public static HassiumModule CompileModuleFromFilePath(string abspath)
         {
+            if (!File.Exists(abspath))
+                throw new CompilerException(new SourceLocation(abspath, 0, 0), "Could not find input file {0}!", abspath);
             var tokens = new Scanner().Scan(abspath, File.ReadAllText(abspath));
             var ast = new Parser.Parser().Parse(tokens);
             var module = new HassiumCompiler().Compile(ast);

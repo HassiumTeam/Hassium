@@ -13,6 +13,12 @@ namespace Hassium
 
         static void Main(string[] args)
         {
+            if (args.Length <= 0)
+            {
+                Console.WriteLine("Please supply a file input!");
+                Environment.Exit(-1);
+            }
+
             try
             {
                 MasterPath = System.IO.Directory.GetCurrentDirectory();
@@ -27,17 +33,17 @@ namespace Hassium
             catch (CompilerException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
             catch (ParserException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
             catch (ScannerException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
         }
     }
