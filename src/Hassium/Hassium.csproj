@@ -98,6 +98,7 @@
     <Compile Include="Compiler\SourceLocation.cs" />
     <Compile Include="Compiler\Lexer\Token.cs" />
     <Compile Include="Compiler\Lexer\TokenType.cs" />
+    <Compile Include="PackageManager\HassiumPackageManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\Crypto\HassiumAES.cs" />
