@@ -98,6 +98,8 @@
     <Compile Include="Compiler\SourceLocation.cs" />
     <Compile Include="Compiler\Lexer\Token.cs" />
     <Compile Include="Compiler\Lexer\TokenType.cs" />
+    <Compile Include="HassiumArgumentParser.cs" />
+    <Compile Include="HassiumConfig.cs" />
     <Compile Include="PackageManager\HassiumPackageManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

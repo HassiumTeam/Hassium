@@ -1,0 +1,6 @@
+# Install by running Hassium.exe --pkg install helloworld
+use Hello from helloworld/hello;
+
+func main () {
+	Hello.main ();	
+}
