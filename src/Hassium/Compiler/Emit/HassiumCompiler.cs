@@ -19,7 +19,7 @@ namespace Hassium.Compiler.Emit
                 throw new CompilerException(new SourceLocation(abspath, 0, 0), "Could not find input file {0}!", abspath);
             var tokens = new Scanner().Scan(abspath, File.ReadAllText(abspath));
             var ast = new Parser.Parser().Parse(tokens);
-            var module = new HassiumCompiler().Compile(ast);
+            var module = new HassiumCompiler(suppressWarns).Compile(ast);
 
             if (!suppressWarns)
                 module.DisplayWarnings();
@@ -32,6 +32,13 @@ namespace Hassium.Compiler.Emit
 
         private SymbolTable table;
         private HassiumModule module;
+
+        private bool suppressWarns;
+
+        public HassiumCompiler(bool suppressWarns)
+        {
+            this.suppressWarns = suppressWarns;
+        }
 
         public HassiumModule Compile(AstNode ast)
         {
@@ -757,7 +764,7 @@ namespace Hassium.Compiler.Emit
             if (filePath == string.Empty)
                 throw new CompilerException(location, "Could not locate file by reference '{0}'!", path);
 
-            return CompileModuleFromFilePath(filePath);
+            return CompileModuleFromFilePath(filePath, suppressWarns);
         }
 
         private string locateFile(string path, string extension, bool pass = false)
