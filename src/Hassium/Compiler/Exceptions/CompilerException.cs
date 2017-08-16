@@ -5,7 +5,7 @@ namespace Hassium.Compiler.Exceptions
     public class CompilerException : Exception
     {
         public SourceLocation SourceLocation { get; private set; }
-        public new string Message { get { return string.Format("Compiler error at {0}! Message: {1}", SourceLocation, messageString); } }
+        public new string Message { get { return string.Format("Compiler error at [{0}]! Message: {1}", SourceLocation, messageString); } }
 
         private string messageString;
 

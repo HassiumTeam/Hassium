@@ -20,6 +20,9 @@ namespace Hassium.PackageManager
                     ? Environment.GetEnvironmentVariable("HOME")
                     : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
             hassiumfolder = Path.Combine(homePath, ".Hassium/");
+
+            if (!Directory.Exists(hassiumfolder))
+                Directory.CreateDirectory(hassiumfolder);
         }
 
         public bool CheckInstalled(string pkgname)

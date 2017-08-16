@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Compiler\Emit\HassiumCompiler.cs" />
     <Compile Include="Compiler\Emit\HassiumInstruction.cs" />
+    <Compile Include="Compiler\HassiumWarning.cs" />
     <Compile Include="Compiler\Emit\Scope.cs" />
     <Compile Include="Compiler\Emit\SymbolTable.cs" />
     <Compile Include="Compiler\Exceptions\CompilerException.cs" />

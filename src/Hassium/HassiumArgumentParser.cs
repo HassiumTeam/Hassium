@@ -36,6 +36,10 @@ namespace Hassium
                         config.Action = expectData("[ACTION]");
                         config.Package = expectData("[PKGNAME]");
                         break;
+                    case "-s":
+                    case "--suppress-warns":
+                        config.SuppressWarnings = true;
+                        break;
                     default:
                         config.FilePath = args[position++];
                         List<string> pargs = new List<string>();
@@ -51,14 +55,15 @@ namespace Hassium
 
         private void displayHelp()
         {
-            Console.WriteLine("USAGE: Hassium.exe -[hargs]... [FILE].has [pargs]...");
-            Console.WriteLine("USAGE: Hassium.exe --pkg [ACTION] [PKGNAME]");
+            Console.WriteLine("USAGE: Hassium.exe   -[hargs]... [FILE].has [pargs]...");
+            Console.WriteLine("USAGE: Hassium.exe   --pkg [ACTION] [PKGNAME]");
             Console.WriteLine("\n[hargs]");
-            Console.WriteLine("-d --dev         Runs in developer mode (verbose errors).");
+            Console.WriteLine("-d --dev             Runs in developer mode (verbose errors).");
+            Console.WriteLine("-s --suppress-warns  Suppresses compiler warnings.");
             Console.WriteLine("\n[ACTION]");
-            Console.WriteLine("check            Checks if PKGNAME is installed.");
-            Console.WriteLine("install          Installs PKGNAME to ~/.Hassium/.");
-            Console.WriteLine("uninstall        Uninstalls PKGNAME.");
+            Console.WriteLine("check                Checks if PKGNAME is installed.");
+            Console.WriteLine("install              Installs PKGNAME to ~/.Hassium/.");
+            Console.WriteLine("uninstall            Uninstalls PKGNAME.");
             die(string.Empty);
         }
 

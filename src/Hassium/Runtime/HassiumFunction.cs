@@ -32,9 +32,9 @@ namespace Hassium.Runtime
             {
                 var reps = (a[0] as FunctionAttribute).SourceRepresentations;
                 if (reps.Count > 1)
-                    vm.CallStack.Push(string.Format("{0}\t{1}", reps[new List<int>(ParameterLengths).IndexOf(args.Length)], location));
+                    vm.CallStack.Push(string.Format("{0}\t[{1}]", reps[new List<int>(ParameterLengths).IndexOf(args.Length)], location));
                 else if (reps.Count == 0)
-                    vm.CallStack.Push(string.Format("{0}\t{1}", reps[0]));
+                    vm.CallStack.Push(string.Format("{0}\t[{1}]", reps[0]));
             }
             if (ParameterLengths[0] != -1)
             {

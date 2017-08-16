@@ -471,7 +471,7 @@ namespace Hassium.Runtime
             sb.AppendLine("At:");
             var firstLine = CallStack.Peek();
             firstLine = firstLine.Substring(0, firstLine.IndexOf("\t"));
-            firstLine = string.Format("{0}\t{1}", firstLine, CurrentSourceLocation);
+            firstLine = string.Format("{0}\t[{1}]", firstLine, CurrentSourceLocation);
             sb.AppendLine(firstLine);
             int len = CallStack.Count;
             for (int i = 0; i < len; i++)

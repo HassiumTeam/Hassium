@@ -17,7 +17,7 @@ namespace Hassium
                 try
                 {
                     VirtualMachine vm = new VirtualMachine();
-                    var module = HassiumCompiler.CompileModuleFromFilePath(config.FilePath);
+                    var module = HassiumCompiler.CompileModuleFromFilePath(config.FilePath, config.SuppressWarnings);
                     HassiumList hargs = new HassiumList(new HassiumObject[0]);
 
                     foreach (var arg in config.Args)
@@ -80,9 +80,10 @@ namespace Hassium
         public HassiumRunType HassiumRunType { get; set; }
 
         // Code
+        public string[] Args { get; set; }
         public bool Dev { get; set; }
         public string FilePath { get; set; }
-        public string[] Args { get; set; }
+        public bool SuppressWarnings { get; set; }
 
         // PackageManager
         public string Action { get; set; }
@@ -92,9 +93,10 @@ namespace Hassium
         {
             HassiumRunType = HassiumRunType.Code;
 
+            Args = new string[0];
             Dev = false;
             FilePath = string.Empty;
-            Args = new string[0];
+            SuppressWarnings = false;
 
             Action = string.Empty;
             Package = string.Empty;

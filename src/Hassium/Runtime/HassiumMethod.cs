@@ -81,7 +81,7 @@ namespace Hassium.Runtime
         public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             if (SourceRepresentation != string.Empty)
-                vm.PushCallStack(string.Format("{0}\t{1}", SourceRepresentation, location));
+                vm.PushCallStack(string.Format("{0}\t[{1}]", SourceRepresentation, location));
             if (SourceRepresentation != string.Empty || Name == "__init__")
                 vm.StackFrame.PushFrame();
 

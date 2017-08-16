@@ -13,13 +13,16 @@ namespace Hassium.Compiler.Emit
 {
     public class HassiumCompiler : IVisitor
     {
-        public static HassiumModule CompileModuleFromFilePath(string abspath)
+        public static HassiumModule CompileModuleFromFilePath(string abspath, bool suppressWarns = false)
         {
             if (!File.Exists(abspath))
                 throw new CompilerException(new SourceLocation(abspath, 0, 0), "Could not find input file {0}!", abspath);
             var tokens = new Scanner().Scan(abspath, File.ReadAllText(abspath));
             var ast = new Parser.Parser().Parse(tokens);
             var module = new HassiumCompiler().Compile(ast);
+
+            if (!suppressWarns)
+                module.DisplayWarnings();
 
             return module;
         }
@@ -64,9 +67,14 @@ namespace Hassium.Compiler.Emit
             {
                 case BinaryOperation.Assignment:
                     node.Right.Visit(this);
+                    // var = val
                     if (node.Left is IdentifierNode)
                     {
                         string identifier = ((IdentifierNode)node.Left).Identifier;
+
+                        // Locals are lowercase
+                        HassiumWarning.EnforceCasing(module, node.Left.SourceLocation, identifier, HassiumCasingType.Lower);
+
                         if (table.ContainsGlobalSymbol(identifier))
                         {
                             emit(node.SourceLocation, InstructionType.StoreGlobalVariable, table.GetGlobalSymbol(identifier));
@@ -79,6 +87,7 @@ namespace Hassium.Compiler.Emit
                             emit(node.SourceLocation, InstructionType.LoadLocal, table.GetSymbol(identifier));
                         }
                     }
+                    // var.attrib = val
                     else if (node.Left is AttributeAccessNode)
                     {
                         AttributeAccessNode accessor = node.Left as AttributeAccessNode;
@@ -88,6 +97,7 @@ namespace Hassium.Compiler.Emit
                         emit(node.SourceLocation, InstructionType.StoreAttribute, accessor.Right.GetHashCode());
                         accessor.Left.Visit(this);
                     }
+                    // var [index] = val
                     else if (node.Left is IterableAccessNode)
                     {
                         IterableAccessNode access = node.Left as IterableAccessNode;
@@ -116,6 +126,9 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(ClassDeclarationNode node)
         {
+            // Classes are PascalCase
+            HassiumWarning.EnforceCasing(module, node.SourceLocation, node.Name, HassiumCasingType.Pascal);
+
             var clazz = new HassiumClass(node.Name);
             clazz.IsPrivate = node.IsPrivate;
             clazz.Parent = classStack.Peek();
@@ -204,6 +217,9 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(EnumNode node)
         {
+            // Enums are PascalCase
+            HassiumWarning.EnforceCasing(module, node.SourceLocation, node.Name, HassiumCasingType.Pascal);
+
             HassiumEnum enum_ = new HassiumEnum(node.Name);
             enum_.IsPrivate = node.IsPrivate;
             foreach (var pair in node.Attributes)
@@ -298,6 +314,9 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(FunctionDeclarationNode node)
         {
+            // Funcs are lowercase
+            HassiumWarning.EnforceCasing(module, node.SourceLocation, node.Name, HassiumCasingType.Lower);
+
             var method = new HassiumMethod(module, node.Name);
             method.IsPrivate = node.IsPrivate;
             methodStack.Push(method);
@@ -497,6 +516,9 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(TraitNode node)
         {
+            // Traits are PascalCase
+            HassiumWarning.EnforceCasing(module, node.SourceLocation, node.Name, HassiumCasingType.Pascal);
+
             HassiumTrait trait = new HassiumTrait(node.Name);
             trait.IsPrivate = node.IsPrivate;
 
@@ -601,16 +623,22 @@ namespace Hassium.Compiler.Emit
             else
                 mod = resolveModuleByPath(node.SourceLocation, path);
 
+            // Hassium source code imports will contain __global__, this is where
+            // we have to look for the desired classes.
             if (mod.Attributes.ContainsKey("__global__"))
             {
                 var globalClass = mod.Attributes["__global__"];
+                // Copy over the __init__ method into ours
                 foreach (var attrib in globalClass.Attributes)
                     if (attrib.Key == "__init__")
                         foreach (var instruction in (attrib.Value as HassiumMethod).Instructions)
                             methodStack.Peek().Instructions.Add(instruction);
-
+                // Import *everything*
                 if (node.Class == "*")
                 {
+                    // use * is bad
+                    module.AddWarning(node.SourceLocation, "Importing '*' is bad practice!");
+
                     foreach (var attrib in globalClass.Attributes)
                     {
                         if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
@@ -628,6 +656,8 @@ namespace Hassium.Compiler.Emit
             {
                 if (node.Class == "*")
                 {
+                    // use * is bad
+                    module.AddWarning(node.SourceLocation, "Importing '*' is bad practice!");
                     foreach (var attrib in mod.Attributes)
                     {
                         if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
