@@ -23,6 +23,23 @@ namespace Hassium.Runtime
 
         public StackFrame.Frame GlobalFrame { get; set; }
 
+        public VirtualMachine()
+        {
+
+        }
+
+        public VirtualMachine(HassiumModule module)
+        {
+            CallStack = new Stack<string>();
+            CurrentModule = module;
+            ExceptionReturns = new Dictionary<HassiumMethod, int>();
+            Globals = new Dictionary<string, HassiumObject>();
+            Handlers = new Stack<HassiumExceptionHandler>();
+            Stack = new Stack<HassiumObject>();
+            StackFrame = new StackFrame();
+            ImportGlobals();
+        }
+
         public void Execute(HassiumModule module, HassiumList args, StackFrame.Frame frame = null)
         {
             CallStack = new Stack<string>();
@@ -32,7 +49,7 @@ namespace Hassium.Runtime
             Handlers = new Stack<HassiumExceptionHandler>();
             Stack = new Stack<HassiumObject>();
             StackFrame = new StackFrame();
-            importGlobals();
+            ImportGlobals();
 
             var globalClass = module.Attributes["__global__"];
             (globalClass.Attributes["__init__"] as HassiumMethod).Invoke(this, new SourceLocation("", 0, 0));
@@ -276,6 +293,13 @@ namespace Hassium.Runtime
                                 RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(attrib)));
                             }
                             break;
+                        case InstructionType.StoreGlobal:
+                            val = Stack.Pop();
+                            attrib = CurrentModule.ConstantPool[arg];
+                            if (Globals.ContainsKey(attrib))
+                                Globals.Remove(attrib);
+                            Globals.Add(attrib, val);
+                            break;
                         case InstructionType.StoreGlobalVariable:
                             CurrentModule.Globals[arg] = Stack.Pop();
                             break;
@@ -431,18 +455,19 @@ namespace Hassium.Runtime
                 ExceptionReturns.Add(handler.Caller, handler.Caller.Labels[handler.Label]);
         }
 
-        private void importGlobals()
+        public void ImportGlobals()
         {
             foreach (string constant in CurrentModule.ConstantPool.Values)
             {
-                if (GlobalFunctions.Functions.ContainsKey(constant))
+                if (GlobalFunctions.Functions.ContainsKey(constant) && !Globals.ContainsKey(constant))
                     Globals.Add(constant, GlobalFunctions.Functions[constant]);
                 else if (CurrentModule.Attributes.ContainsKey(constant))
                     Globals.Add(constant, CurrentModule.Attributes[constant]);
             }
             
             foreach (var pair in InternalModule.InternalModules["Types"].Attributes)
-                Globals.Add(pair.Key, pair.Value);
+                if (!Globals.ContainsKey(pair.Key))
+                    Globals.Add(pair.Key, pair.Value);
 
             foreach (var pair in CurrentModule.Attributes["__global__"].Attributes)
             {

@@ -9,9 +9,9 @@ namespace Hassium.Compiler.Emit
     {
 
         public int NextIndex { get; set; }
-        public bool IsGlobalScope { get { return scopes.Peek() == globalScope; } }
+        public bool IsGlobalScope { get { return Scopes.Peek() == globalScope; } }
 
-        private Stack<Scope> scopes = new Stack<Scope>();
+        public Stack<Scope> Scopes = new Stack<Scope>();
         private Scope globalScope = new Scope();
         private int nextGlobalIndex = 0;
 
@@ -19,24 +19,24 @@ namespace Hassium.Compiler.Emit
         {
             NextIndex = 0;
 
-            scopes.Push(globalScope);
+            Scopes.Push(globalScope);
         }
 
         public void EnterScope()
         {
-            scopes.Push(new Scope());
+            Scopes.Push(new Scope());
         }
 
         public void LeaveScope()
         {
-            scopes.Pop();
-            if (scopes.Count == 2)
+            Scopes.Pop();
+            if (Scopes.Count == 2)
                 NextIndex = 0;
         }
 
         public int GetSymbol(string name)
         {
-            foreach (Scope scope in scopes)
+            foreach (Scope scope in Scopes)
                 if (scope.Symbols.ContainsKey(name))
                     return scope.Symbols[name];
             return -1;
@@ -48,7 +48,7 @@ namespace Hassium.Compiler.Emit
 
         public bool ContainsSymbol(string name)
         {
-            foreach (Scope scope in scopes)
+            foreach (Scope scope in Scopes)
                 if (scope.Symbols.ContainsKey(name))
                     return true;
             return false;
@@ -60,7 +60,7 @@ namespace Hassium.Compiler.Emit
 
         public int AddSymbol(string name)
         {
-            scopes.Peek().Symbols.Add(name, NextIndex);
+            Scopes.Peek().Symbols.Add(name, NextIndex);
             return NextIndex++;
         }
         public int AddGlobalSymbol(string name)

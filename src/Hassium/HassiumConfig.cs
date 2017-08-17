@@ -74,6 +74,8 @@ namespace Hassium
                         break;
                 }
             }
+            else if (config.HassiumRunType == HassiumRunType.REPL)
+                HassiumREPL.Run();
         }
 
 
@@ -106,6 +108,7 @@ namespace Hassium
     public enum HassiumRunType
     {
         Code,
-        PackageManager
+        PackageManager,
+        REPL
     }
 }

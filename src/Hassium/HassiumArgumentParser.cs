@@ -36,6 +36,10 @@ namespace Hassium
                         config.Action = expectData("[ACTION]");
                         config.Package = expectData("[PKGNAME]");
                         break;
+                    case "-r":
+                    case "--repl":
+                        config.HassiumRunType = HassiumRunType.REPL;
+                        break;
                     case "-s":
                     case "--suppress-warns":
                         config.SuppressWarnings = true;
@@ -59,6 +63,7 @@ namespace Hassium
             Console.WriteLine("USAGE: Hassium.exe   --pkg [ACTION] [PKGNAME]");
             Console.WriteLine("\n[hargs]");
             Console.WriteLine("-d --dev             Runs in developer mode (verbose errors).");
+            Console.WriteLine("-r --repl            Executes an REPL shell.");
             Console.WriteLine("-s --suppress-warns  Suppresses compiler warnings.");
             Console.WriteLine("\n[ACTION]");
             Console.WriteLine("check                Checks if PKGNAME is installed.");

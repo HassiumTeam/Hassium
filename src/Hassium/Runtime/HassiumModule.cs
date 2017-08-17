@@ -9,15 +9,15 @@ namespace Hassium.Runtime
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Module");
 
-        public Dictionary<int, HassiumObject> ObjectPool { get; private set; }
         public Dictionary<int, string> ConstantPool { get; private set; }
+        public Dictionary<int, HassiumObject> ObjectPool { get; private set; }
         public Dictionary<int, HassiumObject> Globals { get; private set; }
         public List<HassiumWarning> Warnings { get; private set; }
 
         public HassiumModule()
         {
-            ObjectPool = new Dictionary<int, HassiumObject>();
             ConstantPool = new Dictionary<int, string>();
+            ObjectPool = new Dictionary<int, HassiumObject>();
             Globals = new Dictionary<int, HassiumObject>();
             Warnings = new List<HassiumWarning>();
 

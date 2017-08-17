@@ -68,6 +68,7 @@ namespace Hassium.Compiler.Emit
         SelfReference,
         SetInitialAttribute,
         StoreAttribute,
+        StoreGlobal,
         StoreGlobalVariable,
         StoreIterableElement,
         StoreLocal,

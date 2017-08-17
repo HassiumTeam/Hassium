@@ -23,7 +23,7 @@ namespace Hassium.Runtime
 
         public Dictionary<int, int> Labels { get; private set; }
 
-        public HassiumModule Module { get; private set; }
+        public HassiumModule Module { get; set; }
         public string Name { get; set; }
 
         public Dictionary<FunctionParameter, int> Parameters { get; private set; }

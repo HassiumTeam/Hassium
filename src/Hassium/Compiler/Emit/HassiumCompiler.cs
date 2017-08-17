@@ -17,7 +17,12 @@ namespace Hassium.Compiler.Emit
         {
             if (!File.Exists(abspath))
                 throw new CompilerException(new SourceLocation(abspath, 0, 0), "Could not find input file {0}!", abspath);
-            var tokens = new Scanner().Scan(abspath, File.ReadAllText(abspath));
+            return CompileModuleFromString(abspath, File.ReadAllText(abspath), suppressWarns);
+        }
+        
+        public static HassiumModule CompileModuleFromString(string abspath, string code, bool suppressWarns = false)
+        {
+            var tokens = new Scanner().Scan(abspath, code);
             var ast = new Parser.Parser().Parse(tokens);
             var module = new HassiumCompiler(suppressWarns).Compile(ast);
 
@@ -25,6 +30,7 @@ namespace Hassium.Compiler.Emit
                 module.DisplayWarnings();
 
             return module;
+
         }
 
         private Stack<HassiumMethod> methodStack;
@@ -40,13 +46,13 @@ namespace Hassium.Compiler.Emit
             this.suppressWarns = suppressWarns;
         }
 
-        public HassiumModule Compile(AstNode ast)
+        public HassiumModule Compile(AstNode ast, HassiumModule module = null)
         {
             methodStack = new Stack<HassiumMethod>();
             classStack = new Stack<HassiumClass>();
 
             table = new SymbolTable();
-            module = new HassiumModule();
+            this.module = module == null ? new HassiumModule() : module;
 
             classStack.Push(new HassiumClass("__global__"));
             methodStack.Push(new HassiumMethod(module, "__init__") { Parent = classStack.Peek() });
@@ -82,10 +88,13 @@ namespace Hassium.Compiler.Emit
                         // Locals are lowercase
                         HassiumWarning.EnforceCasing(module, node.Left.SourceLocation, identifier, HassiumCasingType.Lower);
 
+                        if (table.Scopes.Count == 2)
+                            table.AddGlobalSymbol(identifier);
+
                         if (table.ContainsGlobalSymbol(identifier))
                         {
-                            emit(node.SourceLocation, InstructionType.StoreGlobalVariable, table.GetGlobalSymbol(identifier));
-                            emit(node.SourceLocation, InstructionType.LoadGlobalVariable, table.GetGlobalSymbol(identifier));
+                            emit(node.SourceLocation, InstructionType.StoreGlobal, handleConstant(identifier));
+                            emit(node.SourceLocation, InstructionType.LoadGlobal,  handleConstant(identifier));
                         }
                         else
                         {
