@@ -61,8 +61,8 @@ namespace Hassium.Compiler.Emit
 
             var globalClass = classStack.Pop();
             globalClass.AddAttribute("__init__", methodStack.Pop());
-            module.AddAttribute("__global__", globalClass);
-            return module;
+            this.module.AddAttribute("__global__", globalClass);
+            return this.module;
         }
 
         public void Accept(ArgumentListNode node)

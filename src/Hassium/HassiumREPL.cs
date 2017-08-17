@@ -63,9 +63,12 @@ namespace Hassium
 
                 var init = (module.Attributes["__global__"].Attributes["__init__"] as HassiumMethod);
                 init.Module = module;
-                vm.ImportGlobals();
-                Console.WriteLine(vm.ExecuteMethod(init).ToString(vm, vm.CurrentSourceLocation).String);
 
+                vm.ImportGlobals();
+                var ret = vm.ExecuteMethod(init);
+
+                if (!(ret is HassiumNull))
+                    Console.WriteLine(ret.ToString(vm, vm.CurrentSourceLocation).String);
             }
         }
     }
