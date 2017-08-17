@@ -18,6 +18,7 @@ namespace Hassium.Runtime.Types
 
             AddAttribute(INVOKE, _new, 1);
             AddAttribute("modpow", modpow, 3);
+            ImportAttribs(this);
         }
 
         [FunctionAttribute("func new (obj : object) : BigInt")]

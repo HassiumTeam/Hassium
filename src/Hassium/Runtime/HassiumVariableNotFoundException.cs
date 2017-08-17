@@ -13,6 +13,13 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 0);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumVariableNotFoundException exception)
+        {
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute(TOSTRING, exception.Attributes["message"]);
         }
 
         [FunctionAttribute("func new () : VariableNotFoundException")]
@@ -20,8 +27,7 @@ namespace Hassium.Runtime
         {
             HassiumVariableNotFoundException exception = new HassiumVariableNotFoundException();
 
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.Attributes["message"]);
+            ImportAttribs(exception);
 
             return exception;
         }

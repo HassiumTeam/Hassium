@@ -17,6 +17,15 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 1, 2);
+            ImportAttribs(this);
+        }
+        
+        public static void ImportAttribs(HassiumSocketListener listener)
+        {
+            listener.AddAttribute("acceptsock", listener.acceptsock, 0);
+            listener.AddAttribute("localip", new HassiumProperty(listener.get_localip));
+            listener.AddAttribute("start", listener.start, 0);
+            listener.AddAttribute("stop", listener.stop, 0);
         }
 
         [FunctionAttribute("func new (portOrIPAddr : object) : SocketListener", "func new (ip : string, port : int) : SocketListener")]
@@ -39,10 +48,7 @@ namespace Hassium.Runtime.Net
                     listener.TcpListener = new TcpListener(IPAddress.Parse(args[0].ToString(vm, location).String), (int)args[1].ToInt(vm, location).Int);
                     break;
             }
-            listener.AddAttribute("acceptsock", listener.acceptsock, 0);
-            listener.AddAttribute("localip", new HassiumProperty(listener.get_localip));
-            listener.AddAttribute("start", listener.start, 0);
-            listener.AddAttribute("stop", listener.stop, 0);
+            ImportAttribs(listener);
 
             return listener;
         }

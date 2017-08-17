@@ -15,14 +15,11 @@ namespace Hassium.Runtime.Text
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 0, 1);
+            ImportAttribs(this);
         }
 
-        [FunctionAttribute("func new () : StringBuilder", "func new (obj : object) : StringBuilder")]
-        public static HassiumStringBuilder _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static void ImportAttribs(HassiumStringBuilder sb)
         {
-            HassiumStringBuilder sb = new HassiumStringBuilder();
-
-            sb.StringBuilder = args.Length == 0 ? new StringBuilder() : new StringBuilder(args[0].ToString(vm, location).String);
             sb.AddAttribute("append", sb.append, 1);
             sb.AddAttribute("appendf", sb.appendf, -1);
             sb.AddAttribute("appendline", sb.appendline, 1);
@@ -31,6 +28,16 @@ namespace Hassium.Runtime.Text
             sb.AddAttribute("length", new HassiumProperty(sb.get_length));
             sb.AddAttribute("replace", sb.replace, 2);
             sb.AddAttribute(TOSTRING, sb.ToString, 0);
+        }
+
+        [FunctionAttribute("func new () : StringBuilder", "func new (obj : object) : StringBuilder")]
+        public static HassiumStringBuilder _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumStringBuilder sb = new HassiumStringBuilder();
+
+            sb.StringBuilder = args.Length == 0 ? new StringBuilder() : new StringBuilder(args[0].ToString(vm, location).String);
+            ImportAttribs(sb);
+
             return sb;
         }
 

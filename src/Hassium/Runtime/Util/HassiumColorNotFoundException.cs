@@ -16,6 +16,14 @@ namespace Hassium.Runtime.Util
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumColorNotFoundException exception)
+        {
+            exception.AddAttribute("color", new HassiumProperty(exception.get_color));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (col : string) : ColorNotFoundException")]
@@ -24,9 +32,7 @@ namespace Hassium.Runtime.Util
             HassiumColorNotFoundException exception = new HassiumColorNotFoundException();
 
             exception.ColorString = args[0].ToString(vm, location);
-            exception.AddAttribute("color", new HassiumProperty(exception.get_color));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

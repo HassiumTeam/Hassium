@@ -17,6 +17,7 @@ namespace Hassium.Runtime.Util
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
+            ImportAttribs(this);
         }
 
         public HassiumProcess(Process process)
@@ -34,6 +35,8 @@ namespace Hassium.Runtime.Util
 
         public static void ImportAttribs(HassiumProcess proc)
         {
+            proc.Attributes.Clear();
+            proc.AddAttribute(INVOKE, _new, 2);
             proc.AddAttribute("args", new HassiumProperty(proc.get_args, proc.set_args));
             proc.AddAttribute("createwindow", new HassiumProperty(proc.get_createwindow, proc.set_createwindow));
             proc.AddAttribute("path", new HassiumProperty(proc.get_path, proc.set_path));

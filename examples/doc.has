@@ -1,40 +1,40 @@
-from Crypto use *;
+use Crypto;
+use Drawing;
+use IO;
+use Math;
+use Net;
+use Text;
+use Util;
 
-from Drawing use *;
-
-from IO use *;
-
-from Math use *;
-
-from Net use *;
-
-from Text use *;
-
-from Util use *;
+use FS from IO;
+use Path from IO;
 
 func main () {
-	makedocs ("ArgLengthException", new ArgLengthException (null, 0, 1));
-	makedocs ("AttribNotFoundException", new AttribNotFoundException (null, ""));
-	makedocs ("bool", true);
-	makedocs ("BigInt", new BigInt (0));
-	makedocs ("char", 'a');
-	makedocs ("ConversionFailedException", new ConversionFailedException (null, char));
-	makedocs ("dictionary",  { "US" : "A" });
-	makedocs ("func", main);
-	makedocs ("IndexOutOfRangeException", new IndexOutOfRangeException (null, 0));
-	makedocs ("int", 0);
-	makedocs ("list", []);
-	makedocs ("null", null);
-	makedocs ("number", number);
-	makedocs ("PrivateAttribException", new PrivateAttribException (null, ""));
-	makedocs ("property", FS.cwd);
-	makedocs ("string", "");
-	makedocs ("tuple", (1, 2, 3));
-	makedocs ("typedef", string);
-	makedocs ("VariableNotFoundException", new VariableNotFoundException ());
+	makemoddocs ("Crypto", Crypto);
+	makemoddocs ("Drawing", Drawing);
+	makemoddocs ("IO", IO);
+	makemoddocs ("Math", Math);
+	makemoddocs ("Net", Net);
+	makemoddocs ("Text", Text);
+	makemoddocs ("Util", Util);
 }
 
-func makedocs (name : string, obj : object) {
+func makemoddocs (name : string, mod : object) : null {
+	attribs = getattribs (mod);
+
+	if (!FS.direxists (name)) {
+		FS.createdir (name);
+	}
+	FS.cwd = Path.combine (FS.cwd, name);
+
+	foreach (pair in attribs) {
+		makeclassdocs (pair [0], pair [1]);
+	}
+
+	FS.cwd = Path.combine (FS.cwd, "../");
+}
+
+func makeclassdocs (name : string, obj : object) : null {
 	file = FS.open ("{0}.md".format (name));
 
 	file.writeline ("## ```class {0}```\n\n".format (name));

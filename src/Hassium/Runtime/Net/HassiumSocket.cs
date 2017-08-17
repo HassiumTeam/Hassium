@@ -27,6 +27,7 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 0, 1, 2);
+            ImportAttribs(this);
         }
 
         [FunctionAttribute("func new () : Socket", "func new (IPAddrOrStr : object) : Socket", "func new (ip : string, port : int) : Socket", "func new (ip : string, port : int, ssl : bool) : Socket")]

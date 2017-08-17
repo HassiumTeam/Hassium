@@ -15,6 +15,16 @@ namespace Hassium.Runtime.Drawing
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 1, 3, 4);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumColor color)
+        {
+            color.AddAttribute("a", new HassiumProperty(color.get_a));
+            color.AddAttribute("argb", new HassiumProperty(color.get_argb));
+            color.AddAttribute("b", new HassiumProperty(color.get_b));
+            color.AddAttribute("g", new HassiumProperty(color.get_g));
+            color.AddAttribute("r", new HassiumProperty(color.get_r));
         }
 
         [FunctionAttribute("func new (colIntOrStr : object) : Color", "func new (r : int, g : int, b : int) : Color", "func new (a : int, r : int, g : int, b : int) : Color")]
@@ -37,11 +47,7 @@ namespace Hassium.Runtime.Drawing
                     color.Color = Color.FromArgb((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int, (int)args[2].ToInt(vm, location).Int, (int)args[3].ToInt(vm, location).Int);
                     break;
             }
-            color.AddAttribute("a", new HassiumProperty(color.get_a));
-            color.AddAttribute("argb", new HassiumProperty(color.get_argb));
-            color.AddAttribute("b", new HassiumProperty(color.get_b));
-            color.AddAttribute("g", new HassiumProperty(color.get_g));
-            color.AddAttribute("r", new HassiumProperty(color.get_r));
+            ImportAttribs(color);
 
             return color;
         }

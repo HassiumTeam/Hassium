@@ -15,6 +15,10 @@
 
 #### ```func deletefile (file : string) : null```
 
+#### ```func direxists (dir : string) : bool```
+
+#### ```func fileexists (file : string) : bool```
+
 #### ```func gettempfile () : string```
 
 #### ```func gettemppath () : string```

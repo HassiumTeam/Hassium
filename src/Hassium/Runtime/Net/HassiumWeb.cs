@@ -17,14 +17,11 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 0);
+            ImportAttribs(this);
         }
 
-        [FunctionAttribute("func new () : Web")]
-        public static HassiumWeb _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static void ImportAttribs(HassiumWeb web)
         {
-            HassiumWeb web = new HassiumWeb();
-
-            web.WebClient = new WebClient();
             web.AddAttribute("downloaddata", web.downloaddata, 1);
             web.AddAttribute("downloadfile", web.downloadfile, 2);
             web.AddAttribute("downloadstr", web.downloadstr, 1);
@@ -35,6 +32,15 @@ namespace Hassium.Runtime.Net
             web.AddAttribute("uploadstring", web.uploadstr, 2);
             web.AddAttribute("urldecode", web.urldecode, 1);
             web.AddAttribute("urlencode", web.urlencode, 1);
+        }
+
+        [FunctionAttribute("func new () : Web")]
+        public static HassiumWeb _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumWeb web = new HassiumWeb();
+
+            web.WebClient = new WebClient();
+            ImportAttribs(web);
 
             return web;
         }

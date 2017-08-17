@@ -17,6 +17,7 @@ namespace Hassium.Runtime.Util
 
             AddAttribute("now", new HassiumProperty(get_now));
             AddAttribute(INVOKE, _new, 3, 6, 7);
+            ImportAttribs(this);
         }
 
         [FunctionAttribute("func new (year : int, month : int, day : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int, millisecond : int) : DateTime")]

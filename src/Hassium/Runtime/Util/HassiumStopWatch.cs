@@ -15,14 +15,11 @@ namespace Hassium.Runtime.Util
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 0);
+            ImportAttribs(this);
         }
 
-        [FunctionAttribute("func new () : StopWatch")]
-        public static HassiumStopWatch _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static void ImportAttribs(HassiumStopWatch watch)
         {
-            HassiumStopWatch watch = new HassiumStopWatch();
-
-            watch.StopWatch = new Stopwatch();
             watch.AddAttribute("hours", new HassiumProperty(watch.get_hours));
             watch.AddAttribute("isrunning", new HassiumProperty(watch.get_isrunning));
             watch.AddAttribute("milliseconds", new HassiumProperty(watch.get_milliseconds));
@@ -33,6 +30,15 @@ namespace Hassium.Runtime.Util
             watch.AddAttribute("start", watch.start, 0);
             watch.AddAttribute("stop", watch.stop, 0);
             watch.AddAttribute("ticks", new HassiumProperty(watch.get_ticks));
+        }
+
+        [FunctionAttribute("func new () : StopWatch")]
+        public static HassiumStopWatch _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            HassiumStopWatch watch = new HassiumStopWatch();
+
+            watch.StopWatch = new Stopwatch();
+            ImportAttribs(watch);
 
             return watch;
         }

@@ -16,6 +16,14 @@ namespace Hassium.Runtime.Net
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumSocketClosedException exception)
+        {
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("socket", new HassiumProperty(exception.get_socket));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (sock : Socket) : SocketClosedException")]
@@ -24,9 +32,7 @@ namespace Hassium.Runtime.Net
             HassiumSocketClosedException exception = new HassiumSocketClosedException();
 
             exception.Socket = args[0] as HassiumSocket;
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("socket", new HassiumProperty(exception.get_socket));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

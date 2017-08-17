@@ -16,6 +16,15 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumConversionFailedException exception)
+        {
+            exception.AddAttribute("desired", new HassiumProperty(exception.get_desired));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (obj : object, type : object) : ConversionFailedException")]
@@ -30,10 +39,7 @@ namespace Hassium.Runtime
                 exception.DesiredType = args[1] as HassiumTrait;
             else
                 exception.Object = args[1];
-            exception.AddAttribute("desired", new HassiumProperty(exception.get_desired));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

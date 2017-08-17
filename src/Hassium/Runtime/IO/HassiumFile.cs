@@ -39,41 +39,46 @@ namespace Hassium.Runtime.IO
             StreamReader = new StreamReader(fs);
             StreamWriter = new StreamWriter(fs);
 
-            AddAttribute("abspath", new HassiumProperty(get_abspath));
-            AddAttribute("autoflush", new HassiumProperty(get_autoflush, set_autoflush));
-            AddAttribute("close", close, 0);
-            AddAttribute("copyto", copyto, 1);
-            AddAttribute("exists", new HassiumProperty(get_exists));
-            AddAttribute("extension", new HassiumProperty(get_extension, set_extension));
-            AddAttribute("flush", flush, 0);
-            AddAttribute("isclosed", new HassiumProperty(get_isclosed));
-            AddAttribute("length", new HassiumProperty(get_length));
-            AddAttribute("moveTo", moveto, 1);
-            AddAttribute("name", new HassiumProperty(get_name, set_name));
-            AddAttribute("position", new HassiumProperty(get_position, set_position));
-            AddAttribute("readallbytes", readallbytes, 0);
-            AddAttribute("readalllines", readalllines, 0);
-            AddAttribute("readalltext", readalltext, 0);
-            AddAttribute("readbyte", readbyte, 0);
-            AddAttribute("readlist", readbytes, 1);
-            AddAttribute("readint", readint, 0);
-            AddAttribute("readline", readline, 0);
-            AddAttribute("readlong", readlong, 0);
-            AddAttribute("readshort", readshort, 0);
-            AddAttribute("readstring", readstring, 0);
-            AddAttribute("relpath", new HassiumProperty(get_relpath));
-            AddAttribute("size", new HassiumProperty(get_size));
-            AddAttribute("writeallbytes", writeallbytes, 1);
-            AddAttribute("writealllines", writealllines, -1);
-            AddAttribute("writealltext", writealltext, 1);
-            AddAttribute("writebyte", writebyte, 1);
-            AddAttribute("writefloat", writefloat, 1);
-            AddAttribute("writeint", writeint, 1);
-            AddAttribute("writeline", writeline, 1);
-            AddAttribute("writelist", writelist, 1);
-            AddAttribute("writelong", writelong, 1);
-            AddAttribute("writeshort", writeshort, 1);
-            AddAttribute("writestring", writestring, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumFile file)
+        {
+            file.AddAttribute("abspath", new HassiumProperty(file.get_abspath));
+            file.AddAttribute("autoflush", new HassiumProperty(file.get_autoflush, file.set_autoflush));
+            file.AddAttribute("close", file.close, 0);
+            file.AddAttribute("copyto", file.copyto, 1);
+            file.AddAttribute("exists", new HassiumProperty(file.get_exists));
+            file.AddAttribute("extension", new HassiumProperty(file.get_extension, file.set_extension));
+            file.AddAttribute("flush", file.flush, 0);
+            file.AddAttribute("isclosed", new HassiumProperty(file.get_isclosed));
+            file.AddAttribute("length", new HassiumProperty(file.get_length));
+            file.AddAttribute("moveTo", file.moveto, 1);
+            file.AddAttribute("name", new HassiumProperty(file.get_name, file.set_name));
+            file.AddAttribute("position", new HassiumProperty(file.get_position, file.set_position));
+            file.AddAttribute("readallbytes", file.readallbytes, 0);
+            file.AddAttribute("readalllines", file.readalllines, 0);
+            file.AddAttribute("readalltext", file.readalltext, 0);
+            file.AddAttribute("readbyte", file.readbyte, 0);
+            file.AddAttribute("readlist", file.readbytes, 1);
+            file.AddAttribute("readint", file.readint, 0);
+            file.AddAttribute("readline", file.readline, 0);
+            file.AddAttribute("readlong", file.readlong, 0);
+            file.AddAttribute("readshort", file.readshort, 0);
+            file.AddAttribute("readstring", file.readstring, 0);
+            file.AddAttribute("relpath", new HassiumProperty(file.get_relpath));
+            file.AddAttribute("size", new HassiumProperty(file.get_size));
+            file.AddAttribute("writeallbytes", file.writeallbytes, 1);
+            file.AddAttribute("writealllines", file.writealllines, -1);
+            file.AddAttribute("writealltext", file.writealltext, 1);
+            file.AddAttribute("writebyte", file.writebyte, 1);
+            file.AddAttribute("writefloat", file.writefloat, 1);
+            file.AddAttribute("writeint", file.writeint, 1);
+            file.AddAttribute("writeline", file.writeline, 1);
+            file.AddAttribute("writelist", file.writelist, 1);
+            file.AddAttribute("writelong", file.writelong, 1);
+            file.AddAttribute("writeshort", file.writeshort, 1);
+            file.AddAttribute("writestring", file.writestring, 1);
         }
 
         [FunctionAttribute("abspath { get; }")]

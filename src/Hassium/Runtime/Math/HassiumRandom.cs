@@ -16,6 +16,14 @@ namespace Hassium.Runtime.Math
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 0, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumRandom rand)
+        {
+            rand.AddAttribute("randbytes", rand.randbytes, 1);
+            rand.AddAttribute("randfloat", rand.randfloat, 0);
+            rand.AddAttribute("randint", rand.randint, 0, 1, 2);
         }
 
         [FunctionAttribute("func new () : Random", "func new (seed : int) : Random")]
@@ -24,9 +32,7 @@ namespace Hassium.Runtime.Math
             HassiumRandom rand = new HassiumRandom();
 
             rand.Random = args.Length == 0 ? new Random() : new Random((int)args[0].ToInt(vm, location).Int);
-            rand.AddAttribute("randbytes", rand.randbytes, 1);
-            rand.AddAttribute("randfloat", rand.randfloat, 0);
-            rand.AddAttribute("randint", rand.randint, 0, 1, 2);
+            ImportAttribs(rand);
 
             return rand;
         }

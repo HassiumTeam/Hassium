@@ -16,6 +16,15 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumAttribNotFoundException exception)
+        {
+            exception.AddAttribute("attribute", new HassiumProperty(exception.get_attribute));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
+            exception.AddAttribute(TOSTRING, exception.Attributes["message"]);
         }
 
         [FunctionAttribute("func new (obj : object, attrib : string) : AttributeNotFoundException")]
@@ -25,10 +34,7 @@ namespace Hassium.Runtime
 
             exception.Object = args[0];
             exception.Attribute = args[1].ToString(vm, location);
-            exception.AddAttribute("attribute", new HassiumProperty(exception.get_attribute));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
-            exception.AddAttribute(TOSTRING, exception.Attributes["message"]);
+            ImportAttribs(exception);
 
             return exception;
         }

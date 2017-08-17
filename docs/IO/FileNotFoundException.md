@@ -1,4 +1,4 @@
-## ```class FileNotFound```
+## ```class FileNotFoundException```
 
 
 #### ```func new (path : string) : FileNotFoundException```

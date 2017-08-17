@@ -72,6 +72,8 @@ namespace Hassium.Runtime
 
         public void AddAttribute(string name, HassiumObject value)
         {
+            if (Attributes.ContainsKey(name))
+                Attributes.Remove(name);
             Attributes.Add(name, value);
         }
         public void AddAttribute(string name, HassiumFunctionDelegate func, params int[] paramLengths)
@@ -82,6 +84,7 @@ namespace Hassium.Runtime
         {
             AddAttribute(name, func, new int[] { paramLength });
         }
+
         public HassiumObject AddType(HassiumTypeDefinition typeDefinition)
         {
             Types.Add(typeDefinition);

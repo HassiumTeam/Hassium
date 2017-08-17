@@ -15,6 +15,16 @@ namespace Hassium.Runtime.Text
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumEncoding encoding)
+        {
+            encoding.AddAttribute("bodyname", new HassiumProperty(encoding.get_bodyname));
+            encoding.AddAttribute("encodingname", new HassiumProperty(encoding.get_encodingname));
+            encoding.AddAttribute("getbytes", encoding.getbytes, 1);
+            encoding.AddAttribute("getstring", encoding.getstring, 1);
+            encoding.AddAttribute("headername", new HassiumProperty(encoding.get_headername));
         }
 
         [FunctionAttribute("func new (scheme : string) : Encoding")]
@@ -40,11 +50,7 @@ namespace Hassium.Runtime.Text
                     encoding.Encoding = Encoding.ASCII;
                     break;
             }
-            encoding.AddAttribute("bodyname", new HassiumProperty(encoding.get_bodyname));
-            encoding.AddAttribute("encodingname", new HassiumProperty(encoding.get_encodingname));
-            encoding.AddAttribute("getbytes", encoding.getbytes, 1);
-            encoding.AddAttribute("getstring", encoding.getstring, 1);
-            encoding.AddAttribute("headername", new HassiumProperty(encoding.get_headername));
+            ImportAttribs(encoding);
 
             return encoding;
         }

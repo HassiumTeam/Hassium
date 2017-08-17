@@ -15,6 +15,14 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
 
             AddAttribute(INVOKE, _new, 1, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumIPAddr addr)
+        {
+            addr.AddAttribute("address", new HassiumProperty(addr.get_address));
+            addr.AddAttribute("port", new HassiumProperty(addr.get_port));
+            addr.AddAttribute(TOSTRING, addr.toString, 0);
         }
 
         [FunctionAttribute("func new (host : string) : IPaddr", "func new (host : string, port : int) : IPAddr")]
@@ -24,9 +32,7 @@ namespace Hassium.Runtime.Net
 
             addr.Address = args[0].ToString(vm, location);
             addr.Port = args.Length == 2 ? args[1].ToInt(vm, location) : new HassiumInt(-1);
-            addr.AddAttribute("address", new HassiumProperty(addr.get_address));
-            addr.AddAttribute("port", new HassiumProperty(addr.get_port));
-            addr.AddAttribute(TOSTRING, addr.toString, 0);
+            ImportAttribs(addr);
             
             return addr;
         }

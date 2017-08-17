@@ -15,6 +15,15 @@ namespace Hassium.Runtime.Types
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumKeyNotFoundException exception)
+        {
+            exception.AddAttribute("key", new HassiumProperty(exception.get_key));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (obj : object, key : object) : KeyNotFoundException")]
@@ -24,10 +33,7 @@ namespace Hassium.Runtime.Types
 
             exception.Object = args[0];
             exception.Key = args[1];
-            exception.AddAttribute("key", new HassiumProperty(exception.get_key));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

@@ -15,6 +15,14 @@ namespace Hassium.Runtime.IO
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 1);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumFileNotFoundException exception)
+        {
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("path", new HassiumProperty(exception.get_path));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (path : string) : FileNotFoundException")]
@@ -23,9 +31,7 @@ namespace Hassium.Runtime.IO
             HassiumFileNotFoundException exception = new HassiumFileNotFoundException();
 
             exception.Path = args[0].ToString(vm, location);
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("path", new HassiumProperty(exception.get_path));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

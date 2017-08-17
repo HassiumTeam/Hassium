@@ -18,6 +18,8 @@ namespace Hassium.Runtime.IO
             AddAttribute("delete", delete, 1);
             AddAttribute("deletedir", deletedir, 1);
             AddAttribute("deletefile", deletefile, 1);
+            AddAttribute("direxists", direxists, 1);
+            AddAttribute("fileexists", fileexists, 1);
             AddAttribute("gettempfile", gettempfile, 0);
             AddAttribute("gettemppath", gettemppath, 0);
             AddAttribute("listdirs", listdirs, 1);
@@ -117,6 +119,18 @@ namespace Hassium.Runtime.IO
             else
                 vm.RaiseException(HassiumFileNotFoundException._new(vm, location, args[0].ToString(vm, location)));
             return Null;
+        }
+
+        [FunctionAttribute("func direxists (dir : string) : bool")]
+        public HassiumBool direxists(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(Directory.Exists(args[0].ToString(vm, location).String));
+        }
+
+        [FunctionAttribute("func fileexists (file : string) : bool")]
+        public HassiumBool fileexists(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(File.Exists(args[0].ToString(vm, location).String));
         }
 
         [FunctionAttribute("func gettempfile () : string")]

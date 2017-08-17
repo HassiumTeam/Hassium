@@ -16,6 +16,15 @@ namespace Hassium.Runtime.IO
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumFileClosedException exception)
+        {
+            exception.AddAttribute("file", new HassiumProperty(exception.get_file));
+            exception.AddAttribute("filepath", new HassiumProperty(exception.get_filepath));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (file : File, path : string) : FileClosedException")]
@@ -25,10 +34,7 @@ namespace Hassium.Runtime.IO
 
             exception.File = args[0] as HassiumFile;
             exception.FilePath = args[1].ToString(vm, location);
-            exception.AddAttribute("file", new HassiumProperty(exception.get_file));
-            exception.AddAttribute("filepath", new HassiumProperty(exception.get_filepath));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

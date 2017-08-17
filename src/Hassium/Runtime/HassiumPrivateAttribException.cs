@@ -16,16 +16,21 @@ namespace Hassium.Runtime
             AddAttribute(INVOKE, _new, 2);
         }
 
-        [FunctionAttribute("func new (")]
+        public static void ImportAttribs(HassiumPrivateAttribException exception)
+        {
+            exception.AddAttribute("attrib", new HassiumProperty(exception.get_attrib));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
+        }
+
+        [FunctionAttribute("func new () : PrivateAttribException")]
         public static HassiumPrivateAttribException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             HassiumPrivateAttribException exception = new HassiumPrivateAttribException();
 
             exception.Object = args[0];
             exception.Attrib = args[1].ToString(vm, location);
-            exception.AddAttribute("attrib", new HassiumProperty(exception.get_attrib));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
+            ImportAttribs(exception);
 
             return exception;
         }

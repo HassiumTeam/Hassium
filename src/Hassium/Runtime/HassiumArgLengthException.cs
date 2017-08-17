@@ -17,6 +17,16 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 3);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumArgLengthException exception)
+        {
+            exception.AddAttribute("expected", new HassiumProperty(exception.get_expected));
+            exception.AddAttribute("function", new HassiumProperty(exception.get_function));
+            exception.AddAttribute("given", new HassiumProperty(exception.get_given));
+            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
+            exception.AddAttribute(TOSTRING, exception.ToString, 0);
         }
 
         [FunctionAttribute("func new (fn : object, expected : int, given : int) : ArgumentLengthException")]
@@ -27,11 +37,7 @@ namespace Hassium.Runtime
             exception.ExpectedLength = args[1].ToInt(vm, location);
             exception.Function = args[0];
             exception.GivenLength = args[2].ToInt(vm, location);
-            exception.AddAttribute("expected", new HassiumProperty(exception.get_expected));
-            exception.AddAttribute("function", new HassiumProperty(exception.get_function));
-            exception.AddAttribute("given", new HassiumProperty(exception.get_given));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            ImportAttribs(exception);
 
             return exception;
         }

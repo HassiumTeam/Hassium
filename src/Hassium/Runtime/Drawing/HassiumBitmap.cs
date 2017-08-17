@@ -15,6 +15,19 @@ namespace Hassium.Runtime.Drawing
         {
             AddType(TypeDefinition);
             AddAttribute(INVOKE, _new, 1, 2);
+            ImportAttribs(this);
+        }
+
+        public static void ImportAttribs(HassiumBitmap bitmap)
+        {
+            bitmap.AddAttribute("getpixel", bitmap.getpixel, 2);
+            bitmap.AddAttribute("height", new HassiumProperty(bitmap.get_height));
+            bitmap.AddAttribute("hres", new HassiumProperty(bitmap.get_hres));
+            bitmap.AddAttribute("save", bitmap.save, 1);
+            bitmap.AddAttribute("setpixel", bitmap.setpixel, 3);
+            bitmap.AddAttribute("setres", bitmap.setres, 2);
+            bitmap.AddAttribute("vres", new HassiumProperty(bitmap.get_vres));
+            bitmap.AddAttribute("width", new HassiumProperty(bitmap.get_width));
         }
 
         [FunctionAttribute("func new (path : string) : Bitmap", "func new (height : int, width : int) : Bitmap")]
@@ -31,14 +44,7 @@ namespace Hassium.Runtime.Drawing
                     bitmap.Bitmap = new Bitmap((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int);
                     break;
             }
-            bitmap.AddAttribute("getpixel", bitmap.getpixel, 2);
-            bitmap.AddAttribute("height", new HassiumProperty(bitmap.get_height));
-            bitmap.AddAttribute("hres", new HassiumProperty(bitmap.get_hres));
-            bitmap.AddAttribute("save", bitmap.save, 1);
-            bitmap.AddAttribute("setpixel", bitmap.setpixel, 3);
-            bitmap.AddAttribute("setres", bitmap.setres, 2);
-            bitmap.AddAttribute("vres", new HassiumProperty(bitmap.get_vres));
-            bitmap.AddAttribute("width", new HassiumProperty(bitmap.get_width));
+            ImportAttribs(bitmap);
 
             return bitmap;
         }
