@@ -75,7 +75,7 @@ namespace Hassium
                 }
             }
             else if (config.HassiumRunType == HassiumRunType.REPL)
-                HassiumREPL.Run();
+                HassiumREPL.Run(config);
         }
 
 

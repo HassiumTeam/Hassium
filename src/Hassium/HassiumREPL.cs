@@ -12,7 +12,7 @@ namespace Hassium
 {
     public class HassiumREPL
     {
-        public static void Run()
+        public static void Run(HassiumConfig config)
         {
             HassiumModule module = new HassiumModule();
             module.Attributes.Add("__global__", new HassiumClass("__global__"));
@@ -23,41 +23,28 @@ namespace Hassium
                 Console.Write("> ");
                 string code = Console.ReadLine();
 
-
-                /*var mod = HassiumCompiler.CompileModuleFromString("stdin", code);
-
-                foreach (var pair in mod.ConstantPool)
-                    if (!module.ConstantPool.ContainsKey(pair.Key))
-                        module.ConstantPool.Add(pair.Key, pair.Value);
-                foreach (var pair in mod.ObjectPool)
-                    if (!module.ObjectPool.ContainsKey(pair.Key))
-                        module.ObjectPool.Add(pair.Key, pair.Value);
-                foreach (var pair in mod.Globals)
-                    if (!module.Globals.ContainsKey(pair.Key))
-                        module.Globals.Add(pair.Key, pair.Value);
-                */
                 try
                 {
                     var tokens = new Scanner().Scan("stdin", code);
                     var ast = new Parser().Parse(tokens);
-                    module = new HassiumCompiler(false).Compile(ast, module);
+                    module = new HassiumCompiler(config.SuppressWarnings).Compile(ast, module);
                 }
                 catch (CompilerException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    //if (config.Dev)
+                    if (config.Dev)
                         Console.WriteLine(ex);
                 }
                 catch (ParserException ex)
                 {
                     Console.WriteLine(ex.Message);
-                  //  if (config.Dev)
+                    if (config.Dev)
                         Console.WriteLine(ex);
                 }
                 catch (ScannerException ex)
                 {
                     Console.WriteLine(ex.Message);
-                  //  if (config.Dev)
+                    if (config.Dev)
                         Console.WriteLine(ex);
                 }
 
