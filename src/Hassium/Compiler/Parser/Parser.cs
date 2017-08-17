@@ -78,8 +78,15 @@ namespace Hassium.Compiler.Parser
                 return parseUse();
             else if (matchToken(TokenType.Identifier, "while"))
                 return parseWhile();
-            else if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Comma)
-                return parseMultipleAssignment();
+            else if (position + 1 < tokens.Count)
+            {
+                if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Comma)
+                    return parseMultipleAssignment();
+                else if (matchToken(TokenType.OpenCurlyBrace))
+                    return parseCodeBlockNode();
+                else
+                    return parseExpressionStatement();
+            }
             else if (matchToken(TokenType.OpenCurlyBrace))
                 return parseCodeBlockNode();
             else
@@ -823,8 +830,13 @@ namespace Hassium.Compiler.Parser
                 return parseExpression();
             else if (matchToken(TokenType.Identifier, "thread"))
                 return parseThread();
-            else if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Identifier)
-                return parseEnforcedAssignment();
+            else if (position + 1 < tokens.Count)
+            {
+                if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Identifier)
+                    return parseEnforcedAssignment();
+                else if (matchToken(TokenType.Identifier))
+                    return new IdentifierNode(location, expectToken(TokenType.Identifier).Value);
+            }
             else if (matchToken(TokenType.Identifier))
                 return new IdentifierNode(location, expectToken(TokenType.Identifier).Value);
             throw new ParserException(location, "Unexpected token of type '{0}' with value '{1}'", tokens[position].TokenType, tokens[position].Value);

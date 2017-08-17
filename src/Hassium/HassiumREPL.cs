@@ -50,6 +50,14 @@ namespace Hassium
 
                 var init = (module.Attributes["__global__"].Attributes["__init__"] as HassiumMethod);
                 init.Module = module;
+                //init.Instructions.Remove(init.Instructions[init.Instructions.Count - 1]);
+                if (init.Instructions.Count > 0)
+                {
+                    if (init.Instructions[init.Instructions.Count - 1].InstructionType == InstructionType.Pop)
+                        init.Instructions.Insert(init.Instructions.Count - 1, new HassiumInstruction(init.SourceLocation, InstructionType.Return, -1));
+                    else
+                        init.Instructions.Add(new HassiumInstruction(init.SourceLocation, InstructionType.Return, -1));
+                }
 
                 vm.ImportGlobals();
                 var ret = vm.ExecuteMethod(init);
