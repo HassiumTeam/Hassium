@@ -62,7 +62,6 @@ namespace Hassium.Runtime
                 else
                     mainMethod.Invoke(this, mainMethod.SourceLocation);
             }
-
         }
 
         public HassiumObject ExecuteMethod(HassiumMethod method)
