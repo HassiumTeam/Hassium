@@ -2,6 +2,7 @@
 using Hassium.Runtime.Types;
 
 using System;
+using System.Collections.Generic;
 
 namespace Hassium.Runtime.Util
 {
@@ -9,32 +10,45 @@ namespace Hassium.Runtime.Util
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("DateTime");
 
+        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
+        {
+            { "day", new HassiumProperty(get_day)  },
+            { "dayofweek", new HassiumProperty(get_dayofweek)  },
+            { "dayofyear", new HassiumProperty(get_dayofyear)  },
+            { "hour", new HassiumProperty(get_hour)  },
+            { "millisecond", new HassiumProperty(get_millisecond)  },
+            { "minute", new HassiumProperty(get_minute)  },
+            { "month", new HassiumProperty(get_month)  },
+            { "second", new HassiumProperty(get_second)  },
+            { TOSTRING, new HassiumFunction(tostring, 0)  },
+            { "year", new HassiumProperty(get_year)  },
+
+        };
+
         public DateTime DateTime { get; set; }
 
         public HassiumDateTime()
         {
             AddType(TypeDefinition);
 
-            AddAttribute("now", new HassiumProperty(get_now));
-            AddAttribute(INVOKE, _new, 3, 6, 7);
             ImportAttribs(this);
         }
 
         [FunctionAttribute("func new (year : int, month : int, day : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int, millisecond : int) : DateTime")]
-        public static HassiumDateTime _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumDateTime _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumDateTime time = new HassiumDateTime();
 
             switch (args.Length)
             {
                 case 3:
-                    time.DateTime = new DateTime((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int, (int)args[2].ToInt(vm, location).Int);
+                    time.DateTime = new DateTime((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int, (int)args[2].ToInt(vm, args[2], location).Int);
                     break;
                 case 6:
-                    time.DateTime = new DateTime((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int, (int)args[2].ToInt(vm, location).Int, (int)args[3].ToInt(vm, location).Int, (int)args[4].ToInt(vm, location).Int, (int)args[5].ToInt(vm, location).Int);
+                    time.DateTime = new DateTime((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int, (int)args[2].ToInt(vm, args[2], location).Int, (int)args[3].ToInt(vm, args[3], location).Int, (int)args[4].ToInt(vm, args[4], location).Int, (int)args[5].ToInt(vm, args[5], location).Int);
                     break;
                 case 7:
-                    time.DateTime = new DateTime((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int, (int)args[2].ToInt(vm, location).Int, (int)args[3].ToInt(vm, location).Int, (int)args[4].ToInt(vm, location).Int, (int)args[5].ToInt(vm, location).Int, (int)args[6].ToInt(vm, location).Int);
+                    time.DateTime = new DateTime((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int, (int)args[2].ToInt(vm, args[2], location).Int, (int)args[3].ToInt(vm, args[3], location).Int, (int)args[4].ToInt(vm, args[4], location).Int, (int)args[5].ToInt(vm, args[5], location).Int, (int)args[6].ToInt(vm, args[6], location).Int);
                     break;
             }
             ImportAttribs(time);
@@ -44,85 +58,87 @@ namespace Hassium.Runtime.Util
 
         public static void ImportAttribs(HassiumDateTime time)
         {
-            time.AddAttribute("day", new HassiumProperty(time.get_day));
-            time.AddAttribute("dayofweek", new HassiumProperty(time.get_dayofweek));
-            time.AddAttribute("dayofyear", new HassiumProperty(time.get_dayofyear));
-            time.AddAttribute("hour", new HassiumProperty(time.get_hour));
-            time.AddAttribute("millisecond", new HassiumProperty(time.get_millisecond));
-            time.AddAttribute("minute", new HassiumProperty(time.get_minute));
-            time.AddAttribute("month", new HassiumProperty(time.get_month));
-            time.AddAttribute("second", new HassiumProperty(time.get_second));
-            time.AddAttribute(TOSTRING, time.ToString, 0);
-            time.AddAttribute("year", new HassiumProperty(time.get_year));
+            time.Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("day { get; }")]
-        public HassiumInt get_day(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_day(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Day);
         }
 
         [FunctionAttribute("dayofweek { get; }")]
-        public HassiumString get_dayofweek(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_dayofweek(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumString(DateTime.DayOfWeek.ToString());
         }
 
         [FunctionAttribute("dayofyear { get; }")]
-        public HassiumInt get_dayofyear(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_dayofyear(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.DayOfYear);
         }
 
         [FunctionAttribute("hour { get; }")]
-        public HassiumInt get_hour(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_hour(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Hour);
         }
 
         [FunctionAttribute("millisecond { get; }")]
-        public HassiumInt get_millisecond(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_millisecond(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Millisecond);
         }
 
         [FunctionAttribute("minute { get; }")]
-        public HassiumInt get_minute(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_minute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Minute);
         }
 
         [FunctionAttribute("month { get; }")]
-        public HassiumInt get_month(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_month(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Month);
         }
 
         [FunctionAttribute("now { get; }")]
-        public HassiumDateTime get_now(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumDateTime get_now(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumDateTime time = new HassiumDateTime();
 
             time.DateTime = DateTime.Now;
+            ImportAttribs(time);
 
             return time;
         }
 
         [FunctionAttribute("second { get; }")]
-        public HassiumInt get_second(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_second(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Second);
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumString(DateTime.ToString());
         }
 
         [FunctionAttribute("year { get; }")]
-        public HassiumInt get_year(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_year(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var DateTime = (self as HassiumDateTime).DateTime;
             return new HassiumInt(DateTime.Year);
         }
     }

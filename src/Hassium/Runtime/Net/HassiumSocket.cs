@@ -31,7 +31,7 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func new () : Socket", "func new (IPAddrOrStr : object) : Socket", "func new (ip : string, port : int) : Socket", "func new (ip : string, port : int, ssl : bool) : Socket")]
-        public HassiumObject _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumSocket socket = new HassiumSocket();
             Stream stream = null;
@@ -50,15 +50,15 @@ namespace Hassium.Runtime.Net
                         stream = socket.Client.GetStream();
                     }
                     else
-                        return _new(vm, location, HassiumIPAddr._new(vm, location, args[0].ToString(vm, location)));
+                        return _new(vm, self, location, HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
                     break;
                 case 2:
-                    socket.Client = new TcpClient(args[0].ToString(vm, location).String, (int)args[1].ToInt(vm, location).Int);
+                    socket.Client = new TcpClient(args[0].ToString(vm, args[0], location).String, (int)args[1].ToInt(vm, args[1], location).Int);
                     stream = socket.Client.GetStream();
                     break;
                 case 3:
-                    socket.Client = new TcpClient(args[0].ToString(vm, location).String, (int)args[1].ToInt(vm, location).Int);
-                    if (args[2].ToBool(vm, location).Bool)
+                    socket.Client = new TcpClient(args[0].ToString(vm, args[0], location).String, (int)args[1].ToInt(vm, args[1], location).Int);
+                    if (args[2].ToBool(vm,args[2], location).Bool)
                         stream = new SslStream(socket.Client.GetStream(), false, new RemoteCertificateValidationCallback((sender, certificate, chain, sslPolicyErrors) => true), null);
                     else
                         stream = socket.Client.GetStream();
@@ -103,28 +103,28 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("autoflush { get; }")]
-        public HassiumBool get_autoflush(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(AutoFlush);
         }
 
         [FunctionAttribute("autofluah { set; }")]
-        public HassiumNull set_autoflush(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            AutoFlush = args[0].ToBool(vm, location).Bool;
+            AutoFlush = args[0].ToBool(vm, args[0], location).Bool;
 
             return Null;
         }
 
         [FunctionAttribute("func close () : null")]
-        public HassiumNull close(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Client.Close();
             return Null;
         }
 
         [FunctionAttribute("func connect (IPAddrOrStr : object) : null", "func connect (ip : string, port : int) : null")]
-        public HassiumNull connect(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull connect(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             switch (args.Length)
             {
@@ -136,44 +136,44 @@ namespace Hassium.Runtime.Net
                         return Null;
                     }
                     else
-                        return connect(vm, location, HassiumIPAddr._new(vm, location, args[0].ToString(vm, location)));
+                        return connect(vm, self, location, HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
                 case 2:
-                    Client = new TcpClient(args[0].ToString(vm, location).String, (int)args[1].ToInt(vm, location).Int);
+                    Client = new TcpClient(args[0].ToString(vm, args[0], location).String, (int)args[1].ToInt(vm, args[1], location).Int);
                     return Null;
             }
             return Null;
         }
 
         [FunctionAttribute("fromip { get; }")]
-        public HassiumObject get_fromip(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject get_fromip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
             string[] parts = (Client.Client.LocalEndPoint as IPEndPoint).ToString().Split(':');
-            return HassiumIPAddr._new(vm, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
+            return HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
         }
 
         [FunctionAttribute("toip { get; }")]
-        public HassiumObject get_toip(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject get_toip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
             string[] parts = (Client.Client.RemoteEndPoint as IPEndPoint).ToString().Split(':');
-            return HassiumIPAddr._new(vm, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
+            return HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
         }
 
         [FunctionAttribute("func flush () : null")]
-        public HassiumNull flush(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull flush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -182,18 +182,18 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("isconnected { get; }")]
-        public HassiumBool get_isconnected(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_isconnected(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Client.Connected);
         }
 
         [FunctionAttribute("func readbyte () : char")]
-        public HassiumObject readbyte(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readbyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
 
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -201,29 +201,29 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readbytes (count : int) : list")]
-        public HassiumObject readbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
             HassiumList list = new HassiumList(new HassiumObject[0]);
-            int count = (int)args[0].ToInt(vm, location).Int;
+            int count = (int)args[0].ToInt(vm, args[0], location).Int;
             for (int i = 0; i < count; i++)
-                list.add(vm, location, new HassiumChar((char)Reader.ReadBytes(1)[0]));
+                HassiumList.add(vm, list, location, new HassiumChar((char)Reader.ReadBytes(1)[0]));
 
             return list;
         }
 
         [FunctionAttribute("func readfloat () : float")]
-        public HassiumObject readfloat(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readfloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
 
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -231,12 +231,12 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readint () : int")]
-        public HassiumObject readint(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
 
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -244,12 +244,12 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readline () : string")]
-        public HassiumObject readline(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
 
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -257,11 +257,11 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readlong () : int")]
-        public HassiumObject readlong(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readlong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -269,12 +269,12 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readshort () : int")]
-        public HassiumObject readshort(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
 
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -282,11 +282,11 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func readstring () : string")]
-        public HassiumObject readstring(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject readstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
@@ -294,60 +294,60 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func writebyte (b : char) : null")]
-        public HassiumNull writebyte(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writebyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write((byte)args[0].ToChar(vm, location).Char);
+            Writer.Write((byte)args[0].ToChar(vm, args[0], location).Char);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
         }
 
         [FunctionAttribute("func writefloat (f : float) : null")]
-        public HassiumNull writefloat(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writefloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write(args[0].ToFloat(vm, location).Float);
+            Writer.Write(args[0].ToFloat(vm, args[0], location).Float);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
         }
 
         [FunctionAttribute("func writeint (i : int) : null")]
-        public HassiumNull writeint(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writeint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write((int)args[0].ToInt(vm, location).Int);
+            Writer.Write((int)args[0].ToInt(vm, args[0], location).Int);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
         }
 
         [FunctionAttribute("func writeline (str : string) : null")]
-        public HassiumNull writeline(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writeline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            string str = args[0].ToString(vm, location).String;
+            string str = args[0].ToString(vm, args[0], location).String;
 
             foreach (var c in str)
                 Writer.Write(c);
@@ -360,60 +360,60 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func writelist (l : list) : null")]
-        public HassiumNull writelist(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writelist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            foreach (var i in args[0].ToList(vm, location).Values)
+            foreach (var i in args[0].ToList(vm, args[0], location).Values)
                 writeHassiumObject(Writer, i, vm, location);
 
             return Null;
         }
 
         [FunctionAttribute("func writelong (l : int) : null")]
-        public HassiumNull writelong(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writelong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write(args[0].ToInt(vm, location).Int);
+            Writer.Write(args[0].ToInt(vm, args[0], location).Int);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
         }
 
         [FunctionAttribute("func writeshort (s : int) : null")]
-        public HassiumNull writeshort(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writeshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write((short)args[0].ToInt(vm, location).Int);
+            Writer.Write((short)args[0].ToInt(vm, args[0], location).Int);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
         }
 
         [FunctionAttribute("func writestring (str : string) : null")]
-        public HassiumNull writestring(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writestring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (Closed)
             {
-                vm.RaiseException(HassiumSocketClosedException._new(vm, location, this));
+                vm.RaiseException(HassiumSocketClosedException.Attribs[INVOKE].Invoke(vm, location, this));
                 return Null;
             }
 
-            Writer.Write(args[0].ToString(vm, location).String);
+            Writer.Write(args[0].ToString(vm, args[0], location).String);
             if (AutoFlush)
                 Writer.Flush();
             return Null;
@@ -424,20 +424,20 @@ namespace Hassium.Runtime.Net
             var type = obj.Type();
 
             if (type == HassiumBool.TypeDefinition)
-                writer.Write(obj.ToBool(vm, location).Bool);
+                writer.Write(obj.ToBool(vm, obj, location).Bool);
             else if (type == HassiumChar.TypeDefinition)
-                writer.Write((byte)obj.ToChar(vm, location).Char);
+                writer.Write((byte)obj.ToChar(vm, obj, location).Char);
             else if (type == HassiumFloat.TypeDefinition)
-                writer.Write(obj.ToFloat(vm, location).Float);
+                writer.Write(obj.ToFloat(vm, obj, location).Float);
             else if (type == HassiumInt.TypeDefinition)
-                writer.Write(obj.ToInt(vm, location).Int);
+                writer.Write(obj.ToInt(vm, obj, location).Int);
             else if (type == HassiumList.TypeDefinition)
-                foreach (var item in obj.ToList(vm, location).Values)
+                foreach (var item in obj.ToList(vm, obj, location).Values)
                     writeHassiumObject(writer, item, vm, location);
             else if (type == HassiumString.TypeDefinition)
-                writer.Write(obj.ToString(vm, location).String);
+                writer.Write(obj.ToString(vm, obj, location).String);
             else if (type == HassiumTuple.TypeDefinition)
-                foreach (var item in obj.ToTuple(vm, location).Values)
+                foreach (var item in obj.ToTuple(vm, obj, location).Values)
                     writeHassiumObject(writer, item, vm, location);
         }
     }

@@ -70,7 +70,7 @@ namespace Hassium.Runtime
         {
             if (Frames.Peek().ContainsVariable(index))
                 return Frames.Peek().GetVariable(index);
-            vm.RaiseException(HassiumVariableNotFoundException._new(vm, location));
+            vm.RaiseException(HassiumVariableNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(vm, location));
             return HassiumObject.Null;
         }
     }

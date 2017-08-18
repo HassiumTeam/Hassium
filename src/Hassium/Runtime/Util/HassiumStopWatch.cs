@@ -33,7 +33,7 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("func new () : StopWatch")]
-        public static HassiumStopWatch _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumStopWatch _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumStopWatch watch = new HassiumStopWatch();
 
@@ -44,65 +44,65 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("hours { get; }")]
-        public HassiumInt get_hours(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_hours(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(StopWatch.Elapsed.Hours);
         }
 
         [FunctionAttribute("isrunning { get; }")]
-        public HassiumBool get_isrunning(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_isrunning(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(StopWatch.IsRunning);
         }
 
         [FunctionAttribute("milliseconds { get; }")]
-        public HassiumInt get_milliseconds(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_milliseconds(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(StopWatch.Elapsed.Milliseconds);
         }
 
         [FunctionAttribute("minutes { get; }")]
-        public HassiumInt get_minutes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_minutes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(StopWatch.Elapsed.Minutes);
         }
 
         [FunctionAttribute("func restart () : null")]
-        public HassiumNull restart(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull restart(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StopWatch.Restart();
             return Null;
         }
 
         [FunctionAttribute("func reset () : null")]
-        public HassiumNull reset(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull reset(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StopWatch.Reset();
             return Null;
         }
 
         [FunctionAttribute("seconds { get; }")]
-        public HassiumInt get_seconds(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_seconds(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(StopWatch.Elapsed.Seconds);
         }
 
         [FunctionAttribute("func start () : null")]
-        public HassiumNull start(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StopWatch.Start();
             return Null;
         }
 
         [FunctionAttribute("func stop () : null")]
-        public HassiumNull stop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StopWatch.Stop();
             return Null;
         }
 
         [FunctionAttribute("ticks { get; }")]
-        public HassiumInt get_ticks(VirtualMachine vm, SourceLocation location, params HassiumObject[] argS)
+        public HassiumInt get_ticks(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(StopWatch.ElapsedTicks);
         }

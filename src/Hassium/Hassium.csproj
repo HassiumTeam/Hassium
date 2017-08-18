@@ -134,6 +134,7 @@
     <Compile Include="Runtime\IO\HassiumIOModule.cs" />
     <Compile Include="Runtime\IO\HassiumPath.cs" />
     <Compile Include="Runtime\IO\HassiumFileClosedException.cs" />
+    <Compile Include="Runtime\LinkedStack.cs" />
     <Compile Include="Runtime\Math\HassiumMath.cs" />
     <Compile Include="Runtime\Math\HassiumMathModule.cs" />
     <Compile Include="Runtime\Math\HassiumRandom.cs" />

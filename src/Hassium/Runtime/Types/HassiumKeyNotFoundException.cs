@@ -1,5 +1,6 @@
 ﻿using Hassium.Compiler;
 
+using System.Collections.Generic;
 using System.Text;
 
 namespace Hassium.Runtime.Types
@@ -8,60 +9,59 @@ namespace Hassium.Runtime.Types
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("KeyNotFoundException");
 
+        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>
+        {
+            { "key", new HassiumProperty(get_key) },
+            { "message", new HassiumProperty(get_message) },
+            { TOSTRING, new HassiumFunction(tostring, 0) }
+        };
+
         public HassiumObject Key { get; private set; }
         public HassiumObject Object { get; private set; }
 
         public HassiumKeyNotFoundException()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new, 2);
-            ImportAttribs(this);
-        }
-
-        public static void ImportAttribs(HassiumKeyNotFoundException exception)
-        {
-            exception.AddAttribute("key", new HassiumProperty(exception.get_key));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            Attributes = new Dictionary<string, HassiumObject>(Attribs);
         }
 
         [FunctionAttribute("func new (obj : object, key : object) : KeyNotFoundException")]
-        public static HassiumKeyNotFoundException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumKeyNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumKeyNotFoundException exception = new HassiumKeyNotFoundException();
 
             exception.Object = args[0];
             exception.Key = args[1];
-            ImportAttribs(exception);
+            exception.Attributes = new Dictionary<string, HassiumObject>(Attribs);
 
             return exception;
         }
 
         [FunctionAttribute("key { get; }")]
-        public HassiumObject get_key(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject get_key(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return Key;
+            return (self as HassiumKeyNotFoundException).Key;
         }
 
         [FunctionAttribute("message { get; }")]
-        public HassiumString get_message(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString(string.Format("Key Not Found Error: Could not find key '{0}' in object of type '{1}'", Key.ToString(vm, location).String, Object.Type()));
+            var exception = (self as HassiumKeyNotFoundException);
+            return new HassiumString(string.Format("Key Not Found Error: Could not find key '{0}' in object of type '{1}'", exception.Key.ToString(vm, exception.Key, location).String, exception.Object.Type()));
         }
 
         [FunctionAttribute("object { get; }")]
-        public HassiumObject get_object(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return Object;
+            return (self as HassiumKeyNotFoundException).Object;
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(get_message(vm, location).String);
+            sb.AppendLine(get_message(vm, self, location).String);
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());

@@ -35,161 +35,161 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func close () : null")]
-        public HassiumNull close(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            (args[0] as HassiumFile).close(vm, location);
+            (args[0] as HassiumFile).close(vm, args[0], location);
             return Null;
         }
 
         [FunctionAttribute("func copy (src : string, dest : string) : null")]
-        public HassiumNull copy(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull copy(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string source = args[0].ToString(vm, location).String;
+            string source = args[0].ToString(vm, args[0], location).String;
             if (!File.Exists(source))
             {
-                vm.RaiseException(HassiumFileNotFoundException._new(vm, location, args[0].ToString(vm, location)));
+                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
                 return Null;
             }
-            File.Copy(source, args[1].ToString(vm, location).String);
+            File.Copy(source, args[1].ToString(vm, args[1], location).String);
 
             return Null;
         }
 
         [FunctionAttribute("func createdir (path : string) : null")]
-        public HassiumNull createdir(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull createdir(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Directory.CreateDirectory(args[0].ToString(vm, location).String);
+            Directory.CreateDirectory(args[0].ToString(vm, args[0], location).String);
             return Null;
         }
 
         [FunctionAttribute("func createfile (path : string) : null")]
-        public HassiumNull createfile(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull createfile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            File.Create(args[0].ToString(vm, location).String);
+            File.Create(args[0].ToString(vm, args[0], location).String);
             return Null;
         }
 
         [FunctionAttribute("cwd { get; }")]
-        public HassiumString get_cwd(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_cwd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Directory.GetCurrentDirectory());
         }
 
         [FunctionAttribute("cwd { set; }")]
-        public HassiumString set_cwd(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString set_cwd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Directory.SetCurrentDirectory(args[0].ToString(vm, location).String);
-            return get_cwd(vm, location);
+            Directory.SetCurrentDirectory(args[0].ToString(vm, args[0], location).String);
+            return get_cwd(vm, self, location);
         }
 
         [FunctionAttribute("func delete (path : string) : null")]
-        public HassiumNull delete(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull delete(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
 
             if (File.Exists(path))
                 File.Delete(path);
             else if (Directory.Exists(path))
                 Directory.Delete(path);
             else
-                vm.RaiseException(HassiumFileNotFoundException._new(vm, location, args[0].ToString(vm, location)));
+                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
 
             return Null;
         }
 
         [FunctionAttribute("func deletedir (dir : string) : null")]
-        public HassiumNull deletedir(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull deletedir(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string dir = args[0].ToString(vm, location).String;
+            string dir = args[0].ToString(vm, args[0], location).String;
 
             if (Directory.Exists(dir))
                 Directory.Delete(dir);
             else
-                vm.RaiseException(HassiumDirectoryNotFoundException._new(vm, location, args[0].ToString(vm, location)));
+                vm.RaiseException(HassiumDirectoryNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
             return Null;
         }
 
         [FunctionAttribute("func deletefile (file : string) : null")]
-        public HassiumNull deletefile(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull deletefile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
 
             if (File.Exists(path))
                 File.Delete(path);
             else
-                vm.RaiseException(HassiumFileNotFoundException._new(vm, location, args[0].ToString(vm, location)));
+                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
             return Null;
         }
 
         [FunctionAttribute("func direxists (dir : string) : bool")]
-        public HassiumBool direxists(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool direxists(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumBool(Directory.Exists(args[0].ToString(vm, location).String));
+            return new HassiumBool(Directory.Exists(args[0].ToString(vm, args[0], location).String));
         }
 
         [FunctionAttribute("func fileexists (file : string) : bool")]
-        public HassiumBool fileexists(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool fileexists(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumBool(File.Exists(args[0].ToString(vm, location).String));
+            return new HassiumBool(File.Exists(args[0].ToString(vm, args[0], location).String));
         }
 
         [FunctionAttribute("func gettempfile () : string")]
-        public HassiumString gettempfile(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString gettempfile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetTempFileName());
         }
 
         [FunctionAttribute("func gettemppath () : string")]
-        public HassiumString gettemppath(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString gettemppath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetTempPath());
         }
 
         [FunctionAttribute("func listdirs (path : string) : list")]
-        public HassiumList listdirs(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList listdirs(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList result = new HassiumList(new HassiumObject[0]);
-            foreach (string dir in Directory.GetDirectories(args[0].ToString(vm, location).String))
-                result.add(vm, location, new HassiumString(dir));
+            foreach (string dir in Directory.GetDirectories(args[0].ToString(vm, args[0], location).String))
+                HassiumList.add(vm, result, location, new HassiumString(dir));
             return result;
         }
 
         [FunctionAttribute("func listfiles (path : string) : list")]
-        public HassiumList listfiles(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList listfiles(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList result = new HassiumList(new HassiumObject[0]);
-            foreach (string dir in Directory.GetFiles(args[0].ToString(vm, location).String))
-                result.add(vm, location, new HassiumString(dir));
+            foreach (string dir in Directory.GetFiles(args[0].ToString(vm, args[0], location).String))
+                HassiumList.add(vm, result, location, new HassiumString(dir));
             return result;
         }
 
         [FunctionAttribute("func move (src : string, dest : string) : null")]
-        public HassiumNull move(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull move(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string source = args[0].ToString(vm, location).String;
+            string source = args[0].ToString(vm, args[0], location).String;
             if (!File.Exists(source))
             {
-                vm.RaiseException(HassiumFileNotFoundException._new(vm, location, args[0].ToString(vm, location)));
+                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
                 return Null;
             }
-            File.Move(source, args[1].ToString(vm, location).String);
+            File.Move(source, args[1].ToString(vm, args[1], location).String);
 
             return Null;
         }
 
         [FunctionAttribute("func open (path : string) : File")]
-        public HassiumFile open(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumFile open(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
             return new HassiumFile(path);
         }
 
         [FunctionAttribute("func readbytes (path : string) : list")]
-        public HassiumByteArray readbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumByteArray readbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumByteArray list = new HassiumByteArray(new byte[0], new HassiumObject[0]);
 
-            var stream = new FileStream(args[0].ToString(vm, location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var stream = new FileStream(args[0].ToString(vm, args[0], location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
             var reader = new BinaryReader(stream);
 
             try
@@ -206,17 +206,17 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func readlines (path : string) : list")]
-        public HassiumList readlines(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList readlines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
-            var stream = new FileStream(args[0].ToString(vm, location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var stream = new FileStream(args[0].ToString(vm, args[0], location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
             var reader = new StreamReader(stream);
 
             try
             {
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
-                    list.add(vm, location, new HassiumString(reader.ReadLine()));
+                    HassiumList.add(vm, list, location, new HassiumString(reader.ReadLine()));
 
                 return list;
             }
@@ -227,11 +227,11 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func readstring (path : string) : string")]
-        public HassiumString readstring(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString readstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
 
-            var stream = new FileStream(args[0].ToString(vm, location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var stream = new FileStream(args[0].ToString(vm, args[0], location).String, FileMode.Open, FileAccess.Read, FileShare.Read);
             var reader = new StreamReader(stream);
 
             try
@@ -248,9 +248,9 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func writebytes (path : string, bytes : list) : null")]
-        public HassiumNull writebytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
 
             var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
             var writer = new BinaryWriter(stream);
@@ -269,9 +269,9 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func writelines (path : string, lines : list) : null")]
-        public HassiumNull writelines(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writelines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
 
             var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
             var writer = new StreamWriter(stream);
@@ -283,10 +283,10 @@ namespace Hassium.Runtime.IO
                     var type = args[i].Type();
 
                     if (type == HassiumList.TypeDefinition)
-                        foreach (var item in args[i].ToList(vm, location).Values)
-                            writer.WriteLine(item.ToString(vm, location).String);
+                        foreach (var item in args[i].ToList(vm, args[i], location).Values)
+                            writer.WriteLine(item.ToString(vm, item, location).String);
                     else if (type == HassiumString.TypeDefinition)
-                        writer.WriteLine(args[i].ToString(vm, location).String);
+                        writer.WriteLine(args[i].ToString(vm, args[i], location).String);
                     writer.Flush();
                 }
 
@@ -299,11 +299,11 @@ namespace Hassium.Runtime.IO
         }
 
         [FunctionAttribute("func writestring (path : string, str : string) : null")]
-        public HassiumNull writestring(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull writestring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            string path = args[0].ToString(vm, location).String;
+            string path = args[0].ToString(vm, args[0], location).String;
 
-            File.WriteAllText(path, args[1].ToString(vm, location).String);
+            File.WriteAllText(path, args[1].ToString(vm, args[1], location).String);
 
             return Null;
         }
@@ -313,26 +313,26 @@ namespace Hassium.Runtime.IO
             var type = obj.Type();
 
             if (type == HassiumBool.TypeDefinition)
-                writer.Write(obj.ToBool(vm, location).Bool);
+                writer.Write(obj.ToBool(vm, obj, location).Bool);
             else if (type == HassiumChar.TypeDefinition)
-                writer.Write((byte)obj.ToChar(vm, location).Char);
+                writer.Write((byte)obj.ToChar(vm, obj, location).Char);
             else if (type == HassiumFloat.TypeDefinition)
-                writer.Write(obj.ToFloat(vm, location).Float);
+                writer.Write(obj.ToFloat(vm, obj, location).Float);
             else if (type == HassiumInt.TypeDefinition)
-                writer.Write(obj.ToInt(vm, location).Int);
+                writer.Write(obj.ToInt(vm, obj, location).Int);
             else if (type == HassiumList.TypeDefinition)
             {
                 if (obj is HassiumByteArray)
-                    foreach (var b in (obj.ToList(vm, location) as HassiumByteArray).Values)
+                    foreach (var b in (obj.ToList(vm, obj, location) as HassiumByteArray).Values)
                         writer.Write(b);
                 else
-                    foreach (var item in obj.ToList(vm, location).Values)
+                    foreach (var item in obj.ToList(vm, obj, location).Values)
                         writeHassiumObject(writer, item, vm, location);
             }
             else if (type == HassiumString.TypeDefinition)
-                writer.Write(obj.ToString(vm, location).String);
+                writer.Write(obj.ToString(vm, obj, location).String);
             else if (type == HassiumTuple.TypeDefinition)
-                foreach (var item in obj.ToTuple(vm, location).Values)
+                foreach (var item in obj.ToTuple(vm, obj, location).Values)
                     writeHassiumObject(writer, item, vm, location);
             writer.Flush();
         }

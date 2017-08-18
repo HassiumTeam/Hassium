@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using System.Threading;
 
+using Iodine.Util;
+
 namespace Hassium.Runtime.Types
 {
     public class HassiumThread : HassiumObject
@@ -17,7 +19,7 @@ namespace Hassium.Runtime.Types
             VirtualMachine newVM = vm.Clone() as VirtualMachine;
             newVM.ExceptionReturns = new Dictionary<HassiumMethod, int>();
             newVM.Handlers = new Stack<HassiumExceptionHandler>();
-            newVM.Stack = new Stack<HassiumObject>();
+            newVM.Stack = new LinkedStack<HassiumObject>();
             newVM.StackFrame = new StackFrame();
 
             Thread = new Thread(() => ReturnValue = method.Invoke(newVM, location, frame));
@@ -32,26 +34,26 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("isalive { get; }")]
-        public HassiumBool get_isalive(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_isalive(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Thread.IsAlive);
         }
 
         [FunctionAttribute("returns { get; }")]
-        public HassiumObject get_returns(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject get_returns(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return ReturnValue;
         }
 
         [FunctionAttribute("func start () : null")]
-        public HassiumNull start(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Thread.Start();
             return Null;
         }
 
         [FunctionAttribute("func stop () : null")]
-        public HassiumNull stop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Thread.Abort();
             return Null;

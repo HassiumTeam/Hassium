@@ -47,7 +47,7 @@ namespace Hassium.Runtime
                 }
                 if (Attributes.ContainsKey("new"))
                     return Invoke(vm, location, args).AddType(TypeDefinition);
-                vm.RaiseException(HassiumAttribNotFoundException._new(vm, location, this, new HassiumString(INVOKE)));
+                vm.RaiseException(HassiumAttribNotFoundException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumString(INVOKE)));
                 return Null;
             }
         }

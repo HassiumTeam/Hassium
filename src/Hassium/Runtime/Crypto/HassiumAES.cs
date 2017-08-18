@@ -22,43 +22,43 @@ namespace Hassium.Runtime.Crypto
         }
 
         [FunctionAttribute("func decryptbytes (key : list, iv : list, dataStrOrList : object) : list")]
-        public HassiumList decryptbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList decryptbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, location));
-            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, location));
+            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, args[0], location));
+            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, args[1], location));
 
             byte[] data;
             if (args[2] is HassiumString)
-                data = ASCIIEncoding.ASCII.GetBytes(args[2].ToString(vm, location).String);
+                data = ASCIIEncoding.ASCII.GetBytes(args[2].ToString(vm, args[2], location).String);
             else
-                data = ListToByteArr(vm, location, args[2].ToList(vm, location));
+                data = ListToByteArr(vm, location, args[2].ToList(vm, args[2], location));
 
             return new HassiumByteArray(decrypt(key, iv, data), new HassiumObject[0]);
 
         }
 
         [FunctionAttribute("func decryptfilebytes (key : list, iv : list, file : File) : list")]
-        public HassiumList decryptfilebytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList decryptfilebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, location));
-            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, location));
-            HassiumFile file = args[2] is HassiumFile ? (args[2] as HassiumFile) : new HassiumFile(args[2].ToString(vm, location).String);
-            byte[] data = (file.readallbytes(vm, location) as HassiumByteArray).Values.ToArray();
+            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, args[0], location));
+            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, args[1], location));
+            HassiumFile file = args[2] is HassiumFile ? (args[2] as HassiumFile) : new HassiumFile(args[2].ToString(vm, args[2], location).String);
+            byte[] data = (file.readallbytes(vm, self, location) as HassiumByteArray).Values.ToArray();
 
             return new HassiumByteArray(decrypt(key, iv, data), new HassiumObject[0]);
         }
 
         [FunctionAttribute("func encryptbytes (key : list, iv : list, dataStrOrList : object) : list")]
-        public HassiumList encryptbytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList encryptbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, location));
-            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, location));
+            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, args[0], location));
+            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, args[1], location));
 
             byte[] data;
             if (args[2] is HassiumString)
-                data = ASCIIEncoding.ASCII.GetBytes(args[2].ToString(vm, location).String);
+                data = ASCIIEncoding.ASCII.GetBytes(args[2].ToString(vm, args[2], location).String);
             else
-                data = ListToByteArr(vm, location, args[2].ToList(vm, location));
+                data = ListToByteArr(vm, location, args[2].ToList(vm, args[2], location));
 
             using (var memStream = new MemoryStream())
             {
@@ -72,11 +72,11 @@ namespace Hassium.Runtime.Crypto
         }
 
         [FunctionAttribute("func encryptfilebytes (key : list, iv : list, file : File) : list")]
-        public HassiumList encryptfilebytes(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList encryptfilebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, location));
-            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, location));
-            HassiumFile file = args[2] is HassiumFile ? (args[2] as HassiumFile) : new HassiumFile(args[2].ToString(vm, location).String);
+            byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, args[0], location));
+            byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, args[1], location));
+            HassiumFile file = args[2] is HassiumFile ? (args[2] as HassiumFile) : new HassiumFile(args[2].ToString(vm, args[2], location).String);
 
             using (var memStream = new MemoryStream())
             {
@@ -84,7 +84,7 @@ namespace Hassium.Runtime.Crypto
                 {
                     while (file.Reader.BaseStream.Position < file.Reader.BaseStream.Length)
                     {
-                        byte[] buff = new byte[(byte)(file.readbyte(vm, location) as HassiumChar).Char];
+                        byte[] buff = new byte[(byte)(file.readbyte(vm, file, location) as HassiumChar).Char];
                         cryptoStream.Write(buff, 0, 1);
                     }
                 }

@@ -1,6 +1,7 @@
 ﻿using Hassium.Compiler;
 using Hassium.Runtime.Types;
 
+using System.Collections.Generic;
 using System.Text;
 
 namespace Hassium.Runtime
@@ -9,26 +10,25 @@ namespace Hassium.Runtime
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ConversionFailedException");
 
+        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
+        {
+            { "desired", new HassiumProperty(get_desired) },
+            { INVOKE, new HassiumFunction(_new, 2) },
+            { "message", new HassiumProperty(get_message) },
+            { TOSTRING, new HassiumFunction(tostring, 0) }
+        };
+
         public HassiumObject DesiredType { get; set; }
         public HassiumObject Object { get; set; }
 
         public HassiumConversionFailedException()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new, 2);
-            ImportAttribs(this);
-        }
-
-        public static void ImportAttribs(HassiumConversionFailedException exception)
-        {
-            exception.AddAttribute("desired", new HassiumProperty(exception.get_desired));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute("object", new HassiumProperty(exception.get_object));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("func new (obj : object, type : object) : ConversionFailedException")]
-        public static HassiumConversionFailedException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumConversionFailedException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumConversionFailedException exception = new HassiumConversionFailedException();
 
@@ -39,35 +39,36 @@ namespace Hassium.Runtime
                 exception.DesiredType = args[1] as HassiumTrait;
             else
                 exception.Object = args[1];
-            ImportAttribs(exception);
+            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }
 
         [FunctionAttribute("desired { get; }")]
-        public HassiumObject get_desired(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject get_desired(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return DesiredType;
+            return (self as HassiumConversionFailedException).DesiredType;
         }
 
         [FunctionAttribute("message { get; }")]
-        public HassiumString get_message(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString(string.Format("Conversion Failed: Could not convert object of type '{0}' to type '{1}'", Object.Type().ToString(vm, location).String, DesiredType.ToString(vm, location).String));
+            var exception = (self as HassiumConversionFailedException);
+            return new HassiumString(string.Format("Conversion Failed: Could not convert object of type '{0}' to type '{1}'", exception.Object.Type().ToString(vm, exception.Object.Type(), location).String, exception.DesiredType.ToString(vm, exception.DesiredType, location).String));
         }
 
         [FunctionAttribute("object { get; }")]
-        public HassiumObject get_object(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return Object;
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(get_message(vm, location).String);
+            sb.AppendLine(get_message(vm, self, location).String);
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());

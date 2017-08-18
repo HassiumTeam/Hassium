@@ -7,21 +7,25 @@ using Hassium.Compiler.Parser.Ast;
 using Hassium.Compiler.Emit;
 using Hassium.Runtime.Types;
 
+using Iodine.Util;
+
 namespace Hassium.Runtime
 {
     public class VirtualMachine : ICloneable
     {
-        public Stack<string> CallStack { get; private set; }
+        public LinkedStack<string> CallStack { get; private set; }
         public HassiumMethod CurrentMethod { get; private set; }
         public HassiumModule CurrentModule { get; private set; }
         public SourceLocation CurrentSourceLocation { get; private set; }
         public Dictionary<HassiumMethod, int> ExceptionReturns { get; set; }
         public Dictionary<string, HassiumObject> Globals { get; private set; }
         public Stack<HassiumExceptionHandler> Handlers { get; set; }
-        public Stack<HassiumObject> Stack { get; set; }
+        public LinkedStack<HassiumObject> Stack { get; set; }
         public StackFrame StackFrame { get; set; }
 
         public StackFrame.Frame GlobalFrame { get; set; }
+
+        private HassiumObject lastValuePopped = HassiumObject.Null;
 
         public VirtualMachine()
         {
@@ -30,24 +34,24 @@ namespace Hassium.Runtime
 
         public VirtualMachine(HassiumModule module)
         {
-            CallStack = new Stack<string>();
+            CallStack = new LinkedStack<string>();
             CurrentModule = module;
             ExceptionReturns = new Dictionary<HassiumMethod, int>();
             Globals = new Dictionary<string, HassiumObject>();
             Handlers = new Stack<HassiumExceptionHandler>();
-            Stack = new Stack<HassiumObject>();
+            Stack = new LinkedStack<HassiumObject>();
             StackFrame = new StackFrame();
             ImportGlobals();
         }
 
         public void Execute(HassiumModule module, HassiumList args, StackFrame.Frame frame = null)
         {
-            CallStack = new Stack<string>();
+            CallStack = new LinkedStack<string>();
             CurrentModule = module;
             ExceptionReturns = new Dictionary<HassiumMethod, int>();
             Globals = new Dictionary<string, HassiumObject>();
             Handlers = new Stack<HassiumExceptionHandler>();
-            Stack = new Stack<HassiumObject>();
+            Stack = new LinkedStack<HassiumObject>();
             StackFrame = new StackFrame();
             ImportGlobals();
 
@@ -66,23 +70,24 @@ namespace Hassium.Runtime
 
         public HassiumObject ExecuteMethod(HassiumMethod method)
         {
+            //System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
             for (int pos = 0; pos < method.Instructions.Count; pos++)
             {
-                if (ExceptionReturns.ContainsKey(method))
-                {
-                    pos = ExceptionReturns[method];
-                    ExceptionReturns.Remove(method);
-                }
-
-                HassiumObject left, right, val, list;
-                HassiumObject[] elements;
-                string attrib;
-
-                int arg = method.Instructions[pos].Arg;
-                CurrentSourceLocation = method.Instructions[pos].SourceLocation;
-                //Console.WriteLine(method.Instructions[pos].ToString() + "\t"  + method.Name);
                 try
                 {
+                  //  watch.Start();
+                    if (ExceptionReturns.ContainsKey(method))
+                    {
+                        pos = ExceptionReturns[method];
+                        ExceptionReturns.Remove(method);
+                    }
+
+                    HassiumObject left, right, val, list;
+                    HassiumObject[] elements;
+                    string attrib;
+
+                    int arg = method.Instructions[pos].Arg;
+                    CurrentSourceLocation = method.Instructions[pos].SourceLocation;
                     switch (method.Instructions[pos].InstructionType)
                     {
                         case InstructionType.BinaryOperation:
@@ -130,13 +135,13 @@ namespace Hassium.Runtime
                             if (type is HassiumTrait)
                             {
                                 if (!(type as HassiumTrait).Is(this, CurrentSourceLocation, val).Bool)
-                                    RaiseException(HassiumConversionFailedException._new(this, CurrentSourceLocation, val, type));
+                                    RaiseException(HassiumConversionFailedException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, type));
                             }
                             else
                             {
                                 type = type is HassiumTypeDefinition ? type : type.Type();
                                 if (!val.Types.Contains(type as HassiumTypeDefinition))
-                                    RaiseException(HassiumConversionFailedException._new(this, CurrentSourceLocation, val, type));
+                                    RaiseException(HassiumConversionFailedException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, type));
                             }
                             if (StackFrame.Contains(arg))
                                 StackFrame.Modify(arg, val);
@@ -145,33 +150,38 @@ namespace Hassium.Runtime
                             Stack.Push(val);
                             break;
                         case InstructionType.Iter:
-                            Stack.Push(Stack.Pop().Iter(this, CurrentSourceLocation));
+                            val = Stack.Pop();
+                            Stack.Push(val.Iter(this, val, CurrentSourceLocation));
                             break;
                         case InstructionType.IterableFull:
-                            Stack.Push(Stack.Pop().IterableFull(this, CurrentSourceLocation));
+                            val = Stack.Pop();
+                            Stack.Push(val.IterableFull(this, val, CurrentSourceLocation));
                             break;
                         case InstructionType.IterableNext:
-                            Stack.Push(Stack.Pop().IterableNext(this, CurrentSourceLocation));
+                            val = Stack.Pop();
+                            Stack.Push(val.IterableNext(this, val, CurrentSourceLocation));
                             break;
                         case InstructionType.Jump:
                             pos = method.Labels[arg];
                             break;
                         case InstructionType.JumpIfFalse:
-                        if (!Stack.Pop().ToBool(this, CurrentSourceLocation).Bool)
-                            pos = method.Labels[arg];
+                            val = Stack.Pop();
+                            if (!val.ToBool(this, val, CurrentSourceLocation).Bool)
+                                pos = method.Labels[arg];
                             break;
                         case InstructionType.JumpIfTrue:
-                            if (Stack.Pop().ToBool(this, CurrentSourceLocation).Bool)
+                            val = Stack.Pop();
+                            if (val.ToBool(this, val, CurrentSourceLocation).Bool)
                                 pos = method.Labels[arg];
                             break;
                         case InstructionType.LoadAttribute:
                             val = Stack.Pop();
                             try
                             {
-                                var attribute = val.Attributes[CurrentModule.ConstantPool[arg]];
+                                var attribute = val.GetAttribute(CurrentModule.ConstantPool[arg]);
                                 if (attribute.IsPrivate)
                                 {
-                                    RaiseException(HassiumPrivateAttribException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
+                                    RaiseException(HassiumPrivateAttribException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
                                     return HassiumObject.Null;
                                 }
                                 if (attribute is HassiumProperty)
@@ -181,7 +191,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(CurrentModule.ConstantPool[arg])));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, new HassiumString(CurrentModule.ConstantPool[arg])));
                             }
                             break;
                         case InstructionType.LoadGlobal:
@@ -195,10 +205,10 @@ namespace Hassium.Runtime
                                 if (method.Parent.Attributes.ContainsKey(attrib))
                                     Stack.Push(method.Parent.Attributes[attrib]);
                                 else
-                                    RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, method.Parent, new HassiumString(attrib)));
+                                    RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, method.Parent, new HassiumString(attrib)));
                             }
                             else
-                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(attrib)));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, CurrentModule, new HassiumString(attrib)));
                             break;
                         case InstructionType.LoadGlobalVariable:
                             try
@@ -207,22 +217,26 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, CurrentModule, new HassiumString(arg.ToString())));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, CurrentModule, new HassiumString(arg.ToString())));
                             }
                             break;
                         case InstructionType.LoadIterableElement:
                             list = Stack.Pop();
-                            Stack.Push(list.Index(this, CurrentSourceLocation, Stack.Pop()));
+                            Stack.Push(list.Index(this, list, CurrentSourceLocation, Stack.Pop()));
                             break;
                         case InstructionType.LoadLocal:
-                            if (StackFrame.Contains(arg))
-                                Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
+                            if (GlobalFrame.ContainsVariable(arg))
+                            {
+                                if (StackFrame.Contains(arg))
+                                    Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
+                                else
+                                    Stack.Push(GlobalFrame.GetVariable(arg));
+                            }
                             else
-                                Stack.Push(GlobalFrame.GetVariable(arg));
+                                Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
                             break;
                         case InstructionType.Pop:
-                            if (Stack.Count > 0)
-                                Stack.Pop();
+                            lastValuePopped = Stack.Pop();
                             break;
                         case InstructionType.PopHandler:
                             //Handlers.Pop();
@@ -250,7 +264,8 @@ namespace Hassium.Runtime
                             Stack.Push(method.Parent);
                             break;
                         case InstructionType.SetInitialAttribute:
-                            attrib = Stack.Pop().ToString(this, CurrentSourceLocation).String;
+                            val = Stack.Pop();
+                            attrib = val.ToString(this, val, CurrentSourceLocation).String;
                             val = Stack.Pop();
                             var obj = Stack.Peek();
                             if (obj.Attributes.ContainsKey(attrib))
@@ -258,39 +273,34 @@ namespace Hassium.Runtime
                             obj.Attributes.Add(attrib, val);
                             break;
                         case InstructionType.StartThread:
-                            (Stack.Pop() as HassiumThread).start(this, CurrentSourceLocation);
+                            val = Stack.Pop();
+                            (val as HassiumThread).start(this, val, CurrentSourceLocation);
                             break;
                         case InstructionType.StoreAttribute:
                             val = Stack.Pop();
                             attrib = CurrentModule.ConstantPool[arg];
                             if (val.IsPrivate)
                             {
-                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
                                 return HassiumObject.Null;
                             }
-                            try
+
+                            if (val.Attributes.ContainsKey(attrib))
                             {
-                                if (val.Attributes.ContainsKey(attrib))
+                                if (val.Attributes[attrib] is HassiumProperty)
                                 {
-                                    if (val.Attributes[attrib] is HassiumProperty)
+                                    if (((HassiumProperty)val.Attributes[attrib]).Set == null)
                                     {
-                                        if (((HassiumProperty)val.Attributes[attrib]).Set == null)
-                                        {
-                                            RaiseException(HassiumKeyNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(string.Format("{0} { set; }", attrib))));
-                                            return null;
-                                        }
-                                        ((HassiumProperty)val.Attributes[attrib]).Set.Invoke(this, CurrentSourceLocation, Stack.Pop());
-                                        break;
+                                        RaiseException(HassiumKeyNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, new HassiumString(string.Format("{0} { set; }", attrib))));
+                                        return null;
                                     }
-                                    else
-                                        val.Attributes.Remove(attrib);
+                                    ((HassiumProperty)val.Attributes[attrib]).Set.Invoke(this, CurrentSourceLocation, Stack.Pop());
+                                    break;
                                 }
-                                val.Attributes.Add(attrib, Stack.Pop());
+                                else
+                                    val.Attributes.Remove(attrib);
                             }
-                            catch (KeyNotFoundException)
-                            {
-                                RaiseException(HassiumAttribNotFoundException._new(this, CurrentSourceLocation, val, new HassiumString(attrib)));
-                            }
+                            val.Attributes.Add(attrib, Stack.Pop());
                             break;
                         case InstructionType.StoreGlobal:
                             val = Stack.Pop();
@@ -303,7 +313,8 @@ namespace Hassium.Runtime
                             CurrentModule.Globals[arg] = Stack.Pop();
                             break;
                         case InstructionType.StoreIterableElement:
-                            Stack.Push(Stack.Pop().StoreIndex(this, CurrentSourceLocation, Stack.Pop(), Stack.Pop()));
+                            val = Stack.Pop();
+                            Stack.Push(val.StoreIndex(this, val, CurrentSourceLocation, Stack.Pop(), Stack.Pop()));
                             break;
                         case InstructionType.StoreLocal:
                             val = Stack.Pop();
@@ -313,7 +324,8 @@ namespace Hassium.Runtime
                                 StackFrame.Add(arg, val);
                             break;
                         case InstructionType.Swap:
-                            int index = (int)Stack.Pop().ToInt(this, CurrentSourceLocation).Int;
+                            val = Stack.Pop();
+                            int index = (int)val.ToInt(this, val, CurrentSourceLocation).Int;
                             val = StackFrame.GetVariable(CurrentSourceLocation, this, index);
                             StackFrame.Modify(index, StackFrame.GetVariable(CurrentSourceLocation, this, arg));
                             StackFrame.Modify(arg, val);
@@ -326,10 +338,12 @@ namespace Hassium.Runtime
                 }
                 catch (Exception ex)
                 {
-                    RaiseException(new HassiumString(ex.ToString()));
+                    RaiseException(new HassiumString(ex.Message));
                 }
+                //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + watch.ElapsedTicks);
+                //watch.Reset();
             }
-            return HassiumObject.Null;
+            return lastValuePopped;
         }
 
         private void interpretBinaryOperation(HassiumObject left, HassiumObject right, int op)
@@ -337,61 +351,61 @@ namespace Hassium.Runtime
             switch (op)
             {
                 case (int)BinaryOperation.Addition:
-                    Stack.Push(left.Add(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Add(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.BitshiftLeft:
-                    Stack.Push(left.BitshiftLeft(this, CurrentSourceLocation, right));
+                    Stack.Push(left.BitshiftLeft(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.BitshiftRight:
-                    Stack.Push(left.BitshiftRight(this, CurrentSourceLocation, right));
+                    Stack.Push(left.BitshiftRight(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.BitwiseAnd:
-                    Stack.Push(left.BitwiseAnd(this, CurrentSourceLocation, right));
+                    Stack.Push(left.BitwiseAnd(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.BitwiseOr:
-                    Stack.Push(left.BitwiseOr(this, CurrentSourceLocation, right));
+                    Stack.Push(left.BitwiseOr(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.BitwiseXor:
-                    Stack.Push(left.Xor(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Xor(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.Division:
-                    Stack.Push(left.Divide(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Divide(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.EqualTo:
-                    Stack.Push(left.EqualTo(this, CurrentSourceLocation, right));
+                    Stack.Push(left.EqualTo(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.GreaterThan:
-                    Stack.Push(left.GreaterThan(this, CurrentSourceLocation, right));
+                    Stack.Push(left.GreaterThan(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.GreaterThanOrEqual:
-                    Stack.Push(left.GreaterThanOrEqual(this, CurrentSourceLocation, right));
+                    Stack.Push(left.GreaterThanOrEqual(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.IntegerDivision:
-                    Stack.Push(left.IntegerDivision(this, CurrentSourceLocation, right));
+                    Stack.Push(left.IntegerDivision(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.Is:
                     Stack.Push(Is(left, right));
                     break;
                 case (int)BinaryOperation.LesserThan:
-                    Stack.Push(left.LesserThan(this, CurrentSourceLocation, right));
+                    Stack.Push(left.LesserThan(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.LesserThanOrEqual:
-                    Stack.Push(left.LesserThanOrEqual(this, CurrentSourceLocation, right));
+                    Stack.Push(left.LesserThanOrEqual(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.LogicalAnd:
-                    Stack.Push(left.LogicalAnd(this, CurrentSourceLocation, right));
+                    Stack.Push(left.LogicalAnd(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.LogicalOr:
-                    Stack.Push(left.LogicalOr(this, CurrentSourceLocation, right));
+                    Stack.Push(left.LogicalOr(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.Modulus:
-                    Stack.Push(left.Modulus(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Modulus(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.Multiplication:
-                    Stack.Push(left.Multiply(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Multiply(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.NotEqualTo:
-                    Stack.Push(left.NotEqualTo(this, CurrentSourceLocation, right));
+                    Stack.Push(left.NotEqualTo(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.NullCoalescing:
                     if (left == HassiumObject.Null || left == null)
@@ -400,10 +414,10 @@ namespace Hassium.Runtime
                         Stack.Push(left);
                     break;
                 case (int)BinaryOperation.Power:
-                    Stack.Push(left.Power(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Power(this, left, CurrentSourceLocation, right));
                     break;
                 case (int)BinaryOperation.Subtraction:
-                    Stack.Push(left.Subtract(this, CurrentSourceLocation, right));
+                    Stack.Push(left.Subtract(this, left, CurrentSourceLocation, right));
                     break;
             }
         }
@@ -423,13 +437,13 @@ namespace Hassium.Runtime
             switch (op)
             {
                 case (int)UnaryOperation.BitwiseNot:
-                    Stack.Push(target.BitwiseNot(this, CurrentSourceLocation));
+                    Stack.Push(target.BitwiseNot(this, target, CurrentSourceLocation));
                     break;
                 case (int)UnaryOperation.LogicalNot:
-                    Stack.Push(target.LogicalNot(this, CurrentSourceLocation));
+                    Stack.Push(target.LogicalNot(this, target, CurrentSourceLocation));
                     break;
                 case (int)UnaryOperation.Negate:
-                    Stack.Push(target.Negate(this, CurrentSourceLocation));
+                    Stack.Push(target.Negate(this, target, CurrentSourceLocation));
                     break;
             }
         }
@@ -441,9 +455,9 @@ namespace Hassium.Runtime
                 var callStack = UnwindCallStack();
                 Console.Write("Unhandled Exception: ");
                 if (message.Attributes.ContainsKey("message"))
-                    Console.WriteLine(message.Attributes["message"].Invoke(this, CurrentSourceLocation).ToString(this, CurrentSourceLocation).String);
+                    Console.WriteLine(message.GetAttribute("message").Invoke(this, CurrentSourceLocation).ToString(this, message.GetAttribute("message"), CurrentSourceLocation).String);
                 else
-                    Console.WriteLine(message.ToString(this, CurrentSourceLocation).String);
+                    Console.WriteLine(message.ToString(this, message, CurrentSourceLocation).String);
                 Console.WriteLine(callStack);
                 Environment.Exit(0);
                 return;
@@ -501,7 +515,7 @@ namespace Hassium.Runtime
             for (int i = 0; i < len; i++)
                 sb.AppendLine(CallStack.Pop());
 
-            CallStack = new Stack<string>();
+            CallStack = new LinkedStack<string>();
             return sb.ToString();
         }
 

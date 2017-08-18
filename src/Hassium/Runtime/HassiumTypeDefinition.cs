@@ -19,9 +19,9 @@ namespace Hassium.Runtime
         {
             return TypeName;
         }
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString(TypeName);
+            return new HassiumString((self as HassiumTypeDefinition).TypeName);
         }
     }
 }

@@ -20,39 +20,39 @@ namespace Hassium.Runtime.Net
         }
 
         [FunctionAttribute("func gethost (IPAddrOrStr : object) : string")]
-        public HassiumString gethost(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString gethost(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return gethosts(vm, location, args[0]).Index(vm, location, new HassiumInt(0)).ToString(vm, location);
+            return gethosts(vm, self, location, args[0]).Values[0] as HassiumString;
         }
 
         [FunctionAttribute("func gethosts (IPAddrOrStr : object) : list")]
-        public HassiumList gethosts(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList gethosts(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
-            var hosts = Dns.GetHostAddresses(args[0].ToString(vm, location).String);
+            var hosts = Dns.GetHostAddresses(args[0].ToString(vm, args[0], location).String);
 
             foreach (var host in hosts)
-                list.add(vm, location, new HassiumString(host.ToString()));
+                HassiumList.add(vm, list, location, new HassiumString(host.ToString()));
 
             return list;
         }
 
         [FunctionAttribute("func getip (host : string) : IPAddr")]
-        public HassiumIPAddr getip(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumIPAddr getip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return getips(vm, location, args[0]).Index(vm, location, new HassiumInt(0)) as HassiumIPAddr;
+            return getips(vm, self, location, args[0]).Values[0] as HassiumIPAddr;
         }
 
         [FunctionAttribute("func getips (host : string) : list")]
-        public HassiumList getips(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumList getips(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
-            var ips = Dns.GetHostAddresses(args[0].ToString(vm, location).String);
+            var ips = Dns.GetHostAddresses(args[0].ToString(vm, args[0], location).String);
 
             foreach (var ip in ips)
-                list.add(vm, location, HassiumIPAddr._new(vm, location, new HassiumString(ip.ToString())));
+                HassiumList.add(vm, list, location, HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, new HassiumString(ip.ToString())));
 
             return list;
         }

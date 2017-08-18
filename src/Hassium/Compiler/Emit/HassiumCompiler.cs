@@ -246,7 +246,14 @@ namespace Hassium.Compiler.Emit
         public void Accept(ExpressionStatementNode node)
         {
             node.Expression.Visit(this);
-            emit(node.SourceLocation, InstructionType.Pop);
+
+            // Peephole optimization: Remove push/pop redundancies
+            var instructions = methodStack.Peek().Instructions;
+            var type = instructions[instructions.Count - 1].InstructionType;
+            if (type == InstructionType.Push || type == InstructionType.PushConstant || type == InstructionType.PushHandler || type == InstructionType.PushObject)
+                instructions.Remove(instructions[instructions.Count - 1]);
+            else
+                emit(node.SourceLocation, InstructionType.Pop);
         }
         public void Accept(FloatNode node)
         {
@@ -545,7 +552,7 @@ namespace Hassium.Compiler.Emit
                 emit(pair.Value.SourceLocation, InstructionType.Return);
                 var type = methodStack.Pop();
 
-                trait.Traits.add(null, pair.Value.SourceLocation, new HassiumString(pair.Key), type);
+                HassiumDictionary.add(null, trait.Traits, pair.Value.SourceLocation, new HassiumString(pair.Key), type);
             }
 
             classStack.Peek().AddAttribute(node.Name, trait);

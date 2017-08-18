@@ -1,6 +1,7 @@
 ﻿using Hassium.Compiler;
 using Hassium.Runtime.Types;
 
+using System.Collections.Generic;
 using System.Text;
 
 namespace Hassium.Runtime.IO
@@ -9,60 +10,60 @@ namespace Hassium.Runtime.IO
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("StreamClosedException");
 
+        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
+        {
+            { "file", new HassiumProperty(get_file) },
+            { "filepath", new HassiumProperty(get_filepath) },
+            { INVOKE, new HassiumFunction(_new, 2) },
+            { "message", new HassiumFunction(get_message) },
+            { TOSTRING, new HassiumFunction(tostring, 0) }
+        };
+
         public HassiumFile File { get; set; }
         public HassiumString FilePath { get; set; }
 
         public HassiumFileClosedException()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new, 2);
-            ImportAttribs(this);
-        }
-
-        public static void ImportAttribs(HassiumFileClosedException exception)
-        {
-            exception.AddAttribute("file", new HassiumProperty(exception.get_file));
-            exception.AddAttribute("filepath", new HassiumProperty(exception.get_filepath));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("func new (file : File, path : string) : FileClosedException")]
-        public static HassiumFileClosedException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumFileClosedException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumFileClosedException exception = new HassiumFileClosedException();
 
             exception.File = args[0] as HassiumFile;
-            exception.FilePath = args[1].ToString(vm, location);
-            ImportAttribs(exception);
+            exception.FilePath = args[1].ToString(vm, args[1], location);
+            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }
 
         [FunctionAttribute("file { get; }")]
-        public HassiumFile get_file(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumFile get_file(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return File;
+            return (self as HassiumFileClosedException).File;
         }
 
         [FunctionAttribute("filepath { get; }")]
-        public HassiumString get_filepath(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_filepath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return FilePath;
+            return (self as HassiumFileClosedException).FilePath;
         }
 
         [FunctionAttribute("message { message; }")]
-        public HassiumString get_message(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString(string.Format("File Closed: Filepath '{0}' has been closed", FilePath.String));
+            return new HassiumString(string.Format("File Closed: Filepath '{0}' has been closed", (self as HassiumFileClosedException).FilePath.String));
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(get_message(vm, location).String);
+            sb.AppendLine(get_message(vm, self, location).String);
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());

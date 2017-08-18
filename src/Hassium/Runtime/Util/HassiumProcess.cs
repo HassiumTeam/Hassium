@@ -47,11 +47,11 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("func new (path : string, args : string")]
-        public static HassiumProcess _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumProcess _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumProcess process = new HassiumProcess();
 
-            process.StartInfo = new ProcessStartInfo(args[0].ToString(vm, location).String, args[1].ToString(vm, location).String);
+            process.StartInfo = new ProcessStartInfo(args[0].ToString(vm, args[0], location).String, args[1].ToString(vm, args[1], location).String);
             process.Process = new Process();
             process.Process.StartInfo = process.StartInfo;
 
@@ -67,59 +67,59 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("args { get; }")]
-        public HassiumString get_args(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(StartInfo.Arguments);
         }
 
         [FunctionAttribute("args { set; }")]
-        public HassiumNull set_args(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            StartInfo.Arguments = args[0].ToString(vm, location).String;
+            StartInfo.Arguments = args[0].ToString(vm, args[0], location).String;
             return Null;
         }
 
         [FunctionAttribute("createwindow { get; }")]
-        public HassiumBool get_createwindow(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(StartInfo.CreateNoWindow);
         }
 
         [FunctionAttribute("createwindow { set; }")]
-        public HassiumNull set_createwindow(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            StartInfo.CreateNoWindow = args[0].ToBool(vm, location).Bool;
+            StartInfo.CreateNoWindow = args[0].ToBool(vm, args[0], location).Bool;
             return Null;
         }
 
         [FunctionAttribute("path { get; }")]
-        public HassiumString get_path(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(StartInfo.FileName);
         }
 
         [FunctionAttribute("path { set; }")]
-        public HassiumNull set_path(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            StartInfo.FileName = args[0].ToString(vm, location).String;
+            StartInfo.FileName = args[0].ToString(vm, args[0], location).String;
             return Null;
         }
 
         [FunctionAttribute("shellexecute { get; }")]
-        public HassiumBool get_shellexecute(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(StartInfo.UseShellExecute);
         }
 
         [FunctionAttribute("shellexecute { set; }")]
-        public HassiumNull set_shellexecute(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            StartInfo.UseShellExecute = args[0].ToBool(vm, location).Bool;
+            StartInfo.UseShellExecute = args[0].ToBool(vm, args[0], location).Bool;
             return Null;
         }
 
         [FunctionAttribute("func start () : null")]
-        public HassiumNull start(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Process.StartInfo = StartInfo;
             Process.Start();
@@ -128,22 +128,22 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("func stop () : null")]
-        public HassiumNull stop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Process.Kill();
             return Null;
         }
 
         [FunctionAttribute("username { get; }")]
-        public HassiumString get_username(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(StartInfo.UserName);
         }
 
         [FunctionAttribute("username { set; }")]
-        public HassiumNull set_username(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            StartInfo.UserName = args[0].ToString(vm, location).String;
+            StartInfo.UserName = args[0].ToString(vm, args[0], location).String;
             return Null;
         }
     }

@@ -31,38 +31,38 @@ namespace Hassium.Runtime
         };
 
         [FunctionAttribute("func clone (obj : object) : object")]
-        public static HassiumObject clone(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject clone(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return args[0].Clone() as HassiumObject;
         }
 
         [FunctionAttribute("func format (fmt : string, params obj) : string")]
-        public static HassiumString format(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (args.Length <= 0)
                 return new HassiumString(string.Empty);
             if (args.Length == 1)
-                return args[0].ToString(vm, location);
+                return args[0].ToString(vm, args[0], location);
 
             object[] fargs = new object[args.Length];
             for (int i = 1; i < args.Length; i++)
             {
                 if (args[i].Types.Contains(HassiumObject.Number))
-                    fargs[i - 1] = args[i].ToInt(vm, location).Int;
+                    fargs[i - 1] = args[i].ToInt(vm, args[i], location).Int;
                 else
-                    fargs[i - 1] = args[i].ToString(vm, location).String;
+                    fargs[i - 1] = args[i].ToString(vm, args[i], location).String;
             }
-            return new HassiumString(string.Format(args[0].ToString(vm, location).String, fargs));
+            return new HassiumString(string.Format(args[0].ToString(vm, args[0], location).String, fargs));
         }
 
         [FunctionAttribute("func getattribute (obj : object, attrib : string) : object")]
-        public static HassiumObject getattrib(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject getattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return args[0].Attributes[args[1].ToString(vm, location).String];
+            return args[0].Attributes[args[1].ToString(vm, args[1], location).String];
         }
 
         [FunctionAttribute("func getattribs (obj : object) : dict")]
-        public static HassiumDictionary getattribs(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumDictionary getattribs(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumDictionary dict = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
 
@@ -73,24 +73,24 @@ namespace Hassium.Runtime
         }
 
         [FunctionAttribute("func getparamlengths (obj : object) : list")]
-        public static HassiumList getparamlengths(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList getparamlengths(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
             if (args[0] is HassiumFunction)
                 foreach (int len in (args[0] as HassiumFunction).ParameterLengths)
-                    list.add(vm, location, new HassiumInt(len));
+                    HassiumList.add(vm, list, location, new HassiumInt(len));
             else if (args[0] is HassiumMethod)
-                list.add(vm, location, new HassiumInt((args[0] as HassiumMethod).Parameters.Count));
+                HassiumList.add(vm, list, location, new HassiumInt((args[0] as HassiumMethod).Parameters.Count));
             else if (args[0] is HassiumMultiFunc)
                 foreach (var method in (args[0] as HassiumMultiFunc).Methods)
-                    list.add(vm, location, new HassiumInt(method.Parameters.Count));
+                    HassiumList.add(vm, list, location, new HassiumInt(method.Parameters.Count));
 
             return list;
         }
 
         [FunctionAttribute("func getsourcerep (obj : object) : string")]
-        public static HassiumString getsourcerep(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString getsourcerep(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (args[0] is HassiumFunction)
             {
@@ -110,7 +110,7 @@ namespace Hassium.Runtime
         }
 
         [FunctionAttribute("func getsourcereps (obj : object) : list")]
-        public static HassiumList getsourcereps(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList getsourcereps(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
@@ -121,94 +121,94 @@ namespace Hassium.Runtime
                 {
                     var reps = (a[0] as FunctionAttribute).SourceRepresentations;
                     foreach (var rep in reps)
-                        list.add(vm, location, new HassiumString(rep));
+                        HassiumList.add(vm, list, location, new HassiumString(rep));
                 }
             }
             else if (args[0] is HassiumMethod)
-                list.add(vm, location, new HassiumString((args[0] as HassiumMethod).SourceRepresentation));
+                HassiumList.add(vm, list, location, new HassiumString((args[0] as HassiumMethod).SourceRepresentation));
             else if (args[0] is HassiumMultiFunc)
-                list.add(vm, location, new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation));
+                HassiumList.add(vm, list, location, new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation));
             return list;
         }
 
         [FunctionAttribute("func hasattrib (obj : object, attrib : string) : bool")]
-        public static HassiumBool hasattrib(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumBool hasattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumBool(args[0].Attributes.ContainsKey(args[1].ToString(vm, location).String));
+            return new HassiumBool(args[0].Attributes.ContainsKey(args[1].ToString(vm, args[1], location).String));
         }
 
         [FunctionAttribute("func input () : string")]
-        public static HassiumString input(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString input(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Console.ReadLine());
         }
 
         [FunctionAttribute("func map (l : list, f : func) : list")]
-        public static HassiumList map(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList map(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            var list = args[0].ToList(vm, location).Values;
+            var list = args[0].ToList(vm, args[0], location).Values;
             HassiumList result = new HassiumList(new HassiumObject[0]);
 
             for (int i = 0; i < list.Count; i++)
-                result.add(vm, location, args[1].Invoke(vm, location, list[i]));
+                HassiumList.add(vm, result, location, args[1].Invoke(vm, location, list[i]));
 
             return result;
         }
 
         [FunctionAttribute("func print (params obj) : null")]
-        public static HassiumNull print(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull print(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             foreach (var arg in args)
-                Console.Write(arg.ToString(vm, location).String);
+                Console.Write(arg.ToString(vm, arg, location).String);
             return HassiumObject.Null;
         }
 
         [FunctionAttribute("func printf (strf : string, params obj) : null")]
-        public static HassiumNull printf(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull printf(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.Write(format(vm, location, args).String);
+            Console.Write(format(vm, self, location, args).String);
             return HassiumObject.Null;
         }
 
         [FunctionAttribute("func println (params obj) : null")]
-        public static HassiumNull println(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull println(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             foreach (var arg in args)
-                Console.WriteLine(arg.ToString(vm, location).String);
+                Console.WriteLine(arg.ToString(vm, self, location).String);
             return HassiumObject.Null;
         }
 
         [FunctionAttribute("func range (upper : int) : list", "func range (lower : int, upper : int) : list")]
-        public static HassiumList range(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList range(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            int lower = args.Length == 1 ? 0 : (int)args[0].ToInt(vm, location).Int;
-            int upper = args.Length == 1 ? (int)args[0].ToInt(vm, location).Int : (int)args[1].ToInt(vm, location).Int;
+            int lower = args.Length == 1 ? 0 : (int)args[0].ToInt(vm, args[0], location).Int;
+            int upper = args.Length == 1 ? (int)args[0].ToInt(vm, args[0], location).Int : (int)args[1].ToInt(vm, args[1], location).Int;
 
             HassiumList list = new HassiumList(new HassiumObject[0]);
 
             while (lower < upper)
-                list.add(vm, location, new HassiumInt(lower++));
+                HassiumList.add(vm, list, location, new HassiumInt(lower++));
 
             return list;
         }
 
 
         [FunctionAttribute("func setattrib (obj : object, attrib : string, val : object) : null")]
-        public static HassiumNull setattrib(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull setattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            args[0].Attributes.Add(args[1].ToString(vm, location).String, args[2]);
+            args[0].Attributes.Add(args[1].ToString(vm, args[1], location).String, args[2]);
             return HassiumObject.Null;
         }
 
         [FunctionAttribute("func sleep (milliseconds : int) : null")]
-        public static HassiumNull sleep(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull sleep(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            System.Threading.Thread.Sleep((int)args[0].ToInt(vm, location).Int);
+            System.Threading.Thread.Sleep((int)args[0].ToInt(vm, args[0], location).Int);
             return HassiumObject.Null;
         }
 
         [FunctionAttribute("func type (obj : object) : typedef")]
-        public static HassiumTypeDefinition type(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumTypeDefinition type(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (args[0] is HassiumTypeDefinition)
                 return HassiumTypeDefinition.TypeDefinition;
@@ -216,7 +216,7 @@ namespace Hassium.Runtime
         }
 
         [FunctionAttribute("func types (obj : object) : list")]
-        public static HassiumList types(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList types(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (args[0] is HassiumTypeDefinition)
                 return new HassiumList(new HassiumObject[] { HassiumObject.TypeDefinition });

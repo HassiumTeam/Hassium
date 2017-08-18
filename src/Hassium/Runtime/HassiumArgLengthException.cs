@@ -1,6 +1,7 @@
 ﻿using Hassium.Compiler;
 using Hassium.Runtime.Types;
 
+using System.Collections.Generic;
 using System.Text;
 
 namespace Hassium.Runtime
@@ -9,6 +10,15 @@ namespace Hassium.Runtime
     {
         public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ArgumentLengthException");
 
+        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
+        {
+            { "expected", new HassiumProperty(get_expected) },
+            { "function", new HassiumProperty(get_function) },
+            { "given", new HassiumProperty(get_given) },
+            { INVOKE, new HassiumFunction(_new, 3) },
+            { TOSTRING, new HassiumFunction(tostring, 0) }
+        };
+
         public HassiumInt ExpectedLength { get; private set; }
         public HassiumObject Function { get; private set; }
         public HassiumInt GivenLength { get; private set; }
@@ -16,62 +26,54 @@ namespace Hassium.Runtime
         public HassiumArgLengthException()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new, 3);
-            ImportAttribs(this);
-        }
-
-        public static void ImportAttribs(HassiumArgLengthException exception)
-        {
-            exception.AddAttribute("expected", new HassiumProperty(exception.get_expected));
-            exception.AddAttribute("function", new HassiumProperty(exception.get_function));
-            exception.AddAttribute("given", new HassiumProperty(exception.get_given));
-            exception.AddAttribute("message", new HassiumProperty(exception.get_message));
-            exception.AddAttribute(TOSTRING, exception.ToString, 0);
+            
+            Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("func new (fn : object, expected : int, given : int) : ArgumentLengthException")]
-        public static HassiumArgLengthException _new(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumArgLengthException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumArgLengthException exception = new HassiumArgLengthException();
 
-            exception.ExpectedLength = args[1].ToInt(vm, location);
+            exception.ExpectedLength = args[1].ToInt(vm, args[1], location);
             exception.Function = args[0];
-            exception.GivenLength = args[2].ToInt(vm, location);
-            ImportAttribs(exception);
+            exception.GivenLength = args[2].ToInt(vm, args[2], location);
+            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }
 
         [FunctionAttribute("expected { get; }")]
-        public HassiumInt get_expected(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_expected(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return ExpectedLength;
+            return (self as HassiumArgLengthException).ExpectedLength;
         }
 
         [FunctionAttribute("function { get; }")]
-        public HassiumObject get_function(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject get_function(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return Function;
+            return (self as HassiumArgLengthException).Function;
         }
 
         [FunctionAttribute("given { get; }")]
-        public HassiumInt get_given(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_given(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return GivenLength;
+            return (self as HassiumArgLengthException).GivenLength;
         }
 
         [FunctionAttribute("message { get; }")]
-        public HassiumString get_message(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString(string.Format("Argument Length Error: Expected '{0}' arguments, '{1}' given", ExpectedLength.Int, GivenLength.Int));
+            var exception = (self as HassiumArgLengthException);
+            return new HassiumString(string.Format("Argument Length Error: Expected '{0}' arguments, '{1}' given", exception.ExpectedLength.Int, exception.GivenLength.Int));
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public override HassiumString ToString(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine(get_message(vm, location).String);
+            sb.AppendLine(get_message(vm, self, location).String);
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());

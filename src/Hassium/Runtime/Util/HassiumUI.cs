@@ -31,168 +31,168 @@ namespace Hassium.Runtime.Util
         }
 
         [FunctionAttribute("backcolor { get; }")]
-        public HassiumString get_backcolor(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_backcolor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Console.BackgroundColor.ToString().ToLower());
         }
 
         [FunctionAttribute("backcolor { set; }")]
-        public HassiumNull set_backcolor(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_backcolor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.BackgroundColor = stringToConsoleColor(vm, args[0].ToString(vm, location).String);
+            Console.BackgroundColor = stringToConsoleColor(vm, args[0].ToString(vm, args[0], location).String);
             return Null;
         }
 
         [FunctionAttribute("func beep () : null", "func beep (freq : int, milliseconds : int) : null")]
-        public HassiumNull beep(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull beep(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (args.Length == 0)
                 Console.Beep();
             else
-                Console.Beep((int)args[0].ToInt(vm, location).Int, (int)args[1].ToInt(vm, location).Int);
+                Console.Beep((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int);
             return Null;
         }
 
         [FunctionAttribute("capslock { get; }")]
-        public HassiumBool get_capslock(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_capslock(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Console.CapsLock);
         }
 
         [FunctionAttribute("func clear () : null")]
-        public HassiumNull clear(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull clear(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Console.Clear();
             return Null;
         }
 
         [FunctionAttribute("cursorleft { get; }")]
-        public HassiumInt get_cursorleft(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_cursorleft(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.CursorLeft);
         }
 
         [FunctionAttribute("cursorleft { set; }")]
-        public HassiumNull set_cursorleft(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_cursorleft(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.CursorLeft = (int)args[0].ToInt(vm, location).Int;
+            Console.CursorLeft = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("cursorsize { get; }")]
-        public HassiumInt get_cursorsize(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_cursorsize(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.CursorSize);
         }
 
         [FunctionAttribute("cursorsize { set; }")]
-        public HassiumNull set_cursorsize(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_cursorsize(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.CursorSize = (int)args[0].ToInt(vm, location).Int;
+            Console.CursorSize = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("cursortop { get; }")]
-        public HassiumInt get_cursortop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_cursortop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.CursorTop);
         }
 
         [FunctionAttribute("cursortop { set; }")]
-        public HassiumNull set_cursortop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_cursortop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.CursorTop = (int)args[0].ToInt(vm, location).Int;
+            Console.CursorTop = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("cursorvisible { get; }")]
-        public HassiumBool get_cursorvisible(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumBool get_cursorvisible(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Console.CursorVisible);
         }
 
         [FunctionAttribute("cursorvisible { set; }")]
-        public HassiumNull set_cursorvisible(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_cursorvisible(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.CursorVisible = args[0].ToBool(vm, location).Bool;
+            Console.CursorVisible = args[0].ToBool(vm, args[0], location).Bool;
             return Null;
         }
 
         [FunctionAttribute("forecolor { get; }")]
-        public HassiumString get_forecolor(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_forecolor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Console.ForegroundColor.ToString().ToLower());
         }
 
         [FunctionAttribute("forecolor { set; }")]
-        public HassiumNull set_forecolor(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_forecolor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.ForegroundColor = stringToConsoleColor(vm, args[0].ToString(vm, location).String);
+            Console.ForegroundColor = stringToConsoleColor(vm, args[0].ToString(vm, args[0], location).String);
             return Null;
         }
 
         [FunctionAttribute("title { get; }")]
-        public HassiumString get_title(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumString get_title(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Console.Title);
         }
 
         [FunctionAttribute("title { set; }")]
-        public HassiumNull set_title(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_title(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.Title = args[0].ToString(vm, location).String;
+            Console.Title = args[0].ToString(vm, args[0], location).String;
             return Null;
         }
 
         [FunctionAttribute("windowheight { get; }")]
-        public HassiumInt get_windowheight(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_windowheight(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.WindowHeight);
         }
 
         [FunctionAttribute("windowheight { set; }")]
-        public HassiumNull set_windowheight(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_windowheight(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.WindowHeight = (int)args[0].ToInt(vm, location).Int;
+            Console.WindowHeight = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("windowleft { get; }")]
-        public HassiumInt get_windowleft(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_windowleft(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.WindowLeft);
         }
 
         [FunctionAttribute("windowleft { set; }")]
-        public HassiumNull set_windowleft(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_windowleft(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.WindowLeft = (int)args[0].ToInt(vm, location).Int;
+            Console.WindowLeft = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("windowtop { get; }")]
-        public HassiumInt get_windowtop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_windowtop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.WindowTop);
         }
 
         [FunctionAttribute("windowtop { set; }")]
-        public HassiumNull set_windowtop(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_windowtop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.WindowTop = (int)args[0].ToInt(vm, location).Int;
+            Console.WindowTop = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
         [FunctionAttribute("windowwidth { get; }")]
-        public HassiumInt get_windowwidth(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumInt get_windowwidth(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Console.WindowWidth);
         }
 
         [FunctionAttribute("windowwidth { set; }")]
-        public HassiumNull set_windowwidth(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        public HassiumNull set_windowwidth(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.WindowWidth = (int)args[0].ToInt(vm, location).Int;
+            Console.WindowWidth = (int)args[0].ToInt(vm, args[0], location).Int;
             return Null;
         }
 
@@ -251,7 +251,7 @@ namespace Hassium.Runtime.Util
                     break;
                 default:
                     color = ConsoleColor.Black;
-                    vm.RaiseException(HassiumColorNotFoundException._new(vm, vm.CurrentSourceLocation, new HassiumString(colorString)));
+                    vm.RaiseException(HassiumColorNotFoundException.Attribs[INVOKE].Invoke(vm, vm.CurrentSourceLocation, new HassiumString(colorString)));
                     break;
             }
             return color;

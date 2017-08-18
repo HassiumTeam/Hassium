@@ -5,12 +5,14 @@ using System.Collections.Generic;
 
 namespace Hassium.Runtime
 {
-    public delegate HassiumObject HassiumFunctionDelegate(VirtualMachine vm, SourceLocation location, params HassiumObject[] args);
+    public delegate HassiumObject HassiumFunctionDelegate(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args);
+
     public class HassiumFunction : HassiumObject
     {
         public static new HassiumTypeDefinition TypeDefinition = HassiumMethod.TypeDefinition;
         public HassiumFunctionDelegate Target { get; private set; }
         public int[] ParameterLengths { get; private set; }
+        public HassiumObject Self { get; set; }
 
         public HassiumFunction(HassiumFunctionDelegate target, int paramLength)
         {
@@ -36,16 +38,17 @@ namespace Hassium.Runtime
                 else if (reps.Count == 0)
                     vm.PushCallStack(string.Format("{0}\t[{1}]", reps[0]));
             }
+
             if (ParameterLengths[0] != -1)
             {
                 foreach (int len in ParameterLengths)
                     if (len == args.Length)
-                        return Target(vm, location, args);
-                vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
+                        return Target(vm, Self, location, args);
+                vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
                 return Null;
             }
             
-            return Target(vm, location, args);
+            return Target(vm, Self, location, args);
         }
     }
 }

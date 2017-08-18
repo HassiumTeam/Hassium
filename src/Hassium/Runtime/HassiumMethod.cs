@@ -43,8 +43,7 @@ namespace Hassium.Runtime
             Module = module;
             Name = string.Empty;
             SourceRepresentation = string.Empty;
-
-            AddAttribute(INVOKE, Invoke);
+            
             AddType(TypeDefinition);
         }
         public HassiumMethod(HassiumModule module, string name)
@@ -58,8 +57,7 @@ namespace Hassium.Runtime
             Module = module;
             Name = name;
             SourceRepresentation = string.Empty;
-
-            AddAttribute(INVOKE, Invoke);
+            
             AddType(TypeDefinition);
         }
 
@@ -88,11 +86,13 @@ namespace Hassium.Runtime
             int i = 0;
             foreach (var param in Parameters)
             {
+                // If there's more arguments provided than called for
                 if (i >= args.Length)
                 {
-                    vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                    vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                     return Null;
                 }
+
                 var arg = args[i++];
                 if (param.Key.FunctionParameterType == FunctionParameterType.Variadic)
                 {
@@ -102,84 +102,83 @@ namespace Hassium.Runtime
                     {
                         HassiumList list = new HassiumList(new HassiumObject[0]);
                         for (--i; i < args.Length; i++)
-                            list.add(vm, location, args[i]);
+                            HassiumList.add(vm, list, location, args[i]);
                         vm.StackFrame.Add(param.Value, list);
                     }
                     break;
                 }
-                if (param.Key.FunctionParameterType == FunctionParameterType.Enforced)
+                else if (param.Key.FunctionParameterType == FunctionParameterType.Enforced)
                 {
                     var enforcedType = vm.ExecuteMethod(param.Key.EnforcedType);
                     if (enforcedType is HassiumTrait)
                     {
                         if (!(enforcedType as HassiumTrait).Is(vm, location, arg).Bool)
                         {
-                            vm.RaiseException(HassiumConversionFailedException._new(vm, location, arg, enforcedType));
+                            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, arg, enforcedType));
                             return Null;
                         }
                     }
                     else if (!arg.Types.Contains(enforcedType))
                     {
-                        vm.RaiseException(HassiumConversionFailedException._new(vm, location, arg, enforcedType));
+                        vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, arg, enforcedType));
                         return Null;
                     }
                 }
                 vm.StackFrame.Add(param.Value, arg);
             }
 
+            // If there's less arguments than called for
             if (i < args.Length)
             {
-                vm.RaiseException(HassiumArgLengthException._new(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                 return Null;
             }
 
             if (IsConstructor)
             {
-                HassiumClass ret = new HassiumClass(Parent.Name);
-                ret.Attributes = CloneDictionary(Parent.Attributes);
-                ret.AddType(Parent.TypeDefinition);
+                HassiumClass clazz = new HassiumClass(Parent.Name);
+                clazz.Attributes = CloneDictionary(Parent.Attributes);
+                clazz.AddType(Parent.TypeDefinition);
 
                 foreach (var inherit in Parent.Inherits)
                 {
                     foreach (var attrib in CloneDictionary(vm.ExecuteMethod(inherit).Attributes))
                     {
-                        if (!ret.Attributes.ContainsKey(attrib.Key))
+                        if (!clazz.Attributes.ContainsKey(attrib.Key))
                         {
-                            attrib.Value.Parent = ret;
-                            ret.Attributes.Add(attrib.Key, attrib.Value);
+                            attrib.Value.Parent = clazz;
+                            clazz.Attributes.Add(attrib.Key, attrib.Value);
                         }
                     }
                 }
 
                 foreach (var type in Parent.Types)
-                    ret.AddType(type as HassiumTypeDefinition);
-                foreach (var attrib in ret.Attributes.Values)
-                    attrib.Parent = ret;
-                vm.ExecuteMethod(ret.Attributes["new"] as HassiumMethod);
+                    clazz.AddType(type as HassiumTypeDefinition);
+                foreach (var attrib in clazz.Attributes.Values)
+                    attrib.Parent = clazz;
+                vm.ExecuteMethod(clazz.Attributes["new"] as HassiumMethod);
                 vm.PopCallStack();
                 vm.StackFrame.PopFrame();
-                return ret;
+                return clazz;
             }
-            else
+
+            var ret = vm.ExecuteMethod(this);
+
+            if (ReturnType != null)
             {
-                var ret = vm.ExecuteMethod(this);
-
-                if (ReturnType != null)
+                var enforcedType = vm.ExecuteMethod(ReturnType);
+                enforcedType = enforcedType is HassiumTypeDefinition ? enforcedType : enforcedType.Type();
+                if (!ret.Types.Contains(enforcedType))
                 {
-                    var enforcedType = vm.ExecuteMethod(ReturnType);
-                    enforcedType = enforcedType is HassiumTypeDefinition ? enforcedType : enforcedType.Type();
-                    if (!ret.Types.Contains(enforcedType))
-                    {
-                        vm.RaiseException(HassiumConversionFailedException._new(vm, location, ret, enforcedType));
-                        return this;
-                    }
+                    vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, ret, enforcedType));
+                    return this;
                 }
-
-                if (Name != "__init__" && Name != string.Empty) vm.StackFrame.PopFrame();
-                if (SourceRepresentation != string.Empty && Name != "__init__")
-                    vm.PopCallStack();
-                return ret;
             }
+
+            if (Name != "__init__" && Name != string.Empty) vm.StackFrame.PopFrame();
+            if (SourceRepresentation != string.Empty && Name != "__init__")
+                vm.PopCallStack();
+            return ret;
         }
 
         public static Dictionary<TKey, TValue> CloneDictionary<TKey, TValue>
@@ -187,9 +186,12 @@ namespace Hassium.Runtime
         {
             Dictionary<TKey, TValue> ret = new Dictionary<TKey, TValue>(original.Count,
                 original.Comparer);
-            foreach (KeyValuePair<TKey, TValue> entry in original)
+
+            var pairs = original;
+            var keys = original.Keys.ToArray();
+            for (int i = 0; i < original.Count; i++)
             {
-                ret.Add(entry.Key, (TValue)entry.Value.Clone());
+                ret.Add(keys[i], (TValue)original[keys[i]]);
             }
             return ret;
         }
