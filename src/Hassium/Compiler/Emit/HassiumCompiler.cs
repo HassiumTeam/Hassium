@@ -380,22 +380,22 @@ namespace Hassium.Compiler.Emit
             table.LeaveScope();
             method = methodStack.Pop();
 
-            if (classStack.Peek().Attributes.ContainsKey(method.Name))
+            if (classStack.Peek().ContainsAttribute(method.Name))
             {
-                var attrib = classStack.Peek().Attributes[method.Name];
+                var attrib = classStack.Peek().BoundAttributes[method.Name];
                 if (attrib is HassiumMultiFunc)
                     (attrib as HassiumMultiFunc).Methods.Add(method);
                 else
                 {
-                    classStack.Peek().Attributes.Remove(method.Name);
+                    classStack.Peek().BoundAttributes.Remove(method.Name);
                     var multiFunc = new HassiumMultiFunc();
                     multiFunc.Methods.Add(attrib as HassiumMethod);
                     multiFunc.Methods.Add(method);
-                    classStack.Peek().Attributes.Add(method.Name, multiFunc);
+                    classStack.Peek().AddAttribute(method.Name, multiFunc);
                 }
             }
             else
-                classStack.Peek().Attributes.Add(method.Name, method);
+                classStack.Peek().AddAttribute(method.Name, method);
         }
         public void Accept(IdentifierNode node)
         {
@@ -635,7 +635,7 @@ namespace Hassium.Compiler.Emit
                 mod = InternalModule.InternalModules[path];
             else
                 mod = resolveModuleByPath(node.SourceLocation, path);
-            classStack.Peek().Attributes.Add(path.Contains("/") ? Path.GetFileName(path) : path, mod);
+            classStack.Peek().AddAttribute(path.Contains("/") ? Path.GetFileName(path) : path, mod);
         }
         public void Accept(UseFromNode node)
         {
@@ -648,11 +648,11 @@ namespace Hassium.Compiler.Emit
 
             // Hassium source code imports will contain __global__, this is where
             // we have to look for the desired classes.
-            if (mod.Attributes.ContainsKey("__global__"))
+            if (mod.ContainsAttribute("__global__"))
             {
-                var globalClass = mod.Attributes["__global__"];
+                var globalClass = mod.BoundAttributes["__global__"];
                 // Copy over the __init__ method into ours
-                foreach (var attrib in globalClass.Attributes)
+                foreach (var attrib in globalClass.BoundAttributes)
                     if (attrib.Key == "__init__")
                         foreach (var instruction in (attrib.Value as HassiumMethod).Instructions)
                             methodStack.Peek().Instructions.Add(instruction);
@@ -662,18 +662,18 @@ namespace Hassium.Compiler.Emit
                     // use * is bad
                     module.AddWarning(node.SourceLocation, "Importing '*' is bad practice!");
 
-                    foreach (var attrib in globalClass.Attributes)
+                    foreach (var attrib in globalClass.BoundAttributes)
                     {
-                        if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
+                        if (!classStack.Peek().ContainsAttribute(attrib.Key))
                         {
                             var value = attrib.Value.Clone() as HassiumObject;
                             value.Parent = classStack.Peek();
-                            classStack.Peek().Attributes.Add(attrib.Key, value);
+                            classStack.Peek().AddAttribute(attrib.Key, value);
                         }
                     }
                 }
                 else
-                    classStack.Peek().Attributes.Add(node.Class, globalClass.Attributes[node.Class]);
+                    classStack.Peek().AddAttribute(node.Class, globalClass.BoundAttributes[node.Class]);
             }
             else
             {
@@ -681,19 +681,19 @@ namespace Hassium.Compiler.Emit
                 {
                     // use * is bad
                     module.AddWarning(node.SourceLocation, "Importing '*' is bad practice!");
-                    foreach (var attrib in mod.Attributes)
+                    foreach (var attrib in mod.BoundAttributes)
                     {
-                        if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
+                        if (!classStack.Peek().ContainsAttribute(attrib.Key))
                         {
                             var value = attrib.Value.Clone() as HassiumObject;
                             value.Parent = classStack.Peek();
-                            if (!classStack.Peek().Attributes.ContainsKey(attrib.Key))
-                                classStack.Peek().Attributes.Add(attrib.Key, value);
+                            if (!classStack.Peek().ContainsAttribute(attrib.Key))
+                                classStack.Peek().AddAttribute(attrib.Key, value);
                         }
                     }
                 }
                 else
-                    classStack.Peek().Attributes.Add(node.Class, mod.Attributes[node.Class]);
+                    classStack.Peek().AddAttribute(node.Class, mod.BoundAttributes[node.Class]);
             }
 
             if (mod is HassiumModule)

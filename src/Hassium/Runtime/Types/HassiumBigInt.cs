@@ -39,7 +39,6 @@ namespace Hassium.Runtime.Types
         {
             AddType(Number);
             AddType(TypeDefinition);
-            ImportAttribs(this);
         }
 
         [FunctionAttribute("func new (obj : object) : BigInt")]
@@ -56,21 +55,16 @@ namespace Hassium.Runtime.Types
                 bigint.BigInt = new BigInteger(ListToByteArr(vm, location, args[0].ToList(vm, args[0], location, args[0]) as HassiumList));
             else
                 bigint.BigInt = BigInteger.Parse(args[0].ToString(vm, args[0], location).String);
-            ImportAttribs(bigint);
-            return ImportAttribs(bigint);
-        }
 
-        public static HassiumBigInt ImportAttribs(HassiumBigInt bigint)
-        {
-            bigint.Attributes = new Dictionary<string, HassiumObject>(Attribs);
             return bigint;
         }
+        
 
         [FunctionAttribute("func abs () : BigInt")]
         public static HassiumBigInt abs(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var BigInt = (self as HassiumBigInt).BigInt;
-            return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Abs(BigInt) });
+            return new HassiumBigInt() { BigInt = BigInteger.Abs(BigInt) };
         }
 
         [FunctionAttribute("func __add__ (num : number) : number")]
@@ -79,10 +73,10 @@ namespace Hassium.Runtime.Types
             var BigInt = (self as HassiumBigInt).BigInt;
             var bigintarg = args[0] as HassiumBigInt;
             if (bigintarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Add(BigInt, (bigintarg.BigInt)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Add(BigInt, (bigintarg.BigInt)) };
             var intarg = args[0] as HassiumInt;
             if (intarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Add(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Add(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
             vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
             return Null;
         }
@@ -93,10 +87,10 @@ namespace Hassium.Runtime.Types
             var BigInt = (self as HassiumBigInt).BigInt;
             var bigintarg = args[0] as HassiumBigInt;
             if (bigintarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Divide(BigInt, (bigintarg.BigInt)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Divide(BigInt, (bigintarg.BigInt)) };
             var intarg = args[0] as HassiumInt;
             if (intarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Divide(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Divide(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
             vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
             return Null;
         }
@@ -175,7 +169,7 @@ namespace Hassium.Runtime.Types
         [FunctionAttribute("func modpow (val : BigInt, exp : BigInt, mod : BigInt) : BigInt")]
         public static HassiumBigInt modpow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.ModPow(args[0].ToBigInt(vm, args[0], location).BigInt, args[1].ToBigInt(vm, args[1], location).BigInt, args[2].ToBigInt(vm, args[2], location).BigInt) });
+            return new HassiumBigInt() { BigInt = BigInteger.ModPow(args[0].ToBigInt(vm, args[0], location).BigInt, args[1].ToBigInt(vm, args[1], location).BigInt, args[2].ToBigInt(vm, args[2], location).BigInt) };
         }
 
         [FunctionAttribute("func __multiply__ (num : number) : number")]
@@ -184,10 +178,10 @@ namespace Hassium.Runtime.Types
             var BigInt = (self as HassiumBigInt).BigInt;
             var bigintarg = args[0] as HassiumBigInt;
             if (bigintarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Multiply(BigInt, (bigintarg.BigInt)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Multiply(BigInt, (bigintarg.BigInt)) };
             var intarg = args[0] as HassiumInt;
             if (intarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Multiply(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Multiply(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
             vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
             return Null;
         }
@@ -206,10 +200,10 @@ namespace Hassium.Runtime.Types
             var BigInt = (self as HassiumBigInt).BigInt;
             var bigintarg = args[0] as HassiumBigInt;
             if (bigintarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Subtract(BigInt, (bigintarg.BigInt)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Subtract(BigInt, (bigintarg.BigInt)) };
             var intarg = args[0] as HassiumInt;
             if (intarg != null)
-                return ImportAttribs(new HassiumBigInt() { BigInt = BigInteger.Subtract(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) });
+                return new HassiumBigInt() { BigInt = BigInteger.Subtract(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
             vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
             return Null;
         }
@@ -240,6 +234,27 @@ namespace Hassium.Runtime.Types
         {
             var BigInt = (self as HassiumBigInt).BigInt;
             return new HassiumString(BigInt.ToString());
+        }
+        
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

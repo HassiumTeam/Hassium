@@ -22,30 +22,30 @@ namespace Hassium.Runtime
         public new void AddAttribute(string name, HassiumObject obj)
         {
             obj.Parent = this;
-            if (!Attributes.ContainsKey(name))
-                Attributes.Add(name, obj);
+            if (!BoundAttributes.ContainsKey(name))
+                BoundAttributes.Add(name, obj);
         }
 
         public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            if (Attributes.ContainsKey("new"))
-                return Attributes["new"].Invoke(vm, location, args).AddType(TypeDefinition);
-            else if (Attributes.ContainsKey(INVOKE))
-                return Attributes[INVOKE].Invoke(vm, location, args).AddType(TypeDefinition);
+            if (BoundAttributes.ContainsKey("new"))
+                return BoundAttributes["new"].Invoke(vm, location, args).AddType(TypeDefinition);
+            else if (BoundAttributes.ContainsKey(INVOKE))
+                return BoundAttributes[INVOKE].Invoke(vm, location, args).AddType(TypeDefinition);
             else
             {
                 foreach (var inherit in Inherits)
                 {
-                    foreach (var attrib in HassiumMethod.CloneDictionary(vm.ExecuteMethod(inherit).Attributes))
+                    foreach (var attrib in HassiumMethod.CloneDictionary(vm.ExecuteMethod(inherit).GetAttributes()))
                     {
-                        if (!Attributes.ContainsKey(attrib.Key))
+                        if (!BoundAttributes.ContainsKey(attrib.Key))
                         {
                             attrib.Value.Parent = this;
-                            Attributes.Add(attrib.Key, attrib.Value);
+                            BoundAttributes.Add(attrib.Key, attrib.Value);
                         }
                     }
                 }
-                if (Attributes.ContainsKey("new"))
+                if (BoundAttributes.ContainsKey("new"))
                     return Invoke(vm, location, args).AddType(TypeDefinition);
                 vm.RaiseException(HassiumAttribNotFoundException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumString(INVOKE)));
                 return Null;

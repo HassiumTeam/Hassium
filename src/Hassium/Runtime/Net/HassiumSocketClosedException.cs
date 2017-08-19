@@ -24,7 +24,7 @@ namespace Hassium.Runtime.Net
         public HassiumSocketClosedException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (sock : Socket) : SocketClosedException")]
@@ -33,7 +33,6 @@ namespace Hassium.Runtime.Net
             HassiumSocketClosedException exception = new HassiumSocketClosedException();
 
             exception.Socket = args[0] as HassiumSocket;
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

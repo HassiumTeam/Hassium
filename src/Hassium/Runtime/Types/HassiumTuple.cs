@@ -20,8 +20,6 @@ namespace Hassium.Runtime.Types
         {
             AddType(TypeDefinition);
             Values = val;
-
-            Attributes = new Dictionary<string, HassiumObject>(Attribs);
         }
 
         [FunctionAttribute("func __index__ (index : int) : object")]
@@ -36,6 +34,27 @@ namespace Hassium.Runtime.Types
         {
             var Values = (self as HassiumTuple).Values;
             return new HassiumList(Values);
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

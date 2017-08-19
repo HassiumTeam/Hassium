@@ -27,7 +27,7 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (fn : object, expected : int, given : int) : ArgumentLengthException")]
@@ -38,7 +38,6 @@ namespace Hassium.Runtime
             exception.ExpectedLength = args[1].ToInt(vm, args[1], location);
             exception.Function = args[0];
             exception.GivenLength = args[2].ToInt(vm, args[2], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

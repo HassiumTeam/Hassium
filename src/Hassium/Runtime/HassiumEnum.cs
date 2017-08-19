@@ -13,7 +13,7 @@
 
         public new void AddAttribute(string name, HassiumObject obj)
         {
-            Attributes.Add(name, obj);
+            BoundAttributes.Add(name, obj);
             obj.AddType(TypeDefinition);
         }
     }

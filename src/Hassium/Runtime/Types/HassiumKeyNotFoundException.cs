@@ -22,7 +22,6 @@ namespace Hassium.Runtime.Types
         public HassiumKeyNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = new Dictionary<string, HassiumObject>(Attribs);
         }
 
         [FunctionAttribute("func new (obj : object, key : object) : KeyNotFoundException")]
@@ -32,7 +31,6 @@ namespace Hassium.Runtime.Types
 
             exception.Object = args[0];
             exception.Key = args[1];
-            exception.Attributes = new Dictionary<string, HassiumObject>(Attribs);
 
             return exception;
         }
@@ -65,6 +63,27 @@ namespace Hassium.Runtime.Types
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Hassium.Runtime.Util
         public HassiumColorNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (col : string) : ColorNotFoundException")]
@@ -32,7 +32,6 @@ namespace Hassium.Runtime.Util
             HassiumColorNotFoundException exception = new HassiumColorNotFoundException();
 
             exception.ColorString = args[0].ToString(vm, args[0], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

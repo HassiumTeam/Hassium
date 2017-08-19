@@ -28,8 +28,6 @@ namespace Hassium.Runtime.Types
         {
             Dictionary = HassiumMethod.CloneDictionary(initial);
             AddType(TypeDefinition);
-
-            Attributes = new Dictionary<string, HassiumObject>(Attribs);
         }
 
         [FunctionAttribute("func add (key : object, val : object) : null")]
@@ -129,6 +127,27 @@ namespace Hassium.Runtime.Types
         public static HassiumObject valuebykey(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return index(vm, self, location, args[0]);
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

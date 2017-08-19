@@ -23,7 +23,7 @@ namespace Hassium.Runtime
             Name = name;
             Traits = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         public HassiumBool Is(VirtualMachine vm, SourceLocation location, HassiumObject left)
@@ -33,9 +33,9 @@ namespace Hassium.Runtime
                 string name = trait.Key.ToString(vm, trait.Key, location).String;
                 var val = trait.Value is HassiumMethod ? trait.Value.Invoke(vm, location) : trait.Value is HassiumTypeDefinition ? trait.Value : trait.Value.Type();
 
-                if (left.Attributes.ContainsKey(name))
+                if (left.ContainsAttribute(name))
                 {
-                    if (!val.Types.Contains(left.Attributes[name].Type()))
+                    if (!val.Types.Contains(left.BoundAttributes[name].Type()))
                         return False;
                 }
                 else

@@ -19,15 +19,14 @@ namespace Hassium.Runtime
         public HassiumVariableNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new () : VariableNotFoundException")]
         public static HassiumVariableNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumVariableNotFoundException exception = new HassiumVariableNotFoundException();
-
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
 
             return exception;
         }

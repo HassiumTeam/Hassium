@@ -24,7 +24,6 @@ namespace Hassium.Runtime
         public HassiumConversionFailedException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("func new (obj : object, type : object) : ConversionFailedException")]
@@ -39,7 +38,6 @@ namespace Hassium.Runtime
                 exception.DesiredType = args[1] as HassiumTrait;
             else
                 exception.Object = args[1];
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }
@@ -54,7 +52,7 @@ namespace Hassium.Runtime
         public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var exception = (self as HassiumConversionFailedException);
-            return new HassiumString(string.Format("Conversion Failed: Could not convert object of type '{0}' to type '{1}'", exception.Object.Type().ToString(vm, exception.Object.Type(), location).String, exception.DesiredType.ToString(vm, exception.DesiredType, location).String));
+            return new HassiumString(string.Format("Conversion Failed: Could not convert object of type '{0}' to type '{1}'", exception.Object.Type(), exception.DesiredType));
         }
 
         [FunctionAttribute("object { get; }")]
@@ -72,6 +70,27 @@ namespace Hassium.Runtime
             sb.Append(vm.UnwindCallStack());
 
             return new HassiumString(sb.ToString());
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

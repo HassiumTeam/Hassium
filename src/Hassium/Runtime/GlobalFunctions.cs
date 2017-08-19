@@ -58,7 +58,7 @@ namespace Hassium.Runtime
         [FunctionAttribute("func getattribute (obj : object, attrib : string) : object")]
         public static HassiumObject getattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return args[0].Attributes[args[1].ToString(vm, args[1], location).String];
+            return args[0].GetAttribute(args[1].ToString(vm, args[1], location).String);
         }
 
         [FunctionAttribute("func getattribs (obj : object) : dict")]
@@ -66,7 +66,7 @@ namespace Hassium.Runtime
         {
             HassiumDictionary dict = new HassiumDictionary(new Dictionary<HassiumObject, HassiumObject>());
 
-            foreach (var attrib in args[0].Attributes)
+            foreach (var attrib in args[0].GetAttributes())
                 dict.Dictionary.Add(new HassiumString(attrib.Key), attrib.Value);
 
             return dict;
@@ -134,7 +134,7 @@ namespace Hassium.Runtime
         [FunctionAttribute("func hasattrib (obj : object, attrib : string) : bool")]
         public static HassiumBool hasattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumBool(args[0].Attributes.ContainsKey(args[1].ToString(vm, args[1], location).String));
+            return new HassiumBool(args[0].ContainsAttribute(args[1].ToString(vm, args[1], location).String));
         }
 
         [FunctionAttribute("func input () : string")]
@@ -196,7 +196,7 @@ namespace Hassium.Runtime
         [FunctionAttribute("func setattrib (obj : object, attrib : string, val : object) : null")]
         public static HassiumNull setattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            args[0].Attributes.Add(args[1].ToString(vm, args[1], location).String, args[2]);
+            args[0].AddAttribute(args[1].ToString(vm, args[1], location).String, args[2]);
             return HassiumObject.Null;
         }
 

@@ -14,7 +14,7 @@ namespace Hassium
         public static void Run(HassiumConfig config)
         {
             HassiumModule module = new HassiumModule();
-            module.Attributes.Add("__global__", new HassiumClass("__global__"));
+            module.AddAttribute("__global__", new HassiumClass("__global__"));
             VirtualMachine vm = new VirtualMachine(module);
             
             while (true)
@@ -47,7 +47,7 @@ namespace Hassium
                         Console.WriteLine(ex);
                 }
 
-                var init = (module.Attributes["__global__"].Attributes["__init__"] as HassiumMethod);
+                var init = (module.BoundAttributes["__global__"].BoundAttributes["__init__"] as HassiumMethod);
                 init.Module = module;
 
                 vm.ImportGlobals();

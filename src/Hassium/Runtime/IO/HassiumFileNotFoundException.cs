@@ -23,7 +23,7 @@ namespace Hassium.Runtime.IO
         public HassiumFileNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (path : string) : FileNotFoundException")]
@@ -32,7 +32,6 @@ namespace Hassium.Runtime.IO
             HassiumFileNotFoundException exception = new HassiumFileNotFoundException();
 
             exception.Path = args[0].ToString(vm, args[0], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

@@ -1,6 +1,4 @@
-﻿
-
-namespace Hassium
+﻿namespace Hassium
 {
     public class Program
     {

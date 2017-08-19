@@ -137,26 +137,26 @@ namespace Hassium.Runtime
             if (IsConstructor)
             {
                 HassiumClass clazz = new HassiumClass(Parent.Name);
-                clazz.Attributes = CloneDictionary(Parent.Attributes);
+                clazz.BoundAttributes = CloneDictionary(Parent.BoundAttributes);
                 clazz.AddType(Parent.TypeDefinition);
 
                 foreach (var inherit in Parent.Inherits)
                 {
-                    foreach (var attrib in CloneDictionary(vm.ExecuteMethod(inherit).Attributes))
+                    foreach (var attrib in CloneDictionary(vm.ExecuteMethod(inherit).GetAttributes()))
                     {
-                        if (!clazz.Attributes.ContainsKey(attrib.Key))
+                        if (!clazz.ContainsAttribute(attrib.Key))
                         {
                             attrib.Value.Parent = clazz;
-                            clazz.Attributes.Add(attrib.Key, attrib.Value);
+                            clazz.BoundAttributes.Add(attrib.Key, attrib.Value);
                         }
                     }
                 }
 
                 foreach (var type in Parent.Types)
                     clazz.AddType(type as HassiumTypeDefinition);
-                foreach (var attrib in clazz.Attributes.Values)
+                foreach (var attrib in clazz.BoundAttributes.Values)
                     attrib.Parent = clazz;
-                vm.ExecuteMethod(clazz.Attributes["new"] as HassiumMethod);
+                vm.ExecuteMethod(clazz.BoundAttributes["new"] as HassiumMethod);
                 vm.PopCallStack();
                 vm.StackFrame.PopFrame();
                 return clazz;

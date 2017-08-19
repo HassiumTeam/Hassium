@@ -1,0 +1,3 @@
+func main (params args) {
+	println (args [0], args [1], args [2]);
+}

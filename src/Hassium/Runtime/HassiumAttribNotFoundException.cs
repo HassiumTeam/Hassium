@@ -19,13 +19,35 @@ namespace Hassium.Runtime
             { TOSTRING, new HassiumFunction(tostring, 0) },
         };
 
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
+        }
+
+
         public HassiumObject Object { get; private set; }
         public HassiumString Attribute { get; private set; }
 
         public HassiumAttribNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (obj : object, attrib : string) : AttributeNotFoundException")]
@@ -35,7 +57,6 @@ namespace Hassium.Runtime
 
             exception.Object = args[0];
             exception.Attribute = args[1].ToString(vm, args[1], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

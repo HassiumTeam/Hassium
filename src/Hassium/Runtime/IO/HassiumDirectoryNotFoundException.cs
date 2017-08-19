@@ -23,7 +23,7 @@ namespace Hassium.Runtime.IO
         public HassiumDirectoryNotFoundException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (path : str) : DirectoryNotFoundException")]
@@ -32,7 +32,6 @@ namespace Hassium.Runtime.IO
             HassiumDirectoryNotFoundException exception = new HassiumDirectoryNotFoundException();
 
             exception.Path = args[0].ToString(vm, args[0], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

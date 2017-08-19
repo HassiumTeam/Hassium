@@ -25,7 +25,7 @@ namespace Hassium.Runtime.IO
         public HassiumFileClosedException()
         {
             AddType(TypeDefinition);
-            Attributes = HassiumMethod.CloneDictionary(Attribs);
+            
         }
 
         [FunctionAttribute("func new (file : File, path : string) : FileClosedException")]
@@ -35,7 +35,6 @@ namespace Hassium.Runtime.IO
 
             exception.File = args[0] as HassiumFile;
             exception.FilePath = args[1].ToString(vm, args[1], location);
-            exception.Attributes = HassiumMethod.CloneDictionary(Attribs);
 
             return exception;
         }

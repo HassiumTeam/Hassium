@@ -58,7 +58,6 @@ namespace Hassium.Runtime.Util
 
         public static void ImportAttribs(HassiumDateTime time)
         {
-            time.Attributes = HassiumMethod.CloneDictionary(Attribs);
         }
 
         [FunctionAttribute("day { get; }")]

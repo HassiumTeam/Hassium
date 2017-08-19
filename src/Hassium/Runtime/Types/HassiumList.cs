@@ -46,8 +46,6 @@ namespace Hassium.Runtime.Types
         {
             AddType(TypeDefinition);
             Values = values.ToList();
-
-            Attributes = new Dictionary<string, HassiumObject>(Attribs);
         }
 
         [FunctionAttribute("func add (params args) : null")]
@@ -117,7 +115,7 @@ namespace Hassium.Runtime.Types
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count)
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException._new(vm, self, location, self, index));
                 return Null;
             }
             return Values[(int)index.Int];
@@ -254,7 +252,7 @@ namespace Hassium.Runtime.Types
         public static HassiumBigInt tobigint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumList).Values;
-            return HassiumBigInt.ImportAttribs(new HassiumBigInt() { BigInt = new BigInteger(ListToByteArr(vm, location, self as HassiumList)) });
+            return new HassiumBigInt() { BigInt = new BigInteger(ListToByteArr(vm, location, self as HassiumList)) };
         }
 
         [FunctionAttribute("func tobytearr () : list")]
@@ -299,6 +297,27 @@ namespace Hassium.Runtime.Types
             sb.Append(" ]");
 
             return new HassiumString(sb.ToString());
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }
