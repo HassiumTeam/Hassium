@@ -335,12 +335,12 @@ namespace Hassium.Runtime
                             interpretUnaryOperation(Stack.Pop(), arg);
                             break;
                     }
+                    //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + method.Name);
                 }
                 catch (Exception ex)
                 {
                     RaiseException(new HassiumString(ex.ToString()));
                 }
-               //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + watch.ElapsedTicks);
                 //watch.Reset();
             }
             return lastValuePopped;
