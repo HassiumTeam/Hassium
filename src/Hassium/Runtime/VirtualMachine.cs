@@ -86,7 +86,9 @@ namespace Hassium.Runtime
                     HassiumObject[] elements;
                     string attrib;
 
-                    int arg = method.Instructions[pos].Arg;
+                    var inst = method.Instructions[pos];
+                    int arg = inst.Arg;
+
                     CurrentSourceLocation = method.Instructions[pos].SourceLocation;
                     switch (method.Instructions[pos].InstructionType)
                     {
@@ -111,7 +113,7 @@ namespace Hassium.Runtime
                             Stack.Push(new HassiumList(elements));
                             break;
                         case InstructionType.BuildThread:
-                            Stack.Push(new HassiumThread(this, CurrentSourceLocation, CurrentModule.ObjectPool[arg] as HassiumMethod, StackFrame.Frames.Peek()));
+                            Stack.Push(new HassiumThread(this, CurrentSourceLocation, inst.Object as HassiumMethod, StackFrame.Frames.Peek()));
                             break;
                         case InstructionType.BuildTuple:
                             HassiumObject[] tupleElements = new HassiumObject[arg];
@@ -131,7 +133,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.EnforcedAssignment:
                             val = Stack.Pop();
-                            HassiumObject type = CurrentModule.ObjectPool[arg].Invoke(this, CurrentSourceLocation);
+                            HassiumObject type = inst.Object.Invoke(this, CurrentSourceLocation);
                             if (type is HassiumTrait)
                             {
                                 if (!(type as HassiumTrait).Is(this, CurrentSourceLocation, val).Bool)
@@ -178,10 +180,10 @@ namespace Hassium.Runtime
                             val = Stack.Pop();
                             try
                             {
-                                var attribute = val.GetAttribute(CurrentModule.ConstantPool[arg]);
+                                var attribute = val.GetAttribute(inst.Constant);
                                 if (attribute.IsPrivate)
                                 {
-                                    RaiseException(HassiumPrivateAttribException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), val));
+                                    RaiseException(HassiumPrivateAttribException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(inst.Constant), val));
                                     return HassiumObject.Null;
                                 }
                                 if (attribute is HassiumProperty)
@@ -191,11 +193,11 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, new HassiumString(CurrentModule.ConstantPool[arg])));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, new HassiumString(inst.Constant)));
                             }
                             break;
                         case InstructionType.LoadGlobal:
-                            attrib = CurrentModule.ConstantPool[arg];
+                            attrib = inst.Constant;
                             if (method.Module.GetAttribute("__global__").ContainsAttribute(attrib))
                                 Stack.Push(method.Module.GetAttribute("__global__").GetAttribute(attrib));
                             else if (Globals.ContainsKey(attrib))
@@ -245,15 +247,15 @@ namespace Hassium.Runtime
                             Stack.Push(new HassiumInt(arg));
                             break;
                         case InstructionType.PushConstant:
-                            Stack.Push(new HassiumString(CurrentModule.ConstantPool[arg]));
+                            Stack.Push(new HassiumString(inst.Constant));
                             break;
                         case InstructionType.PushHandler:
-                            var handler = CurrentModule.ObjectPool[arg] as HassiumExceptionHandler;
+                            var handler = inst.Object as HassiumExceptionHandler;
                             handler.Frame = StackFrame.Frames.Peek();
                             Handlers.Push(handler);
                             break;
                         case InstructionType.PushObject:
-                            Stack.Push(CurrentModule.ObjectPool[arg]);
+                            Stack.Push(inst.Object);
                             break;
                         case InstructionType.Raise:
                             RaiseException(Stack.Pop());
@@ -278,10 +280,10 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.StoreAttribute:
                             val = Stack.Pop();
-                            attrib = CurrentModule.ConstantPool[arg];
+                            attrib = inst.Constant;
                             if (val.IsPrivate)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(CurrentModule.ConstantPool[arg]), Stack.Pop()));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, new HassiumString(inst.Constant), Stack.Pop()));
                                 return HassiumObject.Null;
                             }
 
@@ -304,7 +306,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.StoreGlobal:
                             val = Stack.Pop();
-                            attrib = CurrentModule.ConstantPool[arg];
+                            attrib = inst.Constant;
                             if (Globals.ContainsKey(attrib))
                                 Globals.Remove(attrib);
                             Globals.Add(attrib, val);
@@ -470,13 +472,18 @@ namespace Hassium.Runtime
 
         public void ImportGlobals()
         {
-            foreach (string constant in CurrentModule.ConstantPool.Values)
+            foreach (var pair in GlobalFunctions.Functions)
+                if (!Globals.ContainsKey(pair.Key))
+                    Globals.Add(pair.Key, pair.Value);
+
+            /*foreach (string constant in CurrentModule.ConstantPool.Values)
             {
                 if (GlobalFunctions.Functions.ContainsKey(constant) && !Globals.ContainsKey(constant))
                     Globals.Add(constant, GlobalFunctions.Functions[constant]);
                 else if (CurrentModule.ContainsAttribute(constant))
                     Globals.Add(constant, CurrentModule.GetAttribute(constant));
             }
+            */
             
             foreach (var pair in InternalModule.InternalModules["Types"].GetAttributes())
                 if (!Globals.ContainsKey(pair.Key))

@@ -108,6 +108,17 @@ namespace Hassium.Runtime.Types
             return new HassiumString(sb.ToString());
         }
 
+        public override HassiumObject Index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            var index = args[0].ToInt(vm, args[0], location);
+            if (index.Int < 0 || index.Int >= Values.Count)
+            {
+                vm.RaiseException(HassiumIndexOutOfRangeException._new(vm, self, location, self, index));
+                return Null;
+            }
+            return Values[(int)index.Int];
+        }
+
         [FunctionAttribute("func __index__ (i : int) : object")]
         public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -123,10 +134,20 @@ namespace Hassium.Runtime.Types
 
         public int IterIndex = 0;
 
+        public override HassiumObject Iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return this;
+        }
+
         [FunctionAttribute("func __iter__ () : list")]
         public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return self;
+        }
+
+        public override HassiumObject IterableFull(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(IterIndex >= Values.Count);
         }
 
         [FunctionAttribute("func __iterfull__ () : bool")]
@@ -134,6 +155,11 @@ namespace Hassium.Runtime.Types
         {
             var list = self as HassiumList;
             return new HassiumBool(list.IterIndex >= list.Values.Count);
+        }
+
+        public override HassiumObject IterableNext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return Values[IterIndex++];
         }
 
         [FunctionAttribute("func __iternext__ () : bool")]
@@ -148,6 +174,11 @@ namespace Hassium.Runtime.Types
         {
             var Values = (self as HassiumList).Values;
             return new HassiumInt(Values.Count);
+        }
+
+        public override HassiumBool NotEqualTo(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return EqualTo(vm, self, location, args).LogicalNot(vm, self, location) as HassiumBool;
         }
 
         [FunctionAttribute("func __notequal__ (l : list) : bool")]
@@ -277,10 +308,29 @@ namespace Hassium.Runtime.Types
             return new HassiumString(BitConverter.ToString(bytes).Replace("-", string.Empty));
         }
 
+        public override HassiumList ToList(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return this;
+        }
+
         [FunctionAttribute("func tolist () : list")]
         public static HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return self as HassiumList;
+        }
+
+        public override HassiumString ToString(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("[ ");
+            foreach (var v in Values)
+                sb.AppendFormat("{0}, ", v.ToString(vm, v, location).String);
+            if (Values.Count > 0)
+                sb.Remove(sb.Length - 2, 2);
+            sb.Append(" ]");
+
+            return new HassiumString(sb.ToString());
         }
 
         [FunctionAttribute("func tostring () : string")]

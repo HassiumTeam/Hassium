@@ -37,7 +37,7 @@ namespace Hassium.Runtime.IO
         [FunctionAttribute("func close () : null")]
         public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            (args[0] as HassiumFile).close(vm, args[0], location);
+            HassiumFile.close(vm, args[0], location);
             return Null;
         }
 

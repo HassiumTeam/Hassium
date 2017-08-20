@@ -12,7 +12,12 @@ namespace Hassium.Runtime.Drawing
 
         public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
         {
-
+            { "a", new HassiumProperty(get_a) },
+            { "argb", new HassiumProperty(get_argb) },
+            { "b", new HassiumProperty(get_b) },
+            { "g", new HassiumProperty(get_g) },
+            { INVOKE, new HassiumFunction(_new, 1, 3, 4) },
+            { "r", new HassiumProperty(get_r) }
         };
 
         public Color Color { get; private set; }
@@ -23,7 +28,7 @@ namespace Hassium.Runtime.Drawing
         }
 
         [FunctionAttribute("func new (colIntOrStr : object) : Color", "func new (r : int, g : int, b : int) : Color", "func new (a : int, r : int, g : int, b : int) : Color")]
-        public HassiumColor _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumColor _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumColor color = new HassiumColor();
 
@@ -47,32 +52,58 @@ namespace Hassium.Runtime.Drawing
         }
 
         [FunctionAttribute("a { get; }")]
-        public HassiumInt get_a(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_a(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var Color = (self as HassiumColor).Color;
             return new HassiumInt(Color.A);
         }
 
-        public HassiumInt get_argb(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_argb(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var Color = (self as HassiumColor).Color;
             return new HassiumInt(Color.ToArgb());
         }
 
         [FunctionAttribute("b { get; }")]
-        public HassiumInt get_b(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_b(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var Color = (self as HassiumColor).Color;
             return new HassiumInt(Color.B);
         }
 
         [FunctionAttribute("g { get; }")]
-        public HassiumInt get_g(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_g(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var Color = (self as HassiumColor).Color;
             return new HassiumInt(Color.G);
         }
 
         [FunctionAttribute("r { get; }")]
-        public HassiumInt get_r(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_r(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            var Color = (self as HassiumColor).Color;
             return new HassiumInt(Color.R);
+        }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in Attribs)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

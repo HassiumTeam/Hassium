@@ -40,6 +40,11 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(Bool == args[0].ToBool(vm, args[0], location).Bool);
         }
 
+        public override HassiumObject LogicalAnd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(Bool && args[0].ToBool(vm, args[0], location).Bool);
+        }
+
         [FunctionAttribute("func __logicaland__ (b : bool) : bool")]
         public static HassiumObject logicaland(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -47,11 +52,21 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(Bool && args[0].ToBool(vm, args[0], location).Bool);
         }
 
+        public override HassiumObject LogicalNot(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(!Bool);
+        }
+
         [FunctionAttribute("func __logicalnot__ (b : bool) : bool")]
         public static HassiumObject logicalnot(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Bool = (self as HassiumBool).Bool;
             return new HassiumBool(!Bool);
+        }
+
+        public override HassiumObject LogicalOr(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(Bool || args[0].ToBool(vm, args[0], location).Bool);
         }
 
         [FunctionAttribute("func __logicalor__ (b : bool) : bool")]
@@ -84,11 +99,21 @@ namespace Hassium.Runtime.Types
             return self as HassiumBool;
         }
 
+        public override HassiumInt ToInt(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Bool ? 1 : 0);
+        }
+
         [FunctionAttribute("func toint () : int")]
         public static HassiumInt toint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Bool = (self as HassiumBool).Bool;
             return new HassiumInt(Bool ? 1 : 0);
+        }
+
+        public override HassiumString ToString(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumString(Bool.ToString().ToLower());
         }
 
         [FunctionAttribute("func tostring () : string")]

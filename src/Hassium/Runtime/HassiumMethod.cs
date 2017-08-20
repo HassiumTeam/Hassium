@@ -61,9 +61,9 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
-        public void Emit(SourceLocation location, InstructionType instructionType, int argument = 0)
+        public void Emit(SourceLocation location, InstructionType instructionType, int argument = -1, string constant = "", HassiumObject obj = null)
         {
-            Instructions.Add(new HassiumInstruction(location, instructionType, argument));
+            Instructions.Add(new HassiumInstruction(location, instructionType, argument, constant, obj));
         }
         public void EmitLabel(SourceLocation location, int label)
         {

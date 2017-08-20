@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Hassium.Runtime;
 
 namespace Hassium.Compiler.Emit
 {
@@ -10,14 +7,20 @@ namespace Hassium.Compiler.Emit
         public SourceLocation SourceLocation { get; private set; }
 
         public InstructionType InstructionType { get; private set; }
-        public int Arg { get; private set; }
 
-        public HassiumInstruction(SourceLocation location, InstructionType instructionType, int arg)
+        public int Arg { get; private set; }
+        public string Constant { get; private set; }
+        public HassiumObject Object { get; private set; }
+
+        public HassiumInstruction(SourceLocation location, InstructionType instructionType, int arg = -1, string constant = "", HassiumObject obj = null)
         {
             SourceLocation = location;
 
             InstructionType = instructionType;
+
             Arg = arg;
+            Constant = constant;
+            Object = obj;
         }
 
         public override string ToString()
@@ -54,7 +57,6 @@ namespace Hassium.Compiler.Emit
         LoadGlobalVariable,
         LoadIterableElement,
         LoadLocal,
-        multipleAssignment,
         Pop,
         PopHandler,
         Push,

@@ -43,7 +43,7 @@ namespace Hassium.Runtime.Crypto
             byte[] key = ListToByteArr(vm, location, args[0].ToList(vm, args[0], location));
             byte[] iv = ListToByteArr(vm, location, args[1].ToList(vm, args[1], location));
             HassiumFile file = args[2] is HassiumFile ? (args[2] as HassiumFile) : new HassiumFile(args[2].ToString(vm, args[2], location).String);
-            byte[] data = (file.readallbytes(vm, self, location) as HassiumByteArray).Values.ToArray();
+            byte[] data = (HassiumFile.readallbytes(vm, file, location) as HassiumByteArray).Values.ToArray();
 
             return new HassiumByteArray(decrypt(key, iv, data), new HassiumObject[0]);
         }
@@ -84,7 +84,7 @@ namespace Hassium.Runtime.Crypto
                 {
                     while (file.Reader.BaseStream.Position < file.Reader.BaseStream.Length)
                     {
-                        byte[] buff = new byte[(byte)(file.readbyte(vm, file, location) as HassiumChar).Char];
+                        byte[] buff = new byte[(byte)(HassiumFile.readbyte(vm, file, location) as HassiumChar).Char];
                         cryptoStream.Write(buff, 0, 1);
                     }
                 }

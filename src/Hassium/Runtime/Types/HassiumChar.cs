@@ -56,11 +56,21 @@ namespace Hassium.Runtime.Types
             Char = val;
         }
 
+        public override HassiumObject Add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)(Char + (char)args[0].ToInt(vm, args[0], location).Int));
+        }
+
         [FunctionAttribute("func __add__ (c : char) : char")]
         public static HassiumObject add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumChar((char)(Char + (char)args[0].ToInt(vm, args[0], location).Int));
+        }
+
+        public override HassiumObject BitshiftLeft(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char << (int)args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __bitshiftleft__ (c : char) : int")]
@@ -70,11 +80,21 @@ namespace Hassium.Runtime.Types
             return new HassiumInt(Char << (int)args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumObject BitshiftRight(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char >> (int)args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __bitshiftright__ (c : char) : int")]
         public static HassiumObject bitshiftright(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumInt(Char >> (int)args[0].ToInt(vm, args[0], location).Int);
+        }
+
+        public override HassiumObject BitwiseAnd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char & args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __bitswiseand__ (c : char) : int")]
@@ -84,11 +104,21 @@ namespace Hassium.Runtime.Types
             return new HassiumInt(Char & args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumObject BitwiseNot(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(~Char);
+        }
+
         [FunctionAttribute("func __bitwisenot__ (c : char) : int")]
         public static HassiumObject bitwisenot(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumInt(~Char);
+        }
+
+        public override HassiumObject BitwiseOr(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char | args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __bitwiseor__ (c : char) : int")]
@@ -98,11 +128,21 @@ namespace Hassium.Runtime.Types
             return new HassiumInt(Char | args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumObject Divide(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char / args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __divide__ (c : char) : int")]
         public static HassiumObject divide(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumInt(Char / args[0].ToInt(vm, args[0], location).Int);
+        }
+
+        public override HassiumBool EqualTo(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(Char == args[0].ToChar(vm, args[0], location).Char);
         }
 
         [FunctionAttribute("func __equals__ (c : char) : bool")]
@@ -119,6 +159,11 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(((byte)Char & (1 << (int)args[0].ToInt(vm, args[0], location).Int - 1)) != 0);
         }
 
+        public override HassiumObject GreaterThan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool((int)Char > args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __greater__ (i : int) : bool")]
         public static HassiumObject greaterthan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -126,11 +171,21 @@ namespace Hassium.Runtime.Types
             return new HassiumBool((int)Char > args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumObject GreaterThanOrEqual(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool((int)Char >= args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __greaterorequal__ (i : int) : bool")]
         public static HassiumObject greaterthanorequal(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumBool((int)Char >= args[0].ToInt(vm, args[0], location).Int);
+        }
+
+        public override HassiumObject IntegerDivision(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char / args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __intdivision__ (i : int) : int")]
@@ -196,11 +251,21 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(char.IsWhiteSpace(Char));
         }
 
+        public override HassiumObject LesserThan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool((int)Char < args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __lesser__ (i : int) : bool")]
         public static HassiumObject lesserthan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumBool((int)Char < args[0].ToInt(vm, args[0], location).Int);
+        }
+
+        public override HassiumObject LesserThanOrEqual(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool((int)Char <= args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __lesserorequal__ (i : int) : bool")]
@@ -210,11 +275,21 @@ namespace Hassium.Runtime.Types
             return new HassiumBool((int)Char <= args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumObject Modulus(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char % args[0].ToInt(vm, args[0], location).Int);
+        }
+
         [FunctionAttribute("func __modulus__ (i : int) : int")]
         public static HassiumObject modulus(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumInt(Char % args[0].ToInt(vm, args[0], location).Int);
+        }
+
+        public override HassiumObject Multiply(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt(Char * args[0].ToInt(vm, args[0], location).Int);
         }
 
         [FunctionAttribute("func __multiply__ (i : int) : int")]
@@ -224,11 +299,21 @@ namespace Hassium.Runtime.Types
             return new HassiumInt(Char * args[0].ToInt(vm, args[0], location).Int);
         }
 
+        public override HassiumBool NotEqualTo(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumBool(Char != args[0].ToChar(vm, args[0], location).Char);
+        }
+
         [FunctionAttribute("func __notequal__ (c : char) : bool")]
         public static HassiumBool notequalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumBool(Char != args[0].ToChar(vm, args[0], location).Char);
+        }
+
+        public override HassiumObject Power(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumFloat(System.Math.Pow(Convert.ToDouble(Char), args[0].ToFloat(vm, args[0], location).Float));
         }
 
         [FunctionAttribute("func __power__ () : float")]
@@ -250,11 +335,21 @@ namespace Hassium.Runtime.Types
                 return new HassiumChar((char)(Char & ~(1 << index)));
         }
 
+        public override HassiumObject Subtract(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)(Char - (char)args[0].ToInt(vm, args[0], location).Int));
+        }
+
         [FunctionAttribute("func __subtract__ (i : int) : char")]
         public static HassiumObject subtract(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumChar((char)(Char - (char)args[0].ToInt(vm, args[0], location).Int));
+        }
+
+        public override HassiumChar ToChar(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return this;
         }
 
         [FunctionAttribute("func tochar () : char")]
@@ -263,11 +358,21 @@ namespace Hassium.Runtime.Types
             return self as HassiumChar;
         }
 
+        public override HassiumFloat ToFloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumFloat((double)Char);
+        }
+
         [FunctionAttribute("func tofloat () : float")]
         public static HassiumFloat tofloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumFloat((double)Char);
+        }
+
+        public override HassiumInt ToInt(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumInt((long)Char);
         }
 
         [FunctionAttribute("func toint () : int")]
@@ -284,6 +389,11 @@ namespace Hassium.Runtime.Types
             return new HassiumChar(Char.ToLower(Char));
         }
 
+        public override HassiumString ToString(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumString(Char.ToString());
+        }
+
         [FunctionAttribute("func tostring () : string")]
         public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -296,6 +406,11 @@ namespace Hassium.Runtime.Types
         {
             var Char = (self as HassiumChar).Char;
             return new HassiumChar(Char.ToUpper(Char));
+        }
+
+        public override HassiumObject Xor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumChar((char)((byte)Char ^ (byte)args[0].ToChar(vm, args[0], location).Char));
         }
 
         [FunctionAttribute("func __xor__ (c : char) : char")]

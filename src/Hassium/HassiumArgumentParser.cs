@@ -47,6 +47,7 @@ namespace Hassium
                     default:
                         config.FilePath = args[position++];
                         List<string> pargs = new List<string>();
+                        pargs.Add(config.FilePath);
                         for (; position < args.Length; position++)
                             pargs.Add(args[position]);
                         config.Args = pargs.ToArray();

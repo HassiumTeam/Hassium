@@ -72,7 +72,7 @@ namespace Hassium.Compiler.Emit
         public void Accept(AttributeAccessNode node)
         {
             node.Left.Visit(this);
-            emit(node.SourceLocation, InstructionType.LoadAttribute, handleConstant(node.Right));
+            emit(node.SourceLocation, InstructionType.LoadAttribute, node.Right);
         }
         public void Accept(BinaryOperationNode node)
         {
@@ -93,8 +93,8 @@ namespace Hassium.Compiler.Emit
 
                         if (table.ContainsGlobalSymbol(identifier))
                         {
-                            emit(node.SourceLocation, InstructionType.StoreGlobal, handleConstant(identifier));
-                            emit(node.SourceLocation, InstructionType.LoadGlobal,  handleConstant(identifier));
+                            emit(node.SourceLocation, InstructionType.StoreGlobal, identifier);
+                            emit(node.SourceLocation, InstructionType.LoadGlobal,  identifier);
                         }
                         else
                         {
@@ -108,9 +108,7 @@ namespace Hassium.Compiler.Emit
                     {
                         AttributeAccessNode accessor = node.Left as AttributeAccessNode;
                         accessor.Left.Visit(this);
-                        if (!module.ConstantPool.ContainsValue(accessor.Right))
-                            module.ConstantPool.Add(accessor.Right.GetHashCode(), accessor.Right);
-                        emit(node.SourceLocation, InstructionType.StoreAttribute, accessor.Right.GetHashCode());
+                        emit(node.SourceLocation, InstructionType.StoreAttribute, accessor.Right);
                         accessor.Left.Visit(this);
                     }
                     // var [index] = val
@@ -138,7 +136,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(CharNode node)
         {
-            emit(node.SourceLocation, InstructionType.PushObject, handleObject(new HassiumChar(node.Char)));
+            emit(node.SourceLocation, InstructionType.PushObject, new HassiumChar(node.Char));
         }
         public void Accept(ClassDeclarationNode node)
         {
@@ -148,8 +146,6 @@ namespace Hassium.Compiler.Emit
             var clazz = new HassiumClass(node.Name);
             clazz.IsPrivate = node.IsPrivate;
             clazz.Parent = classStack.Peek();
-
-            handleConstant(node.Name);
 
             foreach (var inherit in node.Inherits)
             {
@@ -165,8 +161,7 @@ namespace Hassium.Compiler.Emit
             node.Body.Visit(this);
 
             table.LeaveScope();
-            handleObject(classStack.Pop());
-
+            classStack.Pop();
             classStack.Peek().AddAttribute(node.Name, clazz);
         }
         public void Accept(CodeBlockNode node)
@@ -229,7 +224,7 @@ namespace Hassium.Compiler.Emit
                 emit(node.SourceLocation, InstructionType.LoadLocal, table.GetSymbol(node.Variable));
             }
 
-            emit(node.SourceLocation, InstructionType.EnforcedAssignment, handleObject(enforcedType));
+            emit(node.SourceLocation, InstructionType.EnforcedAssignment, enforcedType);
         }
         public void Accept(EnumNode node)
         {
@@ -257,7 +252,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(FloatNode node)
         {
-            emit(node.SourceLocation, InstructionType.PushObject, handleObject(new HassiumFloat(node.Float)));
+            emit(node.SourceLocation, InstructionType.PushObject, new HassiumFloat(node.Float));
         }
         public void Accept(ForNode node)
         {
@@ -331,7 +326,7 @@ namespace Hassium.Compiler.Emit
             foreach (var attrib in node.InitialAttributes)
             {
                 attrib.Value.Visit(this);
-                emit(attrib.Value.SourceLocation, InstructionType.PushConstant, handleConstant(attrib.Key));
+                emit(attrib.Value.SourceLocation, InstructionType.PushConstant, attrib.Key);
                 emit(attrib.Value.SourceLocation, InstructionType.SetInitialAttribute);
             }
         }
@@ -345,8 +340,6 @@ namespace Hassium.Compiler.Emit
             methodStack.Push(method);
             method.SourceLocation = node.SourceLocation;
             method.SourceRepresentation = node.ToString();
-
-            handleConstant(node.Name);
             method.Parent = classStack.Peek();
 
             table.EnterScope();
@@ -404,7 +397,7 @@ namespace Hassium.Compiler.Emit
             else if (table.ContainsGlobalSymbol(node.Identifier))
                 emit(node.SourceLocation, InstructionType.LoadGlobalVariable, table.GetGlobalSymbol(node.Identifier));
             else if (!table.ContainsSymbol(node.Identifier))
-                emit(node.SourceLocation, InstructionType.LoadGlobal, handleConstant(node.Identifier));
+                emit(node.SourceLocation, InstructionType.LoadGlobal, node.Identifier);
             else
                 emit(node.SourceLocation, InstructionType.LoadLocal, table.GetSymbol(node.Identifier));
         }
@@ -423,7 +416,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(IntegerNode node)
         {
-            emit(node.SourceLocation, InstructionType.PushObject, handleObject(new HassiumInt(node.Integer)));
+            emit(node.SourceLocation, InstructionType.PushObject, new HassiumInt(node.Integer));
         }
         public void Accept(IterableAccessNode node)
         {
@@ -450,7 +443,7 @@ namespace Hassium.Compiler.Emit
             table.LeaveScope();
             methodStack.Pop();
 
-            emit(node.SourceLocation, InstructionType.PushObject, handleObject(lambda));
+            emit(node.SourceLocation, InstructionType.PushObject, lambda);
             emit(node.SourceLocation, InstructionType.BuildClosure);
         }
         public void Accept(ListDeclarationNode node)
@@ -479,7 +472,7 @@ namespace Hassium.Compiler.Emit
         }
         public void Accept(StringNode node)
         {
-            emit(node.SourceLocation, InstructionType.PushObject, handleObject(new HassiumString(node.String)));
+            emit(node.SourceLocation, InstructionType.PushObject, new HassiumString(node.String));
         }
         public void Accept(SwitchNode node)
         {
@@ -531,9 +524,8 @@ namespace Hassium.Compiler.Emit
                 node.Body.Visit(this);
 
             methodStack.Pop();
-
-            handleObject(method);
-            emit(node.SourceLocation, InstructionType.BuildThread, method.GetHashCode());
+            
+            emit(node.SourceLocation, InstructionType.BuildThread, method);
             if (node.DoImmediately)
                 emit(node.SourceLocation, InstructionType.StartThread);
         }
@@ -567,9 +559,8 @@ namespace Hassium.Compiler.Emit
             methodStack.Peek().Parameters.Add(new FunctionParameter(FunctionParameterType.Normal, "value"), table.HandleSymbol("value"));
             node.CatchBody.VisitChildren(this);
             var handler = new HassiumExceptionHandler(temp, methodStack.Peek(), endLabel);
-            handleObject(handler);
             methodStack.Pop();
-            emit(node.SourceLocation, InstructionType.PushHandler, handler.GetHashCode());
+            emit(node.SourceLocation, InstructionType.PushHandler, handler);
             node.TryBody.Visit(this);
             emit(node.SourceLocation, InstructionType.PopHandler);
             emitLabel(node.SourceLocation, endLabel);
@@ -695,23 +686,6 @@ namespace Hassium.Compiler.Emit
                 else
                     classStack.Peek().AddAttribute(node.Class, mod.BoundAttributes[node.Class]);
             }
-
-            if (mod is HassiumModule)
-            {
-                foreach (var constant in ((HassiumModule)mod).ConstantPool)
-                {
-                    if (module.ConstantPool.ContainsKey(constant.Key))
-                        module.ConstantPool.Remove(constant.Key);
-                    module.ConstantPool.Add(constant.Key, constant.Value);
-                }
-                foreach (var obj in ((HassiumModule)mod).ObjectPool)
-                {
-                    if (module.ObjectPool.ContainsKey(obj.Key))
-                        module.ObjectPool.Remove(obj.Key);
-                    module.ObjectPool.Add(obj.Key, obj.Value);
-                }
-            }
-
         }
         public void Accept(WhileNode node)
         {
@@ -738,24 +712,17 @@ namespace Hassium.Compiler.Emit
         {
             methodStack.Peek().Emit(location, instructionType, arg);
         }
+        private void emit(SourceLocation location, InstructionType instructionType, string constant)
+        {
+            methodStack.Peek().Emit(location, instructionType, constant: constant);
+        }
+        private void emit(SourceLocation location, InstructionType instructionType, HassiumObject obj)
+        {
+            methodStack.Peek().Emit(location, instructionType, obj: obj);
+        }
         private void emitLabel(SourceLocation location, int label)
         {
             methodStack.Peek().EmitLabel(location, label);
-        }
-
-        private int handleConstant(string constant)
-        {
-            int hashcode = constant.GetHashCode();
-            if (!module.ConstantPool.ContainsKey(hashcode))
-                module.ConstantPool.Add(hashcode, constant);
-            return hashcode;
-        }
-        private int handleObject(HassiumObject obj)
-        {
-            int hashcode = obj.GetHashCode();
-            if (!module.ObjectPool.ContainsKey(hashcode))
-                module.ObjectPool.Add(hashcode, obj);
-            return hashcode;
         }
 
         private static int label = 0;
