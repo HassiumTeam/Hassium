@@ -13,15 +13,18 @@ namespace Hassium.Runtime
         {
             AddType(TypeDefinition);
             TypeName = type;
+
+            AddAttribute("tostring", ToString, 0);
         }
 
         public override string ToString()
         {
             return TypeName;
         }
-        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+
+        public override HassiumString ToString(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return new HassiumString((self as HassiumTypeDefinition).TypeName);
+            return new HassiumString(TypeName);
         }
     }
 }

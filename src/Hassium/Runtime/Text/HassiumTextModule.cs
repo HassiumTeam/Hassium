@@ -5,7 +5,7 @@
         public HassiumTextModule() : base("Text")
         {
             AddAttribute("Encoding", new HassiumEncoding());
-            AddAttribute("StringBuilder", new HassiumStringBuilder());
+            AddAttribute("StringBuilder", HassiumStringBuilder.TypeDefinition);
         }
     }
 }
