@@ -1,7 +1,7 @@
 ﻿using Hassium.Compiler;
-using Hassium.Runtime;
 using Hassium.Runtime.Types;
 
+using System;
 using System.IO;
 
 namespace Hassium.Runtime.IO
@@ -15,9 +15,13 @@ namespace Hassium.Runtime.IO
             AddType(TypeDefinition);
 
             AddAttribute("combine", combine, -1);
+            AddAttribute("getappdata", getappdata, 0);
+            AddAttribute("getdocuments", getdocuments, 0);
+            AddAttribute("gethome", gethome, 0);
+            AddAttribute("getstartup", getstartup, 0);
             AddAttribute("parsedir", parsedir, 1);
             AddAttribute("parseext", parseext, 1);
-            AddAttribute("parsename", parsename, 1);
+            AddAttribute("parsefilename", parsefilename, 1);
             AddAttribute("parseroot", parseroot, 1);
         }
 
@@ -30,11 +34,39 @@ namespace Hassium.Runtime.IO
             return new HassiumString(Path.Combine(paths));
         }
 
+        [FunctionAttribute("func getappdata () : string")]
+        public HassiumString getappdata(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumString(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+        }
+
+        [FunctionAttribute("func getdocuments () : string")]
+        public HassiumString getdocuments(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumString(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+        }
+
+        [FunctionAttribute("func gethome () : string")]
+        public HassiumString gethome(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
+                    Environment.OSVersion.Platform == PlatformID.MacOSX)
+                    ? Environment.GetEnvironmentVariable("HOME")
+                    : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            return new HassiumString(homePath);
+        }
+
+        [FunctionAttribute("func getstartup () : string")]
+        public HassiumString getstartup(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return new HassiumString(Environment.GetFolderPath(Environment.SpecialFolder.Startup));
+        }
+
         [FunctionAttribute("func parsedir (path : string) : string")]
         public HassiumString parsedir(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetDirectoryName(args[0].ToString(vm, args[0], location).String));
-        }
+        } 
 
         [FunctionAttribute("func parseext (path : string) : string")]
         public HassiumString parseext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
@@ -42,8 +74,8 @@ namespace Hassium.Runtime.IO
             return new HassiumString(Path.GetExtension(args[0].ToString(vm, args[0], location).String));
         }
 
-        [FunctionAttribute("func parsename (path : string) : string")]
-        public HassiumString parsename(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        [FunctionAttribute("func parsefilename (path : string) : string")]
+        public HassiumString parsefilename(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetFileName(args[0].ToString(vm, args[0], location).String));
         }
