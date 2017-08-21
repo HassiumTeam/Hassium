@@ -60,14 +60,17 @@ namespace Hassium.Runtime.Types
         {
             public BoolTypeDef() : base("bool")
             {
-                AddAttribute(EQUALTO, EqualTo, 1);
-                AddAttribute(LOGICALAND, LogicalAnd, 1);
-                AddAttribute(LOGICALNOT, LogicalNot, 0);
-                AddAttribute(LOGICALOR, LogicalOr, 1);
-                AddAttribute(NOTEQUALTO, NotEqualTo, 1);
-                AddAttribute(TOBOOL, ToBool, 0);
-                AddAttribute(TOINT, ToInt, 0);
-                AddAttribute(TOSTRING, ToString, 0);
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { EQUALTO, new HassiumFunction(equalto, 1)  },
+                    { LOGICALAND, new HassiumFunction(logicaland, 1)  },
+                    { LOGICALNOT, new HassiumFunction(logicalnot, 0)  },
+                    { LOGICALOR, new HassiumFunction(logicalor, 1)  },
+                    { NOTEQUALTO, new HassiumFunction(notequalto, 1)  },
+                    { TOBOOL, new HassiumFunction(tobool, 0)  },
+                    { TOINT, new HassiumFunction(toint, 0)  },
+                    { TOSTRING, new HassiumFunction(tostring, 0)  }
+                };
             }
 
             [FunctionAttribute("func __equals__ (b : bool) : bool")]

@@ -117,7 +117,8 @@ namespace Hassium.Runtime
 
         public HassiumObject AddType(HassiumTypeDefinition typeDefinition)
         {
-            Types.Add(typeDefinition);
+            if (!Types.Contains(typeDefinition))
+                Types.Add(typeDefinition);
             return this;
         }
 
@@ -322,7 +323,7 @@ namespace Hassium.Runtime
             if (ContainsAttribute(TOBIGINT))
                 return GetAttribute(TOBIGINT).Invoke(vm, location, args) as HassiumBigInt;
             vm.RaiseException(HassiumAttribNotFoundException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumString(TOBIGINT)));
-            return HassiumBigInt._new(vm, self, location, new HassiumInt(-1));
+            return HassiumBigInt.BigIntType._new(vm, self, location, new HassiumInt(-1));
         }
         public virtual HassiumBool ToBool(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

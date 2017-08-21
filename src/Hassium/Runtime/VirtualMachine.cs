@@ -75,7 +75,7 @@ namespace Hassium.Runtime
             {
                 try
                 {
-                  //  watch.Start();
+                    //watch.Start();
                     if (ExceptionReturns.ContainsKey(method))
                     {
                         pos = ExceptionReturns[method];
@@ -168,7 +168,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.JumpIfFalse:
                             val = Stack.Pop();
-                            if (!val.ToBool(this, val, CurrentSourceLocation).Bool)
+                            if (!(val as HassiumBool).Bool)
                                 pos = method.Labels[arg];
                             break;
                         case InstructionType.JumpIfTrue:
@@ -227,14 +227,14 @@ namespace Hassium.Runtime
                             Stack.Push(list.Index(this, list, CurrentSourceLocation, Stack.Pop()));
                             break;
                         case InstructionType.LoadLocal:
-                            if (GlobalFrame.ContainsVariable(arg))
+                           /* if (GlobalFrame.ContainsVariable(arg))
                             {
                                 if (StackFrame.Contains(arg))
                                     Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
                                 else
                                     Stack.Push(GlobalFrame.GetVariable(arg));
                             }
-                            else
+                            else*/
                                 Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
                             break;
                         case InstructionType.Pop:
@@ -337,13 +337,13 @@ namespace Hassium.Runtime
                             interpretUnaryOperation(Stack.Pop(), arg);
                             break;
                     }
-                    //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + method.Name);
+                    //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + watch.ElapsedTicks);
+                    //watch.Reset();
                 }
                 catch (Exception ex)
                 {
                     RaiseException(new HassiumString(ex.ToString()));
                 }
-                //watch.Reset();
             }
             return lastValuePopped;
         }
@@ -484,7 +484,7 @@ namespace Hassium.Runtime
                     Globals.Add(constant, CurrentModule.GetAttribute(constant));
             }
             */
-            
+
             foreach (var pair in InternalModule.InternalModules["Types"].GetAttributes())
                 if (!Globals.ContainsKey(pair.Key))
                     Globals.Add(pair.Key, pair.Value);

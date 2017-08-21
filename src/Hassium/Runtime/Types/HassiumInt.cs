@@ -79,12 +79,12 @@ namespace Hassium.Runtime.Types
 
         public override HassiumObject GreaterThan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return IntTypeDef.greaterthan(vm, this, location, args);
+            return new HassiumBool(Int > args[0].ToInt(vm, args[0], location).Int);
         }
 
         public override HassiumObject GreaterThanOrEqual(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return IntTypeDef.greaterthanorequal(vm, this, location, args);
+            return new HassiumBool(Int >= args[0].ToInt(vm, args[0], location).Int);
         }
 
         public override HassiumObject IntegerDivision(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
@@ -94,7 +94,7 @@ namespace Hassium.Runtime.Types
 
         public override HassiumObject LesserThan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return IntTypeDef.lesserthan(vm, this, location, args);
+            return new HassiumBool(Int < args[0].ToInt(vm, args[0], location).Int);
         }
 
         public override HassiumObject LesserThanOrEqual(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
@@ -119,7 +119,15 @@ namespace Hassium.Runtime.Types
 
         public override HassiumObject Subtract(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return IntTypeDef.subtract(vm, this, location, args);
+            var Int = (self as HassiumInt).Int;
+            var intArg = args[0] as HassiumInt;
+            if (intArg != null)
+                return new HassiumInt(Int - (args[0] as HassiumInt).Int);
+            var floatArg = args[0] as HassiumFloat;
+            if (floatArg != null)
+                return new HassiumFloat(Int - (args[0] as HassiumFloat).Float);
+            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+            return Null;
         }
 
         public override HassiumChar ToChar(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
@@ -156,31 +164,35 @@ namespace Hassium.Runtime.Types
         {
             public IntTypeDef() : base("int")
             {
-                AddAttribute(ADD, Add, 1);
-                AddAttribute(BITSHIFTLEFT, BitshiftLeft, 1);
-                AddAttribute(BITSHIFTRIGHT, BitshiftRight, 1);
-                AddAttribute(BITWISEAND, BitwiseAnd, 1);
-                AddAttribute(BITWISENOT, BitwiseNot, 0);
-                AddAttribute(BITWISEOR, BitwiseOr, 1);
-                AddAttribute(DIVIDE, Divide, 1);
-                AddAttribute(EQUALTO, EqualTo, 1);
-                AddAttribute("getbit", getbit, 1);
-                AddAttribute(GREATERTHAN, GreaterThan, 1);
-                AddAttribute(GREATERTHANOREQUAL, GreaterThanOrEqual, 1);
-                AddAttribute(INTEGERDIVISION, IntegerDivision, 1);
-                AddAttribute(LESSERTHAN, LesserThan, 1);
-                AddAttribute(LESSERTHANOREQUAL, LesserThanOrEqual, 1);
-                AddAttribute(MULTIPLY, Multiply, 1);
-                AddAttribute(NEGATE, Negate, 0);
-                AddAttribute(NOTEQUALTO, NotEqualTo, 1);
-                AddAttribute(POWER, Power, 1);
-                AddAttribute("setbit", setbit, 2);
-                AddAttribute(SUBTRACT, Subtract, 1);
-                AddAttribute(TOCHAR, ToChar, 0);
-                AddAttribute(TOFLOAT, ToFloat, 0);
-                AddAttribute(TOINT, ToInt, 0);
-                AddAttribute(TOSTRING, ToString, 0);
-                AddAttribute(XOR, Xor, 1);
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { ADD, new HassiumFunction(add, 1)  },
+                    { BITSHIFTLEFT, new HassiumFunction(bitshiftleft, 1)  },
+                    { BITSHIFTRIGHT, new HassiumFunction(bitshiftright, 1)  },
+                    { BITWISEAND, new HassiumFunction(bitwiseand, 1)  },
+                    { BITWISENOT, new HassiumFunction(bitwisenot, 0)  },
+                    { BITWISEOR, new HassiumFunction(bitwiseor, 1)  },
+                    { DIVIDE, new HassiumFunction(divide, 1)  },
+                    { EQUALTO, new HassiumFunction(equalto, 1)  },
+                    { "getbit", new HassiumFunction(getbit, 1)  },
+                    { GREATERTHAN, new HassiumFunction(greaterthan, 1)  },
+                    { GREATERTHANOREQUAL, new HassiumFunction(greaterthanorequal, 1)  },
+                    { INTEGERDIVISION, new HassiumFunction(integerdivision, 1)  },
+                    { LESSERTHAN, new HassiumFunction(lesserthan, 1)  },
+                    { LESSERTHANOREQUAL, new HassiumFunction(lesserthanorequal, 1)  },
+                    { MODULUS, new HassiumFunction(modulus, 1) },
+                    { MULTIPLY, new HassiumFunction(multiply, 1)  },
+                    { NEGATE, new HassiumFunction(negate, 0)  },
+                    { NOTEQUALTO, new HassiumFunction(notequalto, 1)  },
+                    { POWER, new HassiumFunction(power, 1)  },
+                    { "setbit", new HassiumFunction(setbit, 2)  },
+                    { SUBTRACT, new HassiumFunction(subtract, 1)  },
+                    { TOCHAR, new HassiumFunction(tochar, 0)  },
+                    { TOFLOAT, new HassiumFunction(tofloat, 0)  },
+                    { TOINT, new HassiumFunction(toint, 0)  },
+                    { TOSTRING, new HassiumFunction(tostring, 0)  },
+                    { XOR, new HassiumFunction(xor, 1)  }
+                };
             }
 
             [FunctionAttribute("func __add__ (num : number) : number")]

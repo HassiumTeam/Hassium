@@ -544,7 +544,7 @@ namespace Hassium.Compiler.Emit
                 emit(pair.Value.SourceLocation, InstructionType.Return);
                 var type = methodStack.Pop();
 
-                HassiumDictionary.add(null, trait.Traits, pair.Value.SourceLocation, new HassiumString(pair.Key), type);
+                HassiumDictionary.DictTypeDef.add(null, trait.Traits, pair.Value.SourceLocation, new HassiumString(pair.Key), type);
             }
 
             classStack.Peek().AddAttribute(node.Name, trait);
