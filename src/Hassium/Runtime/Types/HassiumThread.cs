@@ -14,7 +14,7 @@ namespace Hassium.Runtime.Types
         public Thread Thread { get; private set; }
         public HassiumObject ReturnValue { get; private set; }
 
-        public HassiumThread(VirtualMachine vm, SourceLocation location, HassiumMethod method, StackFrame.Frame frame)
+        public HassiumThread(VirtualMachine vm, SourceLocation location, HassiumMethod method, Dictionary<int, HassiumObject> frame)
         {
             VirtualMachine newVM = vm.Clone() as VirtualMachine;
             newVM.ExceptionReturns = new Dictionary<HassiumMethod, int>();

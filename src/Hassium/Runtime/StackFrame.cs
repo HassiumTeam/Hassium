@@ -7,67 +7,42 @@ namespace Hassium.Runtime
 {
     public class StackFrame
     {
-        public class Frame : ICloneable
-        {
-            public Dictionary<int, HassiumObject> variables = new Dictionary<int, HassiumObject>();
-            public void Add(int index, HassiumObject value)
-            {
-                variables.Add(index, value);
-            }
-            public bool ContainsVariable(int index)
-            {
-                return variables.ContainsKey(index);
-            }
-            public void Modify(int index, HassiumObject value)
-            {
-                variables[index] = value;
-            }
-            public HassiumObject GetVariable(int index)
-            {
-                return variables[index];
-            }
-            public object Clone()
-            {
-                return this.MemberwiseClone();
-            }
-        }
-
-        public Stack<Frame> Frames;
-        public Dictionary<int, HassiumObject> Locals { get { return Frames.Peek().variables; } }
+        public Stack<Dictionary<int, HassiumObject>> Frames;
+        public Dictionary<int, HassiumObject> Locals { get { return Frames.Peek(); } }
         public StackFrame()
         {
-            Frames = new Stack<Frame>();
+            Frames = new Stack<Dictionary<int, HassiumObject>>();
         }
 
         public void PushFrame()
         {
-            Frames.Push(new Frame());
+            Frames.Push(new Dictionary<int, HassiumObject>());
         }
-        public Frame PopFrame()
+        public Dictionary<int, HassiumObject> PopFrame()
         {
             return Frames.Pop();
         }
         public void Add(int index, HassiumObject value = null)
         {
-            if (Frames.Peek().ContainsVariable(index))
-                Frames.Peek().variables.Remove(index);
+            if (Frames.Peek().ContainsKey(index))
+                Frames.Peek().Remove(index);
             Frames.Peek().Add(index, value);
         }
         public bool Contains(int index)
         {
-            foreach (Frame frame in Frames)
-                if (frame.ContainsVariable(index))
+            foreach (var frame in Frames)
+                if (frame.ContainsKey(index))
                     return true;
             return false;
         }
         public void Modify(int index, HassiumObject value)
         {
-            Frames.Peek().Modify(index, value);
+            Frames.Peek()[index] = value;
         }
         public HassiumObject GetVariable(SourceLocation location, VirtualMachine vm, int index)
         {
-            if (Frames.Peek().ContainsVariable(index))
-                return Frames.Peek().GetVariable(index);
+            if (Frames.Peek().ContainsKey(index))
+                return Frames.Peek()[index];
             vm.RaiseException(HassiumVariableNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(vm, location));
             return HassiumObject.Null;
         }

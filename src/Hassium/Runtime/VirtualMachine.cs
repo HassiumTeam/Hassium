@@ -13,17 +13,17 @@ namespace Hassium.Runtime
 {
     public class VirtualMachine : ICloneable
     {
-        public LinkedStack<string> CallStack { get; private set; }
-        public HassiumMethod CurrentMethod { get; private set; }
-        public HassiumModule CurrentModule { get; private set; }
-        public SourceLocation CurrentSourceLocation { get; private set; }
-        public Dictionary<HassiumMethod, int> ExceptionReturns { get; set; }
-        public Dictionary<string, HassiumObject> Globals { get; private set; }
-        public Stack<HassiumExceptionHandler> Handlers { get; set; }
-        public LinkedStack<HassiumObject> Stack { get; set; }
-        public StackFrame StackFrame { get; set; }
+        public LinkedStack<string> CallStack;
+        public HassiumMethod CurrentMethod;
+        public HassiumModule CurrentModule;
+        public SourceLocation CurrentSourceLocation;
+        public Dictionary<HassiumMethod, int> ExceptionReturns;
+        public Dictionary<string, HassiumObject> Globals;
+        public Stack<HassiumExceptionHandler> Handlers;
+        public LinkedStack<HassiumObject> Stack;
+        public StackFrame StackFrame;
 
-        public StackFrame.Frame GlobalFrame { get; set; }
+        public Dictionary<int, HassiumObject> GlobalFrame;
 
         private HassiumObject lastValuePopped = HassiumObject.Null;
 
@@ -37,19 +37,19 @@ namespace Hassium.Runtime
             CallStack = new LinkedStack<string>();
             CurrentModule = module;
             ExceptionReturns = new Dictionary<HassiumMethod, int>();
-            Globals = new Dictionary<string, HassiumObject>();
+            Globals = module.BoundAttributes["__global__"].BoundAttributes;
             Handlers = new Stack<HassiumExceptionHandler>();
             Stack = new LinkedStack<HassiumObject>();
             StackFrame = new StackFrame();
             ImportGlobals();
         }
 
-        public void Execute(HassiumModule module, HassiumList args, StackFrame.Frame frame = null)
+        public void Execute(HassiumModule module, HassiumList args, Dictionary<int, HassiumObject> frame = null)
         {
             CallStack = new LinkedStack<string>();
             CurrentModule = module;
             ExceptionReturns = new Dictionary<HassiumMethod, int>();
-            Globals = new Dictionary<string, HassiumObject>();
+            Globals = module.BoundAttributes["__global__"].BoundAttributes;
             Handlers = new Stack<HassiumExceptionHandler>();
             Stack = new LinkedStack<HassiumObject>();
             StackFrame = new StackFrame();
@@ -85,29 +85,30 @@ namespace Hassium.Runtime
                     HassiumObject left, right, val, list;
                     HassiumObject[] elements;
                     string attrib;
+                    int arg;
 
                     var inst = method.Instructions[pos];
-                    int arg = inst.Arg;
 
-                    CurrentSourceLocation = method.Instructions[pos].SourceLocation;
-                    switch (method.Instructions[pos].InstructionType)
+                    CurrentSourceLocation = inst.SourceLocation;
+                    switch (inst.InstructionType)
                     {
                         case InstructionType.BinaryOperation:
                             right = Stack.Pop();
                             left = Stack.Pop();
-                            interpretBinaryOperation(left, right, arg);
+                            interpretBinaryOperation(left, right, inst.Arg);
                             break;
                         case InstructionType.BuildClosure:
                             Stack.Push(new HassiumClosure(Stack.Pop() as HassiumMethod, StackFrame.Frames.Peek()));
                             break;
                         case InstructionType.BuildDictionary:
+                            arg = inst.Arg;
                             var initials = new Dictionary<HassiumObject, HassiumObject>();
                             for (int i = 0; i < arg; i++)
                                 initials.Add(Stack.Pop(), Stack.Pop());
                             Stack.Push(new HassiumDictionary(initials));
                             break;
                         case InstructionType.BuildList:
-                            elements = new HassiumObject[arg];
+                            elements = new HassiumObject[inst.Arg];
                             for (int i = elements.Length - 1; i >= 0; i--)
                                 elements[i] = Stack.Pop();
                             Stack.Push(new HassiumList(elements));
@@ -116,6 +117,7 @@ namespace Hassium.Runtime
                             Stack.Push(new HassiumThread(this, CurrentSourceLocation, inst.Object as HassiumMethod, StackFrame.Frames.Peek()));
                             break;
                         case InstructionType.BuildTuple:
+                            arg = inst.Arg;
                             HassiumObject[] tupleElements = new HassiumObject[arg];
                             for (int i = arg - 1; i >= 0; i--)
                                 tupleElements[i] = Stack.Pop();
@@ -123,7 +125,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.Call:
                             val = Stack.Pop();
-                            elements = new HassiumObject[arg];
+                            elements = new HassiumObject[inst.Arg];
                             for (int i = elements.Length - 1; i >= 0; i--)
                                 elements[i] = Stack.Pop();
                             Stack.Push(val.Invoke(this, CurrentSourceLocation, elements));
@@ -145,6 +147,7 @@ namespace Hassium.Runtime
                                 if (!val.Types.Contains(type as HassiumTypeDefinition))
                                     RaiseException(HassiumConversionFailedException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, val, type));
                             }
+                            arg = inst.Arg;
                             if (StackFrame.Contains(arg))
                                 StackFrame.Modify(arg, val);
                             else
@@ -164,17 +167,17 @@ namespace Hassium.Runtime
                             Stack.Push(val.IterableNext(this, val, CurrentSourceLocation));
                             break;
                         case InstructionType.Jump:
-                            pos = method.Labels[arg];
+                            pos = method.Labels[inst.Arg];
                             break;
                         case InstructionType.JumpIfFalse:
                             val = Stack.Pop();
                             if (!(val as HassiumBool).Bool)
-                                pos = method.Labels[arg];
+                                pos = method.Labels[inst.Arg];
                             break;
                         case InstructionType.JumpIfTrue:
                             val = Stack.Pop();
-                            if (val.ToBool(this, val, CurrentSourceLocation).Bool)
-                                pos = method.Labels[arg];
+                            if ((val as HassiumBool).Bool)
+                                pos = method.Labels[inst.Arg];
                             break;
                         case InstructionType.LoadAttribute:
                             val = Stack.Pop();
@@ -198,9 +201,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.LoadGlobal:
                             attrib = inst.Constant;
-                            if (method.Module.GetAttribute("__global__").ContainsAttribute(attrib))
-                                Stack.Push(method.Module.GetAttribute("__global__").GetAttribute(attrib));
-                            else if (Globals.ContainsKey(attrib))
+                            if (Globals.ContainsKey(attrib))
                                 Stack.Push(Globals[attrib]);
                             else if (method.Parent != null)
                             {
@@ -215,11 +216,11 @@ namespace Hassium.Runtime
                         case InstructionType.LoadGlobalVariable:
                             try
                             {
-                                Stack.Push(CurrentModule.Globals[arg]);
+                                Stack.Push(CurrentModule.Globals[inst.Arg]);
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, CurrentModule, new HassiumString(arg.ToString())));
+                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, CurrentSourceLocation, CurrentModule, new HassiumString(inst.Arg.ToString())));
                             }
                             break;
                         case InstructionType.LoadIterableElement:
@@ -235,7 +236,7 @@ namespace Hassium.Runtime
                                     Stack.Push(GlobalFrame.GetVariable(arg));
                             }
                             else*/
-                                Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, arg));
+                                Stack.Push(StackFrame.GetVariable(CurrentSourceLocation, this, inst.Arg));
                             break;
                         case InstructionType.Pop:
                             lastValuePopped = Stack.Pop();
@@ -244,7 +245,7 @@ namespace Hassium.Runtime
                             //Handlers.Pop();
                             break;
                         case InstructionType.Push:
-                            Stack.Push(new HassiumInt(arg));
+                            Stack.Push(new HassiumInt(inst.Arg));
                             break;
                         case InstructionType.PushConstant:
                             Stack.Push(new HassiumString(inst.Constant));
@@ -312,13 +313,14 @@ namespace Hassium.Runtime
                             Globals.Add(attrib, val);
                             break;
                         case InstructionType.StoreGlobalVariable:
-                            CurrentModule.Globals[arg] = Stack.Pop();
+                            CurrentModule.Globals[inst.Arg] = Stack.Pop();
                             break;
                         case InstructionType.StoreIterableElement:
                             val = Stack.Pop();
                             Stack.Push(val.StoreIndex(this, val, CurrentSourceLocation, Stack.Pop(), Stack.Pop()));
                             break;
                         case InstructionType.StoreLocal:
+                            arg = inst.Arg;
                             val = Stack.Pop();
                             if (StackFrame.Contains(arg))
                                 StackFrame.Modify(arg, val);
@@ -327,6 +329,7 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.Swap:
                             val = Stack.Pop();
+                            arg = inst.Arg;
                             int index = (int)val.ToInt(this, val, CurrentSourceLocation).Int;
                             val = StackFrame.GetVariable(CurrentSourceLocation, this, index);
                             StackFrame.Modify(index, StackFrame.GetVariable(CurrentSourceLocation, this, arg));
@@ -334,7 +337,7 @@ namespace Hassium.Runtime
                             Stack.Push(val);
                             break;
                         case InstructionType.UnaryOperation:
-                            interpretUnaryOperation(Stack.Pop(), arg);
+                            interpretUnaryOperation(Stack.Pop(), inst.Arg);
                             break;
                     }
                     //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + watch.ElapsedTicks);
@@ -488,14 +491,6 @@ namespace Hassium.Runtime
             foreach (var pair in InternalModule.InternalModules["Types"].GetAttributes())
                 if (!Globals.ContainsKey(pair.Key))
                     Globals.Add(pair.Key, pair.Value);
-
-            foreach (var pair in CurrentModule.GetAttribute("__global__").GetAttributes())
-            {
-                if (Globals.ContainsKey(pair.Key))
-                    Globals.Remove(pair.Key);
-                Globals.Add(pair.Key, pair.Value);
-            }
-
         }
         public void PushCallStack(string val)
         {

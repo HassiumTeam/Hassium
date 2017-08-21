@@ -70,7 +70,7 @@ namespace Hassium.Runtime
             Labels.Add(label, Instructions.Count - 1);
         }
 
-        public HassiumObject Invoke(VirtualMachine vm, SourceLocation location, StackFrame.Frame frame)
+        public HassiumObject Invoke(VirtualMachine vm, SourceLocation location, Dictionary<int, HassiumObject> frame)
         {
             vm.StackFrame.Frames.Push(frame);
             return Invoke(vm, location);

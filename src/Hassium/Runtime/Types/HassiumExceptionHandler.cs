@@ -1,5 +1,7 @@
 ﻿using Hassium.Compiler;
 
+using System.Collections.Generic;
+
 namespace Hassium.Runtime.Types
 {
     public class HassiumExceptionHandler : HassiumObject
@@ -9,7 +11,7 @@ namespace Hassium.Runtime.Types
         public HassiumMethod Caller { get; private set; }
         public HassiumMethod Handler { get; private set; }
         public int Label { get; private set; }
-        public StackFrame.Frame Frame { get; set; }
+        public Dictionary<int, HassiumObject> Frame { get; set; }
 
         public HassiumExceptionHandler(HassiumMethod caller, HassiumMethod handler, int label)
         {
