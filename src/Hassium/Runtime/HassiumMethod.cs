@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Hassium.Compiler;
 using Hassium.Compiler.Emit;
@@ -17,20 +16,20 @@ namespace Hassium.Runtime
         public Stack<int> BreakLabels { get; private set; }
         public Stack<int> ContinueLabels { get; private set; }
 
-        public List<HassiumInstruction> Instructions { get; private set; }
+        public List<HassiumInstruction> Instructions;
 
         public bool IsConstructor { get { return Name == "new"; } }
 
-        public Dictionary<int, int> Labels { get; private set; }
+        public Dictionary<int, int> Labels;
 
-        public HassiumModule Module { get; set; }
-        public string Name { get; set; }
+        public HassiumModule Module;
+        public string Name;
 
-        public Dictionary<FunctionParameter, int> Parameters { get; private set; }
-        public HassiumMethod ReturnType { get; set; }
+        public Dictionary<FunctionParameter, int> Parameters;
+        public HassiumMethod ReturnType;
 
-        public SourceLocation SourceLocation { get; set; }
-        public string SourceRepresentation { get; set; }
+        public SourceLocation SourceLocation;
+        public string SourceRepresentation;
         
         public HassiumMethod(HassiumModule module)
         {
