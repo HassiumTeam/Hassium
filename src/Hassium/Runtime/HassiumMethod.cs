@@ -135,11 +135,12 @@ namespace Hassium.Runtime
 
             if (IsConstructor)
             {
-                HassiumClass clazz = new HassiumClass(Parent.Name);
+                HassiumClass clazz = new HassiumClass((Parent as HassiumClass).Name);
                 clazz.BoundAttributes = CloneDictionary(Parent.BoundAttributes);
-                clazz.AddType(Parent.TypeDefinition);
+                var parent = (Parent as HassiumClass);
+                clazz.AddType(parent.TypeDefinition);
 
-                foreach (var inherit in Parent.Inherits)
+                foreach (var inherit in parent.Inherits)
                 {
                     foreach (var attrib in CloneDictionary(vm.ExecuteMethod(inherit).GetAttributes()))
                     {

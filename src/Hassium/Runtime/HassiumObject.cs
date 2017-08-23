@@ -12,7 +12,7 @@ namespace Hassium.Runtime
 
         public bool IsPrivate = false;
         public static HassiumNull Null = new HassiumNull();
-        public HassiumClass Parent { get; set; }
+        public HassiumObject Parent { get; set; }
 
         public static HassiumBool False {  get { return InternalModule.InternalModules["Types"].GetAttribute("false") as HassiumBool; } }
         public static HassiumBool True { get { return InternalModule.InternalModules["Types"].GetAttribute("true") as HassiumBool; } }
@@ -94,13 +94,13 @@ namespace Hassium.Runtime
         {
             var ret = BoundAttributes[name];
             if (ret is HassiumFunction)
-                (ret as HassiumFunction).Self = this;
+                (ret as HassiumFunction).Parent = this;
             else if (ret is HassiumProperty)
             {
                 var prop = (ret as HassiumProperty);
-                (prop.Get as HassiumFunction).Self = this;
+                (prop.Get as HassiumFunction).Parent = this;
                 if (prop.Set != null)
-                    (prop.Set as HassiumFunction).Self = this;
+                    (prop.Set as HassiumFunction).Parent = this;
             }
             return ret;
         }
@@ -394,13 +394,13 @@ namespace Hassium.Runtime
         {
             var val = this;
             if (val is HassiumFunction)
-                (val as HassiumFunction).Self = self;
+                (val as HassiumFunction).Parent = self;
             else if (val is HassiumProperty)
             {
                 var prop = (val as HassiumProperty);
-                (prop.Get as HassiumFunction).Self = self;
+                (prop.Get as HassiumFunction).Parent = self;
                 if (prop.Set != null)
-                    (prop.Set as HassiumFunction).Self = self;
+                    (prop.Set as HassiumFunction).Parent = self;
             }
             return this;
         }

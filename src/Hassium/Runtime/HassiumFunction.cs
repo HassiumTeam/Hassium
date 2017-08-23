@@ -12,7 +12,6 @@ namespace Hassium.Runtime
         public static new HassiumTypeDefinition TypeDefinition = HassiumMethod.TypeDefinition;
         public HassiumFunctionDelegate Target { get; private set; }
         public int[] ParameterLengths { get; private set; }
-        public HassiumObject Self { get; set; }
 
         public HassiumFunction(HassiumFunctionDelegate target, int paramLength)
         {
@@ -46,12 +45,12 @@ namespace Hassium.Runtime
             {
                 foreach (int len in ParameterLengths)
                     if (len == args.Length)
-                        return Target(vm, Self, location, args);
+                        return Target(vm, Parent, location, args);
                 vm.RaiseException(HassiumArgLengthException.ArgLengthExceptionTypeDef._new(vm, null, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
                 return Null;
             }
             
-            return Target(vm, Self, location, args);
+            return Target(vm, Parent, location, args);
         }
     }
 }
