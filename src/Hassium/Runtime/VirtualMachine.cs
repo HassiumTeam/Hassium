@@ -193,6 +193,7 @@ namespace Hassium.Runtime
                                     RaiseException(HassiumPrivateAttribException.PrivateAttribExceptionTypeDef._new(this, null, loc, new HassiumString(inst.Constant), val));
                                     return HassiumObject.Null;
                                 }
+
                                 if (attribute is HassiumProperty)
                                     Stack.Push((attribute as HassiumProperty).Get.Invoke(this, inst.SourceLocation));
                                 else
@@ -308,7 +309,7 @@ namespace Hassium.Runtime
                                 else
                                     val.RemoveAttribute(attrib);
                             }
-                            val.AddAttribute(attrib, Stack.Pop());
+                            val.AddAttribute(attrib, Stack.Pop().SetSelfReference(val));
                             break;
                         case InstructionType.StoreGlobal:
                             val = Stack.Pop();

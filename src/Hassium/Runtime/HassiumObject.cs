@@ -393,8 +393,8 @@ namespace Hassium.Runtime
         public HassiumObject SetSelfReference(HassiumObject self)
         {
             var val = this;
-            if (val is HassiumFunction)
-                (val as HassiumFunction).Parent = self;
+            if (val is HassiumFunction || val is HassiumMethod)
+                val.Parent = self;
             else if (val is HassiumProperty)
             {
                 var prop = (val as HassiumProperty);
