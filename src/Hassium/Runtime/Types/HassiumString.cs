@@ -141,7 +141,7 @@ namespace Hassium.Runtime.Types
                 }
                 catch
                 {
-                    vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, tostring(vm, self, location), HassiumInt.TypeDefinition));
+                    vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, tostring(vm, self, location), HassiumInt.TypeDefinition));
                     return new HassiumInt(-1);
                 }
             }

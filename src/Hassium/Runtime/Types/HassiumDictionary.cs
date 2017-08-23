@@ -91,7 +91,7 @@ namespace Hassium.Runtime.Types
                 foreach (var key in Dictionary.Keys)
                     if (key.EqualTo(vm, key, location, args[0]).Bool)
                         return Dictionary[key];
-                vm.RaiseException(HassiumAttribNotFoundException.Attribs[INVOKE].Invoke(vm, location, self, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, self, args[0].ToString(vm, args[0], location)));
                 return Null;
             }
 
@@ -112,7 +112,7 @@ namespace Hassium.Runtime.Types
                 foreach (var pair in Dictionary)
                     if (pair.Value.EqualTo(vm, pair.Value, location, args[0]).ToBool(vm, self, location).Bool)
                         return pair.Key;
-                vm.RaiseException(HassiumKeyNotFoundException.Attribs[INVOKE].Invoke(vm, location, self, args[0]));
+                vm.RaiseException(HassiumKeyNotFoundException.KeyNotFoundExceptionTypeDef._new(vm, self, location, self, args[0]));
                 return Null;
             }
 

@@ -37,7 +37,7 @@ namespace Hassium.Runtime.IO
         [FunctionAttribute("func close () : null")]
         public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            HassiumFile.close(vm, args[0], location);
+            close(vm, args[0], location);
             return Null;
         }
 
@@ -47,7 +47,7 @@ namespace Hassium.Runtime.IO
             string source = args[0].ToString(vm, args[0], location).String;
             if (!File.Exists(source))
             {
-                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumFileNotFoundException.FileNotFoundExceptionTypeDef._new(vm, null, location, args[0].ToString(vm, args[0], location)));
                 return Null;
             }
             File.Copy(source, args[1].ToString(vm, args[1], location).String);
@@ -92,7 +92,7 @@ namespace Hassium.Runtime.IO
             else if (Directory.Exists(path))
                 Directory.Delete(path);
             else
-                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumFileNotFoundException.FileNotFoundExceptionTypeDef._new(vm, null, location, args[0].ToString(vm, args[0], location)));
 
             return Null;
         }
@@ -105,7 +105,7 @@ namespace Hassium.Runtime.IO
             if (Directory.Exists(dir))
                 Directory.Delete(dir);
             else
-                vm.RaiseException(HassiumDirectoryNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumDirectoryNotFoundException.DirectoryNotFoundExceptionTypeDef._new(vm, null, location, args[0].ToString(vm, args[0], location)));
             return Null;
         }
 
@@ -117,7 +117,7 @@ namespace Hassium.Runtime.IO
             if (File.Exists(path))
                 File.Delete(path);
             else
-                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumFileNotFoundException.FileNotFoundExceptionTypeDef._new(vm, null, location, args[0].ToString(vm, args[0], location)));
             return Null;
         }
 
@@ -169,7 +169,7 @@ namespace Hassium.Runtime.IO
             string source = args[0].ToString(vm, args[0], location).String;
             if (!File.Exists(source))
             {
-                vm.RaiseException(HassiumFileNotFoundException.Attribs[INVOKE].Invoke(vm, location, args[0].ToString(vm, args[0], location)));
+                vm.RaiseException(HassiumFileNotFoundException.FileNotFoundExceptionTypeDef._new(vm, null, location, args[0].ToString(vm, args[0], location)));
                 return Null;
             }
             File.Move(source, args[1].ToString(vm, args[1], location).String);

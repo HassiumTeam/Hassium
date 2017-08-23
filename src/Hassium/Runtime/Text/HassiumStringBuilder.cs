@@ -21,15 +21,18 @@ namespace Hassium.Runtime.Text
         {
             public StringBuilderTypeDef() : base("StringBuilder")
             {
-                AddAttribute(INVOKE, _new, 0, 1);
-                AddAttribute("append", append, 1);
-                AddAttribute("appendf", appendf, -1);
-                AddAttribute("appendline", appendline, 1);
-                AddAttribute("clear", clear, 0);
-                AddAttribute("insert", insert, 2);
-                AddAttribute("length", new HassiumProperty(get_length));
-                AddAttribute("replace", replace, 2);
-                AddAttribute(TOSTRING, tostring, 0);
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { INVOKE, new HassiumFunction(_new, -1)  },
+                    { "append", new HassiumFunction(append, 1)  },
+                    { "appendf", new HassiumFunction(appendf, -1)  },
+                    { "appendline", new HassiumFunction(appendline, 1)  },
+                    { "clear", new HassiumFunction(clear, 0)  },
+                    { "insert", new HassiumFunction(insert, 2)  },
+                    { "length", new HassiumProperty(get_length)  },
+                    { "replace", new HassiumFunction(replace, 2)  },
+                    { TOSTRING, new HassiumFunction(tostring, 0)  },
+                };
             }
 
             [FunctionAttribute("func new () : StringBuilder", "func new (obj : object) : StringBuilder")]

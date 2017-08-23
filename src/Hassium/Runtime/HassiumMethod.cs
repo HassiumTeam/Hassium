@@ -88,7 +88,7 @@ namespace Hassium.Runtime
                 // If there's more arguments provided than called for
                 if (i >= args.Length)
                 {
-                    vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                    vm.RaiseException(HassiumArgLengthException.ArgLengthExceptionTypeDef._new(vm, null, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                     return Null;
                 }
 
@@ -113,13 +113,13 @@ namespace Hassium.Runtime
                     {
                         if (!(enforcedType as HassiumTrait).Is(vm, location, arg).Bool)
                         {
-                            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, arg, enforcedType));
+                            vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, arg, enforcedType));
                             return Null;
                         }
                     }
                     else if (!arg.Types.Contains(enforcedType))
                     {
-                        vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, arg, enforcedType));
+                        vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, arg, enforcedType));
                         return Null;
                     }
                 }
@@ -129,7 +129,7 @@ namespace Hassium.Runtime
             // If there's less arguments than called for
             if (i < args.Length)
             {
-                vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
+                vm.RaiseException(HassiumArgLengthException.ArgLengthExceptionTypeDef._new(vm, null, location, this, new HassiumInt(Parameters.Count), new HassiumInt(args.Length)));
                 return Null;
             }
 
@@ -169,7 +169,7 @@ namespace Hassium.Runtime
                 enforcedType = enforcedType is HassiumTypeDefinition ? enforcedType : enforcedType.Type();
                 if (!ret.Types.Contains(enforcedType))
                 {
-                    vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, ret, enforcedType));
+                    vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, ret, enforcedType));
                     return this;
                 }
             }

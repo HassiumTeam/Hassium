@@ -7,15 +7,7 @@ namespace Hassium.Runtime.Types
 {
     public class HassiumIndexOutOfRangeException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("IndexOutOfRangeException");
-
-        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
-        {
-            { "index", new HassiumProperty(get_index) },
-            { "message", new HassiumProperty(get_message) },
-            { "object", new HassiumProperty(get_object) },
-            { TOSTRING, new HassiumFunction(tostring, 0) }
-        };
+        public static new HassiumTypeDefinition TypeDefinition = new IndexOutOfRangeExceptionTypeDef();
 
         public HassiumObject Object { get;  set; }
         public HassiumInt RequestedIndex { get; set; }
@@ -25,50 +17,65 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
         }
 
-        [FunctionAttribute("func new (obj : object, int reqIndex) : IndexOutOfRangeException")]
-        public static HassiumIndexOutOfRangeException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class IndexOutOfRangeExceptionTypeDef : HassiumTypeDefinition
         {
-            HassiumIndexOutOfRangeException exception = new HassiumIndexOutOfRangeException();
+            public IndexOutOfRangeExceptionTypeDef() : base("IndexOutOfRangeException")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { "index", new HassiumProperty(get_index) },
+                    { INVOKE, new HassiumFunction(_new, 2) },
+                    { "message", new HassiumProperty(get_message) },
+                    { "object", new HassiumProperty(get_object) },
+                    { TOSTRING, new HassiumFunction(tostring, 0) }
+                };
+            }
 
-            exception.Object = args[0];
-            exception.RequestedIndex = args[1].ToInt(vm, args[1], location);
+            [FunctionAttribute("func new (obj : object, int reqIndex) : IndexOutOfRangeException")]
+            public static HassiumIndexOutOfRangeException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumIndexOutOfRangeException exception = new HassiumIndexOutOfRangeException();
 
-            return exception;
-        }
+                exception.Object = args[0];
+                exception.RequestedIndex = args[1].ToInt(vm, args[1], location);
 
-        [FunctionAttribute("index { get; }")]
-        public static HassiumInt get_index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return (self as HassiumIndexOutOfRangeException).RequestedIndex;
-        }
+                return exception;
+            }
 
-        [FunctionAttribute("message { get; }")]
-        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            var exception = (self as HassiumIndexOutOfRangeException);
-            return new HassiumString(string.Format("Out of range: Index '{0}' is less than 0 or greater than the size of the collection of type '{1}'", exception.RequestedIndex.Int, exception.Object.Type()));
-        }
+            [FunctionAttribute("index { get; }")]
+            public static HassiumInt get_index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumIndexOutOfRangeException).RequestedIndex;
+            }
 
-        [FunctionAttribute("object { get; }")]
-        public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return (self as HassiumIndexOutOfRangeException).Object;
-        }
+            [FunctionAttribute("message { get; }")]
+            public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var exception = (self as HassiumIndexOutOfRangeException);
+                return new HassiumString(string.Format("Out of range: Index '{0}' is less than 0 or greater than the size of the collection of type '{1}'", exception.RequestedIndex.Int, exception.Object.Type()));
+            }
 
-        [FunctionAttribute("func tostring () : string")]
-        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            StringBuilder sb = new StringBuilder();
+            [FunctionAttribute("object { get; }")]
+            public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumIndexOutOfRangeException).Object;
+            }
 
-            sb.AppendLine(get_message(vm, self, location).String);
-            sb.Append(vm.UnwindCallStack());
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                StringBuilder sb = new StringBuilder();
 
-            return new HassiumString(sb.ToString());
+                sb.AppendLine(get_message(vm, self, location).String);
+                sb.Append(vm.UnwindCallStack());
+
+                return new HassiumString(sb.ToString());
+            }
         }
 
         public override bool ContainsAttribute(string attrib)
         {
-            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
         public override HassiumObject GetAttribute(string attrib)
@@ -76,12 +83,12 @@ namespace Hassium.Runtime.Types
             if (BoundAttributes.ContainsKey(attrib))
                 return BoundAttributes[attrib];
             else
-                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
         public override Dictionary<string, HassiumObject> GetAttributes()
         {
-            foreach (var pair in Attribs)
+            foreach (var pair in TypeDefinition.BoundAttributes)
                 if (!BoundAttributes.ContainsKey(pair.Key))
                     BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
             return BoundAttributes;

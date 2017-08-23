@@ -7,12 +7,7 @@ namespace Hassium.Runtime
 {
     public class HassiumPrivateAttribException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("PrivateAttributeException");
-
-        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
-        {
-
-        };
+        public static new HassiumTypeDefinition TypeDefinition = new PrivateAttribExceptionTypeDef();
 
         public HassiumString Attrib { get; set; }
         public HassiumObject Object { get; set; }
@@ -22,33 +17,76 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
-        [FunctionAttribute("func new () : PrivateAttribException")]
-        public static HassiumPrivateAttribException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class PrivateAttribExceptionTypeDef : HassiumTypeDefinition
         {
-            HassiumPrivateAttribException exception = new HassiumPrivateAttribException();
+            public PrivateAttribExceptionTypeDef() : base("PrivateAttributeException")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { "attrib", new HassiumProperty(get_attrib) },
+                    { INVOKE, new HassiumFunction(_new, 2) },
+                    { "message", new HassiumProperty(get_message) },
+                    { "object", new HassiumProperty(get_object) },
+                    { TOSTRING, new HassiumFunction(tostring, 0) }
+                };
+            }
 
-            exception.Object = args[0];
-            exception.Attrib = args[1].ToString(vm, args[1], location);
+            [FunctionAttribute("func new (obj : object, attrib : string) : PrivateAttribException")]
+            public static HassiumPrivateAttribException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumPrivateAttribException exception = new HassiumPrivateAttribException();
 
-            return exception;
+                exception.Object = args[0];
+                exception.Attrib = args[1].ToString(vm, args[1], location);
+
+                return exception;
+            }
+
+            [FunctionAttribute("attrib { get; }")]
+            public static HassiumString get_attrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumPrivateAttribException).Attrib;
+            }
+
+            [FunctionAttribute("message { get; }")]
+            public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var exception = (self as HassiumPrivateAttribException);
+                return new HassiumString(string.Format("Private Attribute Error: Attribute '{0}' is not publicly accessable from object of type '{1}'", exception.Attrib.String, exception.Object.Type()));
+            }
+
+            [FunctionAttribute("object { get; }")]
+            public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumPrivateAttribException).Object;
+            }
+
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return get_message(vm, self, location, args);
+            }
         }
 
-        [FunctionAttribute("attrib { get; }")]
-        public HassiumString get_attrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override bool ContainsAttribute(string attrib)
         {
-            return Attrib;
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        [FunctionAttribute("message { get; }")]
-        public HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override HassiumObject GetAttribute(string attrib)
         {
-            return new HassiumString(string.Format("Private Attribute Error: Attribute '{0}' is not publicly accessable from object of type '{1}'", Attrib.String, Object.Type()));
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
-        [FunctionAttribute("object { get; }")]
-        public HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override Dictionary<string, HassiumObject> GetAttributes()
         {
-            return Object;
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

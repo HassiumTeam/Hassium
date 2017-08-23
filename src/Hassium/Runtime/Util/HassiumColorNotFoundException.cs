@@ -8,55 +8,81 @@ namespace Hassium.Runtime.Util
 {
     public class HassiumColorNotFoundException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("ColorNotFoundException");
-
-        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
-        {
-            { "color", new HassiumProperty(get_color) },
-            { INVOKE, new HassiumFunction(_new, 1) },
-            { "message", new HassiumFunction(get_message) },
-            { TOSTRING, new HassiumFunction(tostring, 0) }
-        };
+        public static new HassiumTypeDefinition TypeDefinition = new ColorNotFoundExceptionTypeDef();
 
         public HassiumString ColorString { get; set; }
 
         public HassiumColorNotFoundException()
         {
             AddType(TypeDefinition);
-            
         }
 
-        [FunctionAttribute("func new (col : string) : ColorNotFoundException")]
-        public static HassiumColorNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class ColorNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
-            HassiumColorNotFoundException exception = new HassiumColorNotFoundException();
+            public ColorNotFoundExceptionTypeDef() : base("ColorNotFoundException")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { "color", new HassiumProperty(get_color) },
+                    { INVOKE, new HassiumFunction(_new, 1) },
+                    { "message", new HassiumFunction(get_message) },
+                    { TOSTRING, new HassiumFunction(tostring, 0) }
+                };
+            }
 
-            exception.ColorString = args[0].ToString(vm, args[0], location);
+            [FunctionAttribute("func new (col : string) : ColorNotFoundException")]
+            public static HassiumColorNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumColorNotFoundException exception = new HassiumColorNotFoundException();
 
-            return exception;
+                exception.ColorString = args[0].ToString(vm, args[0], location);
+
+                return exception;
+            }
+
+            [FunctionAttribute("color { get; }")]
+            public static HassiumString get_color(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumColorNotFoundException).ColorString;
+            }
+
+            [FunctionAttribute("message { get; }")]
+            public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumString(string.Format("Color Not Found: Color '{0}' does not exist", (self as HassiumColorNotFoundException).ColorString.String));
+            }
+
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine(get_message(vm, self, location).String);
+                sb.Append(vm.UnwindCallStack());
+
+                return new HassiumString(sb.ToString());
+            }
         }
 
-        [FunctionAttribute("color { get; }")]
-        public static HassiumString get_color(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override bool ContainsAttribute(string attrib)
         {
-            return (self as HassiumColorNotFoundException).ColorString;
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        [FunctionAttribute("message { get; }")]
-        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override HassiumObject GetAttribute(string attrib)
         {
-            return new HassiumString(string.Format("Color Not Found: Color '{0}' does not exist", (self as HassiumColorNotFoundException).ColorString.String));
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
-        [FunctionAttribute("func tostring () : string")]
-        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override Dictionary<string, HassiumObject> GetAttributes()
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine(get_message(vm, self, location).String);
-            sb.Append(vm.UnwindCallStack());
-
-            return new HassiumString(sb.ToString());
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

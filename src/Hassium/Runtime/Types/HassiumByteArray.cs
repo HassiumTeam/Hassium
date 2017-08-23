@@ -38,7 +38,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func add (byte : char) : null")]
-        public static new HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static  HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             Values.Add((byte)args[0].ToChar(vm, args[0], location).Char);
@@ -46,7 +46,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func contains (byte : char) : bool")]
-        public static new HassiumBool contains(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumBool contains(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             return new HassiumBool(Values.Contains((byte)args[0].ToChar(vm, args[0], location).Char));
@@ -62,7 +62,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func __equals__ (l : list) : bool")]
-        public static new HassiumBool equalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumBool equalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             var list = args[0].ToList(vm, args[0], location).Values;
@@ -73,7 +73,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func format (fmt : string) : string")]
-        public static new HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             StringBuilder sb = new StringBuilder();
@@ -90,20 +90,20 @@ namespace Hassium.Runtime.Types
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count())
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException.IndexOutOfRangeExceptionTypeDef._new(vm, self, location, self, index));
                 return Null;
             }
             return new HassiumChar((char)Values[(int)index.Int]);
         }
 
         [FunctionAttribute("func __index__ (i : int) : object")]
-        public static new HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count())
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException.IndexOutOfRangeExceptionTypeDef._new(vm, self, location, self, index));
                 return Null;
             }
             return new HassiumChar((char)Values[(int)index.Int]);
@@ -117,7 +117,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func __iter__ () : list")]
-        public static new HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return self;
         }
@@ -128,7 +128,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func __iterfull__ () : bool")]
-        public static new HassiumObject iterablefull(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject iterablefull(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var arr = (self as HassiumByteArray);
             return new HassiumBool(arr.IterIndex >= arr.Values.Count());
@@ -140,28 +140,28 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func __iternext__ () : bool")]
-        public static new HassiumObject iterablenext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumObject iterablenext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var arr = (self as HassiumByteArray);
             return new HassiumChar((char)arr.Values[arr.IterIndex++]);
         }
 
         [FunctionAttribute("length { get; }")]
-        public static new HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             return new HassiumInt(Values.Count());
         }
 
         [FunctionAttribute("func remove (byte : char) : null")]
-        public static new HassiumNull remove(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull remove(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             var b = (byte)args[0].ToChar(vm, args[0], location).Char;
 
             if (!Values.Contains(b))
             {
-                vm.RaiseException(HassiumKeyNotFoundException.Attribs[INVOKE].Invoke(vm, location, self, args[0]));
+                vm.RaiseException(HassiumKeyNotFoundException.KeyNotFoundExceptionTypeDef._new(vm, self, location, self, args[0]));
                 return Null;
             }
 
@@ -170,13 +170,13 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func removeat (index : int) : null")]
-        public static new HassiumNull removeat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumNull removeat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count)
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException.IndexOutOfRangeExceptionTypeDef._new(vm, self, location, self, index));
                 return Null;
             }
             Values.Remove(Values[(int)index.Int]);
@@ -198,7 +198,7 @@ namespace Hassium.Runtime.Types
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count)
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException.IndexOutOfRangeExceptionTypeDef._new(vm, self, location, self, index));
                 return Null;
             }
             Values[(int)index.Int] = (byte)args[1].ToChar(vm, args[1], location).Char;
@@ -212,7 +212,7 @@ namespace Hassium.Runtime.Types
             var index = args[0].ToInt(vm, args[0], location);
             if (index.Int < 0 || index.Int >= Values.Count)
             {
-                vm.RaiseException(HassiumIndexOutOfRangeException.Attribs[INVOKE].Invoke(vm, location, self, index));
+                vm.RaiseException(HassiumIndexOutOfRangeException.IndexOutOfRangeExceptionTypeDef._new(vm, self, location, self, index));
                 return Null;
             }
             Values[(int)index.Int] = (byte)args[1].ToChar(vm, args[1], location).Char;
@@ -283,7 +283,7 @@ namespace Hassium.Runtime.Types
 
         public override bool ContainsAttribute(string attrib)
         {
-            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
         public override HassiumObject GetAttribute(string attrib)
@@ -291,7 +291,7 @@ namespace Hassium.Runtime.Types
             if (BoundAttributes.ContainsKey(attrib))
                 return BoundAttributes[attrib];
             else
-                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
         public override Dictionary<string, HassiumObject> GetAttributes()

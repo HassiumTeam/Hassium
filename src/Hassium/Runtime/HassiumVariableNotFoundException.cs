@@ -8,44 +8,71 @@ namespace Hassium.Runtime
 {
     public class HassiumVariableNotFoundException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("VariableNotFoundException");
-
-        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
-        {
-            { INVOKE, new HassiumFunction(_new, 0) },
-            { "message", new HassiumProperty(get_message) }
-        };
+        public static new HassiumTypeDefinition TypeDefinition = new VariableNotFoundExceptionTypeDef();
 
         public HassiumVariableNotFoundException()
         {
             AddType(TypeDefinition);
-            
         }
 
-        [FunctionAttribute("func new () : VariableNotFoundException")]
-        public static HassiumVariableNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class VariableNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
-            HassiumVariableNotFoundException exception = new HassiumVariableNotFoundException();
-            
+            public VariableNotFoundExceptionTypeDef() : base("VariableNotFoundException")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { INVOKE, new HassiumFunction(_new, 0) },
+                    { "message", new HassiumProperty(get_message) },
+                    { TOSTRING, new HassiumFunction(tostring, 0) }
+                };
+            }
 
-            return exception;
+            [FunctionAttribute("func new () : VariableNotFoundException")]
+            public static HassiumVariableNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumVariableNotFoundException exception = new HassiumVariableNotFoundException();
+
+
+                return exception;
+            }
+
+            [FunctionAttribute("message { get; }")]
+            public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumString(string.Format("Variable Not Found: variable was not found inside the stack frmae"));
+            }
+
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine(get_message(vm, self, location).String);
+                sb.Append(vm.UnwindCallStack());
+
+                return new HassiumString(sb.ToString());
+            }
         }
 
-        [FunctionAttribute("message { get; }")]
-        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override bool ContainsAttribute(string attrib)
         {
-            return new HassiumString(string.Format("Variable Not Found: variable was not found inside the stack frmae"));
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        [FunctionAttribute("func tostring () : string")]
-        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override HassiumObject GetAttribute(string attrib)
         {
-            StringBuilder sb = new StringBuilder();
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
 
-            sb.AppendLine(get_message(vm, self, location).String);
-            sb.Append(vm.UnwindCallStack());
-
-            return new HassiumString(sb.ToString());
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

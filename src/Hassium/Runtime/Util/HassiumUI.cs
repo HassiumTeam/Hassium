@@ -251,7 +251,7 @@ namespace Hassium.Runtime.Util
                     break;
                 default:
                     color = ConsoleColor.Black;
-                    vm.RaiseException(HassiumColorNotFoundException.Attribs[INVOKE].Invoke(vm, vm.CurrentSourceLocation, new HassiumString(colorString)));
+                    vm.RaiseException(HassiumColorNotFoundException.ColorNotFoundExceptionTypeDef._new(vm, null, vm.CurrentSourceLocation, new HassiumString(colorString)));
                     break;
             }
             return color;

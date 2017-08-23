@@ -52,7 +52,7 @@ namespace Hassium.Runtime.Net
             var ips = Dns.GetHostAddresses(args[0].ToString(vm, args[0], location).String);
 
             foreach (var ip in ips)
-                HassiumList.add(vm, list, location, HassiumIPAddr.Attribs[INVOKE].Invoke(vm, location, new HassiumString(ip.ToString())));
+                HassiumList.add(vm, list, location, HassiumIPAddr.IPAddrTypeDef._new(vm, null, location, new HassiumString(ip.ToString())));
 
             return list;
         }

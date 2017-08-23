@@ -9,7 +9,7 @@ namespace Hassium.Runtime.Types
 {
     public class HassiumThread : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Thread");
+        public static new HassiumTypeDefinition TypeDefinition = new ThreadTypeDef();
 
         public Thread Thread { get; private set; }
         public HassiumObject ReturnValue { get; private set; }
@@ -26,37 +26,46 @@ namespace Hassium.Runtime.Types
             ReturnValue = Null;
 
             AddType(TypeDefinition);
-
-            AddAttribute("isalive", new HassiumProperty(get_isalive));
-            AddAttribute("returns", new HassiumProperty(get_returns));
-            AddAttribute("start", start, 0);
-            AddAttribute("stop", stop, 0);
         }
 
-        [FunctionAttribute("isalive { get; }")]
-        public HassiumBool get_isalive(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class ThreadTypeDef : HassiumTypeDefinition
         {
-            return new HassiumBool(Thread.IsAlive);
-        }
+            public ThreadTypeDef() : base("Thread")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { "isalive", new HassiumProperty(get_isalive) },
+                    { "returns", new HassiumProperty(get_returns) },
+                    { "start", new HassiumFunction(start) },
+                    { "stop", new HassiumFunction(stop) }
+                };
+            }
 
-        [FunctionAttribute("returns { get; }")]
-        public HassiumObject get_returns(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return ReturnValue;
-        }
+            [FunctionAttribute("isalive { get; }")]
+            public static HassiumBool get_isalive(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumBool((self as HassiumThread).Thread.IsAlive);
+            }
 
-        [FunctionAttribute("func start () : null")]
-        public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            Thread.Start();
-            return Null;
-        }
+            [FunctionAttribute("returns { get; }")]
+            public static HassiumObject get_returns(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumThread).ReturnValue;
+            }
 
-        [FunctionAttribute("func stop () : null")]
-        public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            Thread.Abort();
-            return Null;
+            [FunctionAttribute("func start () : null")]
+            public static HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                (self as HassiumThread).Thread.Start();
+                return Null;
+            }
+
+            [FunctionAttribute("func stop () : null")]
+            public static HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                (self as HassiumThread).Thread.Abort();
+                return Null;
+            }
         }
     }
 }

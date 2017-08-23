@@ -15,8 +15,9 @@
             AddAttribute("false", new HassiumBool(false));
             AddAttribute("float", HassiumFloat.TypeDefinition);
             AddAttribute("func", HassiumFunction.TypeDefinition);
-            AddAttribute("IndexOutOfRangeException", new HassiumIndexOutOfRangeException());
+            AddAttribute("IndexOutOfRangeException", HassiumIndexOutOfRangeException.TypeDefinition);
             AddAttribute("int", HassiumInt.TypeDefinition);
+            AddAttribute("KeyNotFoundException", HassiumKeyNotFoundException.TypeDefinition);
             AddAttribute("list", HassiumList.TypeDefinition);
             AddAttribute("null", Null);
             AddAttribute("number", Number);

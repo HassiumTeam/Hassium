@@ -142,13 +142,13 @@ namespace Hassium.Runtime
                             if (type is HassiumTrait)
                             {
                                 if (!(type as HassiumTrait).Is(this, loc, val).Bool)
-                                    RaiseException(HassiumConversionFailedException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, val, type));
+                                    RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(this, null, loc, val, type));
                             }
                             else
                             {
                                 type = type is HassiumTypeDefinition ? type : type.Type();
                                 if (!val.Types.Contains(type as HassiumTypeDefinition))
-                                    RaiseException(HassiumConversionFailedException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, val, type));
+                                    RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(this, null, loc, val, type));
                             }
                             arg = inst.Arg;
                             if (StackFrame.Contains(arg))
@@ -190,7 +190,7 @@ namespace Hassium.Runtime
                                 var attribute = val.GetAttribute(inst.Constant);
                                 if (attribute.IsPrivate)
                                 {
-                                    RaiseException(HassiumPrivateAttribException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, new HassiumString(inst.Constant), val));
+                                    RaiseException(HassiumPrivateAttribException.PrivateAttribExceptionTypeDef._new(this, null, loc, new HassiumString(inst.Constant), val));
                                     return HassiumObject.Null;
                                 }
                                 if (attribute is HassiumProperty)
@@ -200,7 +200,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, val, new HassiumString(inst.Constant)));
+                                RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, val, new HassiumString(inst.Constant)));
                             }
                             break;
                         case InstructionType.LoadGlobal:
@@ -213,10 +213,10 @@ namespace Hassium.Runtime
                                 if (method.Parent.ContainsAttribute(attrib))
                                     Stack.Push(method.Parent.GetAttribute(attrib));
                                 else
-                                    RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, method.Parent, new HassiumString(attrib)));
+                                    RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, method.Parent, new HassiumString(attrib)));
                             }
                             else
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, loc, CurrentModule, new HassiumString(attrib)));
+                                RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, CurrentModule, new HassiumString(attrib)));
                             break;
                         case InstructionType.LoadGlobalVariable:
                             try
@@ -225,7 +225,7 @@ namespace Hassium.Runtime
                             }
                             catch (KeyNotFoundException)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, inst.SourceLocation, CurrentModule, new HassiumString(inst.Arg.ToString())));
+                                RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, inst.SourceLocation, CurrentModule, new HassiumString(inst.Arg.ToString())));
                             }
                             break;
                         case InstructionType.LoadIterableElement:
@@ -282,14 +282,14 @@ namespace Hassium.Runtime
                             break;
                         case InstructionType.StartThread:
                             val = Stack.Pop();
-                            (val as HassiumThread).start(this, val, inst.SourceLocation);
+                            HassiumThread.ThreadTypeDef.start(this, val, inst.SourceLocation);
                             break;
                         case InstructionType.StoreAttribute:
                             val = Stack.Pop();
                             attrib = inst.Constant;
                             if (val.IsPrivate)
                             {
-                                RaiseException(HassiumAttribNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, inst.SourceLocation, new HassiumString(inst.Constant), Stack.Pop()));
+                                RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, inst.SourceLocation, new HassiumString(inst.Constant), Stack.Pop()));
                                 return HassiumObject.Null;
                             }
 
@@ -299,7 +299,7 @@ namespace Hassium.Runtime
                                 {
                                     if (((HassiumProperty)val.GetAttribute(attrib)).Set == null)
                                     {
-                                        RaiseException(HassiumKeyNotFoundException.Attribs[HassiumObject.INVOKE].Invoke(this, inst.SourceLocation, val, new HassiumString(string.Format("{0} { set; }", attrib))));
+                                        RaiseException(HassiumKeyNotFoundException.KeyNotFoundExceptionTypeDef._new(this, null, inst.SourceLocation, val, new HassiumString(string.Format("{0} { set; }", attrib))));
                                         return null;
                                     }
                                     ((HassiumProperty)val.GetAttribute(attrib)).Set.Invoke(this, inst.SourceLocation, Stack.Pop());

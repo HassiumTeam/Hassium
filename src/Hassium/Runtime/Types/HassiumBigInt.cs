@@ -76,7 +76,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBigInt() { BigInt = BigInteger.Add(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -90,7 +90,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBigInt() { BigInt = BigInteger.Divide(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -112,7 +112,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBool(BigInteger.Compare(BigInt, (intarg as HassiumInt).Int) == 1);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -126,7 +126,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBool(BigInteger.Compare(BigInt, (intarg as HassiumInt).Int) >= 0);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -140,7 +140,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBool(BigInteger.Compare(BigInt, (intarg as HassiumInt).Int) == -1);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -154,7 +154,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBool(BigInteger.Compare(BigInt, (intarg as HassiumInt).Int) <= 0);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -181,7 +181,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBigInt() { BigInt = BigInteger.Multiply(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -203,7 +203,7 @@ namespace Hassium.Runtime.Types
                 var intarg = args[0] as HassiumInt;
                 if (intarg != null)
                     return new HassiumBigInt() { BigInt = BigInteger.Subtract(BigInt, new BigInteger(args[0].ToInt(vm, args[0], location).Int)) };
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 

@@ -8,15 +8,7 @@ namespace Hassium.Runtime.IO
 {
     public class HassiumFileNotFoundException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("FileNotFoundException");
-
-        public static Dictionary<string, HassiumObject> Attribs = new Dictionary<string, HassiumObject>()
-        {
-            { INVOKE, new HassiumFunction(_new, 1) },
-            { "message", new HassiumProperty(get_message) },
-            { "path", new HassiumProperty(get_path) },
-            { TOSTRING, new HassiumFunction(tostring) }
-        };
+        public static new HassiumTypeDefinition TypeDefinition = new FileNotFoundExceptionTypeDef();
 
         public HassiumString Path { get; set; }
 
@@ -26,37 +18,72 @@ namespace Hassium.Runtime.IO
             
         }
 
-        [FunctionAttribute("func new (path : string) : FileNotFoundException")]
-        public static HassiumFileNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public class FileNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
-            HassiumFileNotFoundException exception = new HassiumFileNotFoundException();
+            public FileNotFoundExceptionTypeDef() : base("FileNotFoundException")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { INVOKE, new HassiumFunction(_new, 1) },
+                    { "message", new HassiumProperty(get_message) },
+                    { "path", new HassiumProperty(get_path) },
+                    { TOSTRING, new HassiumFunction(tostring) }
+                };
+            }
 
-            exception.Path = args[0].ToString(vm, args[0], location);
+            [FunctionAttribute("func new (path : string) : FileNotFoundException")]
+            public static HassiumFileNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumFileNotFoundException exception = new HassiumFileNotFoundException();
 
-            return exception;
+                exception.Path = args[0].ToString(vm, args[0], location);
+
+                return exception;
+            }
+
+            [FunctionAttribute("message { get; }")]
+            public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumString(string.Format("File not found: '{0}' does not exist!", (self as HassiumFileNotFoundException).Path.String));
+            }
+
+            [FunctionAttribute("path { get; }")]
+            public static HassiumObject get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return (self as HassiumFileNotFoundException).Path;
+            }
+
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine(get_message(vm, self, location).String);
+                sb.Append(vm.UnwindCallStack());
+
+                return new HassiumString(sb.ToString());
+            }
         }
 
-        [FunctionAttribute("message { get; }")]
-        public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override bool ContainsAttribute(string attrib)
         {
-            return new HassiumString(string.Format("File not found: '{0}' does not exist!", (self as HassiumFileNotFoundException).Path.String));
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        [FunctionAttribute("path { get; }")]
-        public static HassiumObject get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override HassiumObject GetAttribute(string attrib)
         {
-            return (self as HassiumFileNotFoundException).Path;
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
-        [FunctionAttribute("func tostring () : string")]
-        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override Dictionary<string, HassiumObject> GetAttributes()
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine(get_message(vm, self, location).String);
-            sb.Append(vm.UnwindCallStack());
-
-            return new HassiumString(sb.ToString());
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

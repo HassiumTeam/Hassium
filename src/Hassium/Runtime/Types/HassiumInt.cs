@@ -31,7 +31,7 @@ namespace Hassium.Runtime.Types
             var strArg = args[0] as HassiumString;
             if (strArg != null)
                 return new HassiumString(Int.ToString() + (args[0] as HassiumString).String);
-            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+            vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
             return Null;
         }
 
@@ -68,7 +68,7 @@ namespace Hassium.Runtime.Types
             var floatArg = args[0] as HassiumFloat;
             if (floatArg != null)
                 return new HassiumFloat(Int / (args[0] as HassiumFloat).Float);
-            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+            vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
             return this;
         }
 
@@ -126,7 +126,7 @@ namespace Hassium.Runtime.Types
             var floatArg = args[0] as HassiumFloat;
             if (floatArg != null)
                 return new HassiumFloat(Int - (args[0] as HassiumFloat).Float);
-            vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+            vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
             return Null;
         }
 
@@ -211,7 +211,7 @@ namespace Hassium.Runtime.Types
                 var strArg = args[0] as HassiumString;
                 if (strArg != null)
                     return new HassiumString(Int.ToString() + (args[0] as HassiumString).String);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -261,7 +261,7 @@ namespace Hassium.Runtime.Types
                 var floatArg = args[0] as HassiumFloat;
                 if (floatArg != null)
                     return new HassiumFloat(Int / (args[0] as HassiumFloat).Float);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return self;
             }
 
@@ -330,7 +330,7 @@ namespace Hassium.Runtime.Types
                 var floatArg = args[0] as HassiumFloat;
                 if (floatArg != null)
                     return new HassiumFloat(Int * (args[0] as HassiumFloat).Float);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -344,7 +344,7 @@ namespace Hassium.Runtime.Types
                 var floatArg = args[0] as HassiumFloat;
                 if (floatArg != null)
                     return new HassiumFloat(Int * (args[0] as HassiumFloat).Float);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 
@@ -391,7 +391,7 @@ namespace Hassium.Runtime.Types
                 var floatArg = args[0] as HassiumFloat;
                 if (floatArg != null)
                     return new HassiumFloat(Int - (args[0] as HassiumFloat).Float);
-                vm.RaiseException(HassiumConversionFailedException.Attribs[INVOKE].Invoke(vm, location, args[0], Number));
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], Number));
                 return Null;
             }
 

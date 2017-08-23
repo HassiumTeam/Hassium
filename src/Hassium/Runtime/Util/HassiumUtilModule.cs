@@ -4,11 +4,11 @@
     {
         public HassiumUtilModule() : base("Util")
         {
-            AddAttribute("ColorNotFoundException", new HassiumColorNotFoundException());
-            AddAttribute("DateTime", new HassiumDateTime());
+            AddAttribute("ColorNotFoundException", HassiumColorNotFoundException.TypeDefinition);
+            AddAttribute("DateTime", HassiumDateTime.TypeDefinition);
             AddAttribute("OS", new HassiumOS());
-            AddAttribute("Process", new HassiumProcess());
-            AddAttribute("StopWatch", new HassiumStopWatch());
+            AddAttribute("Process", HassiumProcess.TypeDefinition);
+            AddAttribute("StopWatch", HassiumStopWatch.TypeDefinition);
             AddAttribute("UI", new HassiumUI());
         }
     }

@@ -36,18 +36,27 @@ namespace Hassium.Runtime
             {
                 foreach (var inherit in Inherits)
                 {
-                    foreach (var attrib in HassiumMethod.CloneDictionary(vm.ExecuteMethod(inherit).GetAttributes()))
+                    var inheritClazz = vm.ExecuteMethod(inherit);
+                    if (inheritClazz is HassiumTypeDefinition)
                     {
-                        if (!BoundAttributes.ContainsKey(attrib.Key))
+                        foreach (var attrib in inheritClazz.BoundAttributes)
+                            BoundAttributes.Add(attrib.Key, (attrib.Value.Clone() as HassiumObject).SetSelfReference(this));
+                    }
+                    else
+                    {
+                        foreach (var attrib in HassiumMethod.CloneDictionary(vm.ExecuteMethod(inherit).GetAttributes()))
                         {
-                            attrib.Value.Parent = this;
-                            BoundAttributes.Add(attrib.Key, attrib.Value);
+                            if (!BoundAttributes.ContainsKey(attrib.Key))
+                            {
+                                attrib.Value.Parent = this;
+                                BoundAttributes.Add(attrib.Key, attrib.Value);
+                            }
                         }
                     }
                 }
                 if (BoundAttributes.ContainsKey("new"))
                     return Invoke(vm, location, args).AddType(TypeDefinition);
-                vm.RaiseException(HassiumAttribNotFoundException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumString(INVOKE)));
+                vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(INVOKE)));
                 return Null;
             }
         }

@@ -1,14 +1,14 @@
 ﻿using Hassium.Compiler;
 using Hassium.Runtime.Types;
 
-using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Hassium.Runtime.Util
 {
     public class HassiumProcess : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Process");
+        public static new HassiumTypeDefinition TypeDefinition = new ProcessTypeDef();
 
         public Process Process { get; set; }
         public ProcessStartInfo StartInfo { get; set; }
@@ -16,8 +16,6 @@ namespace Hassium.Runtime.Util
         public HassiumProcess()
         {
             AddType(TypeDefinition);
-            AddAttribute(INVOKE, _new, 2);
-            ImportAttribs(this);
         }
 
         public HassiumProcess(Process process)
@@ -33,118 +31,149 @@ namespace Hassium.Runtime.Util
             StartInfo = startInfo;
         }
 
-        public static void ImportAttribs(HassiumProcess proc)
+        public class ProcessTypeDef : HassiumTypeDefinition
         {
-            proc.BoundAttributes.Clear();
-            proc.AddAttribute(INVOKE, _new, 2);
-            proc.AddAttribute("args", new HassiumProperty(proc.get_args, proc.set_args));
-            proc.AddAttribute("createwindow", new HassiumProperty(proc.get_createwindow, proc.set_createwindow));
-            proc.AddAttribute("path", new HassiumProperty(proc.get_path, proc.set_path));
-            proc.AddAttribute("shellexecute", new HassiumProperty(proc.get_shellexecute, proc.set_shellexecute));
-            proc.AddAttribute("start", proc.start, 0);
-            proc.AddAttribute("stop", proc.stop, 0);
-            proc.AddAttribute("username", new HassiumProperty(proc.get_username, proc.set_username));
+            public ProcessTypeDef() : base("Process")
+            {
+                BoundAttributes = new Dictionary<string, HassiumObject>()
+                {
+                    { "args", new HassiumProperty(get_args, set_args)  },
+                    { "createwindow", new HassiumProperty(get_createwindow, set_createwindow)  },
+                    { INVOKE, new HassiumFunction(_new, 2) },
+                    { "path", new HassiumProperty(get_path, set_path)  },
+                    { "shellexecute", new HassiumProperty(get_shellexecute, set_shellexecute)  },
+                    { "start", new HassiumFunction(start, 0)  },
+                    { "stop", new HassiumFunction(stop, 0)  },
+                    { "username", new HassiumProperty(get_username, set_username)  }
+                };
+            }
+
+            [FunctionAttribute("func new (path : string, args : string")]
+            public static HassiumProcess _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                HassiumProcess process = new HassiumProcess();
+
+                process.StartInfo = new ProcessStartInfo(args[0].ToString(vm, args[0], location).String, args[1].ToString(vm, args[1], location).String);
+                process.Process = new Process();
+                process.Process.StartInfo = process.StartInfo;
+
+                return process;
+            }
+
+            [FunctionAttribute("args { get; }")]
+            public static HassiumString get_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                return new HassiumString(StartInfo.Arguments);
+            }
+
+            [FunctionAttribute("args { set; }")]
+            public static HassiumNull set_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                StartInfo.Arguments = args[0].ToString(vm, args[0], location).String;
+                return Null;
+            }
+
+            [FunctionAttribute("createwindow { get; }")]
+            public static HassiumBool get_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                return new HassiumBool(StartInfo.CreateNoWindow);
+            }
+
+            [FunctionAttribute("createwindow { set; }")]
+            public static HassiumNull set_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                StartInfo.CreateNoWindow = args[0].ToBool(vm, args[0], location).Bool;
+                return Null;
+            }
+
+            [FunctionAttribute("path { get; }")]
+            public static HassiumString get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                return new HassiumString(StartInfo.FileName);
+            }
+
+            [FunctionAttribute("path { set; }")]
+            public static HassiumNull set_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                StartInfo.FileName = args[0].ToString(vm, args[0], location).String;
+                return Null;
+            }
+
+            [FunctionAttribute("shellexecute { get; }")]
+            public static HassiumBool get_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                return new HassiumBool(StartInfo.UseShellExecute);
+            }
+
+            [FunctionAttribute("shellexecute { set; }")]
+            public static HassiumNull set_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                StartInfo.UseShellExecute = args[0].ToBool(vm, args[0], location).Bool;
+                return Null;
+            }
+
+            [FunctionAttribute("func start () : null")]
+            public static HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var Process = (self as HassiumProcess).Process;
+                var StartInfo = (self as HassiumProcess).StartInfo;
+
+                Process.StartInfo = StartInfo;
+                Process.Start();
+
+                return Null;
+            }
+
+            [FunctionAttribute("func stop () : null")]
+            public static HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                (self as HassiumProcess).Process.Kill();
+                return Null;
+            }
+
+            [FunctionAttribute("username { get; }")]
+            public static HassiumString get_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                return new HassiumString(StartInfo.UserName);
+            }
+
+            [FunctionAttribute("username { set; }")]
+            public static HassiumNull set_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var StartInfo = (self as HassiumProcess).StartInfo;
+                StartInfo.UserName = args[0].ToString(vm, args[0], location).String;
+                return Null;
+            }
         }
 
-        [FunctionAttribute("func new (path : string, args : string")]
-        public static HassiumProcess _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override bool ContainsAttribute(string attrib)
         {
-            HassiumProcess process = new HassiumProcess();
-
-            process.StartInfo = new ProcessStartInfo(args[0].ToString(vm, args[0], location).String, args[1].ToString(vm, args[1], location).String);
-            process.Process = new Process();
-            process.Process.StartInfo = process.StartInfo;
-
-            process.AddAttribute("args", new HassiumProperty(process.get_args, process.set_args));
-            process.AddAttribute("createwindow", new HassiumProperty(process.get_createwindow, process.set_createwindow));
-            process.AddAttribute("path", new HassiumProperty(process.get_path, process.set_path));
-            process.AddAttribute("shellexecute", new HassiumProperty(process.get_shellexecute, process.set_shellexecute));
-            process.AddAttribute("start", process.start, 0);
-            process.AddAttribute("stop", process.stop, 0);
-            process.AddAttribute("username", new HassiumProperty(process.get_username, process.set_username));
-
-            return process;
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        [FunctionAttribute("args { get; }")]
-        public HassiumString get_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override HassiumObject GetAttribute(string attrib)
         {
-            return new HassiumString(StartInfo.Arguments);
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
-        [FunctionAttribute("args { set; }")]
-        public HassiumNull set_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public override Dictionary<string, HassiumObject> GetAttributes()
         {
-            StartInfo.Arguments = args[0].ToString(vm, args[0], location).String;
-            return Null;
-        }
-
-        [FunctionAttribute("createwindow { get; }")]
-        public HassiumBool get_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return new HassiumBool(StartInfo.CreateNoWindow);
-        }
-
-        [FunctionAttribute("createwindow { set; }")]
-        public HassiumNull set_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            StartInfo.CreateNoWindow = args[0].ToBool(vm, args[0], location).Bool;
-            return Null;
-        }
-
-        [FunctionAttribute("path { get; }")]
-        public HassiumString get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return new HassiumString(StartInfo.FileName);
-        }
-
-        [FunctionAttribute("path { set; }")]
-        public HassiumNull set_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            StartInfo.FileName = args[0].ToString(vm, args[0], location).String;
-            return Null;
-        }
-
-        [FunctionAttribute("shellexecute { get; }")]
-        public HassiumBool get_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return new HassiumBool(StartInfo.UseShellExecute);
-        }
-
-        [FunctionAttribute("shellexecute { set; }")]
-        public HassiumNull set_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            StartInfo.UseShellExecute = args[0].ToBool(vm, args[0], location).Bool;
-            return Null;
-        }
-
-        [FunctionAttribute("func start () : null")]
-        public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            Process.StartInfo = StartInfo;
-            Process.Start();
-
-            return Null;
-        }
-
-        [FunctionAttribute("func stop () : null")]
-        public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            Process.Kill();
-            return Null;
-        }
-
-        [FunctionAttribute("username { get; }")]
-        public HassiumString get_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            return new HassiumString(StartInfo.UserName);
-        }
-
-        [FunctionAttribute("username { set; }")]
-        public HassiumNull set_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
-        {
-            StartInfo.UserName = args[0].ToString(vm, args[0], location).String;
-            return Null;
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
         }
     }
 }

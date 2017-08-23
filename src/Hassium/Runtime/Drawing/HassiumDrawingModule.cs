@@ -4,8 +4,8 @@
     {
         public HassiumDrawingModule() : base("Drawing")
         {
-            AddAttribute("Bitmap", new HassiumBitmap());
-            AddAttribute("Color", new HassiumColor());
+            AddAttribute("Bitmap", HassiumBitmap.TypeDefinition);
+            AddAttribute("Color", HassiumColor.TypeDefinition);
         }
     }
 }

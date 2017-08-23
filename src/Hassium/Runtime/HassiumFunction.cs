@@ -39,12 +39,15 @@ namespace Hassium.Runtime
                     vm.PushCallStack(string.Format("{0}\t[{1}]", reps[0]));
             }
 
+            if (ParameterLengths.Length == 0)
+                ParameterLengths = new int[] { -1 };
+
             if (ParameterLengths[0] != -1)
             {
                 foreach (int len in ParameterLengths)
                     if (len == args.Length)
                         return Target(vm, Self, location, args);
-                vm.RaiseException(HassiumArgLengthException.Attribs[INVOKE].Invoke(vm, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
+                vm.RaiseException(HassiumArgLengthException.ArgLengthExceptionTypeDef._new(vm, null, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
                 return Null;
             }
             
