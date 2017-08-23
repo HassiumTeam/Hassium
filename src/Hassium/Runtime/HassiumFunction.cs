@@ -29,17 +29,18 @@ namespace Hassium.Runtime
         public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
             var a = Target.Method.GetCustomAttributes(typeof(FunctionAttribute), false);
+
+            if (ParameterLengths.Length == 0)
+                ParameterLengths = new int[] { -1 };
+
             if (a.Length > 0)
             {
                 var reps = (a[0] as FunctionAttribute).SourceRepresentations;
-                if (reps.Count > 1)
+                if (reps.Count > 1 && ParameterLengths[0] != -1)
                     vm.PushCallStack(string.Format("{0}\t[{1}]", reps[new List<int>(ParameterLengths).IndexOf(args.Length)], location));
                 else if (reps.Count == 0)
                     vm.PushCallStack(string.Format("{0}\t[{1}]", reps[0]));
             }
-
-            if (ParameterLengths.Length == 0)
-                ParameterLengths = new int[] { -1 };
 
             if (ParameterLengths[0] != -1)
             {

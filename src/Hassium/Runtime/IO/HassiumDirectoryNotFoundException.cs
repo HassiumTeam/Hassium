@@ -8,7 +8,7 @@ namespace Hassium.Runtime.IO
 {
     public class HassiumDirectoryNotFoundException : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("DirectoryNotFoundException");
+        public static new HassiumTypeDefinition TypeDefinition = new DirectoryNotFoundExceptionTypeDef();
 
         public HassiumString Path { get; set; }
 

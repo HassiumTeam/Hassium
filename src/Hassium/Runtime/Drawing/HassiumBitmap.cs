@@ -8,7 +8,7 @@ namespace Hassium.Runtime.Drawing
 {
     public class HassiumBitmap : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Bitmap");
+        public static new HassiumTypeDefinition TypeDefinition = new BitmapTypeDef();
 
         public Bitmap Bitmap { get; private set; }
 

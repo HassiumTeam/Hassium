@@ -11,7 +11,7 @@ namespace Hassium.Runtime.Net
 {
     public class HassiumSocket : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Socket");
+        public static new HassiumTypeDefinition TypeDefinition = new SocketTypeDef();
 
         public TcpClient Client { get; set; }
         public BinaryReader Reader { get; set; }
