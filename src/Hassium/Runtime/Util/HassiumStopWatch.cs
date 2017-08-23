@@ -24,6 +24,7 @@ namespace Hassium.Runtime.Util
                 BoundAttributes = new Dictionary<string, HassiumObject>()
                 {
                     { "hours", new HassiumProperty(get_hours)  },
+                    { INVOKE, new HassiumFunction(_new, 0) },
                     { "isrunning", new HassiumProperty(get_isrunning)  },
                     { "milliseconds", new HassiumProperty(get_milliseconds)  },
                     { "minutes", new HassiumProperty(get_minutes)  },
