@@ -101,5 +101,26 @@ namespace Hassium.Runtime.Text
                 return new HassiumString(Encoding.HeaderName);
             }
         }
+
+        public override bool ContainsAttribute(string attrib)
+        {
+            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
+        }
+
+        public override HassiumObject GetAttribute(string attrib)
+        {
+            if (BoundAttributes.ContainsKey(attrib))
+                return BoundAttributes[attrib];
+            else
+                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
+        }
+
+        public override Dictionary<string, HassiumObject> GetAttributes()
+        {
+            foreach (var pair in TypeDefinition.BoundAttributes)
+                if (!BoundAttributes.ContainsKey(pair.Key))
+                    BoundAttributes.Add(pair.Key, (pair.Value.Clone() as HassiumObject).SetSelfReference(this));
+            return BoundAttributes;
+        }
     }
 }

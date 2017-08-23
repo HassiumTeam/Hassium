@@ -23,7 +23,7 @@ namespace Hassium.Runtime.Text
             {
                 BoundAttributes = new Dictionary<string, HassiumObject>()
                 {
-                    { INVOKE, new HassiumFunction(_new, -1)  },
+                    { INVOKE, new HassiumFunction(_new, 0, 1)  },
                     { "append", new HassiumFunction(append, 1)  },
                     { "appendf", new HassiumFunction(appendf, -1)  },
                     { "appendline", new HassiumFunction(appendline, 1)  },

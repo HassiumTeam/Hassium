@@ -38,7 +38,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func add (byte : char) : null")]
-        public static  HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static new HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             Values.Add((byte)args[0].ToChar(vm, args[0], location).Char);
@@ -266,7 +266,7 @@ namespace Hassium.Runtime.Types
         }
 
         [FunctionAttribute("func tostring () : string")]
-        public static new HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             StringBuilder sb = new StringBuilder();
@@ -283,7 +283,7 @@ namespace Hassium.Runtime.Types
 
         public override bool ContainsAttribute(string attrib)
         {
-            return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
+            return BoundAttributes.ContainsKey(attrib) || Attribs.ContainsKey(attrib);
         }
 
         public override HassiumObject GetAttribute(string attrib)
@@ -291,7 +291,7 @@ namespace Hassium.Runtime.Types
             if (BoundAttributes.ContainsKey(attrib))
                 return BoundAttributes[attrib];
             else
-                return (TypeDefinition.BoundAttributes[attrib].Clone() as HassiumObject).SetSelfReference(this);
+                return (Attribs[attrib].Clone() as HassiumObject).SetSelfReference(this);
         }
 
         public override Dictionary<string, HassiumObject> GetAttributes()

@@ -52,7 +52,7 @@ namespace Hassium.Runtime.Types
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var exception = (self as HassiumIndexOutOfRangeException);
-                return new HassiumString(string.Format("Out of range: Index '{0}' is less than 0 or greater than the size of the collection of type '{1}'", exception.RequestedIndex.Int, exception.Object.Type()));
+                return new HassiumString(string.Format("Out of range: Index '{0}' is less than 0 or greater than the size of the collection of type '{1}', with a max length of '{2}'", exception.RequestedIndex.Int, exception.Object.Type(), exception.Object.GetAttribute("length").Invoke(vm, location).ToString(vm, null, location).String));
             }
 
             [FunctionAttribute("object { get; }")]

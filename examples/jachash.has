@@ -40,6 +40,7 @@ class JacHash {
 		bytes = this.pad (bytes);
 		foreach (i in range (0, bytes.length))
 			this.x += bytes [i].toint ();
+
 		for (int i = 0; i < bytes.length; i++)
 			bytes [i % MAX_LENGTH] = this.next (bytes [i].tochar ());
 		
@@ -81,8 +82,9 @@ class JacHash {
 
 	# Pads the given list of bytes so that it is at least MAX_LENGTH long.
 	func pad (bytes : list) : list {
-		for (i = bytes.length; i < MAX_LENGTH; i++)
+		for (i = bytes.length; i < MAX_LENGTH; i++) {
 			bytes.add (FILLER_BYTE);
+		}
 		return bytes;
 	}
 
