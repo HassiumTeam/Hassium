@@ -7,12 +7,16 @@
         public AstNode TryBody { get; private set; }
         public AstNode CatchBody { get; private set; }
 
-        public TryCatchNode(SourceLocation location, AstNode tryBody, AstNode catchBody)
+        public string ExceptionName { get; private set; }
+
+        public TryCatchNode(SourceLocation location, AstNode tryBody, AstNode catchBody, string exceptionName = "value")
         {
             SourceLocation = location;
 
             TryBody = tryBody;
             CatchBody = catchBody;
+
+            ExceptionName = exceptionName;
         }
 
         public override void Visit(IVisitor visitor)

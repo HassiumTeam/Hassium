@@ -406,9 +406,16 @@ namespace Hassium.Compiler.Parser
             expectToken(TokenType.Identifier, "try");
             AstNode tryBody = parseStatement();
             expectToken(TokenType.Identifier, "catch");
-            AstNode catchBody = parseStatement();
 
-            return new TryCatchNode(location, tryBody, catchBody);
+            if (acceptToken(TokenType.OpenParentheses))
+            {
+                string exception = expectToken(TokenType.Identifier).Value;
+                expectToken(TokenType.CloseParentheses);
+                return new TryCatchNode(location, tryBody, parseStatement(), exception);
+            }
+            
+
+            return new TryCatchNode(location, tryBody, parseStatement());
         }
 
         private TupleNode parseTuple(AstNode init)

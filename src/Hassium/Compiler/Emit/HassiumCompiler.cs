@@ -556,12 +556,12 @@ namespace Hassium.Compiler.Emit
             methodStack.Push(new HassiumMethod(module, "catch"));
             methodStack.Peek().Parent = classStack.Peek();
             table.EnterScope();
-            methodStack.Peek().Parameters.Add(new FunctionParameter(FunctionParameterType.Normal, "value"), table.HandleSymbol("value"));
+            methodStack.Peek().Parameters.Add(new FunctionParameter(FunctionParameterType.Normal, node.ExceptionName), table.HandleSymbol(node.ExceptionName));
             node.CatchBody.VisitChildren(this);
             var handler = new HassiumExceptionHandler(temp, methodStack.Peek(), endLabel);
             methodStack.Pop();
             emit(node.SourceLocation, InstructionType.PushHandler, handler);
-            node.TryBody.Visit(this);
+            node.TryBody.Visit(this); 
             emit(node.SourceLocation, InstructionType.PopHandler);
             emitLabel(node.SourceLocation, endLabel);
         }
