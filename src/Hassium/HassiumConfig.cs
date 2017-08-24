@@ -43,6 +43,15 @@ namespace Hassium
                     if (config.Dev)
                         Console.WriteLine(ex);
                 }
+                catch (UnhandledException ex)
+                {
+                    Console.WriteLine("Unhandled Exception:");
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("\nNear:");
+                    ex.SourceLocation.PrintLocation();
+                    Console.WriteLine(ex.CallStack);
+                    Environment.Exit(0);
+                }
             }
             else if (config.HassiumRunType == HassiumRunType.PackageManager)
             {

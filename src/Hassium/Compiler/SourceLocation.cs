@@ -21,6 +21,11 @@ namespace Hassium.Compiler
         public void PrintLocation()
         {
             var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            PrintLocation(stream);
+        }
+
+        public void PrintLocation(Stream stream)
+        {
             var reader = new StreamReader(stream);
 
             string last = string.Empty;

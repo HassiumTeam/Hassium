@@ -168,6 +168,7 @@
     <Compile Include="Runtime\Types\HassiumThread.cs" />
     <Compile Include="Runtime\Types\HassiumTuple.cs" />
     <Compile Include="Runtime\Types\HassiumTypesModule.cs" />
+    <Compile Include="Runtime\UnhandledException.cs" />
     <Compile Include="Runtime\Util\HassiumColorNotFoundException.cs" />
     <Compile Include="Runtime\Util\HassiumDateTime.cs" />
     <Compile Include="Runtime\Util\HassiumOS.cs" />

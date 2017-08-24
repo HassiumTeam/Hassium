@@ -27,6 +27,15 @@ namespace Hassium
                     var tokens = new Scanner().Scan("stdin", code);
                     var ast = new Parser().Parse(tokens);
                     module = new HassiumCompiler(config.SuppressWarnings).Compile(ast, module);
+
+                    var init = (module.BoundAttributes["__global__"].BoundAttributes["__init__"] as HassiumMethod);
+                    init.Module = module;
+
+                    vm.ImportGlobals();
+                    var ret = vm.ExecuteMethod(init);
+
+                    if (!(ret is HassiumNull))
+                        Console.WriteLine(ret.ToString(vm, ret, vm.CurrentSourceLocation).String);
                 }
                 catch (CompilerException ex)
                 {
@@ -46,15 +55,14 @@ namespace Hassium
                     if (config.Dev)
                         Console.WriteLine(ex);
                 }
-
-                var init = (module.BoundAttributes["__global__"].BoundAttributes["__init__"] as HassiumMethod);
-                init.Module = module;
-
-                vm.ImportGlobals();
-                var ret = vm.ExecuteMethod(init);
-
-                if (!(ret is HassiumNull))
-                    Console.WriteLine(ret.ToString(vm, ret, vm.CurrentSourceLocation).String);
+                catch (UnhandledException ex)
+                {
+                    Console.WriteLine("Unhandled Exception:");
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("\nNear:");
+                    ex.SourceLocation.PrintLocation(new System.IO.MemoryStream(System.Text.Encoding.ASCII.GetBytes(code)));
+                    Console.WriteLine(ex.CallStack);
+                }
             }
         }
     }

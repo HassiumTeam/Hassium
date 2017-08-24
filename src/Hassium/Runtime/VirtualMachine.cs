@@ -352,6 +352,8 @@ namespace Hassium.Runtime
                 }
                 catch (Exception ex)
                 {
+                    if (ex is UnhandledException)
+                        throw ex;
                     RaiseException(new HassiumString(ex.ToString()));
                 }
             }
@@ -466,21 +468,17 @@ namespace Hassium.Runtime
         {
             if (Handlers.Count == 0)
             {
-                var callStack = UnwindCallStack();
+                var callstack = UnwindCallStack();
 
-                CurrentSourceLocation.PrintLocation();
-
-                Console.WriteLine("Unhandled Exception: ");
+                string msg;
                 if (message.ContainsAttribute("message"))
-                    Console.WriteLine(message.GetAttribute("message").Invoke(this, inst.SourceLocation).ToString(this, message.GetAttribute("message"), inst.SourceLocation).String);
+                    msg = message.GetAttribute("message").Invoke(this, inst.SourceLocation).ToString(this, message.GetAttribute("message"), inst.SourceLocation).String;
                 else
-                    Console.WriteLine(message.ToString(this, message, inst.SourceLocation).String);
+                    msg = message.ToString(this, message, inst.SourceLocation).String;
 
-                Console.WriteLine(callStack);
-
-                Environment.Exit(0);
-                return;
+                throw new UnhandledException(CurrentSourceLocation, callstack, msg);
             }
+
             var handler = Handlers.Pop();
             handler.Invoke(this, inst.SourceLocation, message);
             if (!ExceptionReturns.ContainsKey(handler.Caller))
@@ -492,15 +490,6 @@ namespace Hassium.Runtime
             foreach (var pair in GlobalFunctions.Functions)
                 if (!Globals.ContainsKey(pair.Key))
                     Globals.Add(pair.Key, pair.Value);
-
-            /*foreach (string constant in CurrentModule.ConstantPool.Values)
-            {
-                if (GlobalFunctions.Functions.ContainsKey(constant) && !Globals.ContainsKey(constant))
-                    Globals.Add(constant, GlobalFunctions.Functions[constant]);
-                else if (CurrentModule.ContainsAttribute(constant))
-                    Globals.Add(constant, CurrentModule.GetAttribute(constant));
-            }
-            */
 
             foreach (var pair in InternalModule.InternalModules["Types"].GetAttributes())
                 if (!Globals.ContainsKey(pair.Key))
