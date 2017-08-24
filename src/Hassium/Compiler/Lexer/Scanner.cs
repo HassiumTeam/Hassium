@@ -341,6 +341,8 @@ namespace Hassium.Compiler.Lexer
         {
             if (peekChar() == '\n')
                 location = new SourceLocation(filename, location.Row + 1, 1);
+            else if (peekChar() == '\t')
+                location = new SourceLocation(filename, location.Row, location.Column + 4);
             else
                 location = new SourceLocation(filename, location.Row, location.Column + 1);
             return position < code.Length ? code[position++] : -1;

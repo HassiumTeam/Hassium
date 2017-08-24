@@ -467,12 +467,17 @@ namespace Hassium.Runtime
             if (Handlers.Count == 0)
             {
                 var callStack = UnwindCallStack();
-                Console.Write("Unhandled Exception: ");
+
+                CurrentSourceLocation.PrintLocation();
+
+                Console.WriteLine("Unhandled Exception: ");
                 if (message.ContainsAttribute("message"))
                     Console.WriteLine(message.GetAttribute("message").Invoke(this, inst.SourceLocation).ToString(this, message.GetAttribute("message"), inst.SourceLocation).String);
                 else
                     Console.WriteLine(message.ToString(this, message, inst.SourceLocation).String);
+
                 Console.WriteLine(callStack);
+
                 Environment.Exit(0);
                 return;
             }

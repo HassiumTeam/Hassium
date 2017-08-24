@@ -1,4 +1,7 @@
-﻿namespace Hassium.Compiler
+﻿using System;
+using System.IO;
+
+namespace Hassium.Compiler
 {
     public class SourceLocation
     {
@@ -13,6 +16,22 @@
 
             Row = row;
             Column = column;
+        }
+
+        public void PrintLocation()
+        {
+            var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var reader = new StreamReader(stream);
+
+            string last = string.Empty;
+            for (int i = 0; i < Row; i++)
+                last = reader.ReadLine();
+
+            Console.WriteLine(last);
+
+            for (int i = 1; i < Column - 1; i++)
+                Console.Write(' ');
+            Console.WriteLine("^");
         }
 
         public override string ToString()
