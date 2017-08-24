@@ -27,7 +27,7 @@ namespace Hassium.Compiler
             for (int i = 0; i < Row; i++)
                 last = reader.ReadLine();
 
-            Console.WriteLine(last);
+            Console.WriteLine(last.Replace("\t", "    "));
 
             for (int i = 1; i < Column - 1; i++)
                 Console.Write(' ');
