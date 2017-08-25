@@ -22,32 +22,47 @@ namespace Hassium
 
             while (true)
             {
-                Console.Write("> ");
+                Console.Write("(0)> ");
                 string code = Console.ReadLine();
 
                 try
                 {
+                    // Read
                     var tokens = new Scanner().Scan("stdin", code);
+
+                    int line = 1;
+                    while (countOpenTokens(tokens) > countCloseTokens(tokens))
+                    {
+                        Console.Write("({0})> ", line++);
+                        string temp = Console.ReadLine();
+                        foreach (var token in new Scanner().Scan("stdin", temp))
+                            tokens.Add(token);
+                        code += temp;
+                    }
+
                     var ast = new Parser().Parse(tokens);
                     module = new HassiumCompiler(config.SuppressWarnings).Compile(ast, module);
 
+                    // Import
                     foreach (var attrib in module.BoundAttributes["__global__"].BoundAttributes)
                     {
                         if (attribs.ContainsKey(attrib.Key))
                             attribs.Remove(attrib.Key);
                         attribs.Add(attrib.Key, attrib.Value);
                     }
-
                     module.BoundAttributes["__global__"].BoundAttributes = attribs;
-
                     var init = (module.BoundAttributes["__global__"].BoundAttributes["__init__"] as HassiumMethod);
                     init.Module = module;
 
+                    // Eval
                     vm.ImportGlobals();
                     var ret = vm.ExecuteMethod(init);
 
+                    // PrintLine
                     if (!(ret is HassiumNull))
                         Console.WriteLine(ret.ToString(vm, ret, vm.CurrentSourceLocation).String);
+                    else
+                        Console.WriteLine();
                 }
                 catch (CompilerException ex)
                 {
@@ -76,6 +91,24 @@ namespace Hassium
                     Console.WriteLine(ex.CallStack);
                 }
             }
+        }
+
+        private static int countOpenTokens(List<Token> tokens)
+        {
+            int count = 0;
+            foreach (var token in tokens)
+                if (token.TokenType == TokenType.OpenCurlyBrace || token.TokenType == TokenType.OpenParentheses || token.TokenType == TokenType.OpenSquareBrace)
+                    count++;
+            return count;
+        }
+
+        private static int countCloseTokens(List<Token> tokens)
+        {
+            int count = 0;
+            foreach (var token in tokens)
+                if (token.TokenType == TokenType.CloseCurlyBrace || token.TokenType == TokenType.CloseParentheses || token.TokenType == TokenType.CloseSquareBrace)
+                    count++;
+            return count;
         }
     }
 }
