@@ -22,7 +22,7 @@ namespace Hassium
 
             while (true)
             {
-                Console.Write("(0)> ");
+                Console.Write("(1)> ");
                 string code = Console.ReadLine();
 
                 try
@@ -30,14 +30,15 @@ namespace Hassium
                     // Read
                     var tokens = new Scanner().Scan("stdin", code);
 
-                    int line = 1;
+                    // If we missed a closing ), }, or ], keep reading and appending lines until the code is good.
+                    int line = 2;
                     while (countOpenTokens(tokens) > countCloseTokens(tokens))
                     {
                         Console.Write("({0})> ", line++);
                         string temp = Console.ReadLine();
                         foreach (var token in new Scanner().Scan("stdin", temp))
                             tokens.Add(token);
-                        code += temp;
+                        code += temp + System.Environment.NewLine;
                     }
 
                     var ast = new Parser().Parse(tokens);

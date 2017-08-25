@@ -55,10 +55,10 @@ namespace Hassium.Runtime
             return new HassiumString(string.Format(args[0].ToString(vm, args[0], location).String, fargs));
         }
 
-        [FunctionAttribute("func getattribute (obj : object, attrib : string) : object")]
+        [FunctionAttribute("func getattrib (obj : object, attrib : string) : object")]
         public static HassiumObject getattrib(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            return args[0].GetAttribute(args[1].ToString(vm, args[1], location).String);
+            return args[0].GetAttribute(vm, args[1].ToString(vm, args[1], location).String);
         }
 
         [FunctionAttribute("func getattribs (obj : object) : dict")]

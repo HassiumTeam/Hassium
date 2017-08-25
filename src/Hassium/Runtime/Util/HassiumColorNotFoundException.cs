@@ -69,7 +69,7 @@ namespace Hassium.Runtime.Util
             return BoundAttributes.ContainsKey(attrib) || TypeDefinition.BoundAttributes.ContainsKey(attrib);
         }
 
-        public override HassiumObject GetAttribute(string attrib)
+        public override HassiumObject GetAttribute(VirtualMachine vm, string attrib)
         {
             if (BoundAttributes.ContainsKey(attrib))
                 return BoundAttributes[attrib];

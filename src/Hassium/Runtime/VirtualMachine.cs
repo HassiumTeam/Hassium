@@ -56,13 +56,13 @@ namespace Hassium.Runtime
             StackFrame = new StackFrame();
             ImportGlobals();
 
-            var globalClass = module.GetAttribute("__global__");
-            (globalClass.GetAttribute("__init__") as HassiumMethod).Invoke(this, new SourceLocation("", 0, 0));
+            var globalClass = module.GetAttribute(this, "__global__");
+            (globalClass.GetAttribute(this, "__init__") as HassiumMethod).Invoke(this, new SourceLocation("", 0, 0));
             GlobalFrame = StackFrame.Frames.Peek();
 
             if (globalClass.ContainsAttribute("main"))
             {
-                var mainMethod = (globalClass.GetAttribute("main") as HassiumMethod);
+                var mainMethod = (globalClass.GetAttribute(this, "main") as HassiumMethod);
                 if (mainMethod.Parameters.Count > 0)
                     mainMethod.Invoke(this, mainMethod.SourceLocation, args);
                 else
@@ -189,7 +189,7 @@ namespace Hassium.Runtime
                             val = Stack.Pop();
                             try
                             {
-                                var attribute = val.GetAttribute(inst.Constant);
+                                var attribute = val.GetAttribute(this, inst.Constant);
                                 if (attribute.IsPrivate)
                                 {
                                     RaiseException(HassiumPrivateAttribException.PrivateAttribExceptionTypeDef._new(this, null, loc, new HassiumString(inst.Constant), val));
@@ -214,7 +214,7 @@ namespace Hassium.Runtime
                             else if (method.Parent != null)
                             {
                                 if (method.Parent.ContainsAttribute(attrib))
-                                    Stack.Push(method.Parent.GetAttribute(attrib));
+                                    Stack.Push(method.Parent.GetAttribute(this, attrib));
                                 else
                                     RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, method.Parent, new HassiumString(attrib)));
                             }
@@ -298,14 +298,14 @@ namespace Hassium.Runtime
 
                             if (val.ContainsAttribute(attrib))
                             {
-                                if (val.GetAttribute(attrib) is HassiumProperty)
+                                if (val.GetAttribute(this, attrib) is HassiumProperty)
                                 {
-                                    if (((HassiumProperty)val.GetAttribute(attrib)).Set == null)
+                                    if (((HassiumProperty)val.GetAttribute(this, attrib)).Set == null)
                                     {
                                         RaiseException(HassiumKeyNotFoundException.KeyNotFoundExceptionTypeDef._new(this, null, inst.SourceLocation, val, new HassiumString(string.Format("{0} { set; }", attrib))));
                                         return null;
                                     }
-                                    ((HassiumProperty)val.GetAttribute(attrib)).Set.Invoke(this, inst.SourceLocation, Stack.Pop());
+                                    ((HassiumProperty)val.GetAttribute(this, attrib)).Set.Invoke(this, inst.SourceLocation, Stack.Pop());
                                     break;
                                 }
                                 else
@@ -473,7 +473,7 @@ namespace Hassium.Runtime
 
                 string msg;
                 if (message.ContainsAttribute("message"))
-                    msg = message.GetAttribute("message").Invoke(this, inst.SourceLocation).ToString(this, message.GetAttribute("message"), inst.SourceLocation).String;
+                    msg = message.GetAttribute(this, "message").Invoke(this, inst.SourceLocation).ToString(this, message.GetAttribute(this, "message"), inst.SourceLocation).String;
                 else
                     msg = message.ToString(this, message, inst.SourceLocation).String;
 

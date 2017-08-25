@@ -664,7 +664,7 @@ namespace Hassium.Compiler.Emit
                     }
                 }
                 else
-                    classStack.Peek().AddAttribute(node.Class, globalClass.BoundAttributes[node.Class]);
+                    classStack.Peek().AddAttribute(node.Class, globalClass.GetAttribute(null, node.Class));
             }
             else
             {
@@ -683,8 +683,10 @@ namespace Hassium.Compiler.Emit
                         }
                     }
                 }
+                else if (!mod.ContainsAttribute(node.Class))
+                    throw new CompilerException(node.SourceLocation, "Could not find attribute '{0}' in module '{1}'", node.Class, node.Module);
                 else
-                    classStack.Peek().AddAttribute(node.Class, mod.BoundAttributes[node.Class]);
+                    classStack.Peek().AddAttribute(node.Class, mod.GetAttribute(null, node.Class));
             }
         }
         public void Accept(WhileNode node)
