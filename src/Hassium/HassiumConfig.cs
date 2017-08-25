@@ -17,7 +17,7 @@ namespace Hassium
                 try
                 {
                     VirtualMachine vm = new VirtualMachine();
-                    var module = HassiumCompiler.CompileModuleFromFilePath(config.FilePath, config.SuppressWarnings);
+                    var module = HassiumCompiler.CompileModuleFromFilePath(System.IO.Path.GetFullPath(config.FilePath), config.SuppressWarnings);
                     HassiumList hargs = new HassiumList(new HassiumObject[0]);
 
                     foreach (var arg in config.Args)

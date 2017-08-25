@@ -1,4 +1,4 @@
-## class bool
+## class true
 
 #### ```func __equals__ (b : bool) : bool```
 

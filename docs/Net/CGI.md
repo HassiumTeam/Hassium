@@ -1,3 +1,2 @@
-## ```class CGI```
-
+## class CGI
 
