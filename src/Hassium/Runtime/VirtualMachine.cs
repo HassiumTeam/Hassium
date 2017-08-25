@@ -59,6 +59,7 @@ namespace Hassium.Runtime
             var globalClass = module.GetAttribute("__global__");
             (globalClass.GetAttribute("__init__") as HassiumMethod).Invoke(this, new SourceLocation("", 0, 0));
             GlobalFrame = StackFrame.Frames.Peek();
+
             if (globalClass.ContainsAttribute("main"))
             {
                 var mainMethod = (globalClass.GetAttribute("main") as HassiumMethod);
@@ -91,6 +92,7 @@ namespace Hassium.Runtime
                     SourceLocation loc;
 
                     inst = method.Instructions[pos];
+                    //Console.WriteLine(inst.InstructionType + "\t" + inst.SourceLocation);
 
                     switch (inst.InstructionType)
                     {
@@ -347,7 +349,6 @@ namespace Hassium.Runtime
                             interpretUnaryOperation(Stack.Pop(), inst.Arg);
                             break;
                     }
-                    //Console.WriteLine(method.Instructions[pos].ToString() + "\t" + watch.ElapsedTicks);
                     //watch.Reset();
                 }
                 catch (Exception ex)

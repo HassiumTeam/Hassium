@@ -6,6 +6,7 @@ using Hassium.Runtime;
 using Hassium.Runtime.Types;
 
 using System;
+using System.Collections.Generic;
 
 namespace Hassium
 {
@@ -15,8 +16,10 @@ namespace Hassium
         {
             HassiumModule module = new HassiumModule();
             module.AddAttribute("__global__", new HassiumClass("__global__"));
+            var attribs = new Dictionary<string, HassiumObject>();
+
             VirtualMachine vm = new VirtualMachine(module);
-            
+
             while (true)
             {
                 Console.Write("> ");
@@ -27,6 +30,15 @@ namespace Hassium
                     var tokens = new Scanner().Scan("stdin", code);
                     var ast = new Parser().Parse(tokens);
                     module = new HassiumCompiler(config.SuppressWarnings).Compile(ast, module);
+
+                    foreach (var attrib in module.BoundAttributes["__global__"].BoundAttributes)
+                    {
+                        if (attribs.ContainsKey(attrib.Key))
+                            attribs.Remove(attrib.Key);
+                        attribs.Add(attrib.Key, attrib.Value);
+                    }
+
+                    module.BoundAttributes["__global__"].BoundAttributes = attribs;
 
                     var init = (module.BoundAttributes["__global__"].BoundAttributes["__init__"] as HassiumMethod);
                     init.Module = module;

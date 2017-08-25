@@ -19,7 +19,7 @@ namespace Hassium.Compiler.Emit
                 throw new CompilerException(new SourceLocation(abspath, 0, 0), "Could not find input file {0}!", abspath);
             return CompileModuleFromString(abspath, File.ReadAllText(abspath), suppressWarns);
         }
-        
+
         public static HassiumModule CompileModuleFromString(string abspath, string code, bool suppressWarns = false)
         {
             var tokens = new Scanner().Scan(abspath, code);
@@ -94,7 +94,7 @@ namespace Hassium.Compiler.Emit
                         if (table.ContainsGlobalSymbol(identifier))
                         {
                             emit(node.SourceLocation, InstructionType.StoreGlobal, identifier);
-                            emit(node.SourceLocation, InstructionType.LoadGlobal,  identifier);
+                            emit(node.SourceLocation, InstructionType.LoadGlobal, identifier);
                         }
                         else
                         {
@@ -356,7 +356,7 @@ namespace Hassium.Compiler.Emit
                 }
                 method.Parameters.Add(param, table.AddSymbol(param.Name));
             }
-            
+
             if (node.Body is CodeBlockNode)
                 node.Body.VisitChildren(this);
             else
@@ -524,7 +524,7 @@ namespace Hassium.Compiler.Emit
                 node.Body.Visit(this);
 
             methodStack.Pop();
-            
+
             emit(node.SourceLocation, InstructionType.BuildThread, method);
             if (node.DoImmediately)
                 emit(node.SourceLocation, InstructionType.StartThread);
@@ -561,7 +561,7 @@ namespace Hassium.Compiler.Emit
             var handler = new HassiumExceptionHandler(temp, methodStack.Peek(), endLabel);
             methodStack.Pop();
             emit(node.SourceLocation, InstructionType.PushHandler, handler);
-            node.TryBody.Visit(this); 
+            node.TryBody.Visit(this);
             emit(node.SourceLocation, InstructionType.PopHandler);
             emitLabel(node.SourceLocation, endLabel);
         }
