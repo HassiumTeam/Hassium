@@ -12,7 +12,10 @@
 #### ```func createfile (path : string) : null```
 
 
-#### ``````
+#### ```cwd { get; }```
+
+
+#### ```cwd { set; }```
 
 
 #### ```func delete (path : string) : null```

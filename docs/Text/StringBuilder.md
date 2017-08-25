@@ -3,6 +3,9 @@
 #### ```func new () : StringBuilder```
 
 
+#### ```func new (obj : object) : StringBuilder```
+
+
 #### ```func append (obj : object) : StringBuilder```
 
 
@@ -18,7 +21,7 @@
 #### ```func insert (index : int, obj : object) : StringBuilder```
 
 
-#### ``````
+#### ```length { get; }```
 
 
 #### ```func replace (obj1 : object, obj2 : object) : StringBuilder```

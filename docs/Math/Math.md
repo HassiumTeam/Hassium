@@ -21,7 +21,7 @@
 #### ```func cos (num : number) : float```
 
 
-#### ``````
+#### ```e { get; }```
 
 
 #### ```func floor (num : number) : float```
@@ -42,7 +42,7 @@
 #### ```func min (num1 : number, num2 : number) : float```
 
 
-#### ``````
+#### ```pi { get; }```
 
 
 #### ```func pow (num : number, power : number) : float```

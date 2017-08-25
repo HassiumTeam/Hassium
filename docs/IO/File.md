@@ -1,9 +1,12 @@
 ## class File
 
-#### ``````
+#### ```abspath { get; }```
 
 
-#### ``````
+#### ```autoflush { get; }```
+
+
+#### ```autoflush { set; }```
 
 
 #### ```func close () : null```
@@ -12,28 +15,37 @@
 #### ```func copyto (path : string) : null```
 
 
-#### ``````
+#### ```exists { get; }```
 
 
-#### ``````
+#### ```extension { get; }```
+
+
+#### ```extension { set; }```
 
 
 #### ```func flush () : null```
 
 
-#### ``````
+#### ```isclosed { get; }```
 
 
-#### ``````
+#### ```length { get; }```
 
 
 #### ```func moveto (path : string) : null```
 
 
-#### ``````
+#### ```name { get; }```
 
 
-#### ``````
+#### ```name { get; }```
+
+
+#### ```position { get; }```
+
+
+#### ```position { set; }```
 
 
 #### ```func readallbytes () : list```
@@ -66,10 +78,10 @@
 #### ```func readstring () : string```
 
 
-#### ``````
+#### ```relpath{ get; }```
 
 
-#### ``````
+#### ```size { get; }```
 
 
 #### ```func writeallbytes (bytes : list) : null```

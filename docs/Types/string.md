@@ -24,7 +24,7 @@
 #### ```func __iter__ () : list```
 
 
-#### ``````
+#### ```length { get; }```
 
 
 #### ```func __lesser__ (str : string) : bool```

@@ -106,6 +106,11 @@ namespace Hassium.Runtime
                 return new HassiumString((args[0] as HassiumMethod).SourceRepresentation);
             else if (args[0] is HassiumMultiFunc)
                 return new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation);
+            else if (args[0] is HassiumProperty)
+            {
+                var property = (args[0] as HassiumProperty);
+                return new HassiumString((property.Get as HassiumFunction).GetTopSourceRep());
+            }
             return new HassiumString(string.Empty);
         }
 
@@ -128,6 +133,13 @@ namespace Hassium.Runtime
                 HassiumList.add(vm, list, location, new HassiumString((args[0] as HassiumMethod).SourceRepresentation));
             else if (args[0] is HassiumMultiFunc)
                 HassiumList.add(vm, list, location, new HassiumString((args[0] as HassiumMultiFunc).Methods[0].SourceRepresentation));
+            else if (args[0] is HassiumProperty)
+            {
+                var property = (args[0] as HassiumProperty);
+                HassiumList.add(vm, list, location, new HassiumString((property.Get as HassiumFunction).GetTopSourceRep()));
+                if (property.Set != null)
+                    HassiumList.add(vm, list, location, new HassiumString((property.Set as HassiumFunction).GetTopSourceRep()));
+            }
             return list;
         }
 

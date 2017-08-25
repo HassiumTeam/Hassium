@@ -1,6 +1,9 @@
 ## class Socket
 
-#### ``````
+#### ```autoflush { get; }```
+
+
+#### ```autofluah { set; }```
 
 
 #### ```func close () : null```
@@ -9,7 +12,10 @@
 #### ```func connect (IPAddrOrStr : object) : null```
 
 
-#### ``````
+#### ```func connect (ip : string, port : int) : null```
+
+
+#### ```fromip { get; }```
 
 
 #### ```func flush () : null```
@@ -18,7 +24,16 @@
 #### ```func new () : Socket```
 
 
-#### ``````
+#### ```func new (IPAddrOrStr : object) : Socket```
+
+
+#### ```func new (ip : string, port : int) : Socket```
+
+
+#### ```func new (ip : string, port : int, ssl : bool) : Socket```
+
+
+#### ```isconnected { get; }```
 
 
 #### ```func readbyte () : char```
@@ -42,7 +57,7 @@
 #### ```func readstring () : string```
 
 
-#### ``````
+#### ```toip { get; }```
 
 
 #### ```func writebyte (b : char) : null```

@@ -45,7 +45,9 @@ func docclazz (clazz, name : string) {
 	attribs = getattribs (clazz);
 
 	foreach (attrib in attribs) {
-		file.writeline ("#### ```{0}```\n\n".format (getsourcerep (attrib [1])));
+		foreach (rep in getsourcereps (attrib [1])) {
+			file.writeline ("#### ```{0}```\n\n".format (rep));
+		}
 	}
 
 	file.close ();

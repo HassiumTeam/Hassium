@@ -1,9 +1,9 @@
 ## class FileClosedException
 
-#### ``````
+#### ```file { get; }```
 
 
-#### ``````
+#### ```filepath { get; }```
 
 
 #### ```func new (file : File, path : string) : FileClosedException```

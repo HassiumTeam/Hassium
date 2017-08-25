@@ -27,7 +27,7 @@
 #### ```func __iternext__ () : bool```
 
 
-#### ``````
+#### ```length { get; }```
 
 
 #### ```func __notequal__ (l : list) : bool```

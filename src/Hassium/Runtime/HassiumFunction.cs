@@ -53,5 +53,15 @@ namespace Hassium.Runtime
             
             return Target(vm, Parent, location, args);
         }
+
+        public string GetTopSourceRep()
+        {
+
+            var a = Target.Method.GetCustomAttributes(typeof(FunctionAttribute), false);
+
+            if (a.Length > 0)
+                return (a[0] as FunctionAttribute).SourceRepresentation;
+            return string.Empty;
+        }
     }
 }
