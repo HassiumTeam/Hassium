@@ -21,6 +21,13 @@ namespace Hassium.Runtime.Crypto
             AddAttribute("encryptfilebytes", encryptfilebytes, 3);
         }
 
+        [DocStr(
+            "@desc Decrypts the given byte string or list using the specified 16 byte key and iv, returning the result.",
+            "@param key The 16 byte long AES key.",
+            "@param iv The 16 byte long AES iv.",
+            "@param dataStrOrList The data string or list to decrypt.",
+            "@returns A new list of decrypted bytes."
+            )]
         [FunctionAttribute("func decryptbytes (key : list, iv : list, dataStrOrList : object) : list")]
         public HassiumList decryptbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -37,6 +44,13 @@ namespace Hassium.Runtime.Crypto
 
         }
 
+        [DocStr(
+            "@desc Decrypts the given File object using the specified 16 byte key and iv, returning the result.",
+            "@param key The 16 byte long AES key.",
+            "@param iv The 16 byte long AES iv.",
+            "@param file The IO.File object.",
+            "@returns A new list of decrypted bytes."
+            )]
         [FunctionAttribute("func decryptfilebytes (key : list, iv : list, file : File) : list")]
         public HassiumList decryptfilebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -48,6 +62,13 @@ namespace Hassium.Runtime.Crypto
             return new HassiumByteArray(decrypt(key, iv, data), new HassiumObject[0]);
         }
 
+        [DocStr(
+            "@desc Encrypts the given byte string or list using the specified 16 byte key and iv, returning the result.",
+            "@param key The 16 byte long AES key.",
+            "@param iv The 16 byte long AES iv.",
+            "@param dataStrOrList The data string or list to decrypt.",
+            "@returns A new list of encrypted bytes."
+            )]
         [FunctionAttribute("func encryptbytes (key : list, iv : list, dataStrOrList : object) : list")]
         public HassiumList encryptbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -71,6 +92,13 @@ namespace Hassium.Runtime.Crypto
 
         }
 
+        [DocStr(
+            "@desc Encrypts the given File object using the specified 16 byte key and iv, returning the result.",
+            "@param key The 16 byte long AES key.",
+            "@param iv The 16 byte long AES iv.",
+            "@param file The IO.File object.",
+            "@returns A new list of encrypted bytes."
+            )]
         [FunctionAttribute("func encryptfilebytes (key : list, iv : list, file : File) : list")]
         public HassiumList encryptfilebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

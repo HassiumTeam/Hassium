@@ -282,11 +282,11 @@ namespace Hassium.Runtime
         [FunctionAttribute("func help (obj : object) : null")]
         public static HassiumNull help(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            Console.WriteLine(getsourcereps(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim());
+            Console.WriteLine(getsourcereps(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim().Replace("., ", "." + Environment.NewLine).Trim());
             Console.WriteLine();
             Console.WriteLine((getdocdesc(vm, self, location, args) as HassiumString).String);
-            Console.WriteLine(getdocreqparams(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim());
-            Console.WriteLine(getdocoptparams(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim());
+            Console.WriteLine(getdocreqparams(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim().Replace("., ", "." + Environment.NewLine).Trim());
+            Console.WriteLine(getdocoptparams(vm, self, location, args).ToString(vm, null, location).String.Replace("[", string.Empty).Replace("]", string.Empty).Trim().Replace("., ", "." + Environment.NewLine).Trim());
             Console.WriteLine(getdocreturns(vm, self, location, args).ToString(vm, null, location).String);
 
             return HassiumObject.Null;
