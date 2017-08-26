@@ -1,5 +1,0 @@
-use IO;
-
-func main (params args) {
-	println (FS.parseFileNameWithoutExtension (args [0]));
-}

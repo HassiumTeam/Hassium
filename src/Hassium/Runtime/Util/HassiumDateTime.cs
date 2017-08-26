@@ -31,6 +31,7 @@ namespace Hassium.Runtime.Util
                     { "millisecond", new HassiumProperty(get_millisecond)  },
                     { "minute", new HassiumProperty(get_minute)  },
                     { "month", new HassiumProperty(get_month)  },
+                    { "now", new HassiumProperty(get_now) },
                     { "second", new HassiumProperty(get_second)  },
                     { TOSTRING, new HassiumFunction(tostring, 0)  },
                     { "year", new HassiumProperty(get_year)  },

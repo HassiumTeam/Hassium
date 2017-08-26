@@ -493,9 +493,7 @@ namespace Hassium.Compiler.Parser
             var location = this.location;
             AstNode expression = parseExpression();
             acceptToken(TokenType.Semicolon);
-            if (expression is FunctionCallNode || expression is BinaryOperationNode)
-                return new ExpressionStatementNode(location, expression);
-            if (expression is UnaryOperationNode)
+            if (expression is FunctionCallNode || expression is BinaryOperationNode || expression is AttributeAccessNode || expression is UnaryOperationNode)
                 return new ExpressionStatementNode(location, expression);
             return expression;
         }

@@ -58,7 +58,7 @@ namespace Hassium
                     // Eval
                     vm.ImportGlobals();
                     var ret = vm.ExecuteMethod(init);
-
+                    
                     // PrintLine
                     if (!(ret is HassiumNull))
                         Console.WriteLine(ret.ToString(vm, ret, vm.CurrentSourceLocation).String);
