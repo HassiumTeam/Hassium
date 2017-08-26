@@ -468,7 +468,7 @@ namespace Hassium.Compiler.Parser
                     second.Append("/");
             }
             while (acceptToken(TokenType.Dot) || acceptToken(TokenType.Operation, "/"));
-            
+             
             return new UseFromNode(location, first.ToString(), second.ToString());
         }
 

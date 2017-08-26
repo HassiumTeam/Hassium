@@ -108,6 +108,7 @@
     <Compile Include="Runtime\Crypto\HassiumAES.cs" />
     <Compile Include="Runtime\Crypto\HassiumCryptoModule.cs" />
     <Compile Include="Runtime\Crypto\HassiumRSA.cs" />
+    <Compile Include="Runtime\DocStrAttribute.cs" />
     <Compile Include="Runtime\Drawing\HassiumBitmap.cs" />
     <Compile Include="Runtime\Drawing\HassiumColor.cs" />
     <Compile Include="Runtime\Drawing\HassiumDrawingModule.cs" />
