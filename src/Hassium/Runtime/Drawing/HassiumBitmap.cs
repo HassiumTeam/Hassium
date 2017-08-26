@@ -35,6 +35,13 @@ namespace Hassium.Runtime.Drawing
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new Bitmap with either the specified string name or the specified height and width.",
+                "@optional path The file path on disc to the bitmap.",
+                "@optional height The height in pixels for the new bitmap.",
+                "@optional width The width in pixels for the new bitmap.",
+                "@returns The new Bitmap object."
+                )]
             [FunctionAttribute("func new (path : string) : Bitmap", "func new (height : int, width : int) : Bitmap")]
             public static HassiumBitmap _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -53,13 +60,23 @@ namespace Hassium.Runtime.Drawing
                 return bitmap;
             }
 
+            [DocStr(
+                "@desc Returns a new Drawing.Color object with the value of the pixel at the specified x and y coordinates.",
+                "@param x The x coordinate.",
+                "@param y The y coordinate.",
+                "@returns The color at (x, y)."
+                )]
             [FunctionAttribute("func getpixel (x : int, y : int) : Color")]
             public static HassiumObject getpixel(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Bitmap = (self as HassiumBitmap).Bitmap;
-                return _new(vm, null, location, new HassiumInt(Bitmap.GetPixel((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int).ToArgb()));
+                return HassiumColor.ColorTypeDef._new(vm, null, location, new HassiumInt(Bitmap.GetPixel((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int).ToArgb()));
             }
 
+            [DocStr(
+                "@desc Gets the readonly height of the Bitmap in pixels.",
+                "@returns Height as int."
+                )]
             [FunctionAttribute("height { get; }")]
             public static HassiumInt get_height(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -67,6 +84,10 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumInt(Bitmap.Height);
             }
 
+            [DocStr(
+                "@desc Gets the readonly horizontal resolution of the Bitmap.",
+                "@returns Horizontal resolution as int."
+                )]
             [FunctionAttribute("hres { get; }")]
             public static HassiumFloat get_hres(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -74,6 +95,11 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumFloat(Bitmap.HorizontalResolution);
             }
 
+            [DocStr(
+                "@desc Saves this Bitmap to the specified path on disc.",
+                "@param path The path to save the bitmap to.",
+                "@returns null."
+                )]
             [FunctionAttribute("func save (path : string) : null")]
             public static HassiumNull save(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -83,6 +109,13 @@ namespace Hassium.Runtime.Drawing
                 return Null;
             }
 
+            [DocStr(
+                "@desc Sets the value of the pixel at the specified x and y coorinates to the given Drawing.Color object.",
+                "@param x The x coordinate.",
+                "@param y The y coordinate.",
+                "@param col The Drawing.Color",
+                "@returns null."
+                )]
             [FunctionAttribute("func setpixel (x : int, y : int, col : Color) : null")]
             public static HassiumNull setpixel(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -92,6 +125,12 @@ namespace Hassium.Runtime.Drawing
                 return Null;
             }
 
+            [DocStr(
+                "@desc Sets the resolution to the given horitontal and vertical resolutions.",
+                "@param x The horizontal resolution.",
+                "@param y The vertical resolution.",
+                "@returns null."
+                )]
             [FunctionAttribute("func setres (x : float, y : float) : null")]
             public static HassiumNull setres(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -101,6 +140,10 @@ namespace Hassium.Runtime.Drawing
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the readonly vertical resolution of the Bitmap.",
+                "@returns Vertical resolution as int."
+                )]
             [FunctionAttribute("vres { get; }")]
             public static HassiumFloat get_vres(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -108,6 +151,10 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumFloat(Bitmap.VerticalResolution);
             }
 
+            [DocStr(
+                "@desc Gets the readonly width of the Bitmap in pixels.",
+                "@returns Width as int."
+                )]
             [FunctionAttribute("width { get; }")]
             public static HassiumInt get_width(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

@@ -32,6 +32,15 @@ namespace Hassium.Runtime.Drawing
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.",
+                "@optional colIntOrStr The color name string or argb int.",
+                "@optional a The alpha value.",
+                "@optional r The red value.",
+                "@optional g The green value.",
+                "@optional b The blue value.",
+                "@returns The new Color object."
+                )]
             [FunctionAttribute("func new (colIntOrStr : object) : Color", "func new (r : int, g : int, b : int) : Color", "func new (a : int, r : int, g : int, b : int) : Color")]
             public static HassiumColor _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -56,6 +65,10 @@ namespace Hassium.Runtime.Drawing
                 return color;
             }
 
+            [DocStr(
+                "@desc Gets the readonly alpha value.",
+                "@returns a as int."
+                )]
             [FunctionAttribute("a { get; }")]
             public static HassiumInt get_a(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -63,12 +76,21 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumInt(Color.A);
             }
 
+            [DocStr(
+                "@desc Gets the readonly argb value.",
+                "@returns argb as int."
+                )]
+            [FunctionAttribute("argb { get; }")]
             public static HassiumInt get_argb(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Color = (self as HassiumColor).Color;
                 return new HassiumInt(Color.ToArgb());
             }
 
+            [DocStr(
+                "@desc Gets the readonly blue value.",
+                "@returns b as int."
+                )]
             [FunctionAttribute("b { get; }")]
             public static HassiumInt get_b(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -76,6 +98,10 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumInt(Color.B);
             }
 
+            [DocStr(
+                "@desc Gets the readonly green value.",
+                "@returns g as int."
+                )]
             [FunctionAttribute("g { get; }")]
             public static HassiumInt get_g(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -83,6 +109,10 @@ namespace Hassium.Runtime.Drawing
                 return new HassiumInt(Color.G);
             }
 
+            [DocStr(
+                "@desc Gets the readonly red value.",
+                "@returns r as int."
+                )]
             [FunctionAttribute("r { get; }")]
             public static HassiumInt get_r(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

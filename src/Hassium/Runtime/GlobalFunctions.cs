@@ -113,6 +113,12 @@ namespace Hassium.Runtime
                 if (a.Length > 0)
                     return new HassiumString((a[0] as DocStrAttribute).Description);
             }
+            else if (args[0] is HassiumProperty)
+            {
+                var a = ((args[0] as HassiumProperty).Get as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Description);
+            }
             return new HassiumString(string.Empty);
         }
 
@@ -169,6 +175,12 @@ namespace Hassium.Runtime
             if (args[0] is HassiumFunction)
             {
                 var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Returns);
+            }
+            else if (args[0] is HassiumProperty)
+            {
+                var a = ((args[0] as HassiumProperty).Get as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
                 if (a.Length > 0)
                     return new HassiumString((a[0] as DocStrAttribute).Returns);
             }
