@@ -19,12 +19,22 @@ namespace Hassium.Runtime.Net
             AddAttribute("getips", getips, 1);
         }
 
+        [DocStr(
+            "@desc Gets the first hostname of the specified Net.IPAddr object or string ip.",
+            "@param IPAddrOrStr The Net.IPAddr object or string ip address.",
+            "@returns The first hostname as a string."
+            )]
         [FunctionAttribute("func gethost (IPAddrOrStr : object) : string")]
         public HassiumString gethost(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return gethosts(vm, self, location, args[0]).Values[0] as HassiumString;
         }
 
+        [DocStr(
+            "@desc Gets a list of hostnames for the specified Net.IPAddr or string ip.",
+            "@param IPAddrOrStr The Net.IPAddr object or string ip address.",
+            "@returns The list of hostnames."
+            )]
         [FunctionAttribute("func gethosts (IPAddrOrStr : object) : list")]
         public HassiumList gethosts(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -38,12 +48,22 @@ namespace Hassium.Runtime.Net
             return list;
         }
 
+        [DocStr(
+            "@desc Gets the first ip address of the specified hostname as a Net.IPAddr object.",
+            "@param host The hostname as a string.",
+            "@returns A new Net.IPAddr object."
+            )]
         [FunctionAttribute("func getip (host : string) : IPAddr")]
         public HassiumIPAddr getip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return getips(vm, self, location, args[0]).Values[0] as HassiumIPAddr;
         }
 
+        [DocStr(
+            "@desc Gets a list of Net.IPAddr ip addresses for the specified hostname.",
+            "@paran host The hostname as a string.",
+            "@returns A new list of Net.IPAddr objects."
+            )]
         [FunctionAttribute("func getips (host : string) : list")]
         public HassiumList getips(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

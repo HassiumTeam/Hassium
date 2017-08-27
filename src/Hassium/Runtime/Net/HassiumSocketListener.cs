@@ -32,6 +32,13 @@ namespace Hassium.Runtime.Net
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new SocketListener object using either the specified port, the specified Net.IPAddr, or the specified string ip and int port.",
+                "@optional portOrIPAddr The int port to listen on or Net.IPAddr object.",
+                "@optional ip The string ip address to listen on.",
+                "@optional port The int port to listen on.",
+                "@returns The new SocketListener object."
+                )]
             [FunctionAttribute("func new (portOrIPAddr : object) : SocketListener", "func new (ip : string, port : int) : SocketListener")]
             public static HassiumSocketListener _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -56,6 +63,10 @@ namespace Hassium.Runtime.Net
                 return listener;
             }
 
+            [DocStr(
+                "@desc Hangs until a new connection has been received and returns a Net.Socket object of that client.",
+                "@returns The Net.Socket object that connected to this listener."
+                )]
             [FunctionAttribute("func acceptsock () : Socket")]
             public HassiumSocket acceptsock(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -66,12 +77,20 @@ namespace Hassium.Runtime.Net
                 return socket;
             }
 
+            [DocStr(
+                "@desc Gets the readonly Net.IPAddr of the ip the listener is listening on (local ip).",
+                "@returns The Net.IPAddr object of the local address."
+                )]
             [FunctionAttribute("localip { get; }")]
             public HassiumObject get_localip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return HassiumIPAddr.IPAddrTypeDef._new(vm, null, location, new HassiumString(((self as HassiumSocketListener).TcpListener.LocalEndpoint as IPEndPoint).Address.ToString()), new HassiumInt(((self as HassiumSocketListener).TcpListener.LocalEndpoint as IPEndPoint).Port));
             }
 
+            [DocStr(
+                "@desc Starts the listener.",
+                "@returns null."
+                )]
             [FunctionAttribute("func start () : null")]
             public HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -79,6 +98,10 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Stops the listener.",
+                "@returns null."
+                )]
             [FunctionAttribute("func stop () : null")]
             public HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

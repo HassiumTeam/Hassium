@@ -30,6 +30,12 @@ namespace Hassium.Runtime.Net
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new IPAddr object using the specified string host and an optional int port.",
+                "@param host The hostname or ip address as string.",
+                "@optional port The port for a connection.",
+                "@returns The new IPAddr object."
+                )]
             [FunctionAttribute("func new (host : string) : IPaddr", "func new (host : string, port : int) : IPAddr")]
             public static HassiumIPAddr _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -41,18 +47,30 @@ namespace Hassium.Runtime.Net
                 return addr;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string ip address.",
+                "@returns The ip address as a string."
+                )]
             [FunctionAttribute("address { get; }")]
             public static HassiumString get_address(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumIPAddr).Address;
             }
 
+            [DocStr(
+                "@desc Gets the readonly port number.",
+                "@returns The port as an int."
+                )]
             [FunctionAttribute("port { get; }")]
             public static HassiumInt get_port(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumIPAddr).Port;
             }
 
+            [DocStr(
+                "@desc Returns a string representation of this IPAddr object.",
+                "@returns The string ip and/or port."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

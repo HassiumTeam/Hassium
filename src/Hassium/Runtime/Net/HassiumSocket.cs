@@ -62,7 +62,15 @@ namespace Hassium.Runtime.Net
                 };
             }
 
-            [FunctionAttribute("func new () : Socket", "func new (IPAddrOrStr : object) : Socket", "func new (ip : string, port : int) : Socket", "func new (ip : string, port : int, ssl : bool) : Socket")]
+            [DocStr(
+                "@desc Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.",
+                "@optional ip The Net.IPAddr object that has the ip and port.",
+                "@optional ip The string ip address.",
+                "@optional port The int port.",
+                "@optional ssl The bool indicating if the Socket will use ssl.",
+                "@returns The new Socket object."
+                )]
+            [FunctionAttribute("func new () : Socket", "func new (ip : IPAddr) : Socket", "func new (ip : string, port : int) : Socket", "func new (ip : string, port : int, ssl : bool) : Socket")]
             public HassiumObject _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 HassiumSocket socket = new HassiumSocket();
@@ -104,12 +112,19 @@ namespace Hassium.Runtime.Net
                 return socket;
             }
 
+            [DocStr(
+                "@desc Gets the mutable bool indicating if the socket will autoflush.",
+                "@returns True if the stream will automatically flush, otherwise false."
+                )]
             [FunctionAttribute("autoflush { get; }")]
             public HassiumBool get_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool((self as HassiumSocket).AutoFlush);
             }
-
+            [DocStr(
+                "@desc Sets the mutable bool determining if the socket will autoflush.",
+                "@returns null."
+                )]
             [FunctionAttribute("autofluah { set; }")]
             public HassiumNull set_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -118,6 +133,10 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Closes the socket.",
+                "@returns null."
+                )]
             [FunctionAttribute("func close () : null")]
             public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -125,7 +144,14 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
-            [FunctionAttribute("func connect (IPAddrOrStr : object) : null", "func connect (ip : string, port : int) : null")]
+            [DocStr(
+                "@desc Connects the socket to either the specified Net.IPAddr object or the specified string ip and int port.",
+                "@optional ip The Net.IPAddr object to connect to.",
+                "@optional ip The string ip address to connect to.",
+                "@optional port The port to connect to.",
+                "@returns null."
+                )]
+            [FunctionAttribute("func connect (ip : IPAddr) : null", "func connect (ip : string, port : int) : null")]
             public HassiumNull connect(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Client = (self as HassiumSocket).Client;
@@ -147,6 +173,10 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the readonly Net.IPAddr of the ip the socket is connecting from (local ip).",
+                "@returns The Net.IPAddr object of the from address."
+                )]
             [FunctionAttribute("fromip { get; }")]
             public HassiumObject get_fromip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -160,6 +190,10 @@ namespace Hassium.Runtime.Net
                 return HassiumIPAddr.IPAddrTypeDef._new(vm, null, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
             }
 
+            [DocStr(
+                "@desc Gets the readonly Net.IPAddr of the ip the socket is connecting to.",
+                "@returns The Net.IPAddr object of the to address."
+                )]
             [FunctionAttribute("toip { get; }")]
             public HassiumObject get_toip(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -173,6 +207,10 @@ namespace Hassium.Runtime.Net
                 return HassiumIPAddr.IPAddrTypeDef._new(vm, null, location, new HassiumString(parts[0]), new HassiumString(parts[1]));
             }
 
+            [DocStr(
+                "@desc Flushes the socket stream.",
+                "@returns null."
+                )]
             [FunctionAttribute("func flush () : null")]
             public HassiumNull flush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -187,12 +225,20 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets a readonly bool indicating if the socket is currently connected.",
+                "@returns true if the socket is connected, otherwise false."
+                )]
             [FunctionAttribute("isconnected { get; }")]
             public HassiumBool get_isconnected(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool((self as HassiumSocket).Client.Connected);
             }
 
+            [DocStr(
+                "@desc Reads a single byte from the stream and returns it as a char.",
+                "@returns The byte as char."
+                )]
             [FunctionAttribute("func readbyte () : char")]
             public HassiumObject readbyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -206,6 +252,11 @@ namespace Hassium.Runtime.Net
                 return new HassiumChar((char)socket.Reader.ReadBytes(1)[0]);
             }
 
+            [DocStr(
+                "@desc Reads the specified count of bytes from the stream and returns them in a list.",
+                "@param count The amount of bytes to read.",
+                "@returns A list containing the specified amount of bytes."
+                )]
             [FunctionAttribute("func readbytes (count : int) : list")]
             public HassiumObject readbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -224,6 +275,10 @@ namespace Hassium.Runtime.Net
                 return list;
             }
 
+            [DocStr(
+                "@desc Reads a single float from the stream and returns it.",
+                "@returns The read float."
+                )]
             [FunctionAttribute("func readfloat () : float")]
             public HassiumObject readfloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -238,6 +293,10 @@ namespace Hassium.Runtime.Net
                 return new HassiumFloat(socket.Reader.ReadDouble());
             }
 
+            [DocStr(
+                "@desc Reads a single 32-bit integer from the stream and returns it.",
+                "@returns The read 32-bit int."
+                )]
             [FunctionAttribute("func readint () : int")]
             public HassiumObject readint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -252,6 +311,10 @@ namespace Hassium.Runtime.Net
                 return new HassiumInt(socket.Reader.ReadInt32());
             }
 
+            [DocStr(
+                "@desc Reads a line from the stream and returns it as a string.",
+                "@returns The read line string."
+                )]
             [FunctionAttribute("func readline () : string")]
             public HassiumObject readline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -266,6 +329,10 @@ namespace Hassium.Runtime.Net
                 return new HassiumString(socket.StreamReader.ReadLine());
             }
 
+            [DocStr(
+                "@desc Reads a single 64-bit integer from the stream and returns it.",
+                "@returns The read 64-bit int."
+                )]
             [FunctionAttribute("func readlong () : int")]
             public HassiumObject readlong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -279,6 +346,10 @@ namespace Hassium.Runtime.Net
                 return new HassiumInt(socket.Reader.ReadInt64());
             }
 
+            [DocStr(
+                "@desc Reads a single 16-bit integer from the stream and returns it.",
+                "@returns The read 16-bit int."
+                )]
             [FunctionAttribute("func readshort () : int")]
             public HassiumObject readshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -292,6 +363,10 @@ namespace Hassium.Runtime.Net
                 return new HassiumInt(socket.Reader.ReadInt16());
             }
 
+            [DocStr(
+                "@desc Reads a single string from the stream and returns it.",
+                "@returns The read string."
+                )]
             [FunctionAttribute("func readstring () : string")]
             public HassiumObject readstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -305,6 +380,11 @@ namespace Hassium.Runtime.Net
                 return new HassiumString(socket.Reader.ReadString());
             }
 
+            [DocStr(
+                "@desc Writes the given single byte to the file stream.",
+                "@param b The char to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writebyte (b : char) : null")]
             public HassiumNull writebyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -321,6 +401,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given single float to the file stream.",
+                "@param f The float to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writefloat (f : float) : null")]
             public HassiumNull writefloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -337,6 +422,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given single 32-bit integer to the file stream.",
+                "@param i The 32-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeint (i : int) : null")]
             public HassiumNull writeint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -353,6 +443,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given string line to the file stream, followed by a newline.",
+                "@param str The string to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeline (str : string) : null")]
             public HassiumNull writeline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -375,6 +470,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the byte value of each element in the given list to the file stream.",
+                "@param l The list to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writelist (l : list) : null")]
             public HassiumNull writelist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -391,6 +491,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given 64-bit integer to the file stream.",
+                "@param l The 64-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writelong (l : int) : null")]
             public HassiumNull writelong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -407,6 +512,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given 16-bit integer to the file stream.",
+                "@param s The 16-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeshort (s : int) : null")]
             public HassiumNull writeshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -423,6 +533,11 @@ namespace Hassium.Runtime.Net
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given string to the file stream.",
+                "@param str The string to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writestring (str : string) : null")]
             public HassiumNull writestring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
