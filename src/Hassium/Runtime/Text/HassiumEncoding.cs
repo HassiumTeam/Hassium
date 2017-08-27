@@ -31,6 +31,12 @@ namespace Hassium.Runtime.Text
                     { INVOKE, new HassiumFunction(_new, 1) }
                 };
             }
+
+            [DocStr(
+                "@desc Constructs a new Encoding object using the specified encoding scheme.",
+                "@param scheme The string name of the scheme to use. UNICODE, UTF7, UTF8, UTF32 or ASCII.",
+                "@returns The new Encoding object."
+                )]
             [FunctionAttribute("func new (scheme : string) : Encoding")]
             public static HassiumEncoding _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -58,13 +64,21 @@ namespace Hassium.Runtime.Text
                 return encoding;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string body name of this encoding.",
+                "@returns The body name as string."
+                )]
             [FunctionAttribute("bodyname { get; }")]
             public static HassiumString get_bodyname(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Encoding = (self as HassiumEncoding).Encoding;
                 return new HassiumString(Encoding.BodyName);
             }
-
+            
+            [DocStr(
+                "@desc Gets the readonly string encoding name of this encoding.",
+                "@returns The encoding name as string."
+                )]
             [FunctionAttribute("encodingname { get; }")]
             public static HassiumString get_encodingname(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -72,6 +86,11 @@ namespace Hassium.Runtime.Text
                 return new HassiumString(Encoding.EncodingName);
             }
 
+            [DocStr(
+                "@desc Converts the specified string into a list of bytes using this encoding.",
+                "@param str The string to convert.",
+                "@returns The bytes of str as a list."
+                )]
             [FunctionAttribute("func getbytes (str : string) : list")]
             public static HassiumList getbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -81,6 +100,11 @@ namespace Hassium.Runtime.Text
                 return new HassiumByteArray(bytes, new HassiumObject[0]);
             }
 
+            [DocStr(
+                "@desc Converts the given list of bytes into a string using this encoding.",
+                "@param bytes The list of bytes to convert.",
+                "@returns The string value of the bytes."
+                )]
             [FunctionAttribute("func getstring (bytes : list) : string")]
             public static HassiumString getstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -94,6 +118,10 @@ namespace Hassium.Runtime.Text
                 return new HassiumString(Encoding.GetString(bytes));
             }
 
+            [DocStr(
+                "@desc Gets the readonly string header name of this encoding.",
+                "@returns The header name as string."
+                )]
             [FunctionAttribute("headername { get; }")]
             public static HassiumString get_headername(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
