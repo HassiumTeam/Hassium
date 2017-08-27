@@ -34,13 +34,24 @@ namespace Hassium.Runtime.IO
             AddAttribute("writestring", writestring, -1);
         }
 
-        [FunctionAttribute("func close () : null")]
+        [DocStr(
+            "@desc Closes the given IO.File object.",
+            "@param file The IO.File object to close.",
+            "@returns null."
+            )]
+        [FunctionAttribute("func close (file : File) : null")]
         public HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             HassiumFile.FileTypeDef.close(vm, args[0], location);
             return Null;
         }
 
+        [DocStr(
+            "@desc Copies the file at the specified source path to the specified destination path.",
+            "@param src The source file path to copy.",
+            "@param dest The destination file path to be copied to.",
+            "@returns null."
+            )]
         [FunctionAttribute("func copy (src : string, dest : string) : null")]
         public HassiumNull copy(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -55,6 +66,11 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Creates a directory at the specified path.",
+            "@param path The path of the directory to be created.",
+            "@return null."
+            )]
         [FunctionAttribute("func createdir (path : string) : null")]
         public HassiumNull createdir(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -62,6 +78,11 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Creates a file at the specified path.",
+            "@param path The path of the file to be created.",
+            "@returns null."
+            )]
         [FunctionAttribute("func createfile (path : string) : null")]
         public HassiumNull createfile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -69,12 +90,19 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Gets the mutable string of the current working directory.",
+            "@returns The current working directory as string."
+            )]
         [FunctionAttribute("cwd { get; }")]
         public HassiumString get_cwd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Directory.GetCurrentDirectory());
         }
-
+        [DocStr(
+            "@desc Sets the mutable string of the current working directory.",
+            "@returns null."
+            )]
         [FunctionAttribute("cwd { set; }")]
         public HassiumString set_cwd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -82,6 +110,11 @@ namespace Hassium.Runtime.IO
             return get_cwd(vm, self, location);
         }
 
+        [DocStr(
+            "@desc Deltes the file or directory at the specified path string.",
+            "@param path The path string to delete.",
+            "@returns null."
+            )]
         [FunctionAttribute("func delete (path : string) : null")]
         public HassiumNull delete(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -97,6 +130,11 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Deletes the directory at the specified path string.",
+            "@param path The path string to delete.",
+            "@returns null."
+            )]
         [FunctionAttribute("func deletedir (dir : string) : null")]
         public HassiumNull deletedir(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -109,6 +147,11 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Deletes the file at the specified path string.",
+            "@param path The path string to delete.",
+            "@returns null."
+            )]
         [FunctionAttribute("func deletefile (file : string) : null")]
         public HassiumNull deletefile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -121,30 +164,53 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns a bool indicating if the specified directory path string exists.",
+            "@param dir The path string to check.",
+            "@returns true if the directory exists, otherwise false."
+            )]
         [FunctionAttribute("func direxists (dir : string) : bool")]
         public HassiumBool direxists(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Directory.Exists(args[0].ToString(vm, args[0], location).String));
         }
 
+        [DocStr(
+            "@desc Returns a bool indicating if the specicified file path string exist.",
+            "@param file The path string to check.",
+            "@returns true if the file exists, otherwise false."
+            )]
         [FunctionAttribute("func fileexists (file : string) : bool")]
         public HassiumBool fileexists(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(File.Exists(args[0].ToString(vm, args[0], location).String));
         }
 
+        [DocStr(
+            "@desc Returns a new random temporary file path.",
+            "@returns The random file path string."
+            )]
         [FunctionAttribute("func gettempfile () : string")]
         public HassiumString gettempfile(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetTempFileName());
         }
 
+        [DocStr(
+            "@desc Returns a new random temporary directory path.",
+            "@returns The random path string."
+            )]
         [FunctionAttribute("func gettemppath () : string")]
         public HassiumString gettemppath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Path.GetTempPath());
         }
 
+        [DocStr(
+            "@desc Returns a list of all of the directories contained within the specified path string.",
+            "@param path The path to get directories from.",
+            "@returns The list of directories."
+            )]
         [FunctionAttribute("func listdirs (path : string) : list")]
         public HassiumList listdirs(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -154,6 +220,11 @@ namespace Hassium.Runtime.IO
             return result;
         }
 
+        [DocStr(
+            "@desc Returns a list of all of the files contained within the specified path string.",
+            "@param path The path to get directories from.",
+            "@returns The list of files."
+            )]
         [FunctionAttribute("func listfiles (path : string) : list")]
         public HassiumList listfiles(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -163,6 +234,12 @@ namespace Hassium.Runtime.IO
             return result;
         }
 
+        [DocStr(
+            "@desc Moves the file at the specified source path to the specified destination path.",
+            "@param src The source file path to move.",
+            "@param dest The destination file path to be moved to.",
+            "@returns null."
+            )]
         [FunctionAttribute("func move (src : string, dest : string) : null")]
         public HassiumNull move(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -177,6 +254,11 @@ namespace Hassium.Runtime.IO
             return Null;
         }
 
+        [DocStr(
+            "@desc Opens a new file stream to the specified path and returns a new IO.File object.",
+            "@param path The file path to open.",
+            "@returns The new IO.File object."
+            )]
         [FunctionAttribute("func open (path : string) : File")]
         public HassiumFile open(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -184,6 +266,11 @@ namespace Hassium.Runtime.IO
             return new HassiumFile(path);
         }
 
+        [DocStr(
+            "@desc Reads the bytes of the file at the specified path as a list and returns it.",
+            "@param path The file path to read from.",
+            "@returns The list of file bytes."
+            )]
         [FunctionAttribute("func readbytes (path : string) : list")]
         public HassiumByteArray readbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -205,6 +292,11 @@ namespace Hassium.Runtime.IO
             }
         }
 
+        [DocStr(
+            "@desc Reads the lines of a file at the specified path as a list and returns it.",
+            "@param path The file path to read from.",
+            "@returns The list of lines of the file."
+            )]
         [FunctionAttribute("func readlines (path : string) : list")]
         public HassiumList readlines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -226,6 +318,11 @@ namespace Hassium.Runtime.IO
             }
         }
 
+        [DocStr(
+            "@desc Reads the specified file path as a string and returns it.",
+            "@param path The file path to read from.",
+            "@returns The file as a string."
+            )]
         [FunctionAttribute("func readstring (path : string) : string")]
         public HassiumString readstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -247,6 +344,12 @@ namespace Hassium.Runtime.IO
             }
         }
 
+        [DocStr(
+            "@desc Writes the given list of bytes to the specified file path.",
+            "@param path The file path to write to.",
+            "@param bytes The list of bytes to write.",
+            "@returns null."
+            )]
         [FunctionAttribute("func writebytes (path : string, bytes : list) : null")]
         public HassiumNull writebytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -268,6 +371,12 @@ namespace Hassium.Runtime.IO
             }
         }
 
+        [DocStr(
+            "@desc Writes the given list of string lines to the specified file path.",
+            "@param path The file path to write to.",
+            "@param lines The list of string lines to write.",
+            "@returns null."
+            )]
         [FunctionAttribute("func writelines (path : string, lines : list) : null")]
         public HassiumNull writelines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -298,6 +407,12 @@ namespace Hassium.Runtime.IO
             }
         }
 
+        [DocStr(
+            "@desc Writes the given string as the contents for the specified file path.",
+            "@param path The file path to write to.",
+            "@param str The string to write.",
+            "@returns null."
+            )]
         [FunctionAttribute("func writestring (path : string, str : string) : null")]
         public HassiumNull writestring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

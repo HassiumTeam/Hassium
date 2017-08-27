@@ -30,6 +30,11 @@ namespace Hassium.Runtime.Math
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new Random object using the optionally specified seed.",
+                "@optional seed The int seed for the random object.",
+                "@returns The new Random object."
+                )]
             [FunctionAttribute("func new () : Random", "func new (seed : int) : Random")]
             public static HassiumObject _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -40,6 +45,11 @@ namespace Hassium.Runtime.Math
                 return rand;
             }
 
+            [DocStr(
+                "@desc Returns a new list with the specified count, filled with random bytes.",
+                "@param count The amount of random bytes to get.",
+                "@returns A new list of random bytes."
+                )]
             [FunctionAttribute("func randbytes (count : int) : list")]
             public static HassiumList randbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -57,6 +67,10 @@ namespace Hassium.Runtime.Math
                 return bytes;
             }
 
+            [DocStr(
+                "@desc Returns a random float.",
+                "@returns The random float."
+                )]
             [FunctionAttribute("func randfloat () : float")]
             public static HassiumFloat randfloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -64,6 +78,12 @@ namespace Hassium.Runtime.Math
                 return new HassiumFloat(Random.NextDouble());
             }
 
+            [DocStr(
+                "@desc Calculates a random int using either no parameters, the specified upper bound, or the specified lower and upper bound.",
+                "@optional low The inclusive lower bound.",
+                "@optional up The non-inclusive upper bound.",
+                "@returns The random int."
+                )]
             [FunctionAttribute("func randint () : int", "func randint (up : int) : int", "func randint (low : int, up : int) : int")]
             public static HassiumObject randint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

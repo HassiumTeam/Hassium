@@ -29,6 +29,12 @@ namespace Hassium.Runtime.IO
                     { TOSTRING, new HassiumFunction(tostring, 0) }
                 };
             }
+
+            [DocStr(
+                "@desc Constructs a new DirectoryNotFoundException using the specified path.",
+                "@param path The path of the directory that is not found.",
+                "@returns The new DirectoryNotFoundException object."
+                )]
             [FunctionAttribute("func new (path : str) : DirectoryNotFoundException")]
             public static HassiumDirectoryNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -39,18 +45,30 @@ namespace Hassium.Runtime.IO
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+                )]
             [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("Directory Not Found: '{0}' does not exist", (self as HassiumDirectoryNotFoundException).Path.String));
             }
 
+            [DocStr(
+                "@desc Gets the readonly string of the directory that was not found.",
+                "@returns The directory path as a string."
+                )]
             [FunctionAttribute("path { get; }")]
             public static HassiumString get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumDirectoryNotFoundException).Path;
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

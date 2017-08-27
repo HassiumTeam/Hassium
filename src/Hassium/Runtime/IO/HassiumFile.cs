@@ -85,17 +85,30 @@ namespace Hassium.Runtime.IO
                 };
             }
 
+            [DocStr(
+                "@desc Gets the readonly absolute path string.",
+                "@returns The absolute path string."
+                )]
             [FunctionAttribute("abspath { get; }")]
             public static HassiumString get_abspath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumFile).AbsolutePath;
             }
 
+            [DocStr(
+                "@desc Gets the mutable bool indicating if the file stream will autoflush.",
+                "@returns True if the stream will automatically flush, otherwise false."
+                )]
             [FunctionAttribute("autoflush { get; }")]
             public static HassiumBool get_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool((self as HassiumFile).autoFlush);
             }
+
+            [DocStr(
+                "@desc Sets the mutable bool determining if the file stream will autoflush.",
+                "@returns null."
+                )]
             [FunctionAttribute("autoflush { set; }")]
             public static HassiumNull set_autoflush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -104,6 +117,10 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Closes the file stream.",
+                "@returns null."
+                )]
             [FunctionAttribute("func close () : null")]
             public static HassiumNull close(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -120,6 +137,11 @@ namespace Hassium.Runtime.IO
                 }
             }
 
+            [DocStr(
+                "@desc Copies this file to the specified file path.",
+                "@param path The string path to be copied to.",
+                "@returns null."
+                )]
             [FunctionAttribute("func copyto (path : string) : null")]
             public static HassiumNull copyto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -135,7 +157,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
-            [FunctionAttribute("func delete (path : string) : null")]
+            [DocStr(
+                "@desc Deletes this file from the disc.",
+                "@returns null."
+                )]
+            [FunctionAttribute("func delete () : null")]
             public static HassiumNull delete(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var AbsolutePath = (self as HassiumFile).AbsolutePath;
@@ -150,17 +176,29 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the readonly bool indicating if the file exists on disc.",
+                "@returns True if the file exists, otherwise false."
+                )]
             [FunctionAttribute("exists { get; }")]
             public static HassiumBool get_exists(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool(File.Exists((self as HassiumFile).AbsolutePath.String));
             }
 
+            [DocStr(
+                "@desc Gets the mutable string of this file's extension.",
+                "@returns This file's extension as string."
+                )]
             [FunctionAttribute("extension { get; }")]
             public static HassiumString get_extension(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString((self as HassiumFile).FileInfo.Extension);
             }
+            [DocStr(
+                "@desc Sets the mutable string extension for this file.",
+                "@returns null."
+                )]
             [FunctionAttribute("extension { set; }")]
             public static HassiumNull set_extension(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -169,6 +207,10 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Flushes this file stream.",
+                "@returns null."
+                )]
             [FunctionAttribute("func flush () : null")]
             public static HassiumNull flush(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -180,21 +222,35 @@ namespace Hassium.Runtime.IO
                 }
 
                 file.Writer.Flush();
+                file.StreamWriter.Flush();
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the readonly bool indicating if this file has been closed.",
+                "@returns True if the file has been closed, otherwise false."
+                )]
             [FunctionAttribute("isclosed { get; }")]
             public static HassiumBool get_isclosed(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool((self as HassiumFile).closed);
             }
 
+            [DocStr(
+                "@desc Gets the readonly int that represents the size of the file in bytes.",
+                "@returns The size of the file in bytes as an int."
+                )]
             [FunctionAttribute("length { get; }")]
             public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumInt((self as HassiumFile).Reader.BaseStream.Length);
             }
 
+            [DocStr(
+                "@desc Moves this file to the specified file path.",
+                "@param path The string path to be moved to.",
+                "@returns null."
+                )]
             [FunctionAttribute("func moveto (path : string) : null")]
             public static HassiumNull moveto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -210,11 +266,19 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable string containing the name of the file.",
+                "@returns The name of this file."
+                )]
             [FunctionAttribute("name { get; }")]
             public static HassiumString get_name(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(Path.GetFileName((self as HassiumFile).AbsolutePath.String));
             }
+            [DocStr(
+                "@desc Sets the mutable string that sets the name of the file.",
+                "@returns null."
+                )]
             [FunctionAttribute("name { get; }")]
             public static HassiumNull set_name(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -229,11 +293,19 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable int that represents the current position in the file stream.",
+                "@returns The current position as int."
+                )]
             [FunctionAttribute("position { get; }")]
             public static HassiumInt get_position(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumInt((self as HassiumFile).Reader.BaseStream.Position);
             }
+            [DocStr(
+                "@desc Sets the mutable int that changes the position in the file stream.",
+                "@returns null."
+                )]
             [FunctionAttribute("position { set; }")]
             public static HassiumNull set_position(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -241,6 +313,10 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Reads all of the bytes from this file and returns them in a list of chars.",
+                "@returns A list of chars representing each line of the file."
+                )]
             [FunctionAttribute("func readallbytes () : list")]
             public static HassiumObject readallbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -259,12 +335,17 @@ namespace Hassium.Runtime.IO
 
                 HassiumByteArray list = new HassiumByteArray(new byte[0], new HassiumObject[0]);
 
+                file.Reader.BaseStream.Position = 0;
                 while (file.Reader.BaseStream.Position < file.Reader.BaseStream.Length)
                     list.Values.Add(file.Reader.ReadBytes(1)[0]);
 
                 return list;
             }
 
+            [DocStr(
+                "@desc Reads all of the lines from this file and returns them in a list of strings.",
+                "@returns A list of strings representing each line of the file."
+                )]
             [FunctionAttribute("func readalllines () : list")]
             public static HassiumObject readalllines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -283,12 +364,17 @@ namespace Hassium.Runtime.IO
 
                 HassiumList list = new HassiumList(new HassiumObject[0]);
 
+                file.Reader.BaseStream.Position = 0;
                 while (file.Reader.BaseStream.Position < file.Reader.BaseStream.Length)
                     HassiumList.add(vm, list, location, readline(vm, self, location));
 
                 return list;
             }
-
+            
+            [DocStr(
+                "@desc Reads all of the characters from this file and returns them as a single string.",
+                "@returns The file as a string."
+                )]
             [FunctionAttribute("func readalltext () : string")]
             public static HassiumObject readalltext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -307,6 +393,7 @@ namespace Hassium.Runtime.IO
 
                 StringBuilder sb = new StringBuilder();
 
+                file.Reader.BaseStream.Position = 0;
                 while (file.Reader.BaseStream.Position < file.Reader.BaseStream.Length)
                 {
                     var line = readline(vm, self, location);
@@ -316,6 +403,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumString(sb.ToString());
             }
 
+            [DocStr(
+                "@desc Reads a single byte from the stream and returns it as a char.",
+                "@returns The byte as char."
+                )]
             [FunctionAttribute("func readbyte () : char")]
             public static HassiumObject readbyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -335,6 +426,11 @@ namespace Hassium.Runtime.IO
                 return new HassiumChar((char)file.Reader.ReadBytes(1)[0]);
             }
 
+            [DocStr(
+                "@desc Reads the specified count of bytes from the stream and returns them in a list.",
+                "@param count The amount of bytes to read.",
+                "@returns A list containing the specified amount of bytes."
+                )]
             [FunctionAttribute("func readbytes (count : int) : list")]
             public static HassiumObject readbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -359,6 +455,10 @@ namespace Hassium.Runtime.IO
                 return list;
             }
 
+            [DocStr(
+                "@desc Reads a single float from the stream and returns it.",
+                "@returns The read float."
+                )]
             [FunctionAttribute("func readfloat () : float")]
             public static HassiumObject readfloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -378,6 +478,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumFloat(file.Reader.ReadDouble());
             }
 
+            [DocStr(
+                "@desc Reads a single 32-bit integer from the stream and returns it.",
+                "@returns The read 32-bit int."
+                )]
             [FunctionAttribute("func readint () : int")]
             public static HassiumObject readint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -397,6 +501,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumInt(file.Reader.ReadInt32());
             }
 
+            [DocStr(
+                "@desc Reads a line from the stream and returns it as a string.",
+                "@returns The read line string."
+                )]
             [FunctionAttribute("func readline () : string")]
             public static HassiumObject readline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -416,6 +524,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumString(file.StreamReader.ReadLine());
             }
 
+            [DocStr(
+                "@desc Reads a single 64-bit integer from the stream and returns it.",
+                "@returns The read 64-bit int."
+                )]
             [FunctionAttribute("func readlong () : int")]
             public static HassiumObject readlong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -435,6 +547,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumInt(file.Reader.ReadInt64());
             }
 
+            [DocStr(
+                "@desc Reads a single 16-bit integer from the stream and returns it.",
+                "@returns The read 16-bit int."
+                )]
             [FunctionAttribute("func readshort () : int")]
             public static HassiumObject readshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -454,6 +570,10 @@ namespace Hassium.Runtime.IO
                 return new HassiumInt(file.Reader.ReadInt16());
             }
 
+            [DocStr(
+                "@desc Reads a single string from the stream and returns it.",
+                "@returns The read string."
+                )]
             [FunctionAttribute("func readstring () : string")]
             public static HassiumObject readstring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -473,18 +593,31 @@ namespace Hassium.Runtime.IO
                 return new HassiumString(file.Reader.ReadString());
             }
 
+            [DocStr(
+                "@desc Gets the readonly relative path of this file as a string.",
+                "@returns The relative path of the file as string."
+                )]
             [FunctionAttribute("relpath{ get; }")]
             public static HassiumString get_relpath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumFile).RelativePath;
             }
 
+            [DocStr(
+                "@desc Gets the readonly int that represents the size of the file in bytes.",
+                "@returns The size of the file in bytes as an int."
+                )]
             [FunctionAttribute("size { get; }")]
             public static HassiumInt get_size(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumInt((self as HassiumFile).FileInfo.Length);
             }
 
+            [DocStr(
+                "@desc Writes all of the bytes in the given list to the file stream.",
+                "@param bytes The list of bytes to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeallbytes (bytes : list) : null")]
             public static HassiumNull writeallbytes(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -495,6 +628,7 @@ namespace Hassium.Runtime.IO
                     return Null;
                 }
 
+                file.Writer.BaseStream.Position = 0;
                 for (int i = 0; i < args.Length; i++)
                     writeHassiumObject(file.Writer, args[i], vm, location);
 
@@ -503,6 +637,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes all of the string lines to the file stream.",
+                "@param lines The list of lines to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writealllines (lines : list) : null")]
             public static HassiumNull writealllines(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -513,6 +652,7 @@ namespace Hassium.Runtime.IO
                     return Null;
                 }
 
+                file.Writer.BaseStream.Position = 0;
                 for (int i = 0; i < args.Length; i++)
                 {
                     var type = args[i].Type();
@@ -529,6 +669,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the specified string as the file contents.",
+                "@param str The string that will become the file contents.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writealltext (str : string) : null")]
             public static HassiumNull writealltext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -539,6 +684,7 @@ namespace Hassium.Runtime.IO
                     return Null;
                 }
 
+                file.Writer.BaseStream.Position = 0;
                 foreach (var c in args[0].ToString(vm, args[0], location).String)
                     file.Writer.Write(c);
                 if (file.autoFlush)
@@ -546,6 +692,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given single byte to the file stream.",
+                "@param b The char to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writebyte (b : char) : null")]
             public static HassiumNull writebyte(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -562,6 +713,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given single float to the file stream.",
+                "@param f The float to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writefloat (f : float) : null")]
             public static HassiumNull writefloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -578,6 +734,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given single 32-bit integer to the file stream.",
+                "@param i The 32-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeint (i : int) : null")]
             public static HassiumNull writeint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -594,6 +755,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given string line to the file stream, followed by a newline.",
+                "@param str The string to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeline (str : string) : null")]
             public static HassiumNull writeline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -613,6 +779,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the byte value of each element in the given list to the file stream.",
+                "@param l The list to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writelist (l : list) : null")]
             public static HassiumNull writelist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -629,6 +800,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given 64-bit integer to the file stream.",
+                "@param l The 64-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writelong (l : int) : null")]
             public static HassiumNull writelong(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -645,6 +821,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given 16-bit integer to the file stream.",
+                "@param s The 16-bit int to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writeshort (s : int) : null")]
             public static HassiumNull writeshort(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -661,6 +842,11 @@ namespace Hassium.Runtime.IO
                 return Null;
             }
 
+            [DocStr(
+                "@desc Writes the given string to the file stream.",
+                "@param str The string to write.",
+                "@returns null."
+                )]
             [FunctionAttribute("func writestring (str : string) : null")]
             public static HassiumNull writestring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

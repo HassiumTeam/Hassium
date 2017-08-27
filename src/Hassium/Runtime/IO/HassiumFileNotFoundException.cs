@@ -15,7 +15,6 @@ namespace Hassium.Runtime.IO
         public HassiumFileNotFoundException()
         {
             AddType(TypeDefinition);
-            
         }
 
         public class FileNotFoundExceptionTypeDef : HassiumTypeDefinition
@@ -31,6 +30,11 @@ namespace Hassium.Runtime.IO
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new FileNotFoundException object using the specified path.",
+                "@param path The path to the file that was not found.",
+                "@returns The new FileNotFoundException."
+                )]
             [FunctionAttribute("func new (path : string) : FileNotFoundException")]
             public static HassiumFileNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -41,18 +45,30 @@ namespace Hassium.Runtime.IO
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+                )]
             [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("File not found: '{0}' does not exist!", (self as HassiumFileNotFoundException).Path.String));
             }
 
+            [DocStr(
+                "@desc Gets the readonly string of the file that was not found.",
+                "@returns The file path as a string."
+                )]
             [FunctionAttribute("path { get; }")]
             public static HassiumObject get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumFileNotFoundException).Path;
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

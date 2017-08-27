@@ -36,6 +36,11 @@ namespace Hassium.Runtime.Math
             AddAttribute("tan", tan, 1);
         }
 
+        [DocStr(
+            "@desc Returns the absolute value of the specified number.",
+            "@param num The number.",
+            "@returns The absolute value."
+            )]
         [FunctionAttribute("func abs (num : number) : float")]
         public HassiumObject abs(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -46,6 +51,11 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the acosine value of the specified number.",
+            "@param num The number.",
+            "@returns The acosine value."
+            )]
         [FunctionAttribute("func acos (num : number) : float")]
         public HassiumObject acos(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -56,6 +66,11 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the asine value of the specified number.",
+            "@param num The number.",
+            "@returns The asine value."
+            )]
         [FunctionAttribute("func asin (num : number) : float")]
         public HassiumObject asin(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -66,7 +81,11 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
-
+        [DocStr(
+            "@desc Returns the atangent value of the specified number.",
+            "@param num The number.",
+            "@returns The atangent value."
+            )]
         [FunctionAttribute("func atan (num : number) : float")]
         public HassiumObject atan(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -77,18 +96,34 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the atangent2 value of the specified y and x values.",
+            "@param y The y value.",
+            "@param x The x value.",
+            "@returns The atangent2 value."
+            )]
         [FunctionAttribute("func atan2 (y : float, x : float) : float")]
         public HassiumFloat atan2(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.Atan2(args[0].ToFloat(vm, args[0], location).Float, args[1].ToFloat(vm, args[1], location).Float));
         }
 
+        [DocStr(
+            "@desc Returns the next number greater than or equal to the specified number.",
+            "@param num The number.",
+            "@returns The ceiling value."
+            )]
         [FunctionAttribute("func ceil (num : number) : float")]
         public HassiumFloat ceil(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.Ceiling(args[0].ToFloat(vm, args[0], location).Float));
         }
 
+        [DocStr(
+            "@desc Returns the cosine value of the specified number.",
+            "@param num The number.",
+            "@returns The cosine value."
+            )]
         [FunctionAttribute("func cos (num : number) : float")]
         public HassiumObject cos(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -99,19 +134,34 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Gets the readonly float value of e.",
+            "@returns The constant value e."
+            )]
         [FunctionAttribute("e { get; }")]
         public HassiumFloat get_e(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.E);
         }
 
+        [DocStr(
+            "@desc Returns the next number lesser than or equal to the specified number.",
+            "@param num The number.",
+            "@returns The floor value."
+            )]
         [FunctionAttribute("func floor (num : number) : float")]
         public HassiumFloat floor(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.Floor(args[0].ToFloat(vm, args[0], location).Float));
         }
 
-        [FunctionAttribute("hash (algo : string, obj : object) : list")]
+        [DocStr(
+            "@desc Returns a list with the resulting bytes of a hash operating using the specified string algo and the either string or byte value data.",
+            "@param algo The string hasing algorithm to use.",
+            "@param strOrList The hash input data which is either a string or list of bytes.",
+            "@returns A list of the hash bytes."
+            )]
+        [FunctionAttribute("hash (algo : string, strOrList : object) : list")]
         public HassiumList hash(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             HassiumList list = args[1].ToList(vm, args[1], location);
@@ -123,12 +173,23 @@ namespace Hassium.Runtime.Math
             return new HassiumByteArray(hash, new HassiumObject[0]);
         }
         
+        [DocStr(
+            "@desc Calculates the logarithm of the specified number to the specified base.",
+            "@param num The number.",
+            "@param base The base.",
+            "@returns The logarithm of num to base."
+            )]
         [FunctionAttribute("func log (num : number, base : number")]
         public HassiumObject log(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.Log(args[0].ToInt(vm, args[0], location).Int, args[1].ToInt(vm, args[1], location).Int));
         }
 
+        [DocStr(
+            "@desc Calculates the logarithm of the specified number to the base of 10.",
+            "@param num The number.",
+            "@returns The logarithm of num to 10."
+            )]
         [FunctionAttribute("func log10 (num : number) : float")]
         public HassiumObject log10(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -139,6 +200,12 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the larger of the two numbers given.",
+            "@param num1 The first number to compare.",
+            "@param num2 The second number to cmopare.",
+            "@returns num1 if larger than num2, otherwise num2."
+            )]
         [FunctionAttribute("func max (num1 : number, num2 : number) : float")]
         public HassiumObject max(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -149,6 +216,12 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the lesser of the two numbers given.",
+            "@param num1 The first number to compare.",
+            "@param num2 The second number to compare.",
+            "@returns num1 if lesser than num2, otherwise num2."
+            )]
         [FunctionAttribute("func min (num1 : number, num2 : number) : float")]
         public HassiumObject min(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -159,12 +232,22 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Gets the readonly value of pi.",
+            "@returns The constant value pi."
+            )]
         [FunctionAttribute("pi { get; }")]
         public HassiumFloat get_pi(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.PI);
         }
 
+        [DocStr(
+            "@desc Returns the specified number to the specified power.",
+            "@param num The number.",
+            "@param power The power.",
+            "@returns num to the power."
+            )]
         [FunctionAttribute("func pow (num : number, power : number) : float")]
         public HassiumObject pow(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -175,12 +258,22 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Rounds the specified float and returns it.",
+            "@param f The number to round.",
+            "@returns Rounded f."
+            )]
         [FunctionAttribute("func round (f : float) : float")]
         public HassiumFloat round(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
             return new HassiumFloat(System.Math.Round(args[0].ToFloat(vm, args[0], location).Float));
         }
 
+        [DocStr(
+            "@desc Returns the sine value of the specified number.",
+            "@param num The number.",
+            "@returns The sine value."
+            )]
         [FunctionAttribute("func sin (num : number) : float")]
         public HassiumObject sin(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -191,6 +284,11 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the square root value of the specified number.",
+            "@param num The number.",
+            "@returns The square root of num."
+            )]
         [FunctionAttribute("func sqrt (num : number) : float")]
         public HassiumObject sqrt(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {
@@ -201,6 +299,11 @@ namespace Hassium.Runtime.Math
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns the tangent value of num.",
+            "@param num The number.",
+            "@returns The tangent value."
+            )]
         [FunctionAttribute("func tan (num : number) : float")]
         public HassiumObject tan(VirtualMachine vm, HassiumObject self, SourceLocation location, HassiumObject[] args)
         {

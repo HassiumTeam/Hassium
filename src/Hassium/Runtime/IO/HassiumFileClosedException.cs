@@ -32,6 +32,12 @@ namespace Hassium.Runtime.IO
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new FileClosedException using the specified IO.File object and string path.",
+                "@param file The IO.File object that has been closed.",
+                "@param path The path of the file that has been closed.",
+                "@returns The new FileClosedException object."
+                )]
             [FunctionAttribute("func new (file : File, path : string) : FileClosedException")]
             public static HassiumFileClosedException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -43,24 +49,40 @@ namespace Hassium.Runtime.IO
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly IO.File object that has been closed.",
+                "@returns The closed IO.File object."
+                )]
             [FunctionAttribute("file { get; }")]
             public static HassiumFile get_file(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumFileClosedException).File;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string filepath that has been closed.",
+                "@returns The closed string filepath."
+                )]
             [FunctionAttribute("filepath { get; }")]
             public static HassiumString get_filepath(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumFileClosedException).FilePath;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+                )]
             [FunctionAttribute("message { message; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("File Closed: Filepath '{0}' has been closed", (self as HassiumFileClosedException).FilePath.String));
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
