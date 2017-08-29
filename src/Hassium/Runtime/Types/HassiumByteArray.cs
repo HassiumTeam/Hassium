@@ -37,6 +37,11 @@ namespace Hassium.Runtime.Types
             Values = bytes.ToList();
         }
 
+        [DocStr(
+            "@desc Adds a char to this byte array.",
+            "@param byte The char to add.",
+            "@returns null."
+            )]
         [FunctionAttribute("func add (byte : char) : null")]
         public static new HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -45,6 +50,11 @@ namespace Hassium.Runtime.Types
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns a boolean indicating if the byte array contains the specified byte.",
+            "@param byte The byte to check.",
+            "@returns true if the byte array contains the byte, otherwise false."
+            )]
         [FunctionAttribute("func contains (byte : char) : bool")]
         public static HassiumBool contains(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -61,6 +71,11 @@ namespace Hassium.Runtime.Types
             return True;
         }
 
+        [DocStr(
+            "@desc Implements the == operator to determine if this byte array is equal to the specified list.",
+            "@param l The list to compare.",
+            "@returns true if the lists are equal, otherwise false."
+            )]
         [FunctionAttribute("func __equals__ (l : list) : bool")]
         public static HassiumBool equalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -72,6 +87,11 @@ namespace Hassium.Runtime.Types
             return True;
         }
 
+        [DocStr(
+            "@desc Formats this byte array using the specified format string and returns it.",
+            "@param fmt The format string.",
+            "@returns The formatted list string."
+            )]
         [FunctionAttribute("func format (fmt : string) : string")]
         public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -96,6 +116,11 @@ namespace Hassium.Runtime.Types
             return new HassiumChar((char)Values[(int)index.Int]);
         }
 
+        [DocStr(
+            "@desc Implements the [] operator to retrieve the object at the specified index.",
+            "@param i The zero-based index.",
+            "@returns The object at the specified index."
+            )]
         [FunctionAttribute("func __index__ (i : int) : object")]
         public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -113,12 +138,18 @@ namespace Hassium.Runtime.Types
 
         public override HassiumObject Iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            (self as HassiumByteArray).IterIndex = 0;
             return this;
         }
 
+        [DocStr(
+            "@desc Implements the foreach loop for this object.",
+            "@returns This list."
+            )]
         [FunctionAttribute("func __iter__ () : list")]
         public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            (self as HassiumByteArray).IterIndex = 0;
             return self;
         }
 
@@ -127,6 +158,10 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(IterIndex >= Values.Count());
         }
 
+        [DocStr(
+            "@desc Implements the foreach loop for this object.",
+            "@returns true if the loop has iterated through each element, otherwise false."
+            )]
         [FunctionAttribute("func __iterfull__ () : bool")]
         public static HassiumObject iterablefull(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -139,6 +174,10 @@ namespace Hassium.Runtime.Types
             return new HassiumChar((char)Values[(self as HassiumByteArray).IterIndex++]);
         }
 
+        [DocStr(
+            "@desc Implements the foreach loop for this object.",
+            "@returns The next element in the iterable stream."
+            )]
         [FunctionAttribute("func __iternext__ () : bool")]
         public static HassiumObject iterablenext(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -146,6 +185,10 @@ namespace Hassium.Runtime.Types
             return new HassiumChar((char)arr.Values[arr.IterIndex++]);
         }
 
+        [DocStr(
+            "@desc Gets the readonly integer representing the length of this list.",
+            "@returns The length of the list as int."
+            )]
         [FunctionAttribute("length { get; }")]
         public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -153,6 +196,11 @@ namespace Hassium.Runtime.Types
             return new HassiumInt(Values.Count());
         }
 
+        [DocStr(
+            "@desc Removes the specified byte from the list.",
+            "@param byte The char to remove.",
+            "@returns null."
+            )]
         [FunctionAttribute("func remove (byte : char) : null")]
         public static HassiumNull remove(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -169,6 +217,11 @@ namespace Hassium.Runtime.Types
             return Null;
         }
 
+        [DocStr(
+            "@desc Removes the object at the specified index.",
+            "@param index The zero-based index to remove.",
+            "@returns null."
+            )]
         [FunctionAttribute("func removeat (index : int) : null")]
         public static HassiumNull removeat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -183,8 +236,12 @@ namespace Hassium.Runtime.Types
             return Null;
         }
 
+        [DocStr(
+            "@desc Returns a new list containing the values of this list in reverse order.",
+            "@returns The new list of reversed values."
+            )]
         [FunctionAttribute("func reverse () : list")]
-        public static new HassiumList reverse(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList reverse(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             byte[] list = new byte[Values.Count];
@@ -205,8 +262,14 @@ namespace Hassium.Runtime.Types
             return args[1];
         }
 
+        [DocStr(
+            "@desc Implements the []= operator to store the specified byte at the given index.",
+            "@param idnex The zero-based index to store the byte at.",
+            "@param byte The char to be stored.",
+            "@returns The provided byte."
+            )]
         [FunctionAttribute("func __storeindex__ (index : int, byte : char) : object")]
-        public static new HassiumObject storeindex(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static  HassiumObject storeindex(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             var index = args[0].ToInt(vm, args[0], location);
@@ -219,22 +282,34 @@ namespace Hassium.Runtime.Types
             return args[1];
         }
 
+        [DocStr(
+            "@desc Converts this byte array to an ASCII string.",
+            "@returns The ASCII value of this array as string."
+            )]
         [FunctionAttribute("func toascii () : string")]
-        public static new HassiumString toascii(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString toascii(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             return new HassiumString(ASCIIEncoding.ASCII.GetString(Values.ToArray()));
         }
 
+        [DocStr(
+            "@desc Returns this byte array.",
+            "@returns This byte array."
+            )]
         [FunctionAttribute("func tobytearr () : list")]
-        public static new HassiumByteArray tobytearr(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumByteArray tobytearr(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             return self as HassiumByteArray;
         }
 
+        [DocStr(
+            "@desc Converts this byte array to a hex string and returns it.",
+            "@returns The hex string value of this byte array."
+            )]
         [FunctionAttribute("func tohex () : string")]
-        public static new HassiumString tohex(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumString tohex(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             var Values = (self as HassiumByteArray).Values;
             return new HassiumString(BitConverter.ToString(Values.ToArray()).Replace("-", string.Empty));
@@ -245,8 +320,12 @@ namespace Hassium.Runtime.Types
             return this;
         }
 
+        [DocStr(
+            "@desc Returns this byte array as a list.",
+            "@returns This byte array as list."
+            )]
         [FunctionAttribute("func tolist () : list")]
-        public static new HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public static HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return self as HassiumByteArray;
         }
@@ -265,6 +344,10 @@ namespace Hassium.Runtime.Types
             return new HassiumString(sb.ToString());
         }
 
+        [DocStr(
+            "@desc Returns this byte array as a string formatted as [ val1, val2, ... ]",
+            "@returns The string value of this byte array."
+            )]
         [FunctionAttribute("func tostring () : string")]
         public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

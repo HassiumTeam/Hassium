@@ -40,6 +40,11 @@ namespace Hassium.Runtime.Types
                 AddAttribute("toupper", toupper, 0);
             }
 
+            [DocStr(
+                "@desc Implements the + operator to return the specified string appended to this string.",
+                "@param str The string to append.",
+                "@returns A new string with the value of this string appended with the string."
+                )]
             [FunctionAttribute("func __add__ (str : string) : string")]
             public static HassiumObject add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -47,6 +52,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumString(String + args[0].ToString(vm, args[0], location).String);
             }
 
+            [DocStr(
+                "@desc Implements the == operator to determine if the specified string is equal to this string.",
+                "@param str The string to compare.",
+                "@returns true if the strings are equal, otherwise false."
+                )]
             [FunctionAttribute("func __equals__ (str : string) : bool")]
             public static HassiumBool equalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -54,6 +64,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(String == args[0].ToString(vm, args[0], location).String);
             }
 
+            [DocStr(
+                "@desc Treats this string as a format string, using the given list of format args to format and return a new string.",
+                "@optional params fargs The format args to format this string with.",
+                "@returns A new formatted string using this string and the format args."
+                )]
             [FunctionAttribute("func format (params fargs) : string")]
             public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -65,6 +80,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumString(string.Format(String, strargs));
             }
 
+            [DocStr(
+                "@desc Implements the > operator to determine if this string is greater than the specified string.",
+                "@param str The string to compare.",
+                "@returns true if this string is greater than the string, otherwise false."
+                )]
             [FunctionAttribute("func __greater__ (str : string) : bool")]
             public static HassiumObject greaterthan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -72,6 +92,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(string.Compare(String, args[0].ToString(vm, args[0], location).String) == 1);
             }
 
+            [DocStr(
+                "@desc Implements the >= operator to determine if this string is greater than or equal to the specified string.",
+                "@param str The string to compare.",
+                "@returns true if this string is greater than or equal to the string, otherwise false."
+                )]
             [FunctionAttribute("func __greaterorequal__ (str : string) : bool")]
             public static HassiumObject greaterthanorequal(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -79,6 +104,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(string.Compare(String, args[0].ToString(vm, args[0], location).String) >= 0);
             }
 
+            [DocStr(
+                "@desc Implements the [] operator to get the char at the specified 0-based index.",
+                "@param index The 0-based index to get the char at.",
+                "@returns The char at the index."
+                )]
             [FunctionAttribute("func __index__ (index : int) : char")]
             public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -86,6 +116,10 @@ namespace Hassium.Runtime.Types
                 return new HassiumChar(String[(int)args[0].ToInt(vm, args[0], location).Int]);
             }
 
+            [DocStr(
+                "@desc Implements the foreach loop to return a list of chars in this string.",
+                "@returns A new list of the chars in this string."
+                )]
             [FunctionAttribute("func __iter__ () : list")]
             public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -96,6 +130,10 @@ namespace Hassium.Runtime.Types
                 return list;
             }
 
+            [DocStr(
+                "@desc Gets the readonly int length of this string.",
+                "@returns The length of this string as int."
+                )]
             [FunctionAttribute("length { get; }")]
             public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -103,6 +141,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumInt(String == null ? -1 : String.Length);
             }
 
+            [DocStr(
+                "@desc Implements the < operator to determine if this string is lesser than the specified string.",
+                "@param str The string to compare.",
+                "@returns true if this string is lesser than the string, otherwise false."
+                )]
             [FunctionAttribute("func __lesser__ (str : string) : bool")]
             public static HassiumObject lesserthan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -110,6 +153,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(string.Compare(String, args[0].ToString(vm, args[0], location).String) == -1);
             }
 
+            [DocStr(
+                "@desc Implements the <= operator to determine if this string is lesser than or equal to the specified string.",
+                "@param str the string to compare.",
+                "@returns true if this string is lesser than or equal to the string, otherwise false."
+                )]
             [FunctionAttribute("func __lesserorequal__ (str : string) : bool")]
             public static HassiumObject lesserthanorequal(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -117,6 +165,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(string.Compare(String, args[0].ToString(vm, args[0], location).String) <= 0);
             }
 
+            [DocStr(
+                "@desc Implements the != operator to determine if this string is not equal to the specified string.",
+                "@param str The string to compare.",
+                "@returns true if this string is not equal to the string, otherwise false."
+                )]
             [FunctionAttribute("func __notequal__ (str : string) : bool")]
             public static HassiumBool notequalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -124,6 +177,10 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(String != args[0].ToString(vm, args[0], location).String);
             }
 
+            [DocStr(
+                "@desc Converts this string to a float value and returns it.",
+                "@returns The float value of this string."
+                )]
             [FunctionAttribute("func tofloat () : float")]
             public static HassiumFloat tofloat(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

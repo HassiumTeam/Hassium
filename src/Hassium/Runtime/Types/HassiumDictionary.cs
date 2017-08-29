@@ -50,6 +50,12 @@ namespace Hassium.Runtime.Types
                 };
             }
 
+            [DocStr(
+                "@desc Adds the given value to the dictionary under the specified key.",
+                "@param key The key for the entry.",
+                "@param value The value for the key.",
+                "@returns null."
+                )]
             [FunctionAttribute("func add (key : object, val : object) : null")]
             public static HassiumNull add(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -58,6 +64,11 @@ namespace Hassium.Runtime.Types
                 return Null;
             }
 
+            [DocStr(
+                "@desc Returns a boolean indicating if the specified key is present in the dictionary.",
+                "@param key The key to check.",
+                "@returns true if the key is present, otherwise false."
+                )]
             [FunctionAttribute("func containskey (key : object) : bool")]
             public static HassiumBool containskey(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -70,6 +81,11 @@ namespace Hassium.Runtime.Types
                 return False;
             }
 
+            [DocStr(
+                "@desc Returns a boolean indicating if the specified value is present in the dictionary.",
+                "@param val The value to check.",
+                "@returns true if the value is present, otherwise false."
+                )]
             [FunctionAttribute("func containsvalue (val : object) : bool")]
             public static HassiumBool containsvalue(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -82,6 +98,11 @@ namespace Hassium.Runtime.Types
                 return False;
             }
 
+            [DocStr(
+                "@desc Implements the [] operator by retrieving the value at the specified key.",
+                "@param key The key for the value to get.",
+                "@returns The value at key."
+                )]
             [FunctionAttribute("func __index__ (key : object) : object")]
             public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -95,6 +116,10 @@ namespace Hassium.Runtime.Types
                 return Null;
             }
 
+            [DocStr(
+                "@desc Implements the foreach loop, returning a list of tuples in the format (key, value) ...",
+                "@returns A list of (key, value) tuples."
+                )]
             [FunctionAttribute("func __iter__ () : list")]
             public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -105,6 +130,11 @@ namespace Hassium.Runtime.Types
                 return list;
             }
 
+            [DocStr(
+                "@desc Gets the first key that owns the specified value.",
+                "@param val The value to get the key by.",
+                "@returns The key that owns value."
+                )]
             [FunctionAttribute("func keybyvalue (val : object) : object")]
             public static HassiumObject keybyvalue(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -116,6 +146,12 @@ namespace Hassium.Runtime.Types
                 return Null;
             }
 
+            [DocStr(
+                "@desc Implements the []= operator, storing the specified object at the specified key.",
+                "@param key The key to store.",
+                "2param val The value to store under key.",
+                "@returns The value provided."
+                )]
             [FunctionAttribute("func __storeindex__ (key : object, val : object) : object")]
             public static HassiumObject storeindex(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -127,6 +163,10 @@ namespace Hassium.Runtime.Types
                 return args[1];
             }
 
+            [DocStr(
+                "@desc Returns the string value of the dictionary in format { <key> : <value>, ... }",
+                "@returns The string value of this dictionary."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -143,6 +183,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumString(sb.ToString());
             }
 
+            [DocStr(
+                "@desc Gets the value for the specified key.",
+                "@param key The key for the value to get.",
+                "@returns The value at key."
+                )]
             [FunctionAttribute("func valuebykey (key : object) : object")]
             public static HassiumObject valuebykey(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

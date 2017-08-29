@@ -32,7 +32,13 @@ namespace Hassium.Runtime
                 };
             }
 
-            [FunctionAttribute("func new (obj : object, attrib : string) : AttributeNotFoundException")]
+            [DocStr(
+                "@desc Constructs a new AttribNotFoundException using the specified object and attribute string.",
+                "@param obj The object the attrib was not found in.",
+                "@param attrib The string attrib that was not found.",
+                "@returns The new AttribNotFoundException."
+                )]
+            [FunctionAttribute("func new (obj : object, attrib : string) : AttribNotFoundException")]
             public static HassiumAttribNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 HassiumAttribNotFoundException exception = new HassiumAttribNotFoundException();
@@ -43,12 +49,20 @@ namespace Hassium.Runtime
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string attribute that was not found.",
+                "@returns The attribute as string."
+                )]
             [FunctionAttribute("attribute { get; }")]
             public static HassiumObject get_attribute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumAttribNotFoundException).Attribute;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+                )]
             [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -56,12 +70,20 @@ namespace Hassium.Runtime
                 return new HassiumString(string.Format("Attribute Not Found: Could not find attribute '{0}' in object of type '{1}'", exception.Attribute.String, exception.Object.Type()));
             }
 
+            [DocStr(
+                "@desc Gets the readonly object that the attribute was not found in.",
+                "@returns The object."
+                )]
             [FunctionAttribute("object { get; }")]
             public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumAttribNotFoundException).Object;
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

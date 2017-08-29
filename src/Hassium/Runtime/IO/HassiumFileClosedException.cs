@@ -73,7 +73,7 @@ namespace Hassium.Runtime.IO
                 "@desc Gets the readonly string message of the exception.",
                 "@returns The exception message string."
                 )]
-            [FunctionAttribute("message { message; }")]
+            [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("File Closed: Filepath '{0}' has been closed", (self as HassiumFileClosedException).FilePath.String));

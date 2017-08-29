@@ -73,6 +73,11 @@ namespace Hassium.Runtime.Types
                 };
             }
 
+            [DocStr(
+                "@desc Implements the == operator to determine if this bool is equal to the specified bool.",
+                "@param b The bool to compare.",
+                "@returns true if the bools are equal, otherwise false."
+                )]
             [FunctionAttribute("func __equals__ (b : bool) : bool")]
             public static HassiumBool equalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -80,6 +85,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(Bool == args[0].ToBool(vm, args[0], location).Bool);
             }
 
+            [DocStr(
+                "@desc Implements the && operator to determine if both this bool and the specified bool are true.",
+                "@param b The second bool to check.",
+                "@returns true if both bools are true, otherwise false."
+                )]
             [FunctionAttribute("func __logicaland__ (b : bool) : bool")]
             public static HassiumObject logicaland(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -87,13 +97,22 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(Bool && args[0].ToBool(vm, args[0], location).Bool);
             }
 
-            [FunctionAttribute("func __logicalnot__ (b : bool) : bool")]
+            [DocStr(
+                "@desc Implements the ! operator to return the boolean opposite of this bool.",
+                "@returns true if this bool is false, otherwise false."
+                )]
+            [FunctionAttribute("func __logicalnot__ () : bool")]
             public static HassiumObject logicalnot(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Bool = (self as HassiumBool).Bool;
                 return new HassiumBool(!Bool);
             }
 
+            [DocStr(
+                "@desc Implements the || operator to determine if either this bool or the specified bool are true.",
+                "@param b The second bool to check.",
+                "@returns true if either this bool or the other is true, otherwise false."
+                )]
             [FunctionAttribute("func __logicalor__ (b : bool) : bool")]
             public static HassiumObject logicalor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -101,6 +120,11 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(Bool || args[0].ToBool(vm, args[0], location).Bool);
             }
 
+            [DocStr(
+                "@desc Implements the != operator to determine if this bool is not equal to the specified bool.",
+                "@param b The bool to compare to.",
+                "@returns true if the bools are not equal, otherwise false."
+                )]
             [FunctionAttribute("func __notequal__ (b : bool) : bool")]
             public static HassiumBool notequalto(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -108,19 +132,31 @@ namespace Hassium.Runtime.Types
                 return new HassiumBool(Bool != args[0].ToBool(vm, args[0], location).Bool);
             }
 
+            [DocStr(
+                "@desc Returns this bool.",
+                "@returns This bool."
+                )]
             [FunctionAttribute("func tobool () : bool")]
             public static HassiumBool tobool(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return self as HassiumBool;
             }
 
+            [DocStr(
+                "@desc Returns the integer value of this bool.",
+                "@returns 1 if this is true, otherwise 0."
+                )]
             [FunctionAttribute("func toint () : int")]
             public static HassiumInt toint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Bool = (self as HassiumBool).Bool;
                 return new HassiumInt(Bool ? 1 : 0);
             }
-
+            
+            [DocStr(
+                "@desc Returns the string value of this bool.",
+                "@returns 'true' if this is true, otherwise 'false'."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
