@@ -10,6 +10,8 @@ use Util;
 from IO use FS;
 from IO use Path;
 
+from FuncDoc use FuncDoc;
+
 func main () {
 	docmodule (Crypto, "Crypto");
 	docmodule (Drawing, "Drawing");
@@ -45,8 +47,17 @@ func docclazz (clazz, name : string) {
 	attribs = getattribs (clazz);
 
 	foreach (attrib in attribs) {
-		foreach (rep in getsourcereps (attrib [1])) {
+		funcdoc = new FuncDoc (attrib [1]);
+		foreach (rep in funcdoc.sourcereps) {
 			file.writeline ("#### ```{0}```\n\n".format (rep));
+			file.writeline ("```@desc:``` {0}".format (funcdoc.desc));
+			foreach (param in funcdoc.reqparams) {
+				file.writeline ("```    @param: {0}:``` {1}".format (param [0], param [1]));
+			}
+			foreach (param in funcdoc.optparams) {
+				file.writeline ("```    @optional: {0}:``` {1}".format (param [0], param [1]));
+			}
+			file.writeline ("```@returns:``` {0}\n".format (funcdoc.returns));
 		}
 	}
 

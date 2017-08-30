@@ -674,19 +674,19 @@ namespace Hassium.Compiler.Emit
                     module.AddWarning(node.SourceLocation, "Importing '*' is bad practice!");
                     foreach (var attrib in mod.BoundAttributes)
                     {
-                        if (!classStack.Peek().ContainsAttribute(attrib.Key))
+                        if (!module.ContainsAttribute(attrib.Key))
                         {
                             var value = attrib.Value.Clone() as HassiumObject;
                             value.Parent = classStack.Peek();
-                            if (!classStack.Peek().ContainsAttribute(attrib.Key))
-                                classStack.Peek().AddAttribute(attrib.Key, value);
+                            if (!module.ContainsAttribute(attrib.Key))
+                                module.AddAttribute(attrib.Key, value);
                         }
                     }
                 }
                 else if (!mod.ContainsAttribute(node.Class))
                     throw new CompilerException(node.SourceLocation, "Could not find attribute '{0}' in module '{1}'", node.Class, node.Module);
                 else
-                    classStack.Peek().AddAttribute(node.Class, mod.GetAttribute(null, node.Class));
+                    module.AddAttribute(node.Class, mod.GetAttribute(null, node.Class));
             }
         }
         public void Accept(WhileNode node)

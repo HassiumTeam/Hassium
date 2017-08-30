@@ -10,6 +10,8 @@ use Util;
 from IO use FS;
 from IO use Path;
 
+from FuncDoc use FuncDoc;
+
 func main () {
 	docmodule (Crypto, "Crypto");
 	docmodule (Drawing, "Drawing");
@@ -37,7 +39,7 @@ func docmodule (mod : object, name : string) {
 	FS.cwd = Path.combine (FS.cwd, "../");
 }
 
-func docclazz (clazz : object, name : string) {
+func docclazz (clazz, name : string) {
 	file = FS.open ("{0}.md".format (name));
 
 	file.writeline ("## class {0}\n".format (name));
@@ -45,7 +47,11 @@ func docclazz (clazz : object, name : string) {
 	attribs = getattribs (clazz);
 
 	foreach (attrib in attribs) {
-		file.writeline ("#### ```{0}```\n\n".format (getsourcerep (attrib [1])));
+		println ("working on {0}.{1}".format (name, attrib [0]));
+		funcdoc = new FuncDoc (attrib [1]);
+		foreach (rep in funcdoc.sourcereps) {
+			file.writeline ("#### ```{0}```\n\n".format (rep));
+		}
 	}
 
 	file.close ();

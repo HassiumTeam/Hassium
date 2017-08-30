@@ -9,7 +9,7 @@
             AddAttribute("bool", HassiumBool.TypeDefinition);
             AddAttribute("BigInt", HassiumBigInt.TypeDefinition);
             AddAttribute("char", HassiumChar.TypeDefinition);
-            AddAttribute("closure", HassiumClosure.TypeDefinition);
+            //AddAttribute("closure", HassiumClosure.TypeDefinition);
             AddAttribute("ConversionFailedException", new HassiumConversionFailedException());
             AddAttribute("dictionary", HassiumDictionary.TypeDefinition);
             AddAttribute("false", new HassiumBool(false));

@@ -23,15 +23,19 @@ namespace Hassium.Runtime.Types
             {
                 AddAttribute(ADD, add, 1);
                 AddAttribute(EQUALTO, equalto, 1);
+                AddAttribute("endswith", endswith, 1);
                 AddAttribute("format", format, -1);
                 AddAttribute(GREATERTHAN, greaterthan, 1);
                 AddAttribute(GREATERTHANOREQUAL, greaterthanorequal, 1);
                 AddAttribute(INDEX, index, 1);
+                AddAttribute("indexof", indexof, 1);
                 AddAttribute(ITER, iter, 0);
                 AddAttribute("length", new HassiumProperty(get_length));
                 AddAttribute(LESSERTHAN, lesserthan, 1);
                 AddAttribute(LESSERTHANOREQUAL, lesserthanorequal, 1);
                 AddAttribute(NOTEQUALTO, notequalto, 1);
+                AddAttribute("startswith", startsswith, 1);
+                AddAttribute("substring", substring, 1, 2);
                 AddAttribute(TOFLOAT, tofloat, 0);
                 AddAttribute(TOINT, toint, 0);
                 AddAttribute(TOLIST, tolist, 0);
@@ -62,6 +66,17 @@ namespace Hassium.Runtime.Types
             {
                 var String = (self as HassiumString).String;
                 return new HassiumBool(String == args[0].ToString(vm, args[0], location).String);
+            }
+
+            [DocStr(
+                "@desc Returns a boolean indicating if this string ends with the specified string.",
+                "@param str The string to check.",
+                "@returns true if this string does end with the string, otherwise false."
+                )]
+            [FunctionAttribute("func endswith (str : string) : bool")]
+            public static HassiumBool endswith(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumBool((self as HassiumString).String.EndsWith(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(
@@ -114,6 +129,17 @@ namespace Hassium.Runtime.Types
             {
                 var String = (self as HassiumString).String;
                 return new HassiumChar(String[(int)args[0].ToInt(vm, args[0], location).Int]);
+            }
+
+            [DocStr(
+                "@desc Returns the first 0-based index of the specified string in this string.",
+                "@param str The string to get the index of.",
+                "@returns The 0-based index of where the string starts in this string."
+                )]
+            [FunctionAttribute("func indexof (str : string) : int")]
+            public static HassiumInt indexof(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumInt((self as HassiumString).String.IndexOf(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(
@@ -175,6 +201,32 @@ namespace Hassium.Runtime.Types
             {
                 var String = (self as HassiumString).String;
                 return new HassiumBool(String != args[0].ToString(vm, args[0], location).String);
+            }
+
+            [DocStr(
+                "@desc Returns a boolean indicating if this string starts with the specified string.",
+                "@param str The string to check.",
+                "@returns true if this string does start with the string, otherwise false."
+            )]
+            [FunctionAttribute("func startswith (str : string) : bool")]
+            public static HassiumBool startsswith(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumBool((self as HassiumString).String.StartsWith(args[0].ToString(vm, args[0], location).String));
+            }
+
+            [DocStr(
+                "@desc Takes the substring of this string at the specified start index and optional length.",
+                "@param start The 0-based start index.",
+                "@optional len The 0-based ending index.",
+                "@returns The substring."
+                )]
+            [FunctionAttribute("func substring (start : int) : string", "func substring (start : int, len : int) : string")]
+            public static HassiumString substring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args.Length == 2)
+                    return new HassiumString((self as HassiumString).String.Substring((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int));
+                else
+                    return new HassiumString((self as HassiumString).String.Substring((int)args[0].ToInt(vm, args[0], location).Int));
             }
 
             [DocStr(

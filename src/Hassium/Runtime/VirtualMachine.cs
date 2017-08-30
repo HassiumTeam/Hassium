@@ -210,16 +210,27 @@ namespace Hassium.Runtime
                             loc = inst.SourceLocation;
                             attrib = inst.Constant;
                             if (Globals.ContainsKey(attrib))
+                            {
                                 Stack.Push(Globals[attrib]);
-                            else if (method.Parent != null)
+                                break;
+                            }
+                            if (method.Parent != null)
                             {
                                 if (method.Parent.ContainsAttribute(attrib))
+                                {
                                     Stack.Push(method.Parent.GetAttribute(this, attrib));
-                                else
-                                    RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, method.Parent, new HassiumString(attrib)));
+                                    break;
+                                }
                             }
-                            else
-                                RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, CurrentModule, new HassiumString(attrib)));
+                            if (method.Module != null)
+                            {
+                                if (method.Module.ContainsAttribute(attrib))
+                                {
+                                    Stack.Push(method.Module.GetAttribute(this, attrib));
+                                    break;
+                                }
+                            }
+                            RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(this, null, loc, CurrentModule, new HassiumString(attrib)));
                             break;
                         case InstructionType.LoadGlobalVariable:
                             try

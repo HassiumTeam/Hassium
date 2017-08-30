@@ -50,7 +50,7 @@ namespace Hassium.Runtime
                 vm.RaiseException(HassiumArgLengthException.ArgLengthExceptionTypeDef._new(vm, null, location, this, new HassiumInt(ParameterLengths[0]), new HassiumInt(args.Length)));
                 return Null;
             }
-            
+
             return Target(vm, Parent, location, args);
         }
 

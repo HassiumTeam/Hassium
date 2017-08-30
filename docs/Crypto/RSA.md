@@ -1,8 +1,20 @@
 ## class RSA
 
-#### ```func decrypt (pubmod : object, privkey : object, msg : object```
+#### ```func decrypt (pubmod : BigInt, privkey : BigInt, msg : object)```
 
 
-#### ```func encrypt (pubmod : object, pube : object, msg : object```
+```@desc:``` Decrypts the given msg using the given public modulus BigInt and private key BigInt, returning the resulting bytes.
+```    @param: pubmod :``` The public key modulus BigInt.
+```    @param: privkey :``` The private key BigInt.
+```    @param: msg :``` The msg to decrypt.
+```@returns:``` The decrypted msg bytes.
 
+#### ```func encrypt (pubmod : object, pube : object, msg : object)```
+
+
+```@desc:``` Encrypts the given msg using the given public modulus BigInt and public e BigInt, return the resulting bytes.
+```    @param: pubmod :``` The public key modulus BigInt.
+```    @param: pube :``` The public e BigInt.
+```    @param: msg :``` The msg to encrypt.
+```@returns:``` the encrytped msg bytes.
 

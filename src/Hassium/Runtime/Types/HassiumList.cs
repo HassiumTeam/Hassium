@@ -151,7 +151,8 @@ namespace Hassium.Runtime.Types
             [DocStr(
                 "@desc Returns a new list filled with the specified count of specified objects.",
                 "@param count The amount of objects the new list should contain.",
-                "@param obj The object to fill the list with."
+                "@param obj The object to fill the list with.",
+                "@returns The new filled list."
                 )]
             [FunctionAttribute("func fill (count : int, val : object) : list")]
             public static HassiumList fill(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)

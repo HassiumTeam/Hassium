@@ -1,6 +1,7 @@
 ﻿using Hassium.Compiler;
 
 using System.Collections.Generic;
+using System.Text;
 
 namespace Hassium.Runtime.Types
 {
@@ -33,7 +34,9 @@ namespace Hassium.Runtime.Types
                 BoundAttributes = new Dictionary<string, HassiumObject>()
                 {
                     { INDEX, new HassiumFunction(index) },
-                    { ITER, new HassiumFunction(iter) }
+                    { ITER, new HassiumFunction(iter) },
+                    { "length", new HassiumProperty(get_length) },
+                    { TOSTRING, new HassiumFunction(tostring, 0) }
                 };
             }
 
@@ -68,6 +71,26 @@ namespace Hassium.Runtime.Types
             public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumInt((self as HassiumTuple).Values.Length);
+            }
+
+            [DocStr(
+                "@desc Returns this tuple as a string formatted as ( val1, val2, ... )",
+                "@returns The string value of this list."
+            )]
+            [FunctionAttribute("func tostring () : string")]
+            public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var Values = (self as HassiumTuple).Values;
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append("( ");
+                foreach (var v in Values)
+                    sb.AppendFormat("{0}, ", v.ToString(vm, v, location).String);
+                if (Values.Length > 0)
+                    sb.Remove(sb.Length - 2, 2);
+                sb.Append(" )");
+
+                return new HassiumString(sb.ToString());
             }
         }
 

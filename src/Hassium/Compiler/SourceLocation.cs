@@ -12,7 +12,7 @@ namespace Hassium.Compiler
 
         public SourceLocation(string file, int row, int column)
         {
-            File = file;
+            File = Path.Combine(Program.MasterPath, file);
 
             Row = row;
             Column = column;
