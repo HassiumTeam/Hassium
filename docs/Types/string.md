@@ -12,7 +12,7 @@
 
 ```@desc:``` Implements the + operator to return the specified string appended to this string.
 
-    ```@param str:``` The string to append.
+	```@param str:``` The string to append.
 ```@returns:``` A new string with the value of this string appended with the string.
 
 #### ```func __equals__ (str : string) : bool```
@@ -20,7 +20,7 @@
 
 ```@desc:``` Implements the == operator to determine if the specified string is equal to this string.
 
-    ```@param str:``` The string to compare.
+	```@param str:``` The string to compare.
 ```@returns:``` true if the strings are equal, otherwise false.
 
 #### ```func endswith (str : string) : bool```
@@ -28,7 +28,7 @@
 
 ```@desc:``` Returns a boolean indicating if this string ends with the specified string.
 
-    ```@param str:``` The string to check.
+	```@param str:``` The string to check.
 ```@returns:``` true if this string does end with the string, otherwise false.
 
 #### ```func format (params fargs) : string```
@@ -36,7 +36,7 @@
 
 ```@desc:``` Treats this string as a format string, using the given list of format args to format and return a new string.
 
-    ```@optional params fargs:``` The format args to format this string with.
+	```@optional params fargs:``` The format args to format this string with.
 ```@returns:``` A new formatted string using this string and the format args.
 
 #### ```func __greater__ (str : string) : bool```
@@ -44,7 +44,7 @@
 
 ```@desc:``` Implements the > operator to determine if this string is greater than the specified string.
 
-    ```@param str:``` The string to compare.
+	```@param str:``` The string to compare.
 ```@returns:``` true if this string is greater than the string, otherwise false.
 
 #### ```func __greaterorequal__ (str : string) : bool```
@@ -52,7 +52,7 @@
 
 ```@desc:``` Implements the >= operator to determine if this string is greater than or equal to the specified string.
 
-    ```@param str:``` The string to compare.
+	```@param str:``` The string to compare.
 ```@returns:``` true if this string is greater than or equal to the string, otherwise false.
 
 #### ```func __index__ (index : int) : char```
@@ -60,7 +60,7 @@
 
 ```@desc:``` Implements the [] operator to get the char at the specified 0-based index.
 
-    ```@param index:``` The 0-based index to get the char at.
+	```@param index:``` The 0-based index to get the char at.
 ```@returns:``` The char at the index.
 
 #### ```func indexof (str : string) : int```
@@ -68,7 +68,7 @@
 
 ```@desc:``` Returns the first 0-based index of the specified string in this string.
 
-    ```@param str:``` The string to get the index of.
+	```@param str:``` The string to get the index of.
 ```@returns:``` The 0-based index of where the string starts in this string.
 
 #### ```func __iter__ () : list```
@@ -90,7 +90,7 @@
 
 ```@desc:``` Implements the < operator to determine if this string is lesser than the specified string.
 
-    ```@param str:``` The string to compare.
+	```@param str:``` The string to compare.
 ```@returns:``` true if this string is lesser than the string, otherwise false.
 
 #### ```func __lesserorequal__ (str : string) : bool```
@@ -98,7 +98,7 @@
 
 ```@desc:``` Implements the <= operator to determine if this string is lesser than or equal to the specified string.
 
-    ```@param str:``` the string to compare.
+	```@param str:``` the string to compare.
 ```@returns:``` true if this string is lesser than or equal to the string, otherwise false.
 
 #### ```func __notequal__ (str : string) : bool```
@@ -106,7 +106,7 @@
 
 ```@desc:``` Implements the != operator to determine if this string is not equal to the specified string.
 
-    ```@param str:``` The string to compare.
+	```@param str:``` The string to compare.
 ```@returns:``` true if this string is not equal to the string, otherwise false.
 
 #### ```func startswith (str : string) : bool```
@@ -114,7 +114,7 @@
 
 ```@desc:``` Returns a boolean indicating if this string starts with the specified string.
 
-    ```@param str:``` The string to check.
+	```@param str:``` The string to check.
 ```@returns:``` true if this string does start with the string, otherwise false.
 
 #### ```func substring (start : int) : string```
@@ -122,8 +122,8 @@
 
 ```@desc:``` Takes the substring of this string at the specified start index and optional length.
 
-    ```@param start:``` The 0-based start index.
-    ```@optional len:``` The 0-based ending index.
+	```@param start:``` The 0-based start index.
+	```@optional len:``` The 0-based ending index.
 ```@returns:``` The substring.
 
 #### ```func substring (start : int, len : int) : string```
@@ -131,8 +131,8 @@
 
 ```@desc:``` Takes the substring of this string at the specified start index and optional length.
 
-    ```@param start:``` The 0-based start index.
-    ```@optional len:``` The 0-based ending index.
+	```@param start:``` The 0-based start index.
+	```@optional len:``` The 0-based ending index.
 ```@returns:``` The substring.
 
 #### ```func tofloat () : float```

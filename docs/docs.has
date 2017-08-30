@@ -52,10 +52,10 @@ func docclazz (clazz, name : string) {
 			file.writeline ("#### ```{0}```\n\n".format (rep));
 			file.writeline ("```@desc:``` {0}\n".format (funcdoc.desc));
 			foreach (param in funcdoc.reqparams) {
-				file.writeline ("    ```@param {0}:``` {1}".format (param [0], param [1]));
+				file.writeline ("\t```@param {0}:``` {1}".format (param [0], param [1]));
 			}
 			foreach (param in funcdoc.optparams) {
-				file.writeline ("    ```@optional {0}:``` {1}".format (param [0], param [1]));
+				file.writeline ("\t```@optional {0}:``` {1}".format (param [0], param [1]));
 			}
 			file.writeline ("```@returns:``` {0}\n".format (funcdoc.returns));
 		}

@@ -12,9 +12,9 @@
 
 ```@desc:``` Constructs a new SocketListener object using either the specified port, the specified Net.IPAddr, or the specified string ip and int port.
 
-    ```@optional portOrIPAddr:``` The int port to listen on or Net.IPAddr object.
-    ```@optional ip:``` The string ip address to listen on.
-    ```@optional port:``` The int port to listen on.
+	```@optional portOrIPAddr:``` The int port to listen on or Net.IPAddr object.
+	```@optional ip:``` The string ip address to listen on.
+	```@optional port:``` The int port to listen on.
 ```@returns:``` The new SocketListener object.
 
 #### ```func new (ip : string, port : int) : SocketListener```
@@ -22,9 +22,9 @@
 
 ```@desc:``` Constructs a new SocketListener object using either the specified port, the specified Net.IPAddr, or the specified string ip and int port.
 
-    ```@optional portOrIPAddr:``` The int port to listen on or Net.IPAddr object.
-    ```@optional ip:``` The string ip address to listen on.
-    ```@optional port:``` The int port to listen on.
+	```@optional portOrIPAddr:``` The int port to listen on or Net.IPAddr object.
+	```@optional ip:``` The string ip address to listen on.
+	```@optional port:``` The int port to listen on.
 ```@returns:``` The new SocketListener object.
 
 #### ```localip { get; }```
