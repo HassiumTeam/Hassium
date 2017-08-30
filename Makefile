@@ -2,6 +2,7 @@
 
 all:
 	xbuild ./src/Hassium.sln
+	chmod 777 * -R
 
 clean:
 	cd ~ && rm .Hassium -rf
@@ -15,3 +16,4 @@ install:
 	echo "#! /bin/bash" > /usr/bin/hassium
 	echo "/usr/bin/mono /usr/bin/Hassium.exe \$$@" >> /usr/bin/hassium
 	chmod +x /usr/bin/hassium
+	chmod 777 * -R

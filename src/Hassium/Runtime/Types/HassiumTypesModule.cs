@@ -15,6 +15,7 @@
             AddAttribute("false", new HassiumBool(false));
             AddAttribute("float", HassiumFloat.TypeDefinition);
             AddAttribute("func", HassiumFunction.TypeDefinition);
+            AddAttribute("globals", new GlobalFunctions());
             AddAttribute("IndexOutOfRangeException", HassiumIndexOutOfRangeException.TypeDefinition);
             AddAttribute("int", HassiumInt.TypeDefinition);
             AddAttribute("KeyNotFoundException", HassiumKeyNotFoundException.TypeDefinition);
@@ -25,6 +26,7 @@
             AddAttribute("PrivateAttribException", new HassiumPrivateAttribException());
             AddAttribute("property", HassiumProperty.TypeDefinition);
             AddAttribute("string", HassiumString.TypeDefinition);
+            AddAttribute("Thread", HassiumThread.TypeDefinition);
             AddAttribute("true", new HassiumBool(true));
             AddAttribute("tuple", HassiumTuple.TypeDefinition);
             AddAttribute("typedef", HassiumTypeDefinition.TypeDefinition);

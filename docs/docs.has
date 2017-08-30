@@ -21,6 +21,7 @@ func main () {
 	docmodule (Text, "Text");
 	docmodule (Types, "Types");
 	docmodule (Util, "Util");
+	docclazz (globals, "globals");
 }
 
 func docmodule (mod : object, name : string) {

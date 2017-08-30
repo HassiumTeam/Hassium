@@ -6,7 +6,7 @@ using Hassium.Runtime.Types;
 
 namespace Hassium.Runtime
 {
-    public class GlobalFunctions
+    public class GlobalFunctions : HassiumObject
     {
         public static Dictionary<string, HassiumObject> Functions = new Dictionary<string, HassiumObject>()
         {
@@ -34,6 +34,11 @@ namespace Hassium.Runtime
             { "type",            new HassiumFunction(type,            1) },
             { "types",           new HassiumFunction(types,           1) }
         };
+
+        public GlobalFunctions()
+        {
+            BoundAttributes = Functions;
+        }
 
         [DocStr(
             "@desc Creates a clone of the given object.",

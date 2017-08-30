@@ -18,7 +18,7 @@ namespace Hassium.Runtime.Util
             AddAttribute("beep", beep, 0, 2);
             AddAttribute("capslock", new HassiumProperty(get_capslock));
             AddAttribute("clear", clear, 0);
-            AddAttribute("cursorlefT", new HassiumProperty(get_cursorleft, set_cursorleft));
+            AddAttribute("cursorleft", new HassiumProperty(get_cursorleft, set_cursorleft));
             AddAttribute("cursorsize", new HassiumProperty(get_cursorsize, set_cursorsize));
             AddAttribute("cursortop", new HassiumProperty(get_cursortop, set_cursortop));
             AddAttribute("cursorvisible", new HassiumProperty(get_cursorvisible, set_cursorvisible));
