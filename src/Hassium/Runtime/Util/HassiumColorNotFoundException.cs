@@ -30,6 +30,11 @@ namespace Hassium.Runtime.Util
                 };
             }
 
+            [DocStr(
+                "desc Constructs a new ColorNotFoundException using the specified color string.",
+                "@param col The string name of the color that was not found.",
+                "@returns The new ColorNotFoundException object."
+                )]
             [FunctionAttribute("func new (col : string) : ColorNotFoundException")]
             public static HassiumColorNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -40,18 +45,30 @@ namespace Hassium.Runtime.Util
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string color that was not found.",
+                "@returns The not found color as string."
+                )]
             [FunctionAttribute("color { get; }")]
             public static HassiumString get_color(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumColorNotFoundException).ColorString;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+            )]
             [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("Color Not Found: Color '{0}' does not exist", (self as HassiumColorNotFoundException).ColorString.String));
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+            )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

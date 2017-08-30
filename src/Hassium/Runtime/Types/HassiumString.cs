@@ -188,6 +188,10 @@ namespace Hassium.Runtime.Types
                 return new HassiumFloat(Convert.ToDouble(String));
             }
 
+            [DocStr(
+                "@desc Converts this string to an integer value and returns it.",
+                "@returns The int value of this string."
+                )]
             [FunctionAttribute("func toint () : int")]
             public static HassiumInt toint(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -202,7 +206,11 @@ namespace Hassium.Runtime.Types
                     return new HassiumInt(-1);
                 }
             }
-
+               
+            [DocStr(
+                "@desc Converts this string to a list this string's chars.",
+                "@returns A list containing each char in the string."
+                )]
             [FunctionAttribute("func tolist () : list")]
             public static HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -210,6 +218,10 @@ namespace Hassium.Runtime.Types
                 return iter(vm, self, location, args) as HassiumList;
             }
 
+            [DocStr(
+                "@desc Converts this string to lowercase and returns it.",
+                "@returns This string with all lowercase values."
+                )]
             [FunctionAttribute("func tolower () : string")]
             public static HassiumString tolower(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -217,12 +229,20 @@ namespace Hassium.Runtime.Types
                 return new HassiumString(String.ToLower());
             }
 
+            [DocStr(
+                "@desc Returns this string.",
+                "@returns This string."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return self as HassiumString;
             }
 
+            [DocStr(
+                "@desc Converts this string to uppercase and returns it.",
+                "@returns This string with all uppercase values."
+                )]
             [FunctionAttribute("func toupper () : string")]
             public static HassiumString toupper(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

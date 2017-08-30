@@ -37,6 +37,11 @@ namespace Hassium.Runtime.Types
                 };
             }
 
+            [DocStr(
+                "@desc Implements the [] operator to return the value at the 0-based index.",
+                "@oaram index The 0-based index to get.",
+                "@returns The object at the index."
+                )]
             [FunctionAttribute("func __index__ (index : int) : object")]
             public static HassiumObject index(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -44,11 +49,25 @@ namespace Hassium.Runtime.Types
                 return Values[args[0].ToInt(vm, args[0], location).Int];
             }
 
+            [DocStr(
+                "@desc Implements the foreach loop by returning a new list of the values in the tuple.",
+                "@returns A new list containing the values inside the tuple."
+                )]
             [FunctionAttribute("func __iter__ () : list")]
             public static HassiumObject iter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var Values = (self as HassiumTuple).Values;
                 return new HassiumList(Values);
+            }
+
+            [DocStr(
+                "@desc Gets the readonly int that represents the amount of elements in this tuple.",
+                "@returns The number of values in this tuple as int."
+                )]
+            [FunctionAttribute("length { get; }")]
+            public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumInt((self as HassiumTuple).Values.Length);
             }
         }
 

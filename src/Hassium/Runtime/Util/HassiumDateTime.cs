@@ -38,6 +38,17 @@ namespace Hassium.Runtime.Util
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.",
+                "@param year The int year.",
+                "@param month The int month (1-12).",
+                "@param day The int day.",
+                "@optional hour The int hour.",
+                "@optional minute The int minute.",
+                "@optional second The int second.",
+                "@optional millisecond The int millisecond.",
+                "@returns The new DateTime object."
+                )]
             [FunctionAttribute("func new (year : int, month : int, day : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int) : DateTime", "func new (year : int, month : int, day : int, hour : int, min : int, sec : int, millisecond : int) : DateTime")]
             public static HassiumDateTime _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -59,6 +70,10 @@ namespace Hassium.Runtime.Util
                 return time;
             }
 
+            [DocStr(
+                "@desc Gets the readonly int day.",
+                "@returns The day as int."
+                )]
             [FunctionAttribute("day { get; }")]
             public static HassiumInt get_day(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -66,6 +81,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Day);
             }
 
+            [DocStr(
+                "@desc Gets the readonly int dayofweek (1-7).",
+                "@returns The day of week as int."
+                )]
             [FunctionAttribute("dayofweek { get; }")]
             public static HassiumString get_dayofweek(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -73,6 +92,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumString(DateTime.DayOfWeek.ToString());
             }
 
+            [DocStr(
+                "@desc Gets the readonly int dayofyear.",
+                "@returns The day of year as int."
+                )]
             [FunctionAttribute("dayofyear { get; }")]
             public static HassiumInt get_dayofyear(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -80,6 +103,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.DayOfYear);
             }
 
+            [DocStr(
+                "@desc Gets the readonly hour.",
+                "@returns The hour as int."
+                )]
             [FunctionAttribute("hour { get; }")]
             public static HassiumInt get_hour(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -87,6 +114,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Hour);
             }
 
+            [DocStr(
+                "@desc Gets the readonly millisecond.",
+                "@returns The millisecond as int."
+                )]
             [FunctionAttribute("millisecond { get; }")]
             public static HassiumInt get_millisecond(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -94,6 +125,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Millisecond);
             }
 
+            [DocStr(
+                "@desc Gets the readonly minute.",
+                "@returns The minute as int."
+                )]
             [FunctionAttribute("minute { get; }")]
             public static HassiumInt get_minute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -101,6 +136,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Minute);
             }
 
+            [DocStr(
+                "@desc Gets the readonly month.",
+                "@returns The month as int."
+                )]
             [FunctionAttribute("month { get; }")]
             public static HassiumInt get_month(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -108,6 +147,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Month);
             }
 
+            [DocStr(
+                "@desc Returns a new DateTime object with the values for date and time based off of the system clock.",
+                "@returns The new DateTime object with the current date and time."
+                )]
             [FunctionAttribute("now { get; }")]
             public static HassiumDateTime get_now(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -118,6 +161,10 @@ namespace Hassium.Runtime.Util
                 return time;
             }
 
+            [DocStr(
+                "@desc Gets the readonly second.",
+                "@returns The second as int."
+                )]
             [FunctionAttribute("second { get; }")]
             public static HassiumInt get_second(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -125,6 +172,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumInt(DateTime.Second);
             }
 
+            [DocStr(
+                "@desc Gets the string value of this date and time.",
+                "@returns The string value of the DateTime."
+                )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -132,6 +183,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumString(DateTime.ToString());
             }
 
+            [DocStr(
+                "@desc Gets the readonly year.",
+                "@returns The year as int."
+                )]
             [FunctionAttribute("year { get; }")]
             public static HassiumInt get_year(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

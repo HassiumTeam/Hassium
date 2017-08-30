@@ -41,18 +41,30 @@ namespace Hassium.Runtime.Types
                 };
             }
 
+            [DocStr(
+                "@desc Gets the readonly bool representing if this thread is currently running.",
+                "@returns true if the thread is alive, otherwise false."
+                )]
             [FunctionAttribute("isalive { get; }")]
             public static HassiumBool get_isalive(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumBool((self as HassiumThread).Thread.IsAlive);
             }
 
+            [DocStr(
+                "@desc Gets the readonly return value of this thread (post run).",
+                "@returns The return value of this thread as object."
+                )]
             [FunctionAttribute("returns { get; }")]
             public static HassiumObject get_returns(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return (self as HassiumThread).ReturnValue;
             }
 
+            [DocStr(
+                "@desc Starts this thread.",
+                "@returns null."
+                )]
             [FunctionAttribute("func start () : null")]
             public static HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -60,6 +72,10 @@ namespace Hassium.Runtime.Types
                 return Null;
             }
 
+            [DocStr(
+                "@desc Stops this thread.",
+                "@returns null."
+                )]
             [FunctionAttribute("func stop () : null")]
             public static HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

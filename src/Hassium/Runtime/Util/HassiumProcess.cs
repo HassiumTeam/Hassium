@@ -48,6 +48,12 @@ namespace Hassium.Runtime.Util
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new Process object using the specified process path and the given argument string.",
+                "@param path The path to the executable.",
+                "@param args The argument string.",
+                "@returns The new Process object."
+                )]
             [FunctionAttribute("func new (path : string, args : string")]
             public static HassiumProcess _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -60,6 +66,10 @@ namespace Hassium.Runtime.Util
                 return process;
             }
 
+            [DocStr(
+                "@desc Gets the mutable argument string.",
+                "@returns The argument string."
+                )]
             [FunctionAttribute("args { get; }")]
             public static HassiumString get_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -67,6 +77,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumString(StartInfo.Arguments);
             }
 
+            [DocStr(
+                "@desc Sets the mutable argument string.",
+                "@returns null."
+                )]
             [FunctionAttribute("args { set; }")]
             public static HassiumNull set_args(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -75,21 +89,33 @@ namespace Hassium.Runtime.Util
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable boolean indicating if a window will be created.",
+                "@returns true if a new window will be created, otherwise false."
+                )]
             [FunctionAttribute("createwindow { get; }")]
             public static HassiumBool get_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var StartInfo = (self as HassiumProcess).StartInfo;
-                return new HassiumBool(StartInfo.CreateNoWindow);
+                return new HassiumBool(!StartInfo.CreateNoWindow);
             }
 
+            [DocStr(
+                "@desc Sets the mutable boolean indicating if a window will be created.",
+                "@returns null."
+                )]
             [FunctionAttribute("createwindow { set; }")]
             public static HassiumNull set_createwindow(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var StartInfo = (self as HassiumProcess).StartInfo;
-                StartInfo.CreateNoWindow = args[0].ToBool(vm, args[0], location).Bool;
+                StartInfo.CreateNoWindow = !args[0].ToBool(vm, args[0], location).Bool;
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable string to the executable path.",
+                "@returns The path to the executable as string."
+                )]
             [FunctionAttribute("path { get; }")]
             public static HassiumString get_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -97,6 +123,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumString(StartInfo.FileName);
             }
 
+            [DocStr(
+                "@desc Sets the mutable path string to the executable.",
+                "@returns null."
+                )]
             [FunctionAttribute("path { set; }")]
             public static HassiumNull set_path(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -105,6 +135,10 @@ namespace Hassium.Runtime.Util
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable boolean indicating if the process will use a shell execute.",
+                "@returns true if the process will use shell execute, otherwise false."
+                )]
             [FunctionAttribute("shellexecute { get; }")]
             public static HassiumBool get_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -112,6 +146,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumBool(StartInfo.UseShellExecute);
             }
 
+            [DocStr(
+                "@desc Sets the mutable boolean indicating if the process wil use a shell execute.",
+                "@returns null."
+                )]
             [FunctionAttribute("shellexecute { set; }")]
             public static HassiumNull set_shellexecute(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -120,6 +158,10 @@ namespace Hassium.Runtime.Util
                 return Null;
             }
 
+            [DocStr(
+                "@desc Starts the process.",
+                "@returns null."
+                )]
             [FunctionAttribute("func start () : null")]
             public static HassiumNull start(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -132,6 +174,10 @@ namespace Hassium.Runtime.Util
                 return Null;
             }
 
+            [DocStr(
+                "@desc Stops the process.",
+                "@returns null."
+                )]
             [FunctionAttribute("func stop () : null")]
             public static HassiumNull stop(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -139,6 +185,10 @@ namespace Hassium.Runtime.Util
                 return Null;
             }
 
+            [DocStr(
+                "@desc Gets the mutable string username for the process to execute with.",
+                "@returns The string username."
+                )]
             [FunctionAttribute("username { get; }")]
             public static HassiumString get_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -146,6 +196,10 @@ namespace Hassium.Runtime.Util
                 return new HassiumString(StartInfo.UserName);
             }
 
+            [DocStr(
+                "@desc Sets the mutable string username for the process to execute with.",
+                "@returns null."
+                )]
             [FunctionAttribute("username { set; }")]
             public static HassiumNull set_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {

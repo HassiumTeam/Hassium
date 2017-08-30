@@ -18,16 +18,22 @@ namespace Hassium.Runtime.Util
             AddAttribute("exec", exec, -1);
             AddAttribute("exit", exit, 0, 1);
             AddAttribute("exitcode", new HassiumProperty(get_exitcode, set_exitcode));
-            AddAttribute("getarg", getarg, 1);
-            AddAttribute("getargs", getargs, 0);
+            AddAttribute("getarg", getvar, 1);
+            AddAttribute("getargs", getvars, 0);
             AddAttribute("machinename", new HassiumProperty(get_machinename));
             AddAttribute("netversion", new HassiumProperty(get_netversion));
             AddAttribute("newline", new HassiumProperty(get_newline));
-            AddAttribute("setarg", setarg, 2);
+            AddAttribute("setarg", setvar, 2);
             AddAttribute("username", new HassiumProperty(get_username));
             AddAttribute("version", new HassiumProperty(get_version));
         }
 
+        [DocStr(
+            "@desc Starts a new process at the specified path with the given args and returns the OS.Process object.",
+            "@param path The path of the executable to execute.",
+            "@optional params args The arguments to start the process with.",
+            "@returns A new OS.Process object that owns the started process."
+            )]
         [FunctionAttribute("func exec (path : string, params args) : Process")]
         public HassiumProcess exec(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -42,6 +48,11 @@ namespace Hassium.Runtime.Util
             return proc;
         }
 
+        [DocStr(
+            "@desc Exits Hassium with the optionally specified exitcode, default 0.",
+            "@optional code The int exitcode.",
+            "@returns null."
+            )]
         [FunctionAttribute("func exit () : null", "func exit (code : int) : null")]
         public HassiumNull exit(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
@@ -49,67 +60,109 @@ namespace Hassium.Runtime.Util
             return Null;
         }
 
+        [DocStr(
+            "@desc Gets the exit code.",
+            "@returns The exit code as int."
+            )]
         [FunctionAttribute("exitcode { get; }")]
         public HassiumInt get_exitcode(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumInt(Environment.ExitCode);
         }
 
+        [DocStr(
+            "@desc Sets the exit code.",
+            "@returns null."
+            )]
         [FunctionAttribute("exitcode { set; }")]
-        public HassiumInt set_exitcode(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        public HassiumObject set_exitcode(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Environment.ExitCode = (int)args[0].ToInt(vm, args[0], location).Int;
-            return args[0].ToInt(vm, args[0], location);
+            return Null;
         }
 
-        [FunctionAttribute("func getarg (arg : string) : string")]
-        public HassiumString getarg(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        [DocStr(
+            "@desc Gets the environment variable at the specified var.",
+            "@returns The environment variable string at the var."
+            )]
+        [FunctionAttribute("func getvar (var : string) : string")]
+        public HassiumString getvar(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Environment.GetEnvironmentVariable(args[0].ToString(vm, args[0], location).String));
         }
 
-        [FunctionAttribute("func getargs () : list")]
-        public HassiumList getargs(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        [DocStr(
+            "@desc Gets a new list containing all of the environment variables.",
+            "@returns A new list of all the environment variables."
+            )]
+        [FunctionAttribute("func getvars () : list")]
+        public HassiumList getvars(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
-            HassiumList arguments = new HassiumList(new HassiumObject[0]);
+            HassiumList variables = new HassiumList(new HassiumObject[0]);
 
-            foreach (var arg in Environment.GetCommandLineArgs())
-                HassiumList.add(vm, arguments, location, new HassiumString(arg));
+            foreach (var var_ in Environment.GetEnvironmentVariables())
+                HassiumList.add(vm, variables, location, new HassiumString(var_.ToString()));
 
-            return arguments;
+            return variables;
         }
 
+        [DocStr(
+            "@desc Gets the readonly name of this machine.",
+            "@returns The machine name as string."
+            )]
         [FunctionAttribute("machinename { get; }")]
         public HassiumString get_machinename(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Environment.MachineName);
         }
 
+        [DocStr(
+            "@desc Gets the readonly .NET version.",
+            "@returns The .NET version as string."
+            )]
         [FunctionAttribute("netversion { get; }")]
         public HassiumString get_netversion(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Environment.Version.ToString());
         }
 
+        [DocStr(
+            "@desc Gets the readonly string of the system newline separator.",
+            "@returns The system's newline separator."
+            )]
         [FunctionAttribute("newline { get; }")]
         public HassiumString get_newline(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Environment.NewLine);
         }
 
-        [FunctionAttribute("func setarg (arg : string, val : string) : null")]
-        public HassiumNull setarg(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        [DocStr(
+            "@desc Sets the specified environment variable name with the specified value.",
+            "@param var The string variable name to set.",
+            "@param val The string value.",
+            "@returns null."
+            )]
+        [FunctionAttribute("func setvar (var : string, val : string) : null")]
+        public HassiumNull setvar(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             Environment.SetEnvironmentVariable(args[0].ToString(vm, args[0], location).String, args[1].ToString(vm, args[1], location).String);
             return Null;
         }
 
+        [DocStr(
+            "@desc Gets the readonly logged on username.",
+            "@returns The string username."
+            )]
         [FunctionAttribute("username")]
         public HassiumString get_username(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumString(Environment.UserName);
         }
 
+        [DocStr(
+            "@desc Gets the readonly OS version.",
+            "@returns The OS version as string."
+            )]
         [FunctionAttribute("version")]
         public HassiumString get_version(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

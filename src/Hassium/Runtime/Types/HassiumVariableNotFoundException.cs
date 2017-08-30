@@ -27,6 +27,10 @@ namespace Hassium.Runtime
                 };
             }
 
+            [DocStr(
+                "@desc Constructs a new VariableNotFoundException.",
+                "@returns The new VariableNotFoundException object."
+                )]
             [FunctionAttribute("func new () : VariableNotFoundException")]
             public static HassiumVariableNotFoundException _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
@@ -36,12 +40,20 @@ namespace Hassium.Runtime
                 return exception;
             }
 
+            [DocStr(
+                "@desc Gets the readonly string message of the exception.",
+                "@returns The exception message string."
+            )]
             [FunctionAttribute("message { get; }")]
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumString(string.Format("Variable Not Found: variable was not found inside the stack frmae"));
             }
 
+            [DocStr(
+                "@desc Returns the string value of the exception, including the message and callstack.",
+                "@returns The string value of the exception."
+            )]
             [FunctionAttribute("func tostring () : string")]
             public static HassiumString tostring(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
