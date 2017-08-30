@@ -19,8 +19,8 @@
 
 ```@desc:``` Constructs a new FileClosedException using the specified IO.File object and string path.
 
-```	@param: file:``` The IO.File object that has been closed.
-```	@param: path:``` The path of the file that has been closed.
+    ```@param file:``` The IO.File object that has been closed.
+    ```@param path:``` The path of the file that has been closed.
 ```@returns:``` The new FileClosedException object.
 
 #### ```message { get; }```

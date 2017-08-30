@@ -5,7 +5,7 @@
 
 ```@desc:``` Constructs a new DirectoryNotFoundException using the specified path.
 
-```	@param: path:``` The path of the directory that is not found.
+    ```@param path:``` The path of the directory that is not found.
 ```@returns:``` The new DirectoryNotFoundException object.
 
 #### ```message { get; }```

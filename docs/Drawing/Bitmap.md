@@ -5,8 +5,8 @@
 
 ```@desc:``` Returns a new Drawing.Color object with the value of the pixel at the specified x and y coordinates.
 
-```	@param: x:``` The x coordinate.
-```	@param: y:``` The y coordinate.
+    ```@param x:``` The x coordinate.
+    ```@param y:``` The y coordinate.
 ```@returns:``` The color at (x, y).
 
 #### ```height { get; }```
@@ -28,9 +28,9 @@
 
 ```@desc:``` Constructs a new Bitmap with either the specified string name or the specified height and width.
 
-```	@optional: path:``` The file path on disc to the bitmap.
-```	@optional: height:``` The height in pixels for the new bitmap.
-```	@optional: width:``` The width in pixels for the new bitmap.
+    ```@optional path:``` The file path on disc to the bitmap.
+    ```@optional height:``` The height in pixels for the new bitmap.
+    ```@optional width:``` The width in pixels for the new bitmap.
 ```@returns:``` The new Bitmap object.
 
 #### ```func new (height : int, width : int) : Bitmap```
@@ -38,9 +38,9 @@
 
 ```@desc:``` Constructs a new Bitmap with either the specified string name or the specified height and width.
 
-```	@optional: path:``` The file path on disc to the bitmap.
-```	@optional: height:``` The height in pixels for the new bitmap.
-```	@optional: width:``` The width in pixels for the new bitmap.
+    ```@optional path:``` The file path on disc to the bitmap.
+    ```@optional height:``` The height in pixels for the new bitmap.
+    ```@optional width:``` The width in pixels for the new bitmap.
 ```@returns:``` The new Bitmap object.
 
 #### ```func save (path : string) : null```
@@ -48,7 +48,7 @@
 
 ```@desc:``` Saves this Bitmap to the specified path on disc.
 
-```	@param: path:``` The path to save the bitmap to.
+    ```@param path:``` The path to save the bitmap to.
 ```@returns:``` null.
 
 #### ```func setpixel (x : int, y : int, col : Color) : null```
@@ -56,9 +56,9 @@
 
 ```@desc:``` Sets the value of the pixel at the specified x and y coorinates to the given Drawing.Color object.
 
-```	@param: x:``` The x coordinate.
-```	@param: y:``` The y coordinate.
-```	@param: col:``` The Drawing.Color
+    ```@param x:``` The x coordinate.
+    ```@param y:``` The y coordinate.
+    ```@param col:``` The Drawing.Color
 ```@returns:``` null.
 
 #### ```func setres (x : float, y : float) : null```
@@ -66,8 +66,8 @@
 
 ```@desc:``` Sets the resolution to the given horitontal and vertical resolutions.
 
-```	@param: x:``` The horizontal resolution.
-```	@param: y:``` The vertical resolution.
+    ```@param x:``` The horizontal resolution.
+    ```@param y:``` The vertical resolution.
 ```@returns:``` null.
 
 #### ```vres { get; }```

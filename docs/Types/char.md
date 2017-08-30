@@ -5,7 +5,7 @@
 
 ```@desc:``` Implements the + operator to add to this char.
 
-```	@param: c:``` The char to add.
+    ```@param c:``` The char to add.
 ```@returns:``` This char plus the char.
 
 #### ```func __bitshiftleft__ (num : number) : char```
@@ -13,7 +13,7 @@
 
 ```@desc:``` Implements the << operator to perform a left bitshift of this char for the specified anmount of positions.
 
-```	@param: num:``` The number to shift left by.
+    ```@param num:``` The number to shift left by.
 ```@returns:``` The new char that has been shifted left.
 
 #### ```func __bitshiftright__ (num : number) : char```
@@ -21,7 +21,7 @@
 
 ```@desc:``` Implements the >> operator to perform a right bitshift of this char for the specified amount of positions.
 
-```	@param: num:``` The number to shift right by.
+    ```@param num:``` The number to shift right by.
 ```@returns:``` This new char that has been shifted right.
 
 #### ```func __bitswiseand__ (c : char) : char```
@@ -29,7 +29,7 @@
 
 ```@desc:``` Implements the & operator to perform a bitwise and operation on this char with the specified char.
 
-```	@param: c:``` The char to perform the and by.
+    ```@param c:``` The char to perform the and by.
 ```@returns:``` A new char containing only the bits that were 1 between both chars.
 
 #### ```func __bitwisenot__ () : char```
@@ -44,7 +44,7 @@
 
 ```@desc:``` Implements the | operator to perform a bitwise or operation on this char using the specified char.
 
-```	@param: c:``` The char to perform the or by.
+    ```@param c:``` The char to perform the or by.
 ```@returns:``` A new char containing bits that were 1 in either of the chars.
 
 #### ```func __divide__ (num : number) : int```
@@ -52,7 +52,7 @@
 
 ```@desc:``` Implements the / operator, returning this char divided by the specified number.
 
-```	@param: num:``` The number to divide by.
+    ```@param num:``` The number to divide by.
 ```@returns:``` This char divided by the number.
 
 #### ```func __equals__ (c : char) : bool```
@@ -60,7 +60,7 @@
 
 ```@desc:``` Implements the == operator, returning a boolean indicating if both chars are equal.
 
-```	@param: c:``` The char to compare.
+    ```@param c:``` The char to compare.
 ```@returns:``` true if both chars have the same value, otherwise false.
 
 #### ```func getbit (index : int) : bool```
@@ -68,7 +68,7 @@
 
 ```@desc:``` Gets the bit at the specified 0-based index in this char and returns it's value.
 
-```	@param: index:``` The 0-based index to get the bit at.
+    ```@param index:``` The 0-based index to get the bit at.
 ```@returns:``` true if the bit is 0, otherwise false.
 
 #### ```func __greater__ (num : number) : bool```
@@ -76,7 +76,7 @@
 
 ```@desc:``` Implements the > operator to determine if this char is greater than the specified number.
 
-```	@param: num:``` The number to compare.
+    ```@param num:``` The number to compare.
 ```@returns:``` true if this char is greater than the specified number, otherwise false.
 
 #### ```func __greaterorequal__ (num : number) : bool```
@@ -84,7 +84,7 @@
 
 ```@desc:``` Implements the >= operator to determine if this char is greater than or equal to the specified number.
 
-```	@param: num:``` The number to compare.
+    ```@param num:``` The number to compare.
 ```@returns:``` true if this char is greater than or equal to the specified number, otherwise false.
 
 #### ```func __intdivision__ (num : number) : int```
@@ -92,7 +92,7 @@
 
 ```@desc:``` Implements the // operator to divide this char by the specified number and return the closest integer value.
 
-```	@param: num:``` The number to divide by.
+    ```@param num:``` The number to divide by.
 ```@returns:``` This char divided by the number to the nearest whole int.
 
 #### ```func iscontrol () : bool```
@@ -156,7 +156,7 @@
 
 ```@desc:``` Implements the < operator to determine if this char is lesser than the specified number.
 
-```	@param: num:``` The number to compare.
+    ```@param num:``` The number to compare.
 ```@returns:``` true if this is lesser than the number, otherwise false.
 
 #### ```func __lesserorequal__ (num : number) : bool```
@@ -171,7 +171,7 @@
 
 ```@desc:``` Implements the % operator to calculate the modulus of this char and the specified number.
 
-```	@param: num:``` The number to modulus by.
+    ```@param num:``` The number to modulus by.
 ```@returns:``` The modulus of this char and the number.
 
 #### ```func __multiply__ (num : number) : int```
@@ -179,7 +179,7 @@
 
 ```@desc:``` Implements the * operator to multiply this char by the specified number.
 
-```	@param: num:``` The number to multiply by.
+    ```@param num:``` The number to multiply by.
 ```@returns:``` This char multiplied by the number.
 
 #### ```func __notequal__ (c : char) : bool```
@@ -187,7 +187,7 @@
 
 ```@desc:``` Implements the != operator to determine if this char is not equal to the specified char.
 
-```	@param: c:``` The char to compare.
+    ```@param c:``` The char to compare.
 ```@returns:``` true if the chars are not equal, otherwise false.
 
 #### ```func setbit (index : int, val : bool) : char```
@@ -195,8 +195,8 @@
 
 ```@desc:``` Sets the bit at the specified index to the specicied value.
 
-```	@param: index:``` The zero-based index to be set.
-```	@param: val:``` The bool value to set to, true for 1 and false for 0.
+    ```@param index:``` The zero-based index to be set.
+    ```@param val:``` The bool value to set to, true for 1 and false for 0.
 ```@returns:``` A new char with the value set.
 
 #### ```func __subtract__ (num : number) : char```
@@ -204,7 +204,7 @@
 
 ```@desc:``` Implements the - operator to subtract the specified number from this char.
 
-```	@param: num:``` The number to subtract.
+    ```@param num:``` The number to subtract.
 ```@returns:``` This char minus the number.
 
 #### ```func tochar () : char```
@@ -254,6 +254,6 @@
 
 ```@desc:``` Implements the ^ operator to perform an xor operation on this char using the specified char.
 
-```	@param: c:``` The char to perform the xor by.
+    ```@param c:``` The char to perform the xor by.
 ```@returns:``` A new char containing bits that were opposing in each char.
 
