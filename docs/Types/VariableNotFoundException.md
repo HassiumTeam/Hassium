@@ -2,19 +2,19 @@
 
 #### ```func new () : VariableNotFoundException```
 
-```@desc:``` Constructs a new VariableNotFoundException.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new VariableNotFoundException.
 
-```@returns:``` The new VariableNotFoundException object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new VariableNotFoundException object.
 
 #### ```message { get; }```
 
-```@desc:``` Gets the readonly string message of the exception.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string message of the exception.
 
-```@returns:``` The exception message string.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The exception message string.
 
 #### ```func tostring () : string```
 
-```@desc:``` Returns the string value of the exception, including the message and callstack.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns the string value of the exception, including the message and callstack.
 
-```@returns:``` The string value of the exception.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of the exception.
 

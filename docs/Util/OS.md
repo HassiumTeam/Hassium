@@ -2,91 +2,91 @@
 
 #### ```func exec (path : string, params args) : Process```
 
-```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the executable to execute.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the executable to execute.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@optional params args:``` The arguments to start the process with.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional params args:``` The arguments to start the process with.
 
-```@returns:``` A new OS.Process object that owns the started process.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A new OS.Process object that owns the started process.
 
 #### ```func exit () : null```
 
-```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
 
-```@returns:``` null.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```func exit (code : int) : null```
 
-```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
 
-```@returns:``` null.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```exitcode { get; }```
 
-```@desc:``` Gets the exit code.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the exit code.
 
-```@returns:``` The exit code as int.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The exit code as int.
 
 #### ```exitcode { set; }```
 
-```@desc:``` Gets the exit code.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the exit code.
 
-```@returns:``` The exit code as int.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The exit code as int.
 
 #### ```func getvar (var : string) : string```
 
-```@desc:``` Gets the environment variable at the specified var.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the environment variable at the specified var.
 
-```@returns:``` The environment variable string at the var.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The environment variable string at the var.
 
 #### ```func getvars () : list```
 
-```@desc:``` Gets a new list containing all of the environment variables.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets a new list containing all of the environment variables.
 
-```@returns:``` A new list of all the environment variables.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A new list of all the environment variables.
 
 #### ```machinename { get; }```
 
-```@desc:``` Gets the readonly name of this machine.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly name of this machine.
 
-```@returns:``` The machine name as string.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The machine name as string.
 
 #### ```netversion { get; }```
 
-```@desc:``` Gets the readonly .NET version.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly .NET version.
 
-```@returns:``` The .NET version as string.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The .NET version as string.
 
 #### ```newline { get; }```
 
-```@desc:``` Gets the readonly string of the system newline separator.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string of the system newline separator.
 
-```@returns:``` The system's newline separator.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The system's newline separator.
 
 #### ```func setvar (var : string, val : string) : null```
 
-```@desc:``` Sets the specified environment variable name with the specified value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Sets the specified environment variable name with the specified value.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param var:``` The string variable name to set.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param var:``` The string variable name to set.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The string value.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The string value.
 
-```@returns:``` null.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```username```
 
-```@desc:``` Gets the readonly logged on username.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly logged on username.
 
-```@returns:``` The string username.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string username.
 
 #### ```version```
 
-```@desc:``` Gets the readonly OS version.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly OS version.
 
-```@returns:``` The OS version as string.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The OS version as string.
 

@@ -2,71 +2,71 @@
 
 #### ```func add (key : object, val : object) : null```
 
-```@desc:``` Adds the given value to the dictionary under the specified key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Adds the given value to the dictionary under the specified key.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the entry.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the entry.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param value:``` The value for the key.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param value:``` The value for the key.
 
-```@returns:``` null.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```func containskey (key : object) : bool```
 
-```@desc:``` Returns a boolean indicating if the specified key is present in the dictionary.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a boolean indicating if the specified key is present in the dictionary.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to check.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to check.
 
-```@returns:``` true if the key is present, otherwise false.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if the key is present, otherwise false.
 
 #### ```func containsvalue (val : object) : bool```
 
-```@desc:``` Returns a boolean indicating if the specified value is present in the dictionary.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a boolean indicating if the specified value is present in the dictionary.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value to check.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value to check.
 
-```@returns:``` true if the value is present, otherwise false.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if the value is present, otherwise false.
 
 #### ```func __index__ (key : object) : object```
 
-```@desc:``` Implements the [] operator by retrieving the value at the specified key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the [] operator by retrieving the value at the specified key.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the value to get.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the value to get.
 
-```@returns:``` The value at key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The value at key.
 
 #### ```func __iter__ () : list```
 
-```@desc:``` Implements the foreach loop, returning a list of tuples in the format (key, value) ...
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the foreach loop, returning a list of tuples in the format (key, value) ...
 
-```@returns:``` A list of (key, value) tuples.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A list of (key, value) tuples.
 
 #### ```func keybyvalue (val : object) : object```
 
-```@desc:``` Gets the first key that owns the specified value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the first key that owns the specified value.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value to get the key by.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value to get the key by.
 
-```@returns:``` The key that owns value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The key that owns value.
 
 #### ```func __storeindex__ (key : object, val : object) : object```
 
-```@desc:``` Implements the []= operator, storing the specified object at the specified key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the []= operator, storing the specified object at the specified key.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to store.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to store.
 
-```@returns:``` l The value to store under key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` l The value to store under key.
 
 #### ```func tostring () : string```
 
-```@desc:``` Returns the string value of the dictionary in format { <key> : <value>, ... }
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns the string value of the dictionary in format { <key> : <value>, ... }
 
-```@returns:``` The string value of this dictionary.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this dictionary.
 
 #### ```func valuebykey (key : object) : object```
 
-```@desc:``` Gets the value for the specified key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the value for the specified key.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the value to get.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key for the value to get.
 
-```@returns:``` The value at key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The value at key.
 
