@@ -27,8 +27,11 @@
 ```@desc:``` Constructs a new ArgLengthException using the specified function object, the specified given arg length, and the specified expected arg length.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param fn:``` The function object that was given improper args.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param expected:``` The int representing how many args were expected.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param given:``` The int representing how many args were actually given.
+
 ```@returns:``` The new ArgLengthException object.
 
 #### ```func tostring () : string```

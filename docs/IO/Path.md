@@ -6,6 +6,7 @@
 ```@desc:``` Combines the given file paths together and returns the file string.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional params paths:``` The list of paths to combine.
+
 ```@returns:``` The resulting path string.
 
 #### ```func getappdata () : string```
@@ -42,6 +43,7 @@
 ```@desc:``` Parses the directory name of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to parse.
+
 ```@returns:``` The directory name of the path.
 
 #### ```func parseext (path : string) : string```
@@ -50,6 +52,7 @@
 ```@desc:``` Parses The extension of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to parse.
+
 ```@returns:``` The extension of the file path.
 
 #### ```func parsefilename (path : string) : string```
@@ -58,6 +61,7 @@
 ```@desc:``` Parses the file name of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to parse.
+
 ```@returns:``` The file name of the file path.
 
 #### ```func parseroot (path : string) : string```
@@ -66,5 +70,6 @@
 ```@desc:``` Parses the root directory of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param :``` path The path to parse.
+
 ```@returns:``` The root directory of the file path.
 

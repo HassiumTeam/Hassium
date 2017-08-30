@@ -6,6 +6,7 @@
 ```@desc:``` Adds the specified object to this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to add.
+
 ```@returns:``` null.
 
 #### ```func contains (obj : object) : bool```
@@ -14,6 +15,7 @@
 ```@desc:``` Returns a boolean indicating if the specified object was found in this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to check.
+
 ```@returns:``` true if the object was found in the list, otherwise false.
 
 #### ```func __equals__ (l : list) : bool```
@@ -22,6 +24,7 @@
 ```@desc:``` Implements the == operator to determine if the specified list is equal to this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to compare.
+
 ```@returns:``` true if the lists are equal, otherwise false.
 
 #### ```func fill (count : int, val : object) : list```
@@ -30,7 +33,9 @@
 ```@desc:``` Returns a new list filled with the specified count of specified objects.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param count:``` The amount of objects the new list should contain.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to fill the list with.
+
 ```@returns:``` The new filled list.
 
 #### ```func format (fmt : string) : string```
@@ -39,6 +44,7 @@
 ```@desc:``` Formats this list using the specified format string and returns the string result.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param fmt:``` The format string.
+
 ```@returns:``` This list formatted as string.
 
 #### ```func __index__ (i : int) : object```
@@ -47,6 +53,7 @@
 ```@desc:``` Implements the [] operator to return the object at the specified 0-based index.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param i:``` The 0-based index to get the object at.
+
 ```@returns:``` The object at the index.
 
 #### ```func __iter__ () : list```
@@ -83,6 +90,7 @@
 ```@desc:``` Implements the != operator to determine if this list is not equal to the specified list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to compare.
+
 ```@returns:``` true if the lists are not equal, otherwise false.
 
 #### ```func peek () : object```
@@ -105,6 +113,7 @@
 ```@desc:``` Adds the specified object to the top of the list (same as list.add).
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to add.
+
 ```@returns:``` null.
 
 #### ```func remove (obj : object) : null```
@@ -113,6 +122,7 @@
 ```@desc:``` Removes the specified object from this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to remove.
+
 ```@returns:``` null.
 
 #### ```func removeat (index : int) : null```
@@ -121,6 +131,7 @@
 ```@desc:``` Removes the object at the specified 0-based index.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param index:``` The 0-based index to remove at.
+
 ```@returns:``` nuil.
 
 #### ```func reverse () : list```
@@ -136,7 +147,9 @@
 ```@desc:``` Implements the []= operator, storing the specified object at the specified 0-based index.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param index:``` The 0-based index to store at.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to store at the index.
+
 ```@returns:``` The object that was passed.
 
 #### ```func toascii () : string```

@@ -6,6 +6,7 @@
 ```@desc:``` Implements the == operator to determine if this bool is equal to the specified bool.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The bool to compare.
+
 ```@returns:``` true if the bools are equal, otherwise false.
 
 #### ```func __logicaland__ (b : bool) : bool```
@@ -14,6 +15,7 @@
 ```@desc:``` Implements the && operator to determine if both this bool and the specified bool are true.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The second bool to check.
+
 ```@returns:``` true if both bools are true, otherwise false.
 
 #### ```func __logicalnot__ () : bool```
@@ -29,6 +31,7 @@
 ```@desc:``` Implements the || operator to determine if either this bool or the specified bool are true.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The second bool to check.
+
 ```@returns:``` true if either this bool or the other is true, otherwise false.
 
 #### ```func __notequal__ (b : bool) : bool```
@@ -37,6 +40,7 @@
 ```@desc:``` Implements the != operator to determine if this bool is not equal to the specified bool.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The bool to compare to.
+
 ```@returns:``` true if the bools are not equal, otherwise false.
 
 #### ```func tobool () : bool```

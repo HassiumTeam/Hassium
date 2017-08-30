@@ -34,7 +34,9 @@
 ```@desc:``` Constructs a new Process object using the specified process path and the given argument string.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to the executable.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param args:``` The argument string.
+
 ```@returns:``` The new Process object.
 
 #### ```path { get; }```

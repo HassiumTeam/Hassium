@@ -20,7 +20,9 @@
 ```@desc:``` Causes the terminal to beep, optionally specifying the millisecond length and frequency.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param freq:``` The frequency as int.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param milliseconds:``` The milliseconds as int.
+
 ```@returns:``` null.
 
 #### ```func beep (freq : int, milliseconds : int) : null```
@@ -29,7 +31,9 @@
 ```@desc:``` Causes the terminal to beep, optionally specifying the millisecond length and frequency.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param freq:``` The frequency as int.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@param milliseconds:``` The milliseconds as int.
+
 ```@returns:``` null.
 
 #### ```capslock { get; }```

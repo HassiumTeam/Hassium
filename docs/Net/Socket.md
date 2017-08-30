@@ -27,8 +27,11 @@
 ```@desc:``` Connects the socket to either the specified Net.IPAddr object or the specified string ip and int port.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object to connect to.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address to connect to.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The port to connect to.
+
 ```@returns:``` null.
 
 #### ```func connect (ip : string, port : int) : null```
@@ -37,8 +40,11 @@
 ```@desc:``` Connects the socket to either the specified Net.IPAddr object or the specified string ip and int port.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object to connect to.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address to connect to.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The port to connect to.
+
 ```@returns:``` null.
 
 #### ```fromip { get; }```
@@ -61,9 +67,13 @@
 ```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
+
 ```@returns:``` The new Socket object.
 
 #### ```func new (ip : IPAddr) : Socket```
@@ -72,9 +82,13 @@
 ```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
+
 ```@returns:``` The new Socket object.
 
 #### ```func new (ip : string, port : int) : Socket```
@@ -83,9 +97,13 @@
 ```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
+
 ```@returns:``` The new Socket object.
 
 #### ```func new (ip : string, port : int, ssl : bool) : Socket```
@@ -94,9 +112,13 @@
 ```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
+
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
+
 ```@returns:``` The new Socket object.
 
 #### ```isconnected { get; }```
@@ -119,6 +141,7 @@
 ```@desc:``` Reads the specified count of bytes from the stream and returns them in a list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param count:``` The amount of bytes to read.
+
 ```@returns:``` A list containing the specified amount of bytes.
 
 #### ```func readint () : int```
@@ -169,6 +192,7 @@
 ```@desc:``` Writes the given single byte to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The char to write.
+
 ```@returns:``` null.
 
 #### ```func writefloat (f : float) : null```
@@ -177,6 +201,7 @@
 ```@desc:``` Writes the given single float to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param f:``` The float to write.
+
 ```@returns:``` null.
 
 #### ```func writeint (i : int) : null```
@@ -185,6 +210,7 @@
 ```@desc:``` Writes the given single 32-bit integer to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param i:``` The 32-bit int to write.
+
 ```@returns:``` null.
 
 #### ```func writeline (str : string) : null```
@@ -193,6 +219,7 @@
 ```@desc:``` Writes the given string line to the file stream, followed by a newline.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param str:``` The string to write.
+
 ```@returns:``` null.
 
 #### ```func writelist (l : list) : null```
@@ -201,6 +228,7 @@
 ```@desc:``` Writes the byte value of each element in the given list to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to write.
+
 ```@returns:``` null.
 
 #### ```func writelong (l : int) : null```
@@ -209,6 +237,7 @@
 ```@desc:``` Writes the given 64-bit integer to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The 64-bit int to write.
+
 ```@returns:``` null.
 
 #### ```func writeshort (s : int) : null```
@@ -217,6 +246,7 @@
 ```@desc:``` Writes the given 16-bit integer to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param s:``` The 16-bit int to write.
+
 ```@returns:``` null.
 
 #### ```func writestring (str : string) : null```
@@ -225,5 +255,6 @@
 ```@desc:``` Writes the given string to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param str:``` The string to write.
+
 ```@returns:``` null.
 
