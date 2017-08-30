@@ -26,43 +26,7 @@
 
 #### ```func new (year : int, month : int, day : int) : DateTime```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param year:``` The int year.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param month:``` The int month (1-12).
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param day:``` The int day.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional hour:``` The int hour.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional minute:``` The int minute.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional second:``` The int second.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional millisecond:``` The int millisecond.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new DateTime object.
-
 #### ```func new (year : int, month : int, day : int, hour : int, min : int, sec : int) : DateTime```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param year:``` The int year.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param month:``` The int month (1-12).
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param day:``` The int day.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional hour:``` The int hour.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional minute:``` The int minute.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional second:``` The int second.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional millisecond:``` The int millisecond.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new DateTime object.
 
 #### ```func new (year : int, month : int, day : int, hour : int, min : int, sec : int, millisecond : int) : DateTime```
 

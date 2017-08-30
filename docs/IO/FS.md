@@ -36,10 +36,6 @@
 
 #### ```cwd { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string of the current working directory.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The current working directory as string.
-
 #### ```cwd { set; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string of the current working directory.

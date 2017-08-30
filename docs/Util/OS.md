@@ -12,12 +12,6 @@
 
 #### ```func exit () : null```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
-
 #### ```func exit (code : int) : null```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
@@ -27,10 +21,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```exitcode { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the exit code.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The exit code as int.
 
 #### ```exitcode { set; }```
 

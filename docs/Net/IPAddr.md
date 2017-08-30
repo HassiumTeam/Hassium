@@ -8,14 +8,6 @@
 
 #### ```func new (host : string) : IPaddr```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param host:``` The hostname or ip address as string.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The port for a connection.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new IPAddr object.
-
 #### ```func new (host : string, port : int) : IPAddr```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.

@@ -8,10 +8,6 @@
 
 #### ```autoflush { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable bool indicating if the file stream will autoflush.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` True if the stream will automatically flush, otherwise false.
-
 #### ```autoflush { set; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable bool indicating if the file stream will autoflush.
@@ -39,10 +35,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` True if the file exists, otherwise false.
 
 #### ```extension { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string of this file's extension.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` This file's extension as string.
 
 #### ```extension { set; }```
 
@@ -78,10 +70,6 @@
 
 #### ```name { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string containing the name of the file.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The name of this file.
-
 #### ```name { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string containing the name of the file.
@@ -89,10 +77,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The name of this file.
 
 #### ```position { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable int that represents the current position in the file stream.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The current position as int.
 
 #### ```position { set; }```
 

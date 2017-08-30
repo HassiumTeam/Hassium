@@ -24,16 +24,6 @@
 
 #### ```func new (path : string) : Bitmap```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Bitmap with either the specified string name or the specified height and width.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional path:``` The file path on disc to the bitmap.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional height:``` The height in pixels for the new bitmap.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional width:``` The width in pixels for the new bitmap.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Bitmap object.
-
 #### ```func new (height : int, width : int) : Bitmap```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Bitmap with either the specified string name or the specified height and width.

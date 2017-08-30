@@ -2,12 +2,6 @@
 
 #### ```func new () : StringBuilder```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new StringBuilder object, optionally using the specified obj.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional obj:``` The object whose string value to use.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new StringBuilder object.
-
 #### ```func new (obj : object) : StringBuilder```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new StringBuilder object, optionally using the specified obj.

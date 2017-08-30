@@ -26,35 +26,7 @@
 
 #### ```func new (colIntOrStr : object) : Color```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional a:``` The alpha value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional r:``` The red value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional g:``` The green value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional b:``` The blue value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Color object.
-
 #### ```func new (r : int, g : int, b : int) : Color```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional a:``` The alpha value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional r:``` The red value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional g:``` The green value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional b:``` The blue value.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Color object.
 
 #### ```func new (a : int, r : int, g : int, b : int) : Color```
 

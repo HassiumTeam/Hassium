@@ -50,15 +50,16 @@ func docclazz (clazz, name : string) {
 		funcdoc = new FuncDoc (attrib [1]);
 		foreach (rep in funcdoc.sourcereps) {
 			file.writeline ("#### ```{0}```\n".format (rep));
-			file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` {0}\n".format (funcdoc.desc));
-			foreach (param in funcdoc.reqparams) {
-				file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param {0}:``` {1}\n".format (param [0], param [1]));
-			}
-			foreach (param in funcdoc.optparams) {
-				file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional {0}:``` {1}\n".format (param [0], param [1]));
-			}
-			file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` {0}\n".format (funcdoc.returns));
 		}
+
+		file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` {0}\n".format (funcdoc.desc));
+		foreach (param in funcdoc.reqparams) {
+			file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param {0}:``` {1}\n".format (param [0], param [1]));
+		}
+		foreach (param in funcdoc.optparams) {
+			file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional {0}:``` {1}\n".format (param [0], param [1]));
+		}
+		file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` {0}\n".format (funcdoc.returns));
 	}
 
 	file.close ();

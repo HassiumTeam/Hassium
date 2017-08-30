@@ -2,10 +2,6 @@
 
 #### ```autoflush { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable bool indicating if the socket will autoflush.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` True if the stream will automatically flush, otherwise false.
-
 #### ```autofluah { set; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable bool indicating if the socket will autoflush.
@@ -19,16 +15,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```func connect (ip : IPAddr) : null```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Connects the socket to either the specified Net.IPAddr object or the specified string ip and int port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object to connect to.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address to connect to.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The port to connect to.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```func connect (ip : string, port : int) : null```
 
@@ -56,45 +42,9 @@
 
 #### ```func new () : Socket```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Socket object.
-
 #### ```func new (ip : IPAddr) : Socket```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Socket object.
-
 #### ```func new (ip : string, port : int) : Socket```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new Socket object with either no parameters, a Net.IPAddr object, a string ip and int port, or a string ip int port and bool ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The Net.IPAddr object that has the ip and port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The int port.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ssl:``` The bool indicating if the Socket will use ssl.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new Socket object.
 
 #### ```func new (ip : string, port : int, ssl : bool) : Socket```
 

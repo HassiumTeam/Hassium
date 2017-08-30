@@ -2,10 +2,6 @@
 
 #### ```args { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable argument string.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The argument string.
-
 #### ```args { set; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable argument string.
@@ -13,10 +9,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The argument string.
 
 #### ```createwindow { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable boolean indicating if a window will be created.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if a new window will be created, otherwise false.
 
 #### ```createwindow { set; }```
 
@@ -36,10 +28,6 @@
 
 #### ```path { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string to the executable path.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The path to the executable as string.
-
 #### ```path { set; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string to the executable path.
@@ -47,10 +35,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The path to the executable as string.
 
 #### ```shellexecute { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable boolean indicating if the process will use a shell execute.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if the process will use shell execute, otherwise false.
 
 #### ```shellexecute { set; }```
 
@@ -71,10 +55,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 
 #### ```username { get; }```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the mutable string username for the process to execute with.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string username.
 
 #### ```username { set; }```
 

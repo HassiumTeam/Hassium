@@ -116,14 +116,6 @@
 
 #### ```func substring (start : int) : string```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Takes the substring of this string at the specified start index and optional length.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param start:``` The 0-based start index.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional len:``` The 0-based ending index.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The substring.
-
 #### ```func substring (start : int, len : int) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Takes the substring of this string at the specified start index and optional length.
