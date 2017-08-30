@@ -12,10 +12,8 @@
 
 ```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.
 
-```    @param: host :``` The hostname or ip address as string.
-
-```    @optional: port:``` The port for a connection.
-
+```	@param: host:``` The hostname or ip address as string.
+```	@optional: port:``` The port for a connection.
 ```@returns:``` The new IPAddr object.
 
 #### ```func new (host : string, port : int) : IPAddr```
@@ -23,10 +21,8 @@
 
 ```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.
 
-```    @param: host :``` The hostname or ip address as string.
-
-```    @optional: port:``` The port for a connection.
-
+```	@param: host:``` The hostname or ip address as string.
+```	@optional: port:``` The port for a connection.
 ```@returns:``` The new IPAddr object.
 
 #### ```port { get; }```

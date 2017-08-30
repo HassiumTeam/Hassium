@@ -33,20 +33,13 @@
 
 ```@desc:``` Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.
 
-```    @param: year :``` The int year.
-
-```    @param: month :``` The int month (1-12).
-
-```    @param: day :``` The int day.
-
-```    @optional: hour:``` The int hour.
-
-```    @optional: minute:``` The int minute.
-
-```    @optional: second:``` The int second.
-
-```    @optional: millisecond:``` The int millisecond.
-
+```	@param: year:``` The int year.
+```	@param: month:``` The int month (1-12).
+```	@param: day:``` The int day.
+```	@optional: hour:``` The int hour.
+```	@optional: minute:``` The int minute.
+```	@optional: second:``` The int second.
+```	@optional: millisecond:``` The int millisecond.
 ```@returns:``` The new DateTime object.
 
 #### ```func new (year : int, month : int, day : int, hour : int, min : int, sec : int) : DateTime```
@@ -54,20 +47,13 @@
 
 ```@desc:``` Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.
 
-```    @param: year :``` The int year.
-
-```    @param: month :``` The int month (1-12).
-
-```    @param: day :``` The int day.
-
-```    @optional: hour:``` The int hour.
-
-```    @optional: minute:``` The int minute.
-
-```    @optional: second:``` The int second.
-
-```    @optional: millisecond:``` The int millisecond.
-
+```	@param: year:``` The int year.
+```	@param: month:``` The int month (1-12).
+```	@param: day:``` The int day.
+```	@optional: hour:``` The int hour.
+```	@optional: minute:``` The int minute.
+```	@optional: second:``` The int second.
+```	@optional: millisecond:``` The int millisecond.
 ```@returns:``` The new DateTime object.
 
 #### ```func new (year : int, month : int, day : int, hour : int, min : int, sec : int, millisecond : int) : DateTime```
@@ -75,20 +61,13 @@
 
 ```@desc:``` Constructs a new DateTime object using the specified year, month, day, and optional hour, min, second, and millisecond integers.
 
-```    @param: year :``` The int year.
-
-```    @param: month :``` The int month (1-12).
-
-```    @param: day :``` The int day.
-
-```    @optional: hour:``` The int hour.
-
-```    @optional: minute:``` The int minute.
-
-```    @optional: second:``` The int second.
-
-```    @optional: millisecond:``` The int millisecond.
-
+```	@param: year:``` The int year.
+```	@param: month:``` The int month (1-12).
+```	@param: day:``` The int day.
+```	@optional: hour:``` The int hour.
+```	@optional: minute:``` The int minute.
+```	@optional: second:``` The int second.
+```	@optional: millisecond:``` The int millisecond.
 ```@returns:``` The new DateTime object.
 
 #### ```millisecond { get; }```

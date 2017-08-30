@@ -33,8 +33,7 @@
 
 ```@desc:``` Copies this file to the specified file path.
 
-```    @param: path :``` The string path to be copied to.
-
+```	@param: path:``` The string path to be copied to.
 ```@returns:``` null.
 
 #### ```exists { get; }```
@@ -84,8 +83,7 @@
 
 ```@desc:``` Moves this file to the specified file path.
 
-```    @param: path :``` The string path to be moved to.
-
+```	@param: path:``` The string path to be moved to.
 ```@returns:``` null.
 
 #### ```name { get; }```
@@ -149,8 +147,7 @@
 
 ```@desc:``` Reads the specified count of bytes from the stream and returns them in a list.
 
-```    @param: count :``` The amount of bytes to read.
-
+```	@param: count:``` The amount of bytes to read.
 ```@returns:``` A list containing the specified amount of bytes.
 
 #### ```func readint () : int```
@@ -207,8 +204,7 @@
 
 ```@desc:``` Writes all of the bytes in the given list to the file stream.
 
-```    @param: bytes :``` The list of bytes to write.
-
+```	@param: bytes:``` The list of bytes to write.
 ```@returns:``` null.
 
 #### ```func writealllines (lines : list) : null```
@@ -216,8 +212,7 @@
 
 ```@desc:``` Writes all of the string lines to the file stream.
 
-```    @param: lines :``` The list of lines to write.
-
+```	@param: lines:``` The list of lines to write.
 ```@returns:``` null.
 
 #### ```func writealltext (str : string) : null```
@@ -225,8 +220,7 @@
 
 ```@desc:``` Writes the specified string as the file contents.
 
-```    @param: str :``` The string that will become the file contents.
-
+```	@param: str:``` The string that will become the file contents.
 ```@returns:``` null.
 
 #### ```func writebyte (b : char) : null```
@@ -234,8 +228,7 @@
 
 ```@desc:``` Writes the given single byte to the file stream.
 
-```    @param: b :``` The char to write.
-
+```	@param: b:``` The char to write.
 ```@returns:``` null.
 
 #### ```func writefloat (f : float) : null```
@@ -243,8 +236,7 @@
 
 ```@desc:``` Writes the given single float to the file stream.
 
-```    @param: f :``` The float to write.
-
+```	@param: f:``` The float to write.
 ```@returns:``` null.
 
 #### ```func writeint (i : int) : null```
@@ -252,8 +244,7 @@
 
 ```@desc:``` Writes the given single 32-bit integer to the file stream.
 
-```    @param: i :``` The 32-bit int to write.
-
+```	@param: i:``` The 32-bit int to write.
 ```@returns:``` null.
 
 #### ```func writeline (str : string) : null```
@@ -261,8 +252,7 @@
 
 ```@desc:``` Writes the given string line to the file stream, followed by a newline.
 
-```    @param: str :``` The string to write.
-
+```	@param: str:``` The string to write.
 ```@returns:``` null.
 
 #### ```func writelist (l : list) : null```
@@ -270,8 +260,7 @@
 
 ```@desc:``` Writes the byte value of each element in the given list to the file stream.
 
-```    @param: l :``` The list to write.
-
+```	@param: l:``` The list to write.
 ```@returns:``` null.
 
 #### ```func writelong (l : int) : null```
@@ -279,8 +268,7 @@
 
 ```@desc:``` Writes the given 64-bit integer to the file stream.
 
-```    @param: l :``` The 64-bit int to write.
-
+```	@param: l:``` The 64-bit int to write.
 ```@returns:``` null.
 
 #### ```func writeshort (s : int) : null```
@@ -288,8 +276,7 @@
 
 ```@desc:``` Writes the given 16-bit integer to the file stream.
 
-```    @param: s :``` The 16-bit int to write.
-
+```	@param: s:``` The 16-bit int to write.
 ```@returns:``` null.
 
 #### ```func writestring (str : string) : null```
@@ -297,7 +284,6 @@
 
 ```@desc:``` Writes the given string to the file stream.
 
-```    @param: str :``` The string to write.
-
+```	@param: str:``` The string to write.
 ```@returns:``` null.
 

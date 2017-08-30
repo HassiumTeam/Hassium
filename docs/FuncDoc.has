@@ -24,9 +24,9 @@ class FuncDoc {
 				name.append ("params ");
 			}
 
-			descindex = paramstr.indexof (' ') + 1;
+			descindex = paramstr.indexof (' ');
 			name.append (paramstr.substring (0, descindex));
-			this.reqparams.add ((name.tostring (), paramstr.substring (descindex)));
+			this.reqparams.add ((name.tostring (), paramstr.substring (descindex + 1)));
 		}
 
 		optparams = getdocoptparams (f);
@@ -43,13 +43,5 @@ class FuncDoc {
 			name.append (paramstr.substring (0, descindex));
 			this.optparams.add ((name.tostring (), paramstr.substring (descindex + 1)));
 		}
-	}
-
-	func tostring () {
-		println (this.sourcereps);
-		println (this.desc);
-		println (this.reqparams);
-		println (this.optparams);
-		println (this.returns);
 	}
 }

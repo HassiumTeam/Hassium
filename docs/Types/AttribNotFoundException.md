@@ -12,10 +12,8 @@
 
 ```@desc:``` Constructs a new AttribNotFoundException using the specified object and attribute string.
 
-```    @param: obj :``` The object the attrib was not found in.
-
-```    @param: attrib :``` The string attrib that was not found.
-
+```	@param: obj:``` The object the attrib was not found in.
+```	@param: attrib:``` The string attrib that was not found.
 ```@returns:``` The new AttribNotFoundException.
 
 #### ```message { get; }```
