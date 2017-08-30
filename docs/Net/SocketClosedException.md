@@ -5,7 +5,7 @@
 
 ```@desc:``` Constructs a new SocketClosedException using the specified Net.Socket object.
 
-	```@param file:``` The Net.Socket object that has been closed.
+&nbsp;&nbsp;&nbsp;&nbsp;```@param file:``` The Net.Socket object that has been closed.
 ```@returns:``` The new SocketClosedException object.
 
 #### ```message { get; }```

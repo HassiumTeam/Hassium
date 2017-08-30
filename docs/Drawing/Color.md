@@ -33,11 +33,11 @@
 
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
-	```@optional colIntOrStr:``` The color name string or argb int.
-	```@optional a:``` The alpha value.
-	```@optional r:``` The red value.
-	```@optional g:``` The green value.
-	```@optional b:``` The blue value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional a:``` The alpha value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional r:``` The red value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional g:``` The green value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional b:``` The blue value.
 ```@returns:``` The new Color object.
 
 #### ```func new (r : int, g : int, b : int) : Color```
@@ -45,11 +45,11 @@
 
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
-	```@optional colIntOrStr:``` The color name string or argb int.
-	```@optional a:``` The alpha value.
-	```@optional r:``` The red value.
-	```@optional g:``` The green value.
-	```@optional b:``` The blue value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional a:``` The alpha value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional r:``` The red value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional g:``` The green value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional b:``` The blue value.
 ```@returns:``` The new Color object.
 
 #### ```func new (a : int, r : int, g : int, b : int) : Color```
@@ -57,11 +57,11 @@
 
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
-	```@optional colIntOrStr:``` The color name string or argb int.
-	```@optional a:``` The alpha value.
-	```@optional r:``` The red value.
-	```@optional g:``` The green value.
-	```@optional b:``` The blue value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional a:``` The alpha value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional r:``` The red value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional g:``` The green value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional b:``` The blue value.
 ```@returns:``` The new Color object.
 
 #### ```r { get; }```

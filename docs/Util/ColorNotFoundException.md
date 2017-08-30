@@ -12,7 +12,7 @@
 
 ```@desc:``` onstructs a new ColorNotFoundException using the specified color string.
 
-	```@param col:``` The string name of the color that was not found.
+&nbsp;&nbsp;&nbsp;&nbsp;```@param col:``` The string name of the color that was not found.
 ```@returns:``` The new ColorNotFoundException object.
 
 #### ```message { get; }```

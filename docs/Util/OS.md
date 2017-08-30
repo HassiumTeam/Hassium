@@ -5,8 +5,8 @@
 
 ```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.
 
-	```@param path:``` The path of the executable to execute.
-	```@optional params args:``` The arguments to start the process with.
+&nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the executable to execute.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional params args:``` The arguments to start the process with.
 ```@returns:``` A new OS.Process object that owns the started process.
 
 #### ```func exit () : null```
@@ -14,7 +14,7 @@
 
 ```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
-	```@optional code:``` The int exitcode.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
 ```@returns:``` null.
 
 #### ```func exit (code : int) : null```
@@ -22,7 +22,7 @@
 
 ```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
-	```@optional code:``` The int exitcode.
+&nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
 ```@returns:``` null.
 
 #### ```exitcode { get; }```
@@ -79,8 +79,8 @@
 
 ```@desc:``` Sets the specified environment variable name with the specified value.
 
-	```@param var:``` The string variable name to set.
-	```@param val:``` The string value.
+&nbsp;&nbsp;&nbsp;&nbsp;```@param var:``` The string variable name to set.
+&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The string value.
 ```@returns:``` null.
 
 #### ```username```
