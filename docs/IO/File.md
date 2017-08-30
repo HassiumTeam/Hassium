@@ -2,13 +2,11 @@
 
 #### ```abspath { get; }```
 
-
 ```@desc:``` Gets the readonly absolute path string.
 
 ```@returns:``` The absolute path string.
 
 #### ```autoflush { get; }```
-
 
 ```@desc:``` Gets the mutable bool indicating if the file stream will autoflush.
 
@@ -16,20 +14,17 @@
 
 #### ```autoflush { set; }```
 
-
 ```@desc:``` Gets the mutable bool indicating if the file stream will autoflush.
 
 ```@returns:``` True if the stream will automatically flush, otherwise false.
 
 #### ```func close () : null```
 
-
 ```@desc:``` Closes the file stream.
 
 ```@returns:``` null.
 
 #### ```func copyto (path : string) : null```
-
 
 ```@desc:``` Copies this file to the specified file path.
 
@@ -39,13 +34,11 @@
 
 #### ```exists { get; }```
 
-
 ```@desc:``` Gets the readonly bool indicating if the file exists on disc.
 
 ```@returns:``` True if the file exists, otherwise false.
 
 #### ```extension { get; }```
-
 
 ```@desc:``` Gets the mutable string of this file's extension.
 
@@ -53,13 +46,11 @@
 
 #### ```extension { set; }```
 
-
 ```@desc:``` Gets the mutable string of this file's extension.
 
 ```@returns:``` This file's extension as string.
 
 #### ```func flush () : null```
-
 
 ```@desc:``` Flushes this file stream.
 
@@ -67,20 +58,17 @@
 
 #### ```isclosed { get; }```
 
-
 ```@desc:``` Gets the readonly bool indicating if this file has been closed.
 
 ```@returns:``` True if the file has been closed, otherwise false.
 
 #### ```length { get; }```
 
-
 ```@desc:``` Gets the readonly int that represents the size of the file in bytes.
 
 ```@returns:``` The size of the file in bytes as an int.
 
 #### ```func moveto (path : string) : null```
-
 
 ```@desc:``` Moves this file to the specified file path.
 
@@ -90,13 +78,11 @@
 
 #### ```name { get; }```
 
-
 ```@desc:``` Gets the mutable string containing the name of the file.
 
 ```@returns:``` The name of this file.
 
 #### ```name { get; }```
-
 
 ```@desc:``` Gets the mutable string containing the name of the file.
 
@@ -104,13 +90,11 @@
 
 #### ```position { get; }```
 
-
 ```@desc:``` Gets the mutable int that represents the current position in the file stream.
 
 ```@returns:``` The current position as int.
 
 #### ```position { set; }```
-
 
 ```@desc:``` Gets the mutable int that represents the current position in the file stream.
 
@@ -118,13 +102,11 @@
 
 #### ```func readallbytes () : list```
 
-
 ```@desc:``` Reads all of the bytes from this file and returns them in a list of chars.
 
 ```@returns:``` A list of chars representing each line of the file.
 
 #### ```func readalllines () : list```
-
 
 ```@desc:``` Reads all of the lines from this file and returns them in a list of strings.
 
@@ -132,20 +114,17 @@
 
 #### ```func readalltext () : string```
 
-
 ```@desc:``` Reads all of the characters from this file and returns them as a single string.
 
 ```@returns:``` The file as a string.
 
 #### ```func readbyte () : char```
 
-
 ```@desc:``` Reads a single byte from the stream and returns it as a char.
 
 ```@returns:``` The byte as char.
 
 #### ```func readbytes (count : int) : list```
-
 
 ```@desc:``` Reads the specified count of bytes from the stream and returns them in a list.
 
@@ -155,13 +134,11 @@
 
 #### ```func readint () : int```
 
-
 ```@desc:``` Reads a single 32-bit integer from the stream and returns it.
 
 ```@returns:``` The read 32-bit int.
 
 #### ```func readline () : string```
-
 
 ```@desc:``` Reads a line from the stream and returns it as a string.
 
@@ -169,13 +146,11 @@
 
 #### ```func readlong () : int```
 
-
 ```@desc:``` Reads a single 64-bit integer from the stream and returns it.
 
 ```@returns:``` The read 64-bit int.
 
 #### ```func readshort () : int```
-
 
 ```@desc:``` Reads a single 16-bit integer from the stream and returns it.
 
@@ -183,13 +158,11 @@
 
 #### ```func readstring () : string```
 
-
 ```@desc:``` Reads a single string from the stream and returns it.
 
 ```@returns:``` The read string.
 
 #### ```relpath{ get; }```
-
 
 ```@desc:``` Gets the readonly relative path of this file as a string.
 
@@ -197,13 +170,11 @@
 
 #### ```size { get; }```
 
-
 ```@desc:``` Gets the readonly int that represents the size of the file in bytes.
 
 ```@returns:``` The size of the file in bytes as an int.
 
 #### ```func writeallbytes (bytes : list) : null```
-
 
 ```@desc:``` Writes all of the bytes in the given list to the file stream.
 
@@ -213,7 +184,6 @@
 
 #### ```func writealllines (lines : list) : null```
 
-
 ```@desc:``` Writes all of the string lines to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param lines:``` The list of lines to write.
@@ -221,7 +191,6 @@
 ```@returns:``` null.
 
 #### ```func writealltext (str : string) : null```
-
 
 ```@desc:``` Writes the specified string as the file contents.
 
@@ -231,7 +200,6 @@
 
 #### ```func writebyte (b : char) : null```
 
-
 ```@desc:``` Writes the given single byte to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param b:``` The char to write.
@@ -239,7 +207,6 @@
 ```@returns:``` null.
 
 #### ```func writefloat (f : float) : null```
-
 
 ```@desc:``` Writes the given single float to the file stream.
 
@@ -249,7 +216,6 @@
 
 #### ```func writeint (i : int) : null```
 
-
 ```@desc:``` Writes the given single 32-bit integer to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param i:``` The 32-bit int to write.
@@ -257,7 +223,6 @@
 ```@returns:``` null.
 
 #### ```func writeline (str : string) : null```
-
 
 ```@desc:``` Writes the given string line to the file stream, followed by a newline.
 
@@ -267,7 +232,6 @@
 
 #### ```func writelist (l : list) : null```
 
-
 ```@desc:``` Writes the byte value of each element in the given list to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to write.
@@ -275,7 +239,6 @@
 ```@returns:``` null.
 
 #### ```func writelong (l : int) : null```
-
 
 ```@desc:``` Writes the given 64-bit integer to the file stream.
 
@@ -285,7 +248,6 @@
 
 #### ```func writeshort (s : int) : null```
 
-
 ```@desc:``` Writes the given 16-bit integer to the file stream.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param s:``` The 16-bit int to write.
@@ -293,7 +255,6 @@
 ```@returns:``` null.
 
 #### ```func writestring (str : string) : null```
-
 
 ```@desc:``` Writes the given string to the file stream.
 

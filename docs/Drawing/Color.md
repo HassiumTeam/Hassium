@@ -2,13 +2,11 @@
 
 #### ```a { get; }```
 
-
 ```@desc:``` Gets the readonly alpha value.
 
 ```@returns:``` a as int.
 
 #### ```argb { get; }```
-
 
 ```@desc:``` Gets the readonly argb value.
 
@@ -16,20 +14,17 @@
 
 #### ```b { get; }```
 
-
 ```@desc:``` Gets the readonly blue value.
 
 ```@returns:``` b as int.
 
 #### ```g { get; }```
 
-
 ```@desc:``` Gets the readonly green value.
 
 ```@returns:``` g as int.
 
 #### ```func new (colIntOrStr : object) : Color```
-
 
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
@@ -47,7 +42,6 @@
 
 #### ```func new (r : int, g : int, b : int) : Color```
 
-
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
@@ -64,7 +58,6 @@
 
 #### ```func new (a : int, r : int, g : int, b : int) : Color```
 
-
 ```@desc:``` Constructs a new Color with either the specified color name, argb, specified r, g, b, or specified a, r, g, b.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional colIntOrStr:``` The color name string or argb int.
@@ -80,7 +73,6 @@
 ```@returns:``` The new Color object.
 
 #### ```r { get; }```
-
 
 ```@desc:``` Gets the readonly red value.
 

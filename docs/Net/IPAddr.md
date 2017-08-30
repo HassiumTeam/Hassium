@@ -2,13 +2,11 @@
 
 #### ```address { get; }```
 
-
 ```@desc:``` Gets the readonly string ip address.
 
 ```@returns:``` The ip address as a string.
 
 #### ```func new (host : string) : IPaddr```
-
 
 ```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.
 
@@ -20,7 +18,6 @@
 
 #### ```func new (host : string, port : int) : IPAddr```
 
-
 ```@desc:``` Constructs a new IPAddr object using the specified string host and an optional int port.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param host:``` The hostname or ip address as string.
@@ -31,13 +28,11 @@
 
 #### ```port { get; }```
 
-
 ```@desc:``` Gets the readonly port number.
 
 ```@returns:``` The port as an int.
 
 #### ```func tostring () : string```
-
 
 ```@desc:``` Returns a string representation of this IPAddr object.
 

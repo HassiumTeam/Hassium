@@ -2,7 +2,6 @@
 
 #### ```func close (file : File) : null```
 
-
 ```@desc:``` Closes the given IO.File object.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param file:``` The IO.File object to close.
@@ -10,7 +9,6 @@
 ```@returns:``` null.
 
 #### ```func copy (src : string, dest : string) : null```
-
 
 ```@desc:``` Copies the file at the specified source path to the specified destination path.
 
@@ -22,7 +20,6 @@
 
 #### ```func createdir (path : string) : null```
 
-
 ```@desc:``` Creates a directory at the specified path.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the directory to be created.
@@ -30,7 +27,6 @@
 ```@returns:``` ull.
 
 #### ```func createfile (path : string) : null```
-
 
 ```@desc:``` Creates a file at the specified path.
 
@@ -40,20 +36,17 @@
 
 #### ```cwd { get; }```
 
-
 ```@desc:``` Gets the mutable string of the current working directory.
 
 ```@returns:``` The current working directory as string.
 
 #### ```cwd { set; }```
 
-
 ```@desc:``` Gets the mutable string of the current working directory.
 
 ```@returns:``` The current working directory as string.
 
 #### ```func delete (path : string) : null```
-
 
 ```@desc:``` Deltes the file or directory at the specified path string.
 
@@ -63,7 +56,6 @@
 
 #### ```func deletedir (dir : string) : null```
 
-
 ```@desc:``` Deletes the directory at the specified path string.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path string to delete.
@@ -71,7 +63,6 @@
 ```@returns:``` null.
 
 #### ```func deletefile (file : string) : null```
-
 
 ```@desc:``` Deletes the file at the specified path string.
 
@@ -81,7 +72,6 @@
 
 #### ```func direxists (dir : string) : bool```
 
-
 ```@desc:``` Returns a bool indicating if the specified directory path string exists.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param dir:``` The path string to check.
@@ -89,7 +79,6 @@
 ```@returns:``` true if the directory exists, otherwise false.
 
 #### ```func fileexists (file : string) : bool```
-
 
 ```@desc:``` Returns a bool indicating if the specicified file path string exist.
 
@@ -99,20 +88,17 @@
 
 #### ```func gettempfile () : string```
 
-
 ```@desc:``` Returns a new random temporary file path.
 
 ```@returns:``` The random file path string.
 
 #### ```func gettemppath () : string```
 
-
 ```@desc:``` Returns a new random temporary directory path.
 
 ```@returns:``` The random path string.
 
 #### ```func listdirs (path : string) : list```
-
 
 ```@desc:``` Returns a list of all of the directories contained within the specified path string.
 
@@ -122,7 +108,6 @@
 
 #### ```func listfiles (path : string) : list```
 
-
 ```@desc:``` Returns a list of all of the files contained within the specified path string.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to get directories from.
@@ -130,7 +115,6 @@
 ```@returns:``` The list of files.
 
 #### ```func move (src : string, dest : string) : null```
-
 
 ```@desc:``` Moves the file at the specified source path to the specified destination path.
 
@@ -142,7 +126,6 @@
 
 #### ```func open (path : string) : File```
 
-
 ```@desc:``` Opens a new file stream to the specified path and returns a new IO.File object.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The file path to open.
@@ -150,7 +133,6 @@
 ```@returns:``` The new IO.File object.
 
 #### ```func readbytes (path : string) : list```
-
 
 ```@desc:``` Reads the bytes of the file at the specified path as a list and returns it.
 
@@ -160,7 +142,6 @@
 
 #### ```func readlines (path : string) : list```
 
-
 ```@desc:``` Reads the lines of a file at the specified path as a list and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The file path to read from.
@@ -169,7 +150,6 @@
 
 #### ```func readstring (path : string) : string```
 
-
 ```@desc:``` Reads the specified file path as a string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The file path to read from.
@@ -177,7 +157,6 @@
 ```@returns:``` The file as a string.
 
 #### ```func writebytes (path : string, bytes : list) : null```
-
 
 ```@desc:``` Writes the given list of bytes to the specified file path.
 
@@ -189,7 +168,6 @@
 
 #### ```func writelines (path : string, lines : list) : null```
 
-
 ```@desc:``` Writes the given list of string lines to the specified file path.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The file path to write to.
@@ -199,7 +177,6 @@
 ```@returns:``` null.
 
 #### ```func writestring (path : string, str : string) : null```
-
 
 ```@desc:``` Writes the given string as the contents for the specified file path.
 

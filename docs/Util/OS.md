@@ -2,7 +2,6 @@
 
 #### ```func exec (path : string, params args) : Process```
 
-
 ```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the executable to execute.
@@ -13,7 +12,6 @@
 
 #### ```func exit () : null```
 
-
 ```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional code:``` The int exitcode.
@@ -21,7 +19,6 @@
 ```@returns:``` null.
 
 #### ```func exit (code : int) : null```
-
 
 ```@desc:``` Exits Hassium with the optionally specified exitcode, default 0.
 
@@ -31,13 +28,11 @@
 
 #### ```exitcode { get; }```
 
-
 ```@desc:``` Gets the exit code.
 
 ```@returns:``` The exit code as int.
 
 #### ```exitcode { set; }```
-
 
 ```@desc:``` Gets the exit code.
 
@@ -45,13 +40,11 @@
 
 #### ```func getvar (var : string) : string```
 
-
 ```@desc:``` Gets the environment variable at the specified var.
 
 ```@returns:``` The environment variable string at the var.
 
 #### ```func getvars () : list```
-
 
 ```@desc:``` Gets a new list containing all of the environment variables.
 
@@ -59,13 +52,11 @@
 
 #### ```machinename { get; }```
 
-
 ```@desc:``` Gets the readonly name of this machine.
 
 ```@returns:``` The machine name as string.
 
 #### ```netversion { get; }```
-
 
 ```@desc:``` Gets the readonly .NET version.
 
@@ -73,13 +64,11 @@
 
 #### ```newline { get; }```
 
-
 ```@desc:``` Gets the readonly string of the system newline separator.
 
 ```@returns:``` The system's newline separator.
 
 #### ```func setvar (var : string, val : string) : null```
-
 
 ```@desc:``` Sets the specified environment variable name with the specified value.
 
@@ -91,13 +80,11 @@
 
 #### ```username```
 
-
 ```@desc:``` Gets the readonly logged on username.
 
 ```@returns:``` The string username.
 
 #### ```version```
-
 
 ```@desc:``` Gets the readonly OS version.
 

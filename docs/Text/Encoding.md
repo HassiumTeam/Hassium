@@ -2,20 +2,17 @@
 
 #### ```bodyname { get; }```
 
-
 ```@desc:``` Gets the readonly string body name of this encoding.
 
 ```@returns:``` The body name as string.
 
 #### ```encodingname { get; }```
 
-
 ```@desc:``` Gets the readonly string encoding name of this encoding.
 
 ```@returns:``` The encoding name as string.
 
 #### ```func getbytes (str : string) : list```
-
 
 ```@desc:``` Converts the specified string into a list of bytes using this encoding.
 
@@ -25,7 +22,6 @@
 
 #### ```func getstring (bytes : list) : string```
 
-
 ```@desc:``` Converts the given list of bytes into a string using this encoding.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param bytes:``` The list of bytes to convert.
@@ -34,13 +30,11 @@
 
 #### ```headername { get; }```
 
-
 ```@desc:``` Gets the readonly string header name of this encoding.
 
 ```@returns:``` The header name as string.
 
 #### ```func new (scheme : string) : Encoding```
-
 
 ```@desc:``` Constructs a new Encoding object using the specified encoding scheme.
 

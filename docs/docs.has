@@ -49,7 +49,7 @@ func docclazz (clazz, name : string) {
 	foreach (attrib in attribs) {
 		funcdoc = new FuncDoc (attrib [1]);
 		foreach (rep in funcdoc.sourcereps) {
-			file.writeline ("#### ```{0}```\n\n".format (rep));
+			file.writeline ("#### ```{0}```\n".format (rep));
 			file.writeline ("```@desc:``` {0}\n".format (funcdoc.desc));
 			foreach (param in funcdoc.reqparams) {
 				file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@param {0}:``` {1}\n".format (param [0], param [1]));

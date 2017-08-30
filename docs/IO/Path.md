@@ -2,7 +2,6 @@
 
 #### ```func combine (params paths) : string```
 
-
 ```@desc:``` Combines the given file paths together and returns the file string.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@optional params paths:``` The list of paths to combine.
@@ -11,13 +10,11 @@
 
 #### ```func getappdata () : string```
 
-
 ```@desc:``` Gets the path to the ApplicationData folder.
 
 ```@returns:``` The ApplicationData folder.
 
 #### ```func getdocuments () : string```
-
 
 ```@desc:``` Gets the path to the MyDocuments folder.
 
@@ -25,20 +22,17 @@
 
 #### ```func gethome () : string```
 
-
 ```@desc:``` Gets the home folder of the currently logged in user.
 
 ```@returns:``` The home folder.
 
 #### ```func getstartup () : string```
 
-
 ```@desc:``` Gets the startup folder of the currently logged in user.
 
 ```@returns:``` The startup folder.
 
 #### ```func parsedir (path : string) : string```
-
 
 ```@desc:``` Parses the directory name of the specified path string and returns it.
 
@@ -48,7 +42,6 @@
 
 #### ```func parseext (path : string) : string```
 
-
 ```@desc:``` Parses The extension of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to parse.
@@ -57,7 +50,6 @@
 
 #### ```func parsefilename (path : string) : string```
 
-
 ```@desc:``` Parses the file name of the specified path string and returns it.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path to parse.
@@ -65,7 +57,6 @@
 ```@returns:``` The file name of the file path.
 
 #### ```func parseroot (path : string) : string```
-
 
 ```@desc:``` Parses the root directory of the specified path string and returns it.
 

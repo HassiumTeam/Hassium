@@ -2,7 +2,6 @@
 
 #### ```func add (obj : object) : null```
 
-
 ```@desc:``` Adds the specified object to this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to add.
@@ -10,7 +9,6 @@
 ```@returns:``` null.
 
 #### ```func contains (obj : object) : bool```
-
 
 ```@desc:``` Returns a boolean indicating if the specified object was found in this list.
 
@@ -20,7 +18,6 @@
 
 #### ```func __equals__ (l : list) : bool```
 
-
 ```@desc:``` Implements the == operator to determine if the specified list is equal to this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to compare.
@@ -28,7 +25,6 @@
 ```@returns:``` true if the lists are equal, otherwise false.
 
 #### ```func fill (count : int, val : object) : list```
-
 
 ```@desc:``` Returns a new list filled with the specified count of specified objects.
 
@@ -40,7 +36,6 @@
 
 #### ```func format (fmt : string) : string```
 
-
 ```@desc:``` Formats this list using the specified format string and returns the string result.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param fmt:``` The format string.
@@ -48,7 +43,6 @@
 ```@returns:``` This list formatted as string.
 
 #### ```func __index__ (i : int) : object```
-
 
 ```@desc:``` Implements the [] operator to return the object at the specified 0-based index.
 
@@ -58,13 +52,11 @@
 
 #### ```func __iter__ () : list```
 
-
 ```@desc:``` Implements the foreach loop, returning this list.
 
 ```@returns:``` This list.
 
 #### ```func __iterfull__ () : bool```
-
 
 ```@desc:``` Implements the foreach loop, returning a boolean indicating if the loop has reached the end of the list.
 
@@ -72,20 +64,17 @@
 
 #### ```func __iternext__ () : bool```
 
-
 ```@desc:``` Implements the foreach loop, returning the next iterable object.
 
 ```@returns:``` The next iterable object in this list.
 
 #### ```length { get; }```
 
-
 ```@desc:``` Gets the readonly int representing the amount of elements in this list.
 
 ```@returns:``` The amount of elements in the list as int.
 
 #### ```func __notequal__ (l : list) : bool```
-
 
 ```@desc:``` Implements the != operator to determine if this list is not equal to the specified list.
 
@@ -95,20 +84,17 @@
 
 #### ```func peek () : object```
 
-
 ```@desc:``` Returns the top value in this list.
 
 ```@returns:``` The top value in this list.
 
 #### ```func pop () : object```
 
-
 ```@desc:``` Removes the top value from this list and returns it.
 
 ```@returns:``` The top value in this list.
 
 #### ```func push (obj : object) : null```
-
 
 ```@desc:``` Adds the specified object to the top of the list (same as list.add).
 
@@ -118,7 +104,6 @@
 
 #### ```func remove (obj : object) : null```
 
-
 ```@desc:``` Removes the specified object from this list.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to remove.
@@ -126,7 +111,6 @@
 ```@returns:``` null.
 
 #### ```func removeat (index : int) : null```
-
 
 ```@desc:``` Removes the object at the specified 0-based index.
 
@@ -136,13 +120,11 @@
 
 #### ```func reverse () : list```
 
-
 ```@desc:``` Returns a new list with the values in this list reversed.
 
 ```@returns:``` A new list containing the elements from this list in reverse order.
 
 #### ```func __storeindex__ (index : int, obj : object) : object```
-
 
 ```@desc:``` Implements the []= operator, storing the specified object at the specified 0-based index.
 
@@ -154,13 +136,11 @@
 
 #### ```func toascii () : string```
 
-
 ```@desc:``` Converts this list to an ASCII string and returns it.
 
 ```@returns:``` The ASCII string value of this list.
 
 #### ```func tobytearr () : list```
-
 
 ```@desc:``` Converts this list to a more optimized form of list called bytearr.
 
@@ -168,20 +148,17 @@
 
 #### ```func tohex () : string```
 
-
 ```@desc:``` Converts this list to a hex string and returns it.
 
 ```@returns:``` The hex value of this string.
 
 #### ```func tolist () : list```
 
-
 ```@desc:``` Returns this list.
 
 ```@returns:``` This list.
 
 #### ```func tostring () : string```
-
 
 ```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
 
