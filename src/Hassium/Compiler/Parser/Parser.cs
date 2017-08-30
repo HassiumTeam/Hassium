@@ -80,16 +80,18 @@ namespace Hassium.Compiler.Parser
                 return parseUse();
             else if (matchToken(TokenType.Identifier, "while"))
                 return parseWhile();
-            else if (position + 1 < tokens.Count)
+            if (position + 1 < tokens.Count)
             {
                 if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Comma)
                     return parseMultipleAssignment();
-                else if (matchToken(TokenType.OpenCurlyBrace))
-                    return parseCodeBlockNode();
-                else
-                    return parseExpressionStatement();
             }
-            else if (matchToken(TokenType.OpenCurlyBrace))
+            if (position + 2 < tokens.Count)
+            {
+                if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.OpenCurlyBrace && tokens[position + 2].Value == "get")
+                    return parseProperty();
+            }
+
+            if (matchToken(TokenType.OpenCurlyBrace))
                 return parseCodeBlockNode();
             else
                 return parseExpressionStatement();
@@ -338,6 +340,27 @@ namespace Hassium.Compiler.Parser
             AstNode ast = parseStatement();
             ast.IsPrivate = true;
             return ast;
+        }
+
+        private PropertyNode parseProperty()
+        {
+            var location = this.location;
+            string name = expectToken(TokenType.Identifier).Value;
+            expectToken(TokenType.OpenCurlyBrace);
+            expectToken(TokenType.Identifier, "get");
+            AstNode get_ = parseStatement();
+
+            try
+            {
+                if (acceptToken(TokenType.Identifier, "set"))
+                    return new PropertyNode(location, name, get_, parseStatement());
+                else
+                    return new PropertyNode(location, name, get_, null);
+            }
+            finally
+            {
+                expectToken(TokenType.CloseCurlyBrace);
+            }
         }
 
         private RaiseNode parseRaise()

@@ -100,9 +100,9 @@ namespace Hassium.Runtime
             else if (ret is HassiumProperty)
             {
                 var prop = (ret as HassiumProperty);
-                (prop.Get as HassiumFunction).Parent = this;
+                prop.Get.Parent = this;
                 if (prop.Set != null)
-                    (prop.Set as HassiumFunction).Parent = this;
+                    prop.Set.Parent = this;
             }
             return ret;
         }

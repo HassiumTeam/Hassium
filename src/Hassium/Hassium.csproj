@@ -14,7 +14,6 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>/home/reagan/test.has</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -178,6 +178,7 @@
     <Compile Include="Runtime\Util\HassiumUI.cs" />
     <Compile Include="Runtime\Util\HassiumUtilModule.cs" />
     <Compile Include="Runtime\VirtualMachine.cs" />
+    <Compile Include="Compiler\Parser\Ast\PropertyNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

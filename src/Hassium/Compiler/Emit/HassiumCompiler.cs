@@ -460,6 +460,27 @@ namespace Hassium.Compiler.Emit
             foreach (var target in node.Targets)
                 Accept(new BinaryOperationNode(target.SourceLocation, BinaryOperation.Assignment, target, new CodeBlockNode(target.SourceLocation)));
         }
+        public void Accept(PropertyNode node)
+        {
+            var getfunc = new HassiumMethod(module);
+            getfunc.Parent = classStack.Peek();
+            methodStack.Push(getfunc);
+            node.Get_.Visit(this);
+            var get_ = methodStack.Pop();
+
+            HassiumMethod set_ = null;
+            if (node.Set_ != null)
+            {
+                var setfunc = new HassiumMethod(module);
+                setfunc.Parent = classStack.Peek();
+                setfunc.Parameters.Add(new FunctionParameter(FunctionParameterType.Normal, "value"), table.HandleSymbol("value"));
+                methodStack.Push(setfunc);
+                node.Set_.Visit(this);
+                set_ = methodStack.Pop();
+            }
+
+            classStack.Peek().AddAttribute(node.Name, new HassiumProperty(get_, set_));
+        }
         public void Accept(RaiseNode node)
         {
             node.Exception.Visit(this);
