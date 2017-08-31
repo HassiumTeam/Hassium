@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 using Hassium.Compiler.Exceptions;
 using Hassium.Compiler.Lexer;
@@ -770,6 +771,8 @@ namespace Hassium.Compiler.Emit
             if (filePath == string.Empty)
                 throw new CompilerException(location, "Could not locate file by reference '{0}'!", path);
 
+            if (filePath.EndsWith(".dll"))
+                return resolveModuleFromDll(filePath);
             return CompileModuleFromFilePath(filePath, suppressWarns);
         }
 
@@ -798,6 +801,19 @@ namespace Hassium.Compiler.Emit
             if (!pass)
                 return locateFile(Path.Combine(Program.MasterPath, path), extension, true);
             return string.Empty;
+        }
+
+        private HassiumModule resolveModuleFromDll(string path)
+        {
+            var module = new HassiumModule();
+
+            var ass = Assembly.LoadFrom(path);
+            foreach (var type in ass.GetTypes())
+                if (type.IsSubclassOf(typeof(InternalModule)))
+                    foreach (var pair in ((InternalModule)Activator.CreateInstance(type)).BoundAttributes)
+                        module.AddAttribute(pair.Key, pair.Value);
+
+            return module;
         }
     }
 }
