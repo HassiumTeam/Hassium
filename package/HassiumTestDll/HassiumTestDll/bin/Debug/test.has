@@ -1,0 +1,5 @@
+from HassiumTestDll use TestClass;
+
+func main () {
+	println (TestClass.testfunc (3));
+}

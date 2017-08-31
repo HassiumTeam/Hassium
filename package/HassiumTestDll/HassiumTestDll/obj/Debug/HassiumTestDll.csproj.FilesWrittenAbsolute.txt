@@ -1,0 +1,6 @@
+/home/reagan/HassiumTestDll/HassiumTestDll/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/reagan/HassiumTestDll/HassiumTestDll/bin/Debug/HassiumTestDll.dll.mdb
+/home/reagan/HassiumTestDll/HassiumTestDll/bin/Debug/HassiumTestDll.dll
+/home/reagan/HassiumTestDll/HassiumTestDll/obj/Debug/HassiumTestDll.dll
+/home/reagan/HassiumTestDll/HassiumTestDll/obj/Debug/HassiumTestDll.dll.mdb
+/home/reagan/HassiumTestDll/HassiumTestDll/bin/Debug/Hassium.exe

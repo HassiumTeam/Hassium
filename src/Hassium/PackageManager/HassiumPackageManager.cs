@@ -1,13 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Hassium.PackageManager
 {
     public class HassiumPackageManager
     {
-        private const string PACKAGE_URL = "https://raw.githubusercontent.com/HassiumTeam/Hassium/master/package/";
+        private const string PACKAGE_URL = "http://raw.githubusercontent.com/HassiumTeam/Hassium/master/package/";
         private const string MANI_URL_FORMAT = PACKAGE_URL + "{0}/{0}.mani";
         private const string FILE_URL_FORMAT = PACKAGE_URL + "{0}/{1}";
 
@@ -15,6 +17,8 @@ namespace Hassium.PackageManager
 
         public HassiumPackageManager()
         {
+            ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(bypassAllCertificateStuff);
+
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                     Environment.OSVersion.Platform == PlatformID.MacOSX)
                     ? Environment.GetEnvironmentVariable("HOME")
@@ -49,7 +53,11 @@ namespace Hassium.PackageManager
                         var file = line.Trim();
                         if (file == string.Empty)
                             continue;
-                        client.DownloadFile(string.Format(FILE_URL_FORMAT, pkgname, file), file);
+                        string[] parts = file.Split(' ');
+                        if (parts.Length == 1)
+                            client.DownloadFile(string.Format(FILE_URL_FORMAT, pkgname, file), file);
+                        else
+                            client.DownloadFile(string.Format(FILE_URL_FORMAT, pkgname, parts[0]), parts[1]);
                     }
                     return true;
                 }
@@ -67,6 +75,11 @@ namespace Hassium.PackageManager
                 return false;
 
             Directory.Delete(Path.Combine(hassiumfolder, string.Format("{0}/", pkgname)), true);
+            return true;
+        }
+
+        private static bool bypassAllCertificateStuff(object sender, X509Certificate cert, X509Chain chain, System.Net.Security.SslPolicyErrors error)
+        {
             return true;
         }
     }
