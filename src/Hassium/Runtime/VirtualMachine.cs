@@ -92,7 +92,7 @@ namespace Hassium.Runtime
                     SourceLocation loc;
 
                     inst = method.Instructions[pos];
-                    Console.WriteLine(inst.InstructionType + "\t" + inst.SourceLocation);
+                    //Console.WriteLine(inst.InstructionType + "\t" + inst.SourceLocation);
 
                     switch (inst.InstructionType)
                     {
