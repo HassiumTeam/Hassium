@@ -1,6 +1,6 @@
 func main () {
 	while (true) {
-		switch (input ().toInt ()) {
+		switch (input ().toint ()) {
 			case 1, 2 {
 				println ("Got 1 or 2");
 			}

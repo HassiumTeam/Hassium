@@ -187,7 +187,6 @@ namespace Hassium.Runtime
             Dictionary<TKey, TValue> ret = new Dictionary<TKey, TValue>(original.Count,
                 original.Comparer);
 
-            var pairs = original;
             var keys = original.Keys.ToArray();
             for (int i = 0; i < original.Count; i++)
             {

@@ -245,7 +245,7 @@ namespace Hassium.Compiler.Emit
             // Peephole optimization: Remove push/pop redundancies
             var instructions = methodStack.Peek().Instructions;
             var type = instructions[instructions.Count - 1].InstructionType;
-            if (type == InstructionType.Push || type == InstructionType.PushConstant || type == InstructionType.PushHandler || type == InstructionType.PushObject)
+            if (type == InstructionType.LoadAttribute || type == InstructionType.LoadGlobal || type == InstructionType.LoadLocal || type == InstructionType.Push || type == InstructionType.PushConstant || type == InstructionType.PushHandler || type == InstructionType.PushObject)
                 instructions.Remove(instructions[instructions.Count - 1]);
             else
                 emit(node.SourceLocation, InstructionType.Pop);
@@ -503,15 +503,15 @@ namespace Hassium.Compiler.Emit
             for (int i = 0; i < node.Cases.Count; i++)
                 emit(node.Value.SourceLocation, InstructionType.Duplicate);
 
-            foreach (var pair in node.Cases)
+            foreach (var case_ in node.Cases)
             {
                 var falseLabel = nextLabel();
-                pair.Key.Visit(this);
-                emit(pair.Key.SourceLocation, InstructionType.BinaryOperation, (int)BinaryOperation.EqualTo);
-                emit(pair.Key.SourceLocation, InstructionType.JumpIfFalse, falseLabel);
-                pair.Value.Visit(this);
+                case_.C.Visit(this);
+                emit(case_.C.SourceLocation, InstructionType.BinaryOperation, (int)case_.BinaryOperation);
+                emit(case_.C.SourceLocation, InstructionType.JumpIfFalse, falseLabel);
+                case_.Stmt.Visit(this);
                 emit(node.Value.SourceLocation, InstructionType.Jump, endLabel);
-                emitLabel(pair.Value.SourceLocation, falseLabel);
+                emitLabel(case_.Stmt.SourceLocation, falseLabel);
             }
 
             node.Default.Visit(this);

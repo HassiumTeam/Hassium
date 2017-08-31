@@ -46,7 +46,7 @@ namespace Hassium.Runtime.Net
             }
             else
             {
-                var stdin = new StreamReader(Console.OpenStandardInput());
+                //var stdin = new StreamReader(Console.OpenStandardInput());
                 query_string = string.Empty;//stdin.ReadToEnd();
             }
             if (!string.IsNullOrWhiteSpace(query_string))

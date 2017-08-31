@@ -387,13 +387,22 @@ namespace Hassium.Compiler.Parser
             expectToken(TokenType.Identifier, "switch");
             AstNode value = parseExpression();
             expectToken(TokenType.OpenCurlyBrace);
-            Dictionary<AstNode, AstNode> cases = new Dictionary<AstNode, AstNode>();
+            List<Case> cases = new List<Case>();
             do
             {
                 expectToken(TokenType.Identifier, "case");
-                AstNode c = parseExpression();
+                var op = BinaryOperation.EqualTo;
+                if (matchToken(TokenType.Comparison))
+                    op = stringToBinaryOperation(expectToken(TokenType.Comparison).Value);
+                var exprs = new List<AstNode>();
+                do
+                {
+                    exprs.Add(parseExpression());
+                }
+                while (acceptToken(TokenType.Comma));
                 AstNode body = parseStatement();
-                cases.Add(c, body);
+                foreach (var expr in exprs)
+                    cases.Add(new Case(op, expr, body));
             } while (!matchToken(TokenType.Identifier, "default") && !matchToken(TokenType.CloseCurlyBrace));
             AstNode _default;
             if (acceptToken(TokenType.Identifier, "default"))
