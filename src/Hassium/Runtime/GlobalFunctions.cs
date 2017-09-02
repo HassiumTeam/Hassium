@@ -11,6 +11,7 @@ namespace Hassium.Runtime
         public static Dictionary<string, HassiumObject> Functions = new Dictionary<string, HassiumObject>()
         {
             { "clone",           new HassiumFunction(clone,           1) },
+            { "eval",            new HassiumFunction(eval,            1) },
             { "format",          new HassiumFunction(format,         -1) },
             { "getattrib",       new HassiumFunction(getattrib,       2) },
             { "getattribs",      new HassiumFunction(getattribs,      1) },
@@ -49,6 +50,17 @@ namespace Hassium.Runtime
         public static HassiumObject clone(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return args[0].Clone() as HassiumObject;
+        }
+
+        [DocStr(
+            "@desc Compiles the given string of Hassium source and returns a module.",
+            "@param src The string Hassium source.",
+            "@returns The compiled Hassium module."
+            )]
+        [FunctionAttribute("func eval (src : string) : module")]
+        public static HassiumModule eval(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            return Hassium.Compiler.Emit.HassiumCompiler.CompileModuleFromString("eval", args[0].ToString(vm, args[0], location).String);
         }
 
         [DocStr(

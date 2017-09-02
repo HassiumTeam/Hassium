@@ -20,6 +20,7 @@
             AddAttribute("int", HassiumInt.TypeDefinition);
             AddAttribute("KeyNotFoundException", HassiumKeyNotFoundException.TypeDefinition);
             AddAttribute("list", HassiumList.TypeDefinition);
+            AddAttribute("module", HassiumModule.TypeDefinition);
             AddAttribute("null", Null);
             AddAttribute("number", Number);
             AddAttribute("object", HassiumObject.TypeDefinition);

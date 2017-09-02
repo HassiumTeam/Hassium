@@ -1,4 +1,5 @@
 ﻿using Hassium.Compiler;
+using Hassium.Runtime.Types;
 
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,12 @@ namespace Hassium.Runtime
 
             if (Warnings.Count > 0)
                 Console.WriteLine("\n");
+        }
+
+        public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            vm.Execute(this, new HassiumList(args));
+            return Null;
         }
     }
 }
