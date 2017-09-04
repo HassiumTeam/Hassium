@@ -37,7 +37,7 @@ namespace Hassium.Runtime
 
         public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
         {
-            vm.Execute(this, new HassiumList(args));
+            new VirtualMachine().Execute(this, new HassiumList(args));
             return Null;
         }
     }

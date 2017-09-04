@@ -8,6 +8,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The cloned object.
 
+#### ```func eval (src : string) : module```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Compiles the given string of Hassium source and returns a module.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param src:``` The string Hassium source.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The compiled Hassium module.
+
 #### ```func format (fmt : string, params obj) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` C# formats the given format string with a list of arguments.

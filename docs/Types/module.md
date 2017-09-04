@@ -1,4 +1,4 @@
-## class number
+## class module
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
 
