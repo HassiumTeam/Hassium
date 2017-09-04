@@ -42,12 +42,46 @@ namespace Hassium.Runtime.Types
                     { "containskey", new HassiumFunction(containskey, 1)  },
                     { "containsvalue", new HassiumFunction(containsvalue, 1)  },
                     { INDEX, new HassiumFunction(index, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1) },
                     { ITER, new HassiumFunction(iter, 0)  },
                     { "keybyvalue", new HassiumFunction(keybyvalue, 1)  },
                     { STOREINDEX, new HassiumFunction(storeindex, 2)  },
+                    { TOLIST, new HassiumFunction(tolist, 0)  },
                     { TOSTRING, new HassiumFunction(tostring, 0)  },
                     { "valuebykey", new HassiumFunction(valuebykey, 1)  },
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new dict using the given list or given list of tuples.",
+                "@param l The list to use.",
+                "@returns The new dict object."
+                )]
+            [FunctionAttribute("func new (l : list) : dict")]
+            public static HassiumDictionary _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumDictionary)
+                    return args[0] as HassiumDictionary;
+                var dict = new Dictionary<HassiumObject, HassiumObject>();
+
+                HassiumObject key = null;
+                foreach (var e in args[0].ToList(vm, args[0], location).Values)
+                {
+                    if (e is HassiumTuple)
+                    {
+                        var tup = (e as HassiumTuple);
+                        dict.Add(tup.Values[0], tup.Values[1]);
+                    }
+                    else if (key == null)
+                        key = e;
+                    else
+                    {
+                        dict.Add(key, e);
+                        key = null;
+                    }
+                }
+
+                return new HassiumDictionary(dict);
             }
 
             [DocStr(
@@ -161,6 +195,16 @@ namespace Hassium.Runtime.Types
                 else
                     Dictionary.Add(args[0], args[1]);
                 return args[1];
+            }
+
+            [DocStr(
+                "@desc Converts this dictionary to a list of tuples and returns it.",
+                "@returns A new list of tuples in (key, value) format."
+                )]
+            [FunctionAttribute("func tolist () : list")]
+            public static HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return iter(vm, self, location) as HassiumList;
             }
 
             [DocStr(

@@ -8,6 +8,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if the bools are equal, otherwise false.
 
+#### ```func new (val : object) : bool```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new bool object using the specified value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value of the bool.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new bool object.
+
 #### ```func __logicaland__ (b : bool) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the && operator to determine if both this bool and the specified bool are true.

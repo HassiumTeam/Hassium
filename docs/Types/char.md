@@ -94,6 +94,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` This char divided by the number to the nearest whole int.
 
+#### ```func new (val : object) : char```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new char object using the specified value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new char object.
+
 #### ```func iscontrol () : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a boolean indicating if this char is a control char.

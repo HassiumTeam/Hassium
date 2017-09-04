@@ -191,6 +191,7 @@ namespace Hassium.Runtime.Types
                     { GREATERTHAN, new HassiumFunction(greaterthan, 1)  },
                     { GREATERTHANOREQUAL, new HassiumFunction(greaterthanorequal, 1)  },
                     { INTEGERDIVISION, new HassiumFunction(integerdivision, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1)  },
                     { LESSERTHAN, new HassiumFunction(lesserthan, 1)  },
                     { LESSERTHANOREQUAL, new HassiumFunction(lesserthanorequal, 1)  },
                     { MODULUS, new HassiumFunction(modulus, 1) },
@@ -206,6 +207,19 @@ namespace Hassium.Runtime.Types
                     { TOSTRING, new HassiumFunction(tostring, 0)  },
                     { XOR, new HassiumFunction(xor, 1)  }
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new int object using the specified value.",
+                "@param val The value.",
+                "@returns The new int object."
+                )]
+            [FunctionAttribute("func new (val : object) : int")]
+            public static HassiumInt _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumInt)
+                    return args[0] as HassiumInt;
+                return new HassiumInt(System.Convert.ToInt64(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(

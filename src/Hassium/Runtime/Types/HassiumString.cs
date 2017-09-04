@@ -45,6 +45,19 @@ namespace Hassium.Runtime.Types
             }
 
             [DocStr(
+                "@desc Constructs a new string object using the specified value.",
+                "@param val The value.",
+                "@returns The new string object."
+                )]
+            [FunctionAttribute("func new (val : object) : string")]
+            public static HassiumString _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumList)
+                    return HassiumList.ListTypeDef.toascii(vm, args[0], location);
+                return new HassiumString(args[0].ToString(vm, args[0], location).String);
+            }
+
+            [DocStr(
                 "@desc Implements the + operator to return the specified string appended to this string.",
                 "@param str The string to append.",
                 "@returns A new string with the value of this string appended with the string."

@@ -78,6 +78,7 @@ namespace Hassium.Runtime.Types
                     { "fill", new HassiumFunction(fill, 2)  },
                     { "format", new HassiumFunction(format, 1)  },
                     { INDEX, new HassiumFunction(index, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1)  },
                     { ITER, new HassiumFunction(iter, 0)  },
                     { ITERABLEFULL, new HassiumFunction(iterablefull, 0)  },
                     { ITERABLENEXT, new HassiumFunction(iterablenext, 0)  },
@@ -96,6 +97,19 @@ namespace Hassium.Runtime.Types
                     { TOLIST, new HassiumFunction(tolist, 0)  },
                     { TOSTRING, new HassiumFunction(tostring, 0)  },
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new list using the specified iterable value.",
+                "@param iterable The iterable object.",
+                "@returns The new list object."
+                )]
+            [FunctionAttribute("func new (iterable : object) : list")]
+            public static HassiumList _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumList)
+                    return args[0] as HassiumList;
+                return args[0].Iter(vm, args[0], location) as HassiumList;
             }
 
             [DocStr(

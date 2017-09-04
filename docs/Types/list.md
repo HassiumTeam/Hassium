@@ -50,6 +50,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The object at the index.
 
+#### ```func new (iterable : object) : list```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new list using the specified iterable value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param iterable:``` The iterable object.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new list object.
+
 #### ```func __iter__ () : list```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the foreach loop, returning this list.

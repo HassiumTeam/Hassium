@@ -11,7 +11,7 @@
             AddAttribute("char", HassiumChar.TypeDefinition);
             //AddAttribute("closure", HassiumClosure.TypeDefinition);
             AddAttribute("ConversionFailedException", new HassiumConversionFailedException());
-            AddAttribute("dictionary", HassiumDictionary.TypeDefinition);
+            AddAttribute("dict", HassiumDictionary.TypeDefinition);
             AddAttribute("false", new HassiumBool(false));
             AddAttribute("float", HassiumFloat.TypeDefinition);
             AddAttribute("func", HassiumFunction.TypeDefinition);

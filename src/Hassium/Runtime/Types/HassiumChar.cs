@@ -151,6 +151,7 @@ namespace Hassium.Runtime.Types
                     { GREATERTHAN, new HassiumFunction(greaterthan, 1)  },
                     { GREATERTHANOREQUAL, new HassiumFunction(greaterthanorequal, 1)  },
                     { INTEGERDIVISION, new HassiumFunction(integerdivision, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1) },
                     { "iscontrol", new HassiumFunction(iscontrol, 0)  },
                     { "isdigit", new HassiumFunction(isdigit, 0)  },
                     { "isletter", new HassiumFunction(isletter, 0)  },
@@ -174,6 +175,27 @@ namespace Hassium.Runtime.Types
                     { "toupper", new HassiumFunction(toupper, 0)  },
                     { XOR, new HassiumFunction(xor, 1)  }
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new char object using the specified value.",
+                "@param val The value.",
+                "@returns The new char object."
+            )]
+            [FunctionAttribute("func new (val : object) : char")]
+            public static HassiumChar _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumChar)
+                    return args[0] as HassiumChar;
+                if (args[0] is HassiumFloat)
+                    return new HassiumChar((char)(int)(args[0] as HassiumFloat).Float);
+                if (args[0] is HassiumInt)
+                    return new HassiumChar((char)(args[0] as HassiumInt).Int);
+                if (args[0] is HassiumString)
+                    return new HassiumChar((args[0] as HassiumString).String[0]);
+
+                vm.RaiseException(HassiumConversionFailedException.ConversionFailedExceptionTypeDef._new(vm, null, location, args[0], HassiumChar.TypeDefinition));
+                return new HassiumChar('\0');
             }
 
             [DocStr(

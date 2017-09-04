@@ -19,7 +19,7 @@ namespace Hassium.Runtime
 
         public static HassiumTypeDefinition Number = new HassiumTypeDefinition("number");
 
-        public static string INVOKE = "__invoke__";
+        public static string INVOKE = "new";
         public static string ADD = "__add__";
         public static string SUBTRACT = "__subtract__";
         public static string MULTIPLY = "__multiply__";

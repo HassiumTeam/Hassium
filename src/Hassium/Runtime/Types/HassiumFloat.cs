@@ -109,6 +109,7 @@ namespace Hassium.Runtime.Types
                     { GREATERTHAN, new HassiumFunction(greaterthan, 1)  },
                     { GREATERTHANOREQUAL, new HassiumFunction(greaterthanorequal, 1)  },
                     { INTEGERDIVISION, new HassiumFunction(integerdivision, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1)  },
                     { LESSERTHAN, new HassiumFunction(lesserthan, 1)  },
                     { LESSERTHANOREQUAL, new HassiumFunction(lesserthanorequal, 1)  },
                     { MULTIPLY, new HassiumFunction(multiply, 1)  },
@@ -120,6 +121,19 @@ namespace Hassium.Runtime.Types
                     { TOINT, new HassiumFunction(toint, 0)  },
                     { TOSTRING, new HassiumFunction(tostring, 0)  },
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new float object using the specified value.",
+                "@param val The value.",
+                "@returns The new float object."
+                )]
+            [FunctionAttribute("func new (val : object) : float")]
+            public static HassiumFloat _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumFloat)
+                    return (args[0] as HassiumFloat);
+                return new HassiumFloat(System.Convert.ToDouble(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(

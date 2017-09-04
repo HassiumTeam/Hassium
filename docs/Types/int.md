@@ -94,6 +94,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` This int divided by the number to the nearest whole int.
 
+#### ```func new (val : object) : int```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new int object using the specified value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param val:``` The value.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new int object.
+
 #### ```func __lesser__ (num : number) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the < operator to determine if this int is lesser than the specified number.

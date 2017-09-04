@@ -1,4 +1,4 @@
-## class dictionary
+## class dict
 
 #### ```func add (key : object, val : object) : null```
 
@@ -34,6 +34,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The value at key.
 
+#### ```func new (l : list) : dict```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new dict using the given list or given list of tuples.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param l:``` The list to use.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new dict object.
+
 #### ```func __iter__ () : list```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the foreach loop, returning a list of tuples in the format (key, value) ...
@@ -55,6 +63,12 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to store.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` l The value to store under key.
+
+#### ```func tolist () : list```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Converts this dictionary to a list of tuples and returns it.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A new list of tuples in (key, value) format.
 
 #### ```func tostring () : string```
 

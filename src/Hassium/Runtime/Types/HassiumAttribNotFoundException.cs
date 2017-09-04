@@ -10,8 +10,8 @@ namespace Hassium.Runtime
     {
         public static new HassiumTypeDefinition TypeDefinition = new AttribNotFoundExceptionTypeDef();
 
-        public HassiumObject Object { get; private set; }
         public HassiumString Attribute { get; private set; }
+        public HassiumObject TypeDef { get; private set; }
 
         public HassiumAttribNotFoundException()
         {
@@ -43,7 +43,7 @@ namespace Hassium.Runtime
             {
                 HassiumAttribNotFoundException exception = new HassiumAttribNotFoundException();
 
-                exception.Object = args[0];
+                exception.TypeDef = args[0] is HassiumTypeDefinition ? args[0] : args[0].Type();
                 exception.Attribute = args[1].ToString(vm, args[1], location);
 
                 return exception;
@@ -67,7 +67,7 @@ namespace Hassium.Runtime
             public static HassiumString get_message(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 var exception = (self as HassiumAttribNotFoundException);
-                return new HassiumString(string.Format("Attribute Not Found: Could not find attribute '{0}' in object of type '{1}'", exception.Attribute.String, exception.Object.Type()));
+                return new HassiumString(string.Format("Attribute Not Found: Could not find attribute '{0}' in object of type '{1}'", exception.Attribute.String, exception.TypeDef));
             }
 
             [DocStr(
@@ -77,7 +77,7 @@ namespace Hassium.Runtime
             [FunctionAttribute("object { get; }")]
             public static HassiumObject get_object(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
-                return (self as HassiumAttribNotFoundException).Object;
+                return (self as HassiumAttribNotFoundException).TypeDef;
             }
 
             [DocStr(
