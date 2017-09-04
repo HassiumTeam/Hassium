@@ -16,6 +16,8 @@ namespace Hassium.Runtime
         public Stack<int> BreakLabels { get; private set; }
         public Stack<int> ContinueLabels { get; private set; }
 
+        public DocStrAttribute DocStr;
+
         public List<HassiumInstruction> Instructions;
 
         public bool IsConstructor { get { return Name == "new"; } }

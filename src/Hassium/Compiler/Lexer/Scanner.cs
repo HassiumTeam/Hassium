@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 using Hassium.Compiler.Exceptions;
@@ -14,6 +15,7 @@ namespace Hassium.Compiler.Lexer
         private string code;
         private int position;
         private List<Token> result;
+        private List<string> attachedComments;
 
         public List<Token> Scan(string filename, string source)
         {
@@ -22,6 +24,7 @@ namespace Hassium.Compiler.Lexer
             code = source;
             position = 0;
             result = new List<Token>();
+            attachedComments = new List<string>();
             char c;
 
             while (peekChar() != -1)
@@ -310,14 +313,20 @@ namespace Hassium.Compiler.Lexer
             while ((char.IsLetterOrDigit((char)peekChar()) || (char)peekChar() == '_') && peekChar() != -1)
                 sb.Append((char)readChar());
             string val = sb.ToString();
-            add(val == "is" ? TokenType.Operation : TokenType.Identifier, val);
+
+            string[] attached = attachedComments.ToArray();
+            add(val == "is" ? TokenType.Operation : TokenType.Identifier, val, attached);
+            attachedComments.Clear();
         }
 
         private void scanSingleLineComment()
         {
             readChar(); // #
+            StringBuilder sb = new StringBuilder();
             while (peekChar() != -1 && (char)peekChar() != '\n')
-                readChar();
+                sb.Append((char)readChar());
+            if (sb.ToString().Trim().StartsWith("@"))
+                attachedComments.Add(sb.ToString().Trim());
         }
         private void scanMultiLineComment()
         {
@@ -348,9 +357,9 @@ namespace Hassium.Compiler.Lexer
             return position < code.Length ? code[position++] : -1;
         }
 
-        private void add(TokenType tokenType, string value)
+        private void add(TokenType tokenType, string value, string[] attached = null)
         {
-            result.Add(new Token(location, tokenType, value));
+            result.Add(new Token(location, tokenType, value, attached));
         }
     }
 }

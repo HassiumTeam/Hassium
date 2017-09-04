@@ -337,6 +337,7 @@ namespace Hassium.Compiler.Emit
             HassiumWarning.EnforceCasing(module, node.SourceLocation, node.Name, HassiumCasingType.Lower);
 
             var method = new HassiumMethod(module, node.Name);
+            method.DocStr = node.DocStr;
             method.IsPrivate = node.IsPrivate;
             methodStack.Push(method);
             method.SourceLocation = node.SourceLocation;

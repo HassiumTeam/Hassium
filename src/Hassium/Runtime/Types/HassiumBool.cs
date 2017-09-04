@@ -21,6 +21,13 @@ namespace Hassium.Runtime.Types
             return new HassiumBool(Bool == args[0].ToBool(vm, args[0], location).Bool);
         }
 
+        public override HassiumObject Invoke(VirtualMachine vm, SourceLocation location, params HassiumObject[] args)
+        {
+            if (args[0] is HassiumBool)
+                return args[0];
+            return new HassiumBool(System.Convert.ToBoolean(args[0].ToString(vm, args[0], location).String));
+        }
+
         public override HassiumObject LogicalAnd(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             return new HassiumBool(Bool && args[0].ToBool(vm, args[0], location).Bool);
@@ -63,6 +70,7 @@ namespace Hassium.Runtime.Types
                 BoundAttributes = new Dictionary<string, HassiumObject>()
                 {
                     { EQUALTO, new HassiumFunction(equalto, 1)  },
+                    { INVOKE, new HassiumFunction(_new, 1)  },
                     { LOGICALAND, new HassiumFunction(logicaland, 1)  },
                     { LOGICALNOT, new HassiumFunction(logicalnot, 0)  },
                     { LOGICALOR, new HassiumFunction(logicalor, 1)  },
@@ -71,6 +79,19 @@ namespace Hassium.Runtime.Types
                     { TOINT, new HassiumFunction(toint, 0)  },
                     { TOSTRING, new HassiumFunction(tostring, 0)  }
                 };
+            }
+
+            [DocStr(
+                "@desc Constructs a new bool object using the specified value.",
+                "@param val The value of the bool.",
+                "@returns The new bool object."
+            )]
+            [FunctionAttribute("func new (val : object) : bool")]
+            public static HassiumBool _new(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                if (args[0] is HassiumBool)
+                    return args[0] as HassiumBool;
+                return new HassiumBool(System.Convert.ToBoolean(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(

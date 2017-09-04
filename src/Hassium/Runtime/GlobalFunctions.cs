@@ -136,6 +136,12 @@ namespace Hassium.Runtime
                 if (a.Length > 0)
                     return new HassiumString((a[0] as DocStrAttribute).Description);
             }
+            else if (args[0] is HassiumMethod)
+            {
+                var meth = (args[0] as HassiumMethod);
+                if (meth.DocStr != null)
+                    return new HassiumString(meth.DocStr.Description);
+            }
             return new HassiumString(string.Empty);
         }
 
@@ -154,6 +160,13 @@ namespace Hassium.Runtime
                 var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
                 if (a.Length > 0)
                     foreach (var param in (a[0] as DocStrAttribute).OptionalParams)
+                        HassiumList.add(vm, list, location, new HassiumString(param));
+            }
+            else if (args[0] is HassiumMethod)
+            {
+                var meth = (args[0] as HassiumMethod);
+                if (meth.DocStr != null)
+                    foreach (var param in meth.DocStr.OptionalParams)
                         HassiumList.add(vm, list, location, new HassiumString(param));
             }
 
@@ -175,6 +188,13 @@ namespace Hassium.Runtime
                 var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
                 if (a.Length > 0)
                     foreach (var param in (a[0] as DocStrAttribute).RequiredParams)
+                        HassiumList.add(vm, list, location, new HassiumString(param));
+            }
+            else if (args[0] is HassiumMethod)
+            {
+                var meth = (args[0] as HassiumMethod);
+                if (meth.DocStr != null)
+                    foreach (var param in meth.DocStr.RequiredParams)
                         HassiumList.add(vm, list, location, new HassiumString(param));
             }
 
@@ -200,6 +220,12 @@ namespace Hassium.Runtime
                 var a = ((args[0] as HassiumProperty).Get as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
                 if (a.Length > 0)
                     return new HassiumString((a[0] as DocStrAttribute).Returns);
+            }
+            else if (args[0] is HassiumMethod)
+            {
+                var meth = (args[0] as HassiumMethod);
+                if (meth.DocStr != null)
+                    return new HassiumString(meth.DocStr.Returns);
             }
 
             return new HassiumString(string.Empty);

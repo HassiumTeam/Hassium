@@ -5,6 +5,7 @@ using System.Text;
 using Hassium.Compiler.Exceptions;
 using Hassium.Compiler.Lexer;
 using Hassium.Compiler.Parser.Ast;
+using Hassium.Runtime;
 
 namespace Hassium.Compiler.Parser
 {
@@ -260,7 +261,7 @@ namespace Hassium.Compiler.Parser
         private FunctionDeclarationNode parseFunctionDeclaration()
         {
             var location = this.location;
-            expectToken(TokenType.Identifier, "func");
+            var attached = expectToken(TokenType.Identifier, "func").AttachedComments;
             string name = expectToken(TokenType.Identifier).Value;
             var parameters = new List<FunctionParameter>();
             expectToken(TokenType.OpenParentheses);
@@ -277,8 +278,8 @@ namespace Hassium.Compiler.Parser
                 acceptToken(TokenType.Comma);
             }
             if (acceptToken(TokenType.Colon))
-                return new FunctionDeclarationNode(location, name, parameters, parseExpression(), parseStatement());
-            return new FunctionDeclarationNode(location, name, parameters, parseStatement());
+                return new FunctionDeclarationNode(location, name, parameters, parseExpression(), parseStatement()) { DocStr = attached.Length == 0 ? null : new DocStrAttribute(attached) };
+            return new FunctionDeclarationNode(location, name, parameters, parseStatement()) { DocStr = attached.Length == 0 ? null : new DocStrAttribute(attached) };
         }
 
         private IfNode parseIf()

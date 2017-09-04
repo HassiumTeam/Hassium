@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Hassium.Runtime;
+
+using System.Collections.Generic;
 using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
@@ -12,6 +14,8 @@ namespace Hassium.Compiler.Parser.Ast
         public AstNode Body { get; private set; }
         public AstNode EnforcedReturnType { get; private set; }
 
+        public DocStrAttribute DocStr { get; set; }
+
         public FunctionDeclarationNode(SourceLocation location, string name, List<FunctionParameter> parameters, AstNode body)
         {
             SourceLocation = location;
@@ -20,6 +24,8 @@ namespace Hassium.Compiler.Parser.Ast
             Parameters = parameters;
             Body = body;
             EnforcedReturnType = null;
+
+            DocStr = null;
         }
         public FunctionDeclarationNode(SourceLocation location, string name, List<FunctionParameter> parameters, AstNode enforcedReturnType, AstNode body)
         {
@@ -29,6 +35,8 @@ namespace Hassium.Compiler.Parser.Ast
             Parameters = parameters;
             Body = body;
             EnforcedReturnType = enforcedReturnType;
+
+            DocStr = null;
         }
 
         public override string ToString()
