@@ -116,7 +116,7 @@ namespace Hassium.Compiler.Parser
         private ClassDeclarationNode parseClassDeclaration()
         {
             var location = this.location;
-            expectToken(TokenType.Identifier, "class");
+            var attached = expectToken(TokenType.Identifier, "class").AttachedComments;
             string name = expectToken(TokenType.Identifier).Value;
             if (acceptToken(TokenType.Colon))
             {
@@ -125,9 +125,9 @@ namespace Hassium.Compiler.Parser
                 {
                     inherits.Add(parseExpression());
                 } while (acceptToken(TokenType.Comma));
-                return new ClassDeclarationNode(location, name, parseStatement(), inherits);
+                return new ClassDeclarationNode(location, name, parseStatement(), inherits) { DocStr = attached.Length == 0 ? null : new DocStrAttribute(attached) };
             }
-            return new ClassDeclarationNode(location, name, parseStatement());
+            return new ClassDeclarationNode(location, name, parseStatement()) { DocStr = attached.Length == 0 ? null : new DocStrAttribute(attached) };
         }
 
         private CodeBlockNode parseCodeBlockNode()

@@ -11,6 +11,8 @@ namespace Hassium.Runtime
         public new HassiumTypeDefinition TypeDefinition { get; private set; }
         public List<HassiumMethod> Inherits { get; private set; }
 
+        public DocStrAttribute DocStr { get; set; }
+
         public HassiumClass(string name)
         {
             Name = name;

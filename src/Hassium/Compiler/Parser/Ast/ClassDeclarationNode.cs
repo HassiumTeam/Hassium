@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Hassium.Runtime;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Hassium.Compiler.Parser.Ast
 {
@@ -11,8 +10,10 @@ namespace Hassium.Compiler.Parser.Ast
 
         public string Name { get; private set; }
 
-        public List<AstNode> Inherits { get; private set; }
         public AstNode Body { get; private set; }
+        public List<AstNode> Inherits { get; private set; }
+
+        public DocStrAttribute DocStr { get; set; }
 
         public ClassDeclarationNode(SourceLocation location, string name, AstNode body)
         {

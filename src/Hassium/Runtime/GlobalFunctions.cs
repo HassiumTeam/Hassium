@@ -142,6 +142,18 @@ namespace Hassium.Runtime
                 if (meth.DocStr != null)
                     return new HassiumString(meth.DocStr.Description);
             }
+            else if (args[0] is HassiumClass)
+            {
+                var clazz = (args[0] as HassiumClass);
+                if (clazz.DocStr != null)
+                    return new HassiumString(clazz.DocStr.Description);
+            }
+            else if (args[0] is HassiumTypeDefinition)
+            {
+                var a = args[0].GetType().GetCustomAttributes(true);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Description);
+            }
             return new HassiumString(string.Empty);
         }
 

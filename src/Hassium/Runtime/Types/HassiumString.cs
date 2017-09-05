@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Types
             String = val;
         }
 
+        [DocStr(
+            "@desc Represents a string, which is an array of characters.",
+            "@returns string."
+            )]
         public class StringTypeDef : HassiumTypeDefinition
         {
             public StringTypeDef() : base("string")

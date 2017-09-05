@@ -147,6 +147,7 @@ namespace Hassium.Compiler.Emit
             var clazz = new HassiumClass(node.Name);
             clazz.IsPrivate = node.IsPrivate;
             clazz.Parent = classStack.Peek();
+            clazz.DocStr = node.DocStr;
 
             foreach (var inherit in node.Inherits)
             {

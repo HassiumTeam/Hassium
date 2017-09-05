@@ -140,6 +140,7 @@ namespace Hassium.Runtime
                 HassiumClass clazz = new HassiumClass((Parent as HassiumClass).Name);
                 clazz.BoundAttributes = CloneDictionary(Parent.BoundAttributes);
                 var parent = (Parent as HassiumClass);
+                clazz.DocStr = parent.DocStr;
                 clazz.AddType(parent.TypeDefinition);
 
                 foreach (var inherit in parent.Inherits)
