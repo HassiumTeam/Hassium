@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Drawing
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a Color object.",
+            "@returns Color."
+            )]
         public class ColorTypeDef : HassiumTypeDefinition
         {
             public ColorTypeDef() : base("Color")

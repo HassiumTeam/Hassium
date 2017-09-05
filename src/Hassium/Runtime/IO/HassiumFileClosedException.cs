@@ -18,6 +18,10 @@ namespace Hassium.Runtime.IO
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when an IO.File object's stream has been closed.",
+            "@returns FileClosedException."
+            )]
         public class FileClosedExceptionTypeDef : HassiumTypeDefinition
         {
             public FileClosedExceptionTypeDef() : base("FileClosedException")

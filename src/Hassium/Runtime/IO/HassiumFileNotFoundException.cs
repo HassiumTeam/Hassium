@@ -17,6 +17,10 @@ namespace Hassium.Runtime.IO
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when a file is not found.",
+            "@returns FileNotFoundException."
+            )]
         public class FileNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public FileNotFoundExceptionTypeDef() : base("FileNotFoundException")

@@ -8,7 +8,7 @@ namespace Hassium.Runtime.IO
 {
     public class HassiumPath : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("Path");
+        public static new HassiumTypeDefinition TypeDefinition = new PathTypeDef();
 
         public HassiumPath()
         {
@@ -23,6 +23,18 @@ namespace Hassium.Runtime.IO
             AddAttribute("parseext", parseext, 1);
             AddAttribute("parsefilename", parsefilename, 1);
             AddAttribute("parseroot", parseroot, 1);
+        }
+
+        [DocStr(
+            "@desc A class containing methods for interacting with path strings.",
+            "@returns Path."
+            )]
+        public class PathTypeDef : HassiumTypeDefinition
+        {
+            public PathTypeDef() : base("Path")
+            {
+                
+            }
         }
 
         [DocStr(

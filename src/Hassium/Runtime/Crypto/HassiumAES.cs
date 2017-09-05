@@ -10,7 +10,7 @@ namespace Hassium.Runtime.Crypto
 {
     public class HassiumAES : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("AES");
+        public static new HassiumTypeDefinition TypeDefinition = new AESTypeDef();
 
         public HassiumAES()
         {
@@ -19,6 +19,17 @@ namespace Hassium.Runtime.Crypto
             AddAttribute("decryptfilebytes", decryptfilebytes, 3);
             AddAttribute("encryptbytes", encryptbytes, 3);
             AddAttribute("encryptfilebytes", encryptfilebytes, 3);
+        }
+
+        [DocStr(
+            "@desc A class containing methods for encrypting and decrypting lists of bytes and IO.File objects using AES.",
+            "@returns AES."
+            )]
+        public class AESTypeDef : HassiumTypeDefinition
+        {
+            public AESTypeDef() : base("AES")
+            {
+            }
         }
 
         [DocStr(

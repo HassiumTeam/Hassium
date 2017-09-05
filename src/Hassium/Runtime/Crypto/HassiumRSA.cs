@@ -7,7 +7,7 @@ namespace Hassium.Runtime.Crypto
 {
     public class HassiumRSA : HassiumObject
     {
-        public static new HassiumTypeDefinition TypeDefinition = new HassiumTypeDefinition("RSA");
+        public static new HassiumTypeDefinition TypeDefinition = new RSATypeDef();
 
         public HassiumRSA()
         {
@@ -15,6 +15,17 @@ namespace Hassium.Runtime.Crypto
 
             AddAttribute("decrypt", decrypt, 3);
             AddAttribute("encrypt", encrypt, 3);
+        }
+
+        [DocStr(
+            "@desc A class containing methods for encrypting and decrypting messages using RSA.",
+            "@returns RSA."
+            )]
+        public class RSATypeDef : HassiumTypeDefinition
+        {
+            public RSATypeDef() : base("RSA")
+            {
+            }
         }
 
         [DocStr(

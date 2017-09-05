@@ -17,6 +17,10 @@ namespace Hassium.Runtime.IO
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception thrown when a directory is not found.",
+            "@returns DirectoryNotFoundException."
+            )]
         public class DirectoryNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public DirectoryNotFoundExceptionTypeDef() : base("DirectoryNotFoundException")

@@ -35,6 +35,18 @@ namespace Hassium.Runtime.IO
         }
 
         [DocStr(
+            "@desc A class containing methods for interacting with the filesystem.",
+            "@returns FS."
+            )]
+        public class FSTypeDef : HassiumTypeDefinition
+        {
+            public FSTypeDef() : base("FS")
+            {
+                
+            }
+        }
+
+        [DocStr(
             "@desc Closes the given IO.File object.",
             "@param file The IO.File object to close.",
             "@returns null."

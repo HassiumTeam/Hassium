@@ -41,6 +41,10 @@ namespace Hassium.Runtime.IO
             StreamWriter = new StreamWriter(fs);
         }
 
+        [DocStr(
+            "@desc A class representing a File object.",
+            "@returns File."
+            )]
         public class FileTypeDef : HassiumTypeDefinition
         {
             public FileTypeDef() : base("File")

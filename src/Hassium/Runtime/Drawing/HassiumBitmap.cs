@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Drawing
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a Bitmap object.",
+            "@returns Bitmap."
+            )]
         public class BitmapTypeDef : HassiumTypeDefinition
         {
             public BitmapTypeDef() : base("Bitmap")
