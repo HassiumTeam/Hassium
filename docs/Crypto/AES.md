@@ -1,6 +1,6 @@
 ## class AES
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for encrypting and decrypting lists of bytes and IO.File objects using AES.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for encrypting and decrypting lists of bytes and IO.File objects using AES.
 
 #### ```func decryptbytes (key : list, iv : list, dataStrOrList : object) : list```
 

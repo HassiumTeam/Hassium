@@ -1,6 +1,6 @@
 ## class char
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a byte-sized character.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a byte-sized character.
 
 #### ```func __add__ (c : char) : char```
 

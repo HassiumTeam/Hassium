@@ -1,6 +1,6 @@
 ## class bool
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a boolean that is either true or false.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a boolean that is either true or false.
 
 #### ```func __equals__ (b : bool) : bool```
 

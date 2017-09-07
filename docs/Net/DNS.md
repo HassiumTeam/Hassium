@@ -1,6 +1,6 @@
 ## class DNS
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for resolving IP addresses and hostnames through the DNS protocol.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for resolving IP addresses and hostnames through the DNS protocol.
 
 #### ```func gethost (IPAddrOrStr : object) : string```
 

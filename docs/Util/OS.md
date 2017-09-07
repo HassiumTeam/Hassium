@@ -1,6 +1,6 @@
 ## class OS
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for interacting with the operating system, environment, and processes.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for interacting with the operating system, environment, and processes.
 
 #### ```func exec (path : string, params args) : Process```
 

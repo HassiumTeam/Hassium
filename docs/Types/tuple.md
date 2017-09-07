@@ -1,6 +1,6 @@
 ## class tuple
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a fixed length non-mutable list of objects.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a fixed length non-mutable list of objects.
 
 #### ```func __index__ (index : int) : object```
 

@@ -1,6 +1,6 @@
 ## class Thread
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a separate thread from the main entry point.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a separate thread from the main entry point.
 
 #### ```isalive { get; }```
 

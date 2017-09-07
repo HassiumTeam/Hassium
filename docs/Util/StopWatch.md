@@ -1,6 +1,6 @@
 ## class StopWatch
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a StopWatch object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a StopWatch object.
 
 #### ```hours { get; }```
 

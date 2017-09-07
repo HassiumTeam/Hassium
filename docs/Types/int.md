@@ -1,6 +1,6 @@
 ## class int
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a 64-bit integer.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a 64-bit integer.
 
 #### ```func __add__ (num : number) : number```
 

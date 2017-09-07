@@ -1,6 +1,6 @@
 ## class Bitmap
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a Bitmap object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a Bitmap object.
 
 #### ```func getpixel (x : int, y : int) : Color```
 

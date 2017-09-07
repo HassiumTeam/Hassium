@@ -1,6 +1,6 @@
 ## class AttribNotFoundException
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when an attribute is not found within an object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing an exception that is thrown when an attribute is not found within an object.
 
 #### ```attribute { get; }```
 

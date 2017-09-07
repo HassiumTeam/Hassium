@@ -1,6 +1,6 @@
 ## class FileNotFoundException
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when a file is not found.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing an exception that is thrown when a file is not found.
 
 #### ```func new (path : string) : FileNotFoundException```
 

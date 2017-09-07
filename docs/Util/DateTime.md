@@ -1,6 +1,6 @@
 ## class DateTime
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a specific instance of time and date.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a specific instance of time and date.
 
 #### ```day { get; }```
 

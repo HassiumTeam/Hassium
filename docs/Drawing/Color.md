@@ -1,6 +1,6 @@
 ## class Color
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a Color object.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a Color object.
 
 #### ```a { get; }```
 

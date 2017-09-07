@@ -1,6 +1,6 @@
 ## class list
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a variable length list of objects.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a variable length list of objects.
 
 #### ```func add (obj : object) : null```
 

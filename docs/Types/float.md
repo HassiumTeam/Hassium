@@ -1,6 +1,6 @@
 ## class float
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a double-precision floating point number.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a double-precision floating point number.
 
 #### ```func __add__ (num : number) : float```
 

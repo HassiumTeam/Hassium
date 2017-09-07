@@ -1,6 +1,6 @@
 ## class Math
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for advanced mathematical operations.
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for advanced mathematical operations.
 
 #### ```func abs (num : number) : float```
 
