@@ -1,5 +1,7 @@
 ## class Bitmap
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a Bitmap object.
+
 #### ```func getpixel (x : int, y : int) : Color```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a new Drawing.Color object with the value of the pixel at the specified x and y coordinates.

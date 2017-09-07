@@ -1,5 +1,7 @@
 ## class VariableNotFoundException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when a variable is not found inside of the stack frame.
+
 #### ```func new () : VariableNotFoundException```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new VariableNotFoundException.

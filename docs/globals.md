@@ -1,5 +1,7 @@
 ## class globals
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func clone (obj : object) : object```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Creates a clone of the given object.

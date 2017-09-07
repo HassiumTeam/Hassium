@@ -1,5 +1,7 @@
 ## class StopWatch
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a StopWatch object.
+
 #### ```hours { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly hours that have passed.

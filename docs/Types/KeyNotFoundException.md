@@ -1,5 +1,7 @@
 ## class KeyNotFoundException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when a key is not found in an object.
+
 #### ```func new (obj : object, key : object) : KeyNotFoundException```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new KeyNotFoundException object using the specified object and key.

@@ -1,5 +1,7 @@
 ## class FileClosedException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when an IO.File object's stream has been closed.
+
 #### ```file { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly IO.File object that has been closed.

@@ -1,8 +1,6 @@
 ## class FS
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for interacting with the filesystem.
 
 #### ```func close (file : File) : null```
 

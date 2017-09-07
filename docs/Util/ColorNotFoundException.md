@@ -1,5 +1,7 @@
 ## class ColorNotFoundException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when a color is not found or cannot be resolved.
+
 #### ```color { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string color that was not found.

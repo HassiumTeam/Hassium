@@ -1,8 +1,6 @@
 ## class Path
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class containing methods for interacting with path strings.
 
 #### ```func combine (params paths) : string```
 

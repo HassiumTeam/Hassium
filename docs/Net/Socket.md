@@ -1,5 +1,7 @@
 ## class Socket
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```autoflush { get; }```
 
 #### ```autofluah { set; }```

@@ -1,5 +1,7 @@
 ## class File
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a File object.
+
 #### ```abspath { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly absolute path string.

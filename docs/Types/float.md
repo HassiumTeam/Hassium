@@ -1,5 +1,7 @@
 ## class float
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a double-precision floating point number.
+
 #### ```func __add__ (num : number) : float```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the + operator, adding this float to the specified number.

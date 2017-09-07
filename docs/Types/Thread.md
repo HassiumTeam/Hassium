@@ -1,5 +1,7 @@
 ## class Thread
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a separate thread from the main entry point.
+
 #### ```isalive { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly bool representing if this thread is currently running.

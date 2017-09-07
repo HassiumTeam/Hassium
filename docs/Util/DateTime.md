@@ -1,5 +1,7 @@
 ## class DateTime
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a specific instance of time and date.
+
 #### ```day { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly int day.

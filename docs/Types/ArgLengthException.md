@@ -1,5 +1,7 @@
 ## class ArgLengthException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception that is thrown when an argument length does not match the desired length.
+
 #### ```expected { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly int representing how many args were expected.

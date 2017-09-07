@@ -1,5 +1,7 @@
 ## class DirectoryNotFoundException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing an exception thrown when a directory is not found.
+
 #### ```func new (path : str) : DirectoryNotFoundException```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new DirectoryNotFoundException using the specified path.

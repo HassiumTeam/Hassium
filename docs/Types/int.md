@@ -1,5 +1,7 @@
 ## class int
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a 64-bit integer.
+
 #### ```func __add__ (num : number) : number```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the + operator, adding this int to the specified number.

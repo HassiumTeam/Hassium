@@ -1,5 +1,7 @@
 ## class Color
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a Color object.
+
 #### ```a { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly alpha value.

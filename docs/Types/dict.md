@@ -1,5 +1,7 @@
 ## class dict
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` @desc A class representing a dictionary where the keys and values are objects.
+
 #### ```func add (key : object, val : object) : null```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Adds the given value to the dictionary under the specified key.
