@@ -28,6 +28,10 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a separate thread from the main entry point.",
+            "@returns Thread."
+            )]
         public class ThreadTypeDef : HassiumTypeDefinition
         {
             public ThreadTypeDef() : base("Thread")

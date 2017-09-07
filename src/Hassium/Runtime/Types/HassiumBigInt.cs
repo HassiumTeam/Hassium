@@ -18,6 +18,10 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a variable length integer represented with a list of bytes.",
+            "@returns BigInt."
+            )]
         public class BigIntType : HassiumTypeDefinition
         {
             public BigIntType() : base("BigInt")

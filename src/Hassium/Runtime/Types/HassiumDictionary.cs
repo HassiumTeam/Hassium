@@ -32,6 +32,10 @@ namespace Hassium.Runtime.Types
             return DictTypeDef.storeindex(vm, this, location, args);
         }
 
+        [DocStr(
+            "@desc A class representing a dictionary where the keys and values are objects.",
+            "@returns dict."
+            )]
         public class DictTypeDef : HassiumTypeDefinition
         {
             public DictTypeDef() : base("dict")

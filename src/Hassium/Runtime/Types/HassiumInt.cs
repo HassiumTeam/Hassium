@@ -173,6 +173,10 @@ namespace Hassium.Runtime.Types
             return new HassiumString(Int.ToString());
         }
 
+        [DocStr(
+            "@desc A class representing a 64-bit integer.",
+            "@returns int."
+            )]
         public class IntTypeDef : HassiumTypeDefinition
         {
             public IntTypeDef() : base("int")

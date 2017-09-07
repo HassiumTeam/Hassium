@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Math
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a Random object for computing pseudo-random numbers.",
+            "@returns Random."
+            )]
         public class RandomTypeDef : HassiumTypeDefinition
         {
             public RandomTypeDef() : base("Random")

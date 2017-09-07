@@ -19,6 +19,10 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when an argument length does not match the desired length.",
+            "@returns ArgLengthException."
+            )]
         public class ArgLengthExceptionTypeDef : HassiumTypeDefinition
         {
             public ArgLengthExceptionTypeDef() : base("ArgLengthException")

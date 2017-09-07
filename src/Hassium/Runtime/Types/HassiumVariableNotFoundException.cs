@@ -15,6 +15,10 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when a variable is not found inside of the stack frame.",
+            "@returns VariableNotFoundException."
+            )]
         public class VariableNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public VariableNotFoundExceptionTypeDef() : base("VariableNotFoundException")

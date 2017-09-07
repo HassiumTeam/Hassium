@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Util
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a specific instance of time and date.",
+            "@returns DateTime."
+            )]
         public class DateTimeTypeDef : HassiumTypeDefinition
         {
             public DateTimeTypeDef() : base("DateTime")

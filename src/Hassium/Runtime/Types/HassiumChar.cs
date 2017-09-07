@@ -133,6 +133,10 @@ namespace Hassium.Runtime.Types
             return new HassiumChar((char)((byte)Char ^ (byte)args[0].ToChar(vm, args[0], location).Char));
         }
 
+        [DocStr(
+            "@desc A class representing a byte-sized character.",
+            "@returns char."
+            )]
         public class CharTypeDef : HassiumTypeDefinition
         {
             public CharTypeDef() : base("char")

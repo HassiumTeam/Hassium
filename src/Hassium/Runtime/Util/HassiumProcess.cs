@@ -31,6 +31,10 @@ namespace Hassium.Runtime.Util
             StartInfo = startInfo;
         }
 
+        [DocStr(
+            "@desc A class representing a separate process being hosted by this process.",
+            "@returns Process."
+            )]
         public class ProcessTypeDef : HassiumTypeDefinition
         {
             public ProcessTypeDef() : base("Process")

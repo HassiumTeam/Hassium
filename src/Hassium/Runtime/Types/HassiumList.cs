@@ -66,6 +66,10 @@ namespace Hassium.Runtime.Types
             return new HassiumString(sb.ToString());
         }
 
+        [DocStr(
+            "@desc A class representing a variable length list of objects.",
+            "@returns list."
+            )]
         public class ListTypeDef : HassiumTypeDefinition
         {
             public ListTypeDef() : base("list")

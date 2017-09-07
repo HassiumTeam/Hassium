@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Util
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when a color is not found or cannot be resolved.",
+            "@returns ColorNotFoundException."
+            )]
         public class ColorNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public ColorNotFoundExceptionTypeDef() : base("ColorNotFoundException")

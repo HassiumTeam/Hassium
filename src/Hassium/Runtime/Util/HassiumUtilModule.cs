@@ -6,10 +6,10 @@
         {
             AddAttribute("ColorNotFoundException", HassiumColorNotFoundException.TypeDefinition);
             AddAttribute("DateTime", HassiumDateTime.TypeDefinition);
-            AddAttribute("OS", new HassiumOS());
+            AddAttribute("OS", HassiumOS.TypeDefinition);
             AddAttribute("Process", HassiumProcess.TypeDefinition);
             AddAttribute("StopWatch", HassiumStopWatch.TypeDefinition);
-            AddAttribute("UI", new HassiumUI());
+            AddAttribute("UI", HassiumUI.TypeDefinition);
         }
     }
 }
