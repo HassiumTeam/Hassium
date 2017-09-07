@@ -2,7 +2,7 @@
 using Hassium.Runtime.Types;
 
 using System;
-
+using System.Collections.Generic;
 
 namespace Hassium.Runtime.Util
 {

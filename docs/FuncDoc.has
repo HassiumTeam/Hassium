@@ -2,6 +2,8 @@ from Text use StringBuilder;
 
 class FuncDoc {
 	func new (f) {
+		this.desc = "";
+		this.returns = "";
 		this.sourcereps = getsourcereps (f);
 		if (getdocdesc (f).length > 5) {
 			this.desc = getdocdesc (f).substring (6);

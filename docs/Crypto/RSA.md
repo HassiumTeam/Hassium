@@ -1,5 +1,9 @@
 ## class RSA
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func decrypt (pubmod : BigInt, privkey : BigInt, msg : object)```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Decrypts the given msg using the given public modulus BigInt and private key BigInt, returning the resulting bytes.

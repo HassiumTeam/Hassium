@@ -1,5 +1,9 @@
 ## class OS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func exec (path : string, params args) : Process```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.

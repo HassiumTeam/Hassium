@@ -2,31 +2,31 @@
 
 #### ```attrib { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this list.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func new (obj : object, attrib : string) : PrivateAttribException```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this list.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```message { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this list.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```object { get; }```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this list.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func tostring () : string```
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this list as a string formatted as [ val1, val2, ... ]
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string value of this list.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 

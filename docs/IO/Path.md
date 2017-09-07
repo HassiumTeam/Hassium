@@ -1,5 +1,9 @@
 ## class Path
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func combine (params paths) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Combines the given file paths together and returns the file string.

@@ -1,5 +1,9 @@
 ## class FS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func close (file : File) : null```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Closes the given IO.File object.

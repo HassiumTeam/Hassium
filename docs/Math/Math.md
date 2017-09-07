@@ -1,5 +1,9 @@
 ## class Math
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func abs (num : number) : float```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns the absolute value of the specified number.

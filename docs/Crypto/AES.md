@@ -1,5 +1,9 @@
 ## class AES
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func decryptbytes (key : list, iv : list, dataStrOrList : object) : list```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Decrypts the given byte string or list using the specified 16 byte key and iv, returning the result.

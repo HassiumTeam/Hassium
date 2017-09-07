@@ -1,5 +1,9 @@
 ## class DNS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
+
 #### ```func gethost (IPAddrOrStr : object) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the first hostname of the specified Net.IPAddr object or string ip.

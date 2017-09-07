@@ -44,6 +44,7 @@ func docclazz (clazz, name : string) {
 	file = FS.open ("{0}.md".format (name));
 
 	file.writeline ("## class {0}\n".format (name));
+	#file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` {0}\n".format (getdocdesc (clazz)));
 
 	attribs = getattribs (clazz);
 

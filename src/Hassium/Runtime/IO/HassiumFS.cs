@@ -9,8 +9,11 @@ namespace Hassium.Runtime.IO
 {
     public class HassiumFS : HassiumObject
     {
+        public static new HassiumTypeDefinition TypeDefinition = new FSTypeDef();
+
         public HassiumFS()
         {
+            AddType(TypeDefinition);
         }
 
         [DocStr(
