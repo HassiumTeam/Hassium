@@ -140,7 +140,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the unary - operator to return this int times -1.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` his int multiplied by -1.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func __notequal__ (i : int) : bool```
 
@@ -174,7 +174,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param num:``` The number to subtract.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` This int minux the number.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func tochar () : char```
 

@@ -40,7 +40,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param num:``` The number to compare.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if this float is greater than or equal to the number, otherwise false.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func __intdivision__ (num : number) : int```
 

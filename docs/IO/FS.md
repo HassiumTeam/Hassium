@@ -26,7 +26,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the directory to be created.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` ull.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func createfile (path : string) : null```
 

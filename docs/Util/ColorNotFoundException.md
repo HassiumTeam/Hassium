@@ -8,14 +8,6 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The not found color as string.
 
-#### ```func new (col : string) : ColorNotFoundException```
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` onstructs a new ColorNotFoundException using the specified color string.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param col:``` The string name of the color that was not found.
-
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The new ColorNotFoundException object.
-
 #### ```message { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string message of the exception.

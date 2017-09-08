@@ -337,8 +337,12 @@ namespace Hassium.Compiler.Parser
 
         private AstNode parsePriv()
         {
-            expectToken(TokenType.Identifier, "priv");
+            var attached = expectToken(TokenType.Identifier, "priv").AttachedComments;
             AstNode ast = parseStatement();
+            if (ast is ClassDeclarationNode)
+                (ast as ClassDeclarationNode).DocStr = new DocStrAttribute(attached);
+            else if (ast is FunctionDeclarationNode)
+                (ast as FunctionDeclarationNode).DocStr = new DocStrAttribute(attached);
             ast.IsPrivate = true;
             return ast;
         }

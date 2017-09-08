@@ -46,6 +46,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A dictionary with the attributes.
 
+#### ```func getdocauthor (obj : object) : string```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the @author parameter of documentation for a function.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The function to get documentation for.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The documentation author.
+
 #### ```func getdocdesc (obj : object) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the @desc parameter of documentation for a function.

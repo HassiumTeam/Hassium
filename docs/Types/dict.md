@@ -64,7 +64,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to store.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` l The value to store under key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The value provided.
 
 #### ```func tolist () : list```
 
