@@ -7,7 +7,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class DictionaryDeclarationNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public List<AstNode> Keys { get; private set; }
         public List<AstNode> Values { get; private set; }

@@ -5,7 +5,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class EnumNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; } 
+        public override SourceLocation SourceLocation { get; set; } 
 
         public Dictionary<int, string> Attributes { get; private set; }
         public string Name { get; private set; }

@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class MultipleAssignmentNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public List<AstNode> Targets { get; private set; }
         public AstNode Value { get; private set; }

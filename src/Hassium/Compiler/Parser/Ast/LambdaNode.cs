@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class LambdaNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public ArgumentListNode Parameters { get; private set; }
         public AstNode Body { get; private set; }

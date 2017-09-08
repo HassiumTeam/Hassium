@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class TernaryOperationNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Condition { get; private set; }
         public AstNode TrueExpression { get; private set; }
