@@ -2,7 +2,7 @@
 {
     public class IterableAccessNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Target { get; private set; }
         public AstNode Index { get; private set; }

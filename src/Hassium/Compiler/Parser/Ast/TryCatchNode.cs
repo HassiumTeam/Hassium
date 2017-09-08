@@ -2,7 +2,7 @@
 {
     public class TryCatchNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode TryBody { get; private set; }
         public AstNode CatchBody { get; private set; }

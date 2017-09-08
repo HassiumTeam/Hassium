@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class SwitchNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public List<Case> Cases { get; private set; }
         public AstNode Default { get; private set; }

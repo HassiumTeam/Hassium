@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class FunctionCallNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public Dictionary<string, AstNode> InitialAttributes { get; private set; }
         public AstNode Target { get; private set; }

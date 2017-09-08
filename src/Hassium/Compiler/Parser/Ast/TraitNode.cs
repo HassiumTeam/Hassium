@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class TraitNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public string Name { get; private set; }
 

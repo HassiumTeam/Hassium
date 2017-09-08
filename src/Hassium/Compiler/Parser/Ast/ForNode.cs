@@ -2,7 +2,7 @@
 {
     public class ForNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode InitialStatement { get; private set; }
         public AstNode Condition { get; private set; }

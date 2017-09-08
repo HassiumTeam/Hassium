@@ -2,7 +2,7 @@
 {
     public class StringNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public string String { get; private set; }
 

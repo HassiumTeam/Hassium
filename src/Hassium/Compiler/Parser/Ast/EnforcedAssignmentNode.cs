@@ -2,7 +2,7 @@
 {
     public class EnforcedAssignmentNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public string Variable { get; private set; }
 

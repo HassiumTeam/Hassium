@@ -7,7 +7,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class WhileNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Condition { get; private set; }
         public AstNode Body { get; private set; }
