@@ -18,6 +18,10 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when an attribute is not found within an object.",
+            "@returns AttribNotFoundException."
+            )]
         public class AttribNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public AttribNotFoundExceptionTypeDef() : base("AttribNotFoundException")

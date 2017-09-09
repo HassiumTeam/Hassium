@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown if an index is out of the range of an object.",
+            "@returns IndexOutOfRangeException."
+            )]
         public class IndexOutOfRangeExceptionTypeDef : HassiumTypeDefinition
         {
             public IndexOutOfRangeExceptionTypeDef() : base("IndexOutOfRangeException")

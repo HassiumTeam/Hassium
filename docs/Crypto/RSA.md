@@ -1,5 +1,7 @@
 ## class RSA
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for encrypting and decrypting messages using RSA.
+
 #### ```func decrypt (pubmod : BigInt, privkey : BigInt, msg : object)```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Decrypts the given msg using the given public modulus BigInt and private key BigInt, returning the resulting bytes.

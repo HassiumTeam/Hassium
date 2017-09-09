@@ -97,6 +97,10 @@ namespace Hassium.Runtime.Types
             return FloatTypeDef.tostring(vm, this, location, args);
         }
 
+        [DocStr(
+            "@desc A class representing a double-precision floating point number.",
+            "@returns float."
+            )]
         public class FloatTypeDef : HassiumTypeDefinition
         {
             public FloatTypeDef() : base("float")

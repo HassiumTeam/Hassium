@@ -2,7 +2,7 @@
 {
     public class UseFromNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public string Class { get; private set; }
         public string Module { get; private set; }

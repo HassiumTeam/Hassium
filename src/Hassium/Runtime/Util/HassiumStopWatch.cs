@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Util
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a StopWatch object.",
+            "@returns StopWatch."
+            )]
         public class StopWatchTypeDef : HassiumTypeDefinition
         {
             public StopWatchTypeDef() : base("StopWatch")

@@ -1,5 +1,7 @@
 ## class dict
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a dictionary where the keys and values are objects.
+
 #### ```func add (key : object, val : object) : null```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Adds the given value to the dictionary under the specified key.
@@ -62,7 +64,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param key:``` The key to store.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` l The value to store under key.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The value provided.
 
 #### ```func tolist () : list```
 

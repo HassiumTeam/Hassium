@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Types
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when a key is not found in an object.",
+            "@returns KeyNotFoundException."
+            )]
         public class KeyNotFoundExceptionTypeDef : HassiumTypeDefinition
         {
             public KeyNotFoundExceptionTypeDef() : base("KeyNotFoundException")

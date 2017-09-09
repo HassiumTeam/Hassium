@@ -15,6 +15,7 @@ namespace Hassium.Runtime
             { "format",          new HassiumFunction(format,         -1) },
             { "getattrib",       new HassiumFunction(getattrib,       2) },
             { "getattribs",      new HassiumFunction(getattribs,      1) },
+            { "getdocauthor",    new HassiumFunction(getdocauthor,    1) },
             { "getdocdesc",      new HassiumFunction(getdocdesc,      1) },
             { "getdocoptparams", new HassiumFunction(getdocoptparams, 1) },
             { "getdocreqparams", new HassiumFunction(getdocreqparams, 1) },
@@ -114,6 +115,47 @@ namespace Hassium.Runtime
                 dict.Dictionary.Add(new HassiumString(attrib.Key), attrib.Value);
 
             return dict;
+        }
+
+        [DocStr(
+            "@desc Gets the @author parameter of documentation for a function.",
+            "@param obj The function to get documentation for.",
+            "@returns The documentation author."
+            )]
+        [FunctionAttribute("func getdocauthor (obj : object) : string")]
+        public static HassiumString getdocauthor(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            if (args[0] is HassiumFunction)
+            {
+                var a = (args[0] as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Author);
+            }
+            else if (args[0] is HassiumProperty)
+            {
+                var a = ((args[0] as HassiumProperty).Get as HassiumFunction).Target.Method.GetCustomAttributes(typeof(DocStrAttribute), false);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Author);
+            }
+            else if (args[0] is HassiumMethod)
+            {
+                var meth = (args[0] as HassiumMethod);
+                if (meth.DocStr != null)
+                    return new HassiumString(meth.DocStr.Author);
+            }
+            else if (args[0] is HassiumClass)
+            {
+                var clazz = (args[0] as HassiumClass);
+                if (clazz.DocStr != null)
+                    return new HassiumString(clazz.DocStr.Author);
+            }
+            else if (args[0] is HassiumTypeDefinition)
+            {
+                var a = args[0].GetType().GetCustomAttributes(true);
+                if (a.Length > 0)
+                    return new HassiumString((a[0] as DocStrAttribute).Author);
+            }
+            return new HassiumString(string.Empty);
         }
 
         [DocStr(

@@ -2,7 +2,7 @@
 {
     public class ThreadNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Body { get; private set; }
         public bool DoImmediately { get; private set; }

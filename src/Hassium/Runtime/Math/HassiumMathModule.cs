@@ -4,7 +4,7 @@
     {
         public HassiumMathModule() : base("Math")
         {
-            AddAttribute("Math", new HassiumMath());
+            AddAttribute("Math", HassiumMath.TypeDefinition);
             AddAttribute("Random", HassiumRandom.TypeDefinition);
         }
     }

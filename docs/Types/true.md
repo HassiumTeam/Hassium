@@ -1,5 +1,7 @@
 ## class true
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func __equals__ (b : bool) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the == operator to determine if this bool is equal to the specified bool.

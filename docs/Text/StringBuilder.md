@@ -1,5 +1,7 @@
 ## class StringBuilder
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func new () : StringBuilder```
 
 #### ```func new (obj : object) : StringBuilder```

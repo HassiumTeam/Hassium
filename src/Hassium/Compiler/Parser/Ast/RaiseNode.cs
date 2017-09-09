@@ -2,7 +2,7 @@
 {
     public class RaiseNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Exception { get; private set; }
 

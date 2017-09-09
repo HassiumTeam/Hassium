@@ -1,5 +1,7 @@
 ## class globals
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func clone (obj : object) : object```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Creates a clone of the given object.
@@ -43,6 +45,14 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The object to get attributes from.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A dictionary with the attributes.
+
+#### ```func getdocauthor (obj : object) : string```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the @author parameter of documentation for a function.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param obj:``` The function to get documentation for.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The documentation author.
 
 #### ```func getdocdesc (obj : object) : string```
 

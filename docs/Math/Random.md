@@ -1,5 +1,7 @@
 ## class Random
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a Random object for computing pseudo-random numbers.
+
 #### ```func new () : Random```
 
 #### ```func new (seed : int) : Random```

@@ -1,5 +1,7 @@
 ## class string
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class represneting an array of characters.
+
 #### ```func tostring () : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this string.

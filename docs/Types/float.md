@@ -1,5 +1,7 @@
 ## class float
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a double-precision floating point number.
+
 #### ```func __add__ (num : number) : float```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the + operator, adding this float to the specified number.
@@ -38,7 +40,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param num:``` The number to compare.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if this float is greater than or equal to the number, otherwise false.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func __intdivision__ (num : number) : int```
 

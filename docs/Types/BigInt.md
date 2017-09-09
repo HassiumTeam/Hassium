@@ -1,5 +1,7 @@
 ## class BigInt
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a variable length integer represented with a list of bytes.
+
 #### ```func tostring () : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Converts this BigInt to a string and returns it.

@@ -7,7 +7,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class TupleNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public List<AstNode> Elements { get; private set; }
 

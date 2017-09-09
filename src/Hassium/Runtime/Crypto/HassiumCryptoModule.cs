@@ -4,8 +4,8 @@
     {
         public HassiumCryptoModule() : base("Crypto")
         {
-            AddAttribute("AES", new HassiumAES());
-            AddAttribute("RSA", new HassiumRSA());
+            AddAttribute("AES", HassiumAES.TypeDefinition);
+            AddAttribute("RSA", HassiumRSA.TypeDefinition);
         }
     }
 }

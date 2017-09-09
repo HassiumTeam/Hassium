@@ -1,5 +1,7 @@
 ## class SocketClosedException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func new (sock : Socket) : SocketClosedException```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Constructs a new SocketClosedException using the specified Net.Socket object.

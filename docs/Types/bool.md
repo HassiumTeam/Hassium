@@ -1,5 +1,7 @@
 ## class bool
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a boolean that is either true or false.
+
 #### ```func __equals__ (b : bool) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the == operator to determine if this bool is equal to the specified bool.

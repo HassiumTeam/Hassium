@@ -5,6 +5,7 @@ namespace Hassium.Runtime
 {
     public class DocStrAttribute : Attribute
     {
+        public string Author { get; private set; }
         public string Description { get; private set; }
 
         public List<string> RequiredParams { get; private set; }
@@ -14,17 +15,24 @@ namespace Hassium.Runtime
 
         public DocStrAttribute(params string[] lines)
         {
+            Description = string.Empty;
+
             RequiredParams = new List<string>();
             OptionalParams = new List<string>();
 
-            int index = 0;
+            Returns = string.Empty;
 
-            Description = lines[index++];
-            while (lines[index].Trim().StartsWith("@param"))
-                RequiredParams.Add(lines[index++]);
-            while (lines[index].Trim().StartsWith("@optional"))
-                OptionalParams.Add(lines[index++]);
-            Returns = lines[index];
+            foreach (var line in lines)
+                if (line.Trim().StartsWith("@author"))
+                    Author = line.Trim();
+                else if (line.Trim().StartsWith("@desc"))
+                    Description = line.Trim();
+                else if (line.Trim().StartsWith("@param"))
+                    RequiredParams.Add(line.Trim());
+                else if (line.Trim().StartsWith("@optional"))
+                    OptionalParams.Add(line.Trim());
+                else if (line.Trim().StartsWith("@returns"))
+                    Returns = line.Trim();
         }
     }
 }

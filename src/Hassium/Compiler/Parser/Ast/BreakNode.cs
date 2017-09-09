@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class BreakNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public BreakNode(SourceLocation location)
         {

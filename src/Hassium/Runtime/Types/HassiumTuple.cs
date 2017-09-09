@@ -27,6 +27,10 @@ namespace Hassium.Runtime.Types
             return TupleTypeDef.iter(vm, this, location, args);
         }
 
+        [DocStr(
+            "@desc A class representing a fixed length non-mutable list of objects.",
+            "@returns tuple."
+            )]
         public class TupleTypeDef : HassiumTypeDefinition
         {
             public TupleTypeDef() : base("tuple")

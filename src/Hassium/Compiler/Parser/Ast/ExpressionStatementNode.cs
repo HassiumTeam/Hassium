@@ -2,7 +2,7 @@
 {
     public class ExpressionStatementNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public AstNode Expression { get; private set; }
 

@@ -1,5 +1,7 @@
 ## class DNS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for resolving IP addresses and hostnames through the DNS protocol.
+
 #### ```func gethost (IPAddrOrStr : object) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the first hostname of the specified Net.IPAddr object or string ip.
@@ -28,5 +30,5 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets a list of Net.IPAddr ip addresses for the specified hostname.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` st The hostname as a string.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A new list of Net.IPAddr objects.
 

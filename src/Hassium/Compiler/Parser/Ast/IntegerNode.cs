@@ -4,7 +4,7 @@ namespace Hassium.Compiler.Parser.Ast
 {
     public class IntegerNode : AstNode
     {
-        public override SourceLocation SourceLocation { get; }
+        public override SourceLocation SourceLocation { get; set; }
 
         public long Integer { get; private set; }
 

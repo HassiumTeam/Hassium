@@ -1,5 +1,7 @@
 ## class OS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for interacting with the operating system, environment, and processes.
+
 #### ```func exec (path : string, params args) : Process```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Starts a new process at the specified path with the given args and returns the OS.Process object.

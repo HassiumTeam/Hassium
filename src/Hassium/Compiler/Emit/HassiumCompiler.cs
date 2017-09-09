@@ -14,6 +14,7 @@ namespace Hassium.Compiler.Emit
 {
     public class HassiumCompiler : IVisitor
     {
+        private bool suppressWarns = false;
         public static HassiumModule CompileModuleFromFilePath(string abspath, bool suppressWarns = false)
         {
             if (!File.Exists(abspath))
@@ -39,8 +40,6 @@ namespace Hassium.Compiler.Emit
 
         private SymbolTable table;
         private HassiumModule module;
-
-        private bool suppressWarns;
 
         public HassiumCompiler(bool suppressWarns)
         {
@@ -660,6 +659,9 @@ namespace Hassium.Compiler.Emit
                 mod = InternalModule.InternalModules[path];
             else
                 mod = resolveModuleByPath(node.SourceLocation, path);
+
+            if (mod is HassiumModule && !suppressWarns)
+                (mod as HassiumModule).DisplayWarnings();
 
             // Hassium source code imports will contain __global__, this is where
             // we have to look for the desired classes.

@@ -1,5 +1,7 @@
 ## class UI
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for interacting with the terminal user interface (TUI).
+
 #### ```backcolor { get; }```
 
 #### ```backcolor { set; }```

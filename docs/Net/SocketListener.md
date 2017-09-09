@@ -1,5 +1,7 @@
 ## class SocketListener
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```func acceptsock () : Socket```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Hangs until a new connection has been received and returns a Net.Socket object of that client.

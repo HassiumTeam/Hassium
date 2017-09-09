@@ -1,5 +1,7 @@
 ## class IPAddr
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```address { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string ip address.

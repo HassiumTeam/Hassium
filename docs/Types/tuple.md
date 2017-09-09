@@ -1,10 +1,12 @@
 ## class tuple
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a fixed length non-mutable list of objects.
+
 #### ```func __index__ (index : int) : object```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the [] operator to return the value at the 0-based index.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` dex The 0-based index to get.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The object at the index.
 
 #### ```func __iter__ () : list```
 

@@ -1,5 +1,7 @@
 ## class Math
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for advanced mathematical operations.
+
 #### ```func abs (num : number) : float```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns the absolute value of the specified number.

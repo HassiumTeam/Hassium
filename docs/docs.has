@@ -44,11 +44,14 @@ func docclazz (clazz, name : string) {
 	file = FS.open ("{0}.md".format (name));
 
 	file.writeline ("## class {0}\n".format (name));
+	clazzdoc = new FuncDoc (clazz);
+	file.writeline ("&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` {0}\n".format (clazzdoc.desc));
 
 	attribs = getattribs (clazz);
 
 	foreach (attrib in attribs) {
 		funcdoc = new FuncDoc (attrib [1]);
+		if (funcdoc.desc == "") continue;
 		foreach (rep in funcdoc.sourcereps) {
 			file.writeline ("#### ```{0}```\n".format (rep));
 		}

@@ -63,6 +63,10 @@ namespace Hassium.Runtime.Types
             return new HassiumString(Bool.ToString().ToLower());
         }
 
+        [DocStr(
+            "@desc A class representing a boolean that is either true or false.",
+            "@returns bool."
+            )]
         public class BoolTypeDef : HassiumTypeDefinition
         {
             public BoolTypeDef() : base("bool")

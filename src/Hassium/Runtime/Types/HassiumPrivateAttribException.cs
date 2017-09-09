@@ -17,6 +17,10 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown if an attempt is made to access a private attribute.",
+            "@returns PrivateAttributeException."
+            )]
         public class PrivateAttribExceptionTypeDef : HassiumTypeDefinition
         {
             public PrivateAttribExceptionTypeDef() : base("PrivateAttributeException")

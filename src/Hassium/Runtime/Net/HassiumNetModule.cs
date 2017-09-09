@@ -4,8 +4,8 @@
     {
         public HassiumNetModule() : base("Net")
         {
-            AddAttribute("CGI", new HassiumCGI());
-            AddAttribute("DNS", new HassiumDNS());
+            //AddAttribute("CGI", new HassiumCGI());
+            AddAttribute("DNS", HassiumDNS.TypeDefinition);
             AddAttribute("IPAddr", HassiumIPAddr.TypeDefinition);
             AddAttribute("Socket", HassiumSocket.TypeDefinition);
             AddAttribute("SocketClosedException", HassiumSocketClosedException.TypeDefinition);

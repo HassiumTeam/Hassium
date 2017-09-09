@@ -1,5 +1,7 @@
 ## class FS
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for interacting with the filesystem.
+
 #### ```func close (file : File) : null```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Closes the given IO.File object.
@@ -24,7 +26,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param path:``` The path of the directory to be created.
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` ull.
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` 
 
 #### ```func createfile (path : string) : null```
 

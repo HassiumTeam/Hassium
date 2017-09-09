@@ -1,5 +1,7 @@
 ## class Encoding
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+
 #### ```bodyname { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly string body name of this encoding.

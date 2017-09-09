@@ -1,5 +1,7 @@
 ## class Path
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class containing methods for interacting with path strings.
+
 #### ```func combine (params paths) : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Combines the given file paths together and returns the file string.

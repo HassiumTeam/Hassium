@@ -1,5 +1,7 @@
 ## class IndexOutOfRangeException
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing an exception that is thrown if an index is out of the range of an object.
+
 #### ```index { get; }```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the readonly integer index that was out of range.

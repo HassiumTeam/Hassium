@@ -18,6 +18,10 @@ namespace Hassium.Runtime
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown if a type conversion fails.",
+            "@returns ConversionFailedException."
+            )]
         public class ConversionFailedExceptionTypeDef : HassiumTypeDefinition
         {
             public ConversionFailedExceptionTypeDef() : base("ConversionFailedException")

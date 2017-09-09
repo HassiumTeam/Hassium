@@ -1,5 +1,7 @@
 ## class Process
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a separate process being hosted by this process.
+
 #### ```args { get; }```
 
 #### ```args { set; }```

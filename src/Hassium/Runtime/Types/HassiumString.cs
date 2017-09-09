@@ -18,7 +18,7 @@ namespace Hassium.Runtime.Types
         }
 
         [DocStr(
-            "@desc Represents a string, which is an array of characters.",
+            "@desc A class represneting an array of characters.",
             "@returns string."
             )]
         public class StringTypeDef : HassiumTypeDefinition
