@@ -187,6 +187,7 @@ namespace Hassium.Runtime.Types
                     { BITWISEOR, new HassiumFunction(bitwiseor, 1)  },
                     { DIVIDE, new HassiumFunction(divide, 1)  },
                     { EQUALTO, new HassiumFunction(equalto, 1)  },
+                    { "format", new HassiumFunction(format, 1) },
                     { "getbit", new HassiumFunction(getbit, 1)  },
                     { GREATERTHAN, new HassiumFunction(greaterthan, 1)  },
                     { GREATERTHANOREQUAL, new HassiumFunction(greaterthanorequal, 1)  },
@@ -335,6 +336,17 @@ namespace Hassium.Runtime.Types
             {
                 var Int = (self as HassiumInt).Int;
                 return new HassiumBool(Int == args[0].ToInt(vm, args[0], location).Int);
+            }
+
+            [DocStr(
+                "@desc Returns a string using the specified format string and this int as the argument.",
+                "@param fmt The C# format string.",
+                "@returns The formatted string."
+                )]
+            [FunctionAttribute("func format (fmt : string) : string")]
+            public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumString(string.Format(args[0].ToString(vm, args[0], location).String, (self as HassiumInt).Int));
             }
 
             [DocStr(
