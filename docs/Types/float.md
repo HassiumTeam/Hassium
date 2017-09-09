@@ -26,6 +26,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if both numbers are equal, otherwise false.
 
+#### ```func format (fmt : string) : string```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a string using the specified format string and this float as the argument.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param fmt:``` The C# format string.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The formatted string.
+
 #### ```func __greater__ (num : number) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the > operator to determine if this float is greater than the specified number.

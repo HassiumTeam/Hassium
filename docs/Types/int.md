@@ -64,6 +64,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if the numbers are equal, otherwise false.
 
+#### ```func format (fmt : string) : string```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a string using the specified format string and this int as the argument.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param fmt:``` The C# format string.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The formatted string.
+
 #### ```func getbit (index : int) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Gets the bit at the specified 0-based index in this int and returns it's value.
