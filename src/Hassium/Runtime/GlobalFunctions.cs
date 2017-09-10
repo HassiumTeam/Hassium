@@ -73,6 +73,11 @@ namespace Hassium.Runtime
         [FunctionAttribute("func format (fmt : string, params obj) : string")]
         public static HassiumString format(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
+            return format(vm, location, args);
+        }
+
+        private static HassiumString format(VirtualMachine vm, SourceLocation location, HassiumObject[] args)
+        {
             if (args.Length <= 0)
                 return new HassiumString(string.Empty);
             if (args.Length == 1)

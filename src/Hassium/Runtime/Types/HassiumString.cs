@@ -37,6 +37,7 @@ namespace Hassium.Runtime.Types
                 AddAttribute("length", new HassiumProperty(get_length));
                 AddAttribute(LESSERTHAN, lesserthan, 1);
                 AddAttribute(LESSERTHANOREQUAL, lesserthanorequal, 1);
+                AddAttribute(MODULUS, modulus, 1);
                 AddAttribute(NOTEQUALTO, notequalto, 1);
                 AddAttribute("startswith", startsswith, 1);
                 AddAttribute("substring", substring, 1, 2);
@@ -206,6 +207,19 @@ namespace Hassium.Runtime.Types
             {
                 var String = (self as HassiumString).String;
                 return new HassiumBool(string.Compare(String, args[0].ToString(vm, args[0], location).String) <= 0);
+            }
+
+            [DocStr(
+                "@desc Implements the % operator to use this string as a format string with the specified list or tuple as format args.",
+                "@param listOrTuple The list or tuple object that will act as format args.",
+                "@returns The formatted string."
+                )]
+            [FunctionAttribute("func __modulus__ (listOrTuple : object) : string")]
+            public static HassiumString modulus(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var vals = args[0].ToList(vm, args[0], location).Values;
+                vals.Insert(0, self);
+                return new HassiumString(GlobalFunctions.format(vm, null, location, vals.ToArray()).String);
             }
 
             [DocStr(

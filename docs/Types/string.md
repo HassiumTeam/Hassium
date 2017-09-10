@@ -100,6 +100,14 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` true if this string is lesser than or equal to the string, otherwise false.
 
+#### ```func __modulus__ (listOrTuple : object) : string```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the % operator to use this string as a format string with the specified list or tuple as format args.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@param listOrTuple:``` The list or tuple object that will act as format args.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The formatted string.
+
 #### ```func __notequal__ (str : string) : bool```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the != operator to determine if this string is not equal to the specified string.

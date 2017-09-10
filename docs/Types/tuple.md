@@ -20,6 +20,12 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The number of values in this tuple as int.
 
+#### ```func tolist () : list```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns a new list containing the elements inside this tuple.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` A new list with the elements in this tuple.
+
 #### ```func tostring () : string```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Returns this tuple as a string formatted as ( val1, val2, ... )

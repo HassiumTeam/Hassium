@@ -40,6 +40,7 @@ namespace Hassium.Runtime.Types
                     { INDEX, new HassiumFunction(index) },
                     { ITER, new HassiumFunction(iter) },
                     { "length", new HassiumProperty(get_length) },
+                    { TOLIST, new HassiumFunction(tolist, 0) },
                     { TOSTRING, new HassiumFunction(tostring, 0) }
                 };
             }
@@ -75,6 +76,16 @@ namespace Hassium.Runtime.Types
             public static HassiumInt get_length(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 return new HassiumInt((self as HassiumTuple).Values.Length);
+            }
+
+            [DocStr(
+                "@desc Returns a new list containing the elements inside this tuple.",
+                "@returns A new list with the elements in this tuple."
+                )]
+            [FunctionAttribute("func tolist () : list")]
+            public static HassiumList tolist(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumList((self as HassiumTuple).Values);
             }
 
             [DocStr(
