@@ -17,3 +17,11 @@ install:
 	echo "/usr/bin/mono /usr/bin/Hassium.exe \$$@" >> /usr/bin/hassium
 	chmod +x /usr/bin/hassium
 	chmod 777 * -R
+
+install-mac:
+	mkdir -p ~/.Hassium
+	cp ./src/Hassium/bin/Debug/Hassium.exe /usr/local/bin/Hassium.exe
+	echo "#! /bin/bash" > /usr/local/bin/hassium
+	echo "/usr/local/bin/mono-boehm /usr/local/bin/Hassium.exe \$$@" >> /usr/local/bin/hassium
+	chmod +x /usr/local/bin/hassium
+	chmod 777 * -r
