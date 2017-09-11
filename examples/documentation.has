@@ -1,0 +1,81 @@
+# @author Jacob Misirian
+# @desc Demonstrates the use of documentation for classes and funcs in Hassium.
+# @returns null.
+func main () : null {
+	printhelpdoc (main);
+	printhelpdoc (MyClass);
+	
+	printhelpdoc (MyClass.new);
+	c = new MyClass (4, 8);
+
+	printhelpdoc (MyClass.__add__);
+	println (c + 3);
+
+	printhelpdoc (MyClass.varadd);
+	println (c.varadd (7, 10, 13));
+
+	return null;
+}
+
+# @desc Displays a helpdoc for the specified object.
+# @param obj The object to get help for.
+# @returns null.
+func printhelpdoc (obj : object) : null {
+	srcreps = getsourcereps (obj);
+	auth = getdocauthor (obj);
+	desc = getdocdesc (obj);
+	reqparams = getdocreqparams (obj);
+	optparams = getdocoptparams (obj);
+	returns = getdocreturns (obj);
+
+	foreach (src in srcreps) println (src);
+	if (auth != "") println (auth);
+	if (desc != "") println (desc);
+	foreach (req in reqparams) println (req);
+	foreach (opt in optparams) println (opt);
+	if (returns != "") println (returns);
+
+	return null;
+}
+
+# @desc A class containing sample methods for documentation purposes. 
+class MyClass {
+	
+	# @desc Constructs a new MyClass using the two specified numbers.
+	# @param x The first number.
+	# @param y The second number.
+	# @returns The new MyClass object.
+	func new (x : number, y : number) {
+		this.x = x;
+		this.y = y;
+	}
+
+	# @desc Implements the + operator to add the specified number to this.x and this.y.
+	# @param num The number to add.
+	# @returns The sum.
+	func __add__ (num : number) : number {
+		return (this.x + this.y) + num;
+	}
+
+        # @desc Returns a new formatted string using the specified format string and this.x and this.y.
+        # @param fmt The format string to use.
+        # @returns The formatted string.
+        func format (fmt : string) : string {
+                return format (fmt, this.x, this.y);
+        }
+
+	# @desc Adds at least one number to this.x and this.y as well as a variable number of numbers.
+	# @param num The first number to add.
+	# @optional params nums The variable numbers to add.
+	# @returns The sum.
+	func varadd (num : number, params nums) : number {
+		sum = this.x + this.y;
+		sum += num;
+
+		foreach (num_ in nums) {
+			sum += num_;
+		}
+
+		return sum;
+	}
+}
