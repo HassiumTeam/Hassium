@@ -1,25 +1,25 @@
 from Net use Socket;
 
 func main (params args) : null {
-	sock = new Socket (args [1], args [2].toint ());
+	with (new Socket (args [1], args [2].toint ())) as sock {
+		while (!sock.isconnected) sleep (100);
 
-	while (!sock.isconnected) sleep (100);
+		thread do {
+			try {
+				while (true) {
+					printf (sock.readbyte ());
+				}
+			} catch {
+				println ("Disconnected");
+			}
+		}
 
-	thread do {
 		try {
 			while (true) {
-				printf (sock.readbyte ());
+				sock.writeline (input ());
 			}
 		} catch {
 			println ("Disconnected");
 		}
-	}
-	try {
-
-		while (true) {
-			sock.writeline (input ());
-		}
-	} catch {
-		println ("Disconnected");
 	}
 }
