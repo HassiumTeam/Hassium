@@ -735,6 +735,20 @@ namespace Hassium.Compiler.Emit
 
             restoreLabels(breakLabelCount, continueLabelCount);
         }
+        public void Accept(WithNode node)
+        {
+            table.EnterScope();
+            node.Target.Visit(this);
+
+            var assign = node.Assign == string.Empty ? nextLabel().ToString() : node.Assign;
+            var sym = table.HandleSymbol(assign);
+            emit(node.SourceLocation, InstructionType.StoreLocal, sym);
+
+            emit(node.SourceLocation, InstructionType.EnterWith, sym);
+            if (node.Body is CodeBlockNode) node.Body.VisitChildren(this); else node.Body.Visit(this);
+            emit(node.SourceLocation, InstructionType.ExitWith, sym);
+            table.LeaveScope();
+        }
 
         private void emit(SourceLocation location, InstructionType instructionType, int arg = -1)
         {

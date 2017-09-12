@@ -44,6 +44,8 @@ namespace Hassium.Compiler.Emit
         Dispose,
         Duplicate,
         EnforcedAssignment,
+		EnterWith,
+		ExitWith,
         Goto,
         Iter,
         IterableFull,

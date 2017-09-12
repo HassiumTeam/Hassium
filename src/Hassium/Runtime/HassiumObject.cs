@@ -47,6 +47,8 @@ namespace Hassium.Runtime
         public static string ITER = "__iter__";
         public static string ITERABLEFULL = "__iterfull__";
         public static string ITERABLENEXT = "__iternext__";
+        public static string ENTER = "__enter__";
+        public static string EXIT = "__exit__";
         public static string DISPOSE = "dispose";
         public static string TOBIGINT = "tobigint";
         public static string TOBOOL = "tobool";
@@ -311,6 +313,20 @@ namespace Hassium.Runtime
             if (ContainsAttribute(ITERABLENEXT))
                 return GetAttribute(vm, ITERABLENEXT).Invoke(vm, location, args);
             vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(ITERABLENEXT)));
+            return Null;
+        }
+        public virtual HassiumObject Enter(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            if (ContainsAttribute(ENTER))
+                return GetAttribute(vm, ENTER).Invoke(vm, location, args);
+            vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(ENTER)));
+            return Null;
+        }
+        public virtual HassiumObject Exit(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+        {
+            if (ContainsAttribute(EXIT))
+                return GetAttribute(vm, EXIT).Invoke(vm, location, args);
+            vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(EXIT)));
             return Null;
         }
         public virtual HassiumObject Dispose(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)

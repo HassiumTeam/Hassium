@@ -159,6 +159,14 @@ namespace Hassium.Runtime
                                 StackFrame.Add(arg, val);
                             Stack.Push(val);
                             break;
+                        case InstructionType.EnterWith:
+                            val = StackFrame.GetVariable(inst.SourceLocation, this, inst.Arg);
+                            val.Enter(this, val, CurrentSourceLocation);
+                            break;
+                        case InstructionType.ExitWith:
+                            val = StackFrame.GetVariable(inst.SourceLocation, this, inst.Arg);
+                            val.Exit(this, val, CurrentSourceLocation);
+                            break;
                         case InstructionType.Iter:
                             val = Stack.Pop();
                             Stack.Push(val.Iter(this, val, inst.SourceLocation));
@@ -255,7 +263,7 @@ namespace Hassium.Runtime
                                     Stack.Push(GlobalFrame.GetVariable(arg));
                             }
                             else*/
-                                Stack.Push(StackFrame.GetVariable(inst.SourceLocation, this, inst.Arg));
+                            Stack.Push(StackFrame.GetVariable(inst.SourceLocation, this, inst.Arg));
                             break;
                         case InstructionType.Pop:
                             lastValuePopped = Stack.Pop();

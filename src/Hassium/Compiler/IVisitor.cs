@@ -43,5 +43,6 @@ namespace Hassium.Compiler
         void Accept(UseNode node);
         void Accept(UseFromNode node);
         void Accept(WhileNode node);
+        void Accept(WithNode node);
     }
 }

@@ -81,6 +81,8 @@ namespace Hassium.Compiler.Parser
                 return parseUse();
             else if (matchToken(TokenType.Identifier, "while"))
                 return parseWhile();
+            else if (matchToken(TokenType.Identifier, "with"))
+                return parseWith();
             if (position + 1 < tokens.Count)
             {
                 if (matchToken(TokenType.Identifier) && tokens[position + 1].TokenType == TokenType.Comma)
@@ -523,6 +525,17 @@ namespace Hassium.Compiler.Parser
             AstNode body = parseStatement();
 
             return new WhileNode(location, condition, body);
+        }
+
+        private WithNode parseWith()
+        {
+            var location = this.location;
+            expectToken(TokenType.Identifier, "with");
+            AstNode target = parseExpression();
+            string assign = acceptToken(TokenType.Identifier, "as") ? expectToken(TokenType.Identifier).Value : string.Empty;
+            AstNode body = parseStatement();
+
+            return new WithNode(target, body, assign);
         }
 
         private AstNode parseExpressionStatement()
