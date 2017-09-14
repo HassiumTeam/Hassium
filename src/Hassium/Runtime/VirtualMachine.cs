@@ -45,7 +45,7 @@ namespace Hassium.Runtime
             ImportGlobals();
         }
 
-        public void Execute(HassiumModule module, HassiumList args, Dictionary<int, HassiumObject> frame = null)
+        public HassiumObject Execute(HassiumModule module, HassiumList args, Dictionary<int, HassiumObject> frame = null)
         {
             CallStack = new LinkedStack<string>();
             CurrentModule = module;
@@ -68,6 +68,8 @@ namespace Hassium.Runtime
                 else
                     mainMethod.Invoke(this, mainMethod.SourceLocation);
             }
+
+            return lastValuePopped;
         }
 
         public HassiumObject ExecuteMethod(HassiumMethod method)

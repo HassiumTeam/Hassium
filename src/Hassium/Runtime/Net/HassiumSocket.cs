@@ -30,6 +30,10 @@ namespace Hassium.Runtime.Net
 			AutoFlush = true;
 		}
 
+        [DocStr(
+            "@desc A class representing a socket connection to a server.",
+            "@returns Socket."
+            )]
 		public class SocketTypeDef : HassiumTypeDefinition
 		{
 			public SocketTypeDef() : base("Socket")

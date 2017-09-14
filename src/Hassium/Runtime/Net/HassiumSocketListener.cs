@@ -18,6 +18,10 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a server that listens for connecting sockets.",
+            "@returns SocketListener."
+            )]
         public class SocketListenerTypeDef : HassiumTypeDefinition
         {
             public SocketListenerTypeDef() : base("SocketListener")

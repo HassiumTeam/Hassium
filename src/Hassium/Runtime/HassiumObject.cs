@@ -193,15 +193,13 @@ namespace Hassium.Runtime
         {
             if (ContainsAttribute(EQUALTO))
                 return GetAttribute(vm, EQUALTO).Invoke(vm, location, args).ToBool(vm, self, location);
-            vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(EQUALTO)));
-            return False;
+            return new HassiumBool(this == args[0]);
         }
         public virtual HassiumBool NotEqualTo(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {
             if (ContainsAttribute(NOTEQUALTO))
                 return GetAttribute(vm, NOTEQUALTO).Invoke(vm, location, args).ToBool(vm, self, location);
-            vm.RaiseException(HassiumAttribNotFoundException.AttribNotFoundExceptionTypeDef._new(vm, null, location, this, new HassiumString(NOTEQUALTO)));
-            return False;
+            return new HassiumBool(this != args[0]);
         }
         public virtual HassiumObject GreaterThan(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
         {

@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing an exception that is thrown when access is attempted to a socket that has been closed.",
+            "@returns SocketClosedException."
+            )]
         public class SocketClosedExceptionTypeDef : HassiumTypeDefinition
         {
             public SocketClosedExceptionTypeDef() : base("SocketClosedException")

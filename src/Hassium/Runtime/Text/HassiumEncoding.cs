@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Text
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a specific string encoding scheme.",
+            "@returns Encoding."
+            )]
         public class EncodingTypeDef : HassiumTypeDefinition
         {
             public EncodingTypeDef() : base("Encoding")

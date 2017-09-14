@@ -18,6 +18,10 @@ namespace Hassium.Runtime.Net
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a web client for interacting with HTTP servers.",
+            "@returns Web."
+            )]
         public class WebTypeDef : HassiumTypeDefinition
         {
             public WebTypeDef() : base("Web")

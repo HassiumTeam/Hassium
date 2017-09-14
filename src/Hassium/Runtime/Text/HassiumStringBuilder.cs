@@ -17,6 +17,10 @@ namespace Hassium.Runtime.Text
             AddType(TypeDefinition);
         }
 
+        [DocStr(
+            "@desc A class representing a mutable string object.",
+            "@returns StringBuilder."
+            )]
         public class StringBuilderTypeDef : HassiumTypeDefinition
         {
             public StringBuilderTypeDef() : base("StringBuilder")

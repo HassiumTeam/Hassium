@@ -180,6 +180,7 @@
     <Compile Include="Runtime\VirtualMachine.cs" />
     <Compile Include="Compiler\Parser\Ast\PropertyNode.cs" />
     <Compile Include="Compiler\Parser\Ast\WithNode.cs" />
+    <Compile Include="Runtime\Text\HassiumRegEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
