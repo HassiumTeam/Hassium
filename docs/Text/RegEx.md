@@ -34,7 +34,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` The string with replaced values.
 
-#### ```func split (re : regex, str : string```
+#### ```func split (re : regex, str : string) : list```
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Splits the specified input string at the specified regex string and returns a list of substrings.
 

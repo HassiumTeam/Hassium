@@ -84,7 +84,7 @@ namespace Hassium.Runtime.Text
                 "@param str The input string.",
                 "@returns The list of split substrings."
                 )]
-            [FunctionAttribute("func split (re : regex, str : string")]
+            [FunctionAttribute("func split (re : regex, str : string) : list")]
             public static HassiumList split(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
             {
                 HassiumList list = new HassiumList(new HassiumObject[0]);
