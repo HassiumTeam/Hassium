@@ -1,6 +1,6 @@
 ## class Encoding
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a specific string encoding scheme.
 
 #### ```bodyname { get; }```
 

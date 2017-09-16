@@ -1,6 +1,6 @@
 ## class StringBuilder
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a mutable string object.
 
 #### ```func new () : StringBuilder```
 

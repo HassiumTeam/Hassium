@@ -1,6 +1,6 @@
 ## class SocketListener
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a server that listens for connecting sockets.
 
 #### ```func acceptsock () : Socket```
 

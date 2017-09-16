@@ -36,6 +36,10 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` True if the file exists, otherwise false.
 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the 'exit' portion of the with statement. Closes the file.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
+
 #### ```extension { get; }```
 
 #### ```extension { set; }```

@@ -1,6 +1,6 @@
 ## class SocketClosedException
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing an exception that is thrown when access is attempted to a socket that has been closed.
 
 #### ```func new (sock : Socket) : SocketClosedException```
 

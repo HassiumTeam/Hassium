@@ -1,6 +1,6 @@
 ## class Socket
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a socket connection to a server.
 
 #### ```autoflush { get; }```
 
@@ -27,6 +27,18 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional ip:``` The string ip address to connect to.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```@optional port:``` The port to connect to.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
+
+#### ```func __enter__ () : null```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the 'enter' portion of the with statement. Does nothing.
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
+
+#### ```func __exit__ () : null```
+
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` Implements the 'exit' portion of the with statement. Closes the socket.
 
 &nbsp;&nbsp;&nbsp;&nbsp;```@returns:``` null.
 

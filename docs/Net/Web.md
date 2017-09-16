@@ -1,6 +1,6 @@
 ## class Web
 
-&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` 
+&nbsp;&nbsp;&nbsp;&nbsp;```@desc:``` A class representing a web client for interacting with HTTP servers.
 
 #### ```func downloaddata (url : string) : list```
 
