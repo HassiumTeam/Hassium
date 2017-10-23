@@ -26,6 +26,7 @@ namespace Hassium.Runtime.Types
             public StringTypeDef() : base("string")
             {
                 AddAttribute(ADD, add, 1);
+                AddAttribute("contains", contains, 1);
                 AddAttribute(EQUALTO, equalto, 1);
                 AddAttribute("endswith", endswith, 1);
                 AddAttribute("format", format, -1);
@@ -39,8 +40,10 @@ namespace Hassium.Runtime.Types
                 AddAttribute(LESSERTHANOREQUAL, lesserthanorequal, 1);
                 AddAttribute(MODULUS, modulus, 1);
                 AddAttribute(NOTEQUALTO, notequalto, 1);
+                AddAttribute("split", split, 1);
                 AddAttribute("startswith", startsswith, 1);
                 AddAttribute("substring", substring, 1, 2);
+                AddAttribute(TOCHAR, tochar, 0);
                 AddAttribute(TOFLOAT, tofloat, 0);
                 AddAttribute(TOINT, toint, 0);
                 AddAttribute(TOLIST, tolist, 0);
@@ -72,6 +75,18 @@ namespace Hassium.Runtime.Types
             {
                 var String = (self as HassiumString).String;
                 return new HassiumString(String + args[0].ToString(vm, args[0], location).String);
+            }
+
+            [DocStr(
+                "@desc Returns a boolean indicating if this string contains the specified string.",
+                "@param str The string to check.",
+                "@returns true if this string contains the specified string, otherwise false."
+                )]
+            [FunctionAttribute("func contains (str : string) : bool")]
+            public static HassiumBool contains(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var String = (self as HassiumString).String;
+                return new HassiumBool(String.Contains(args[0].ToString(vm, args[0], location).String));
             }
 
             [DocStr(
@@ -235,6 +250,21 @@ namespace Hassium.Runtime.Types
             }
 
             [DocStr(
+                "@desc Divides the string into a list of substrings based on the specified separator.",
+                "@param c The char to split on.",
+                "@returns The list of substrings."
+                )]
+            [FunctionAttribute("func split (c : char) : list")]
+            public static HassiumList split(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                var String = (self as HassiumString).String;
+                var list = new HassiumList(new HassiumObject[0]);
+                foreach (var part in String.Split(args[0].ToChar(vm, args[0], location).Char))
+                    HassiumList.ListTypeDef.add(vm, list, location, new HassiumString(part));
+                return list;
+            }
+
+            [DocStr(
                 "@desc Returns a boolean indicating if this string starts with the specified string.",
                 "@param str The string to check.",
                 "@returns true if this string does start with the string, otherwise false."
@@ -258,6 +288,16 @@ namespace Hassium.Runtime.Types
                     return new HassiumString((self as HassiumString).String.Substring((int)args[0].ToInt(vm, args[0], location).Int, (int)args[1].ToInt(vm, args[1], location).Int));
                 else
                     return new HassiumString((self as HassiumString).String.Substring((int)args[0].ToInt(vm, args[0], location).Int));
+            }
+
+            [DocStr(
+                "@desc Converts this string to a character value.",
+                "@returns This string as char."
+                )]
+            [FunctionAttribute("func tochar () : char")]
+            public static HassiumChar tochar(VirtualMachine vm, HassiumObject self, SourceLocation location, params HassiumObject[] args)
+            {
+                return new HassiumChar((self as HassiumString).String[0]);
             }
 
             [DocStr(
